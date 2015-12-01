@@ -14,10 +14,13 @@ class BubbleGrid extends FlxObject
 	
 	public var columns : Int;
 	public var rows : Int;
+	
 	public var cellSize : Float;
 	public var halfCell : Float;
 
 	public var canvas : FlxSprite;
+	
+	public var data : Array<Array<Int>>;
 	
 	public function new(X : Float, Y : Float, Width : Float, Height : Float)
 	{
@@ -32,9 +35,13 @@ class BubbleGrid extends FlxObject
 		
 		highlightedCell = new FlxPoint(-1, -1);
 		
-		trace(bounds.width + "/" + columns + "+0.5 = " + cellSize);
+		// trace(bounds.width + "/" + columns + "+0.5 = " + cellSize);
 		
 		renderCanvas();
+		
+		data = [];
+		
+		clearData();
 	}
 	
 	override public function update()
@@ -62,7 +69,7 @@ class BubbleGrid extends FlxObject
 		xx = Std.int(FlxMath.bound(xx, 0, columns-1));
 		yy = Std.int(FlxMath.bound(yy, 0, rows-1));
 		
-		highlightedCell.set(xx, yy);
+		var highlightedCell : FlxPoint = FlxPoint.get(xx, yy);
 		
 		return highlightedCell;
 	}
@@ -106,5 +113,30 @@ class BubbleGrid extends FlxObject
 				FlxSpriteUtil.drawRect(canvas, col * cellSize + cellOffset, row * cellSize, cellSize, cellSize, ccolor, lineStyle);
 			}
 		}
+	}
+	
+	public function clearData()
+	{
+		data = [];
+		for (row in 0...rows)
+		{
+			data[row] = [];
+			
+			for (col in 0...columns)
+			{
+				data[row][col] = 0x0;
+			}
+		}
+	}
+	
+	public function setData(col : Float, row : Float, value : Int)
+	{
+		trace("data[" + row + ", " + col + "]");
+		data[Std.int(row)][Std.int(col)] = value;
+	}
+	
+	public function getData(col : Float, row : Float) : Int
+	{
+		return data[Std.int(row)][Std.int(col)];
 	}
 }

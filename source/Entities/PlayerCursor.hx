@@ -42,7 +42,7 @@ class PlayerCursor extends FlxSprite
 		else if (FlxG.keys.pressed.RIGHT)
 			aimAngle += AngleDelta;
 			
-		aimAngle = FlxMath.bound(aimAngle, 45, 135);
+		aimAngle = FlxMath.bound(aimAngle, 30, 150);
 		
 		if (oldAngle != aimAngle)
 		{
@@ -54,8 +54,8 @@ class PlayerCursor extends FlxSprite
 			
 			label.text = "" + aimAngle;
 			FlxSpriteUtil.fill(this, 0x00000000);
-			FlxSpriteUtil.drawCircle(this, aimOrigin.x, aimOrigin.y, Length * 0.3, 0xFFFF5151);
-			FlxSpriteUtil.drawLine(this, aimOrigin.x, aimOrigin.y, targetX, targetY, { color : 0xFFFF5151, thickness: 2 });
+			FlxSpriteUtil.drawCircle(this, aimOrigin.x, aimOrigin.y, Length * 0.3, 0xFFFFFFFF);
+			FlxSpriteUtil.drawLine(this, aimOrigin.x, aimOrigin.y, targetX, targetY, { color : 0xFFFFFFFF, thickness: 3 });
 		}
 		
 		label.update();

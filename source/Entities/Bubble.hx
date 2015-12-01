@@ -14,7 +14,7 @@ class Bubble extends FlxSprite
 	public static var StateIdling : Int = 2;
 	public static var StateDebug  : Int = 3;
 	
-	public var Speed : Float = 200;
+	public var Speed : Float = 400;
 	public var Size : Float = 9;
 	public var HalfSize : Float = 4.5;
 	
@@ -23,7 +23,9 @@ class Bubble extends FlxSprite
 	
 	public var state : Int;
 	
+	public var lastPosition : FlxPoint;
 	public var cellPosition : FlxPoint;
+	public var cellCenterPosition : FlxPoint;
 	
 	public function new(X : Float, Y : Float, World : PlayState, Color : Int)
 	{
@@ -31,11 +33,15 @@ class Bubble extends FlxSprite
 		
 		makeGraphic(20, 20, 0x00000000);
 		FlxSpriteUtil.drawCircle(this, 10, 10, Size, 0xFFFFFFFF);
+		offset.set(0, 0);
 		
 		color = Color;
 		
 		world = World;
 		grid = world.grid;
+		
+		cellPosition = new FlxPoint();
+		lastPosition = new FlxPoint();
 		
 		state = StateAiming;
 	}
@@ -49,13 +55,13 @@ class Bubble extends FlxSprite
 				// Do nothing
 				velocity.set();
 				
+				cellPosition.set(-1, -1);
+				lastPosition.set(-1, -1);
+				
 			case Bubble.StateFlying:
 				
-				// Highlight your way
-				grid.getCellAt(x, y);
-				
 				// Bounce off walls
-				if (x - Size <= grid.bounds.left || x + Size >= grid.bounds.right)
+				if (x - Size * 1.5 <= grid.bounds.left || x + Size * 1.5 >= grid.bounds.right)
 					velocity.x *= -1;
 				
 				// Stick to the ceiling
@@ -64,10 +70,19 @@ class Bubble extends FlxSprite
 					onHitCeiling();
 				}
 				else
+				
 				// Stick to the bubble mass
 				if (checkCollisionWithBubbles())
 				{
 					onHitBubbles();
+				}
+				
+				// Remember your way
+				var currentPosition : FlxPoint = grid.getCellAt(x, y);
+				if (!compare(currentPosition, cellPosition))
+				{
+					lastPosition.set(cellPosition.x, cellPosition.y);
+					cellPosition.set(currentPosition.x, currentPosition.y);
 				}
 				
 			case Bubble.StateIdling:
@@ -76,15 +91,15 @@ class Bubble extends FlxSprite
 				velocity.set();
 				
 				// Positioning yourself slowly
-				if (Math.abs(x - cellPosition.x) > 1 || Math.abs(y - cellPosition.y) > 1)
+				if (Math.abs(x - cellCenterPosition.x) > 1 || Math.abs(y - cellCenterPosition.y) > 1)
 				{
-					x = FlxMath.lerp(x, cellPosition.x, 0.25);
-					y = FlxMath.lerp(y, cellPosition.y, 0.25);
+					x = FlxMath.lerp(x, cellCenterPosition.x, 0.25);
+					y = FlxMath.lerp(y, cellCenterPosition.y, 0.25);
 				}
 				else
 				{
-					x = cellPosition.x;
-					y = cellPosition.y;
+					x = cellCenterPosition.x;
+					y = cellCenterPosition.y;
 				}
 				
 			case Bubble.StateDebug:
@@ -117,23 +132,44 @@ class Bubble extends FlxSprite
 	
 	public function onHitCeiling()
 	{
-		onHitSomething();
+		onHitSomething(true);
 	}
 	
 	public function onHitBubbles()
 	{
-		onHitSomething();
+		onHitSomething(false);
 	}
 	
-	public function onHitSomething()
+	public function onHitSomething(useNewPosition : Bool)
 	{
 		if (state == StateFlying)
 		{
 			// Rest!
 			state = StateIdling;
 			
-			// Fetch your idling place
-			cellPosition = grid.getCenterOfCellAt(x, y);
+			// Discriminate between ceiling and bubble hit
+			if (useNewPosition)
+			{
+				// Fetch your idling place
+				var currentPosition : FlxPoint = grid.getCellAt(x, y);
+				cellPosition.set(currentPosition.x, currentPosition.y);
+				cellCenterPosition = grid.getCenterOfCellAt(x, y);
+			}
+			else
+			{
+				// Consider the last valid position visited
+				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
+			}
+			
+			// If it's already occupied, go to the last one free you got
+			if (grid.getData(cellPosition.x, cellPosition.y) != 0)
+			{
+				trace(cellPosition + " is already occupied, returning to " + lastPosition);
+				cellCenterPosition = grid.getCellCenter(Std.int(lastPosition.x), Std.int(lastPosition.y));
+			}
+			
+			// Store your data
+			grid.setData(cellPosition.x, cellPosition.y, color);
 			
 			// And notify
 			world.onBubbleStop();
@@ -152,6 +188,11 @@ class Bubble extends FlxSprite
 		return false;
 	}
 	
+	public static function compare(A : FlxPoint, B : FlxPoint) : Bool
+	{
+		return A.x == B.x && A.y == B.y;
+	}
+	
 	public function touches(bubble : Bubble) : Bool
 	{
 		var deltaXSquared : Float = x - bubble.x;
@@ -160,7 +201,7 @@ class Bubble extends FlxSprite
 		deltaYSquared *= deltaYSquared;
 
 		// Calculate the sum of the radii, then square it
-		var sumRadiiSquared : Float = Size + bubble.Size; 
+		var sumRadiiSquared : Float = Size * 0.9 + bubble.Size * 0.9;
 		sumRadiiSquared *= sumRadiiSquared;
 
 		return (deltaXSquared + deltaYSquared <= sumRadiiSquared);
