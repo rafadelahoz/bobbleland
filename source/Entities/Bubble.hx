@@ -46,6 +46,12 @@ class Bubble extends FlxSprite
 		state = StateAiming;
 	}
 	
+	override public function kill()
+	{
+		alpha = 0.2;
+		trace("oh nO");
+	}
+	
 	override public function update()
 	{
 		switch (state)
@@ -61,7 +67,7 @@ class Bubble extends FlxSprite
 			case Bubble.StateFlying:
 				
 				// Bounce off walls
-				if (x - Size * 1.5 <= grid.bounds.left || x + Size * 1.5 >= grid.bounds.right)
+				if (x + width/2 - Size * 1.5 <= grid.bounds.left || x + width/2 + Size * 1.5 >= grid.bounds.right)
 					velocity.x *= -1;
 				
 				// Stick to the ceiling
@@ -140,9 +146,9 @@ class Bubble extends FlxSprite
 		onHitSomething(false);
 	}
 	
-	public function onHitSomething(useNewPosition : Bool)
+	public function onHitSomething(useNewPosition : Bool, debug : Bool = false)
 	{
-		if (state == StateFlying)
+		if (debug || state == StateFlying)
 		{
 			// Rest!
 			state = StateIdling;
@@ -162,17 +168,20 @@ class Bubble extends FlxSprite
 			}
 			
 			// If it's already occupied, go to the last one free you got
-			if (grid.getData(cellPosition.x, cellPosition.y) != 0)
+			if (grid.getData(cellPosition.x, cellPosition.y) != null)
 			{
 				trace(cellPosition + " is already occupied, returning to " + lastPosition);
 				cellCenterPosition = grid.getCellCenter(Std.int(lastPosition.x), Std.int(lastPosition.y));
 			}
 			
 			// Store your data
-			grid.setData(cellPosition.x, cellPosition.y, color);
+			grid.setData(cellPosition.x, cellPosition.y, this);
 			
-			// And notify
-			world.onBubbleStop();
+			if (!debug)
+			{	
+				// And notify
+				world.onBubbleStop();
+			}
 		}
 	}
 	
@@ -195,9 +204,9 @@ class Bubble extends FlxSprite
 	
 	public function touches(bubble : Bubble) : Bool
 	{
-		var deltaXSquared : Float = x - bubble.x;
+		var deltaXSquared : Float = (x + width/2) - (bubble.x + width/2);
 		deltaXSquared *= deltaXSquared;
-		var deltaYSquared : Float = y - bubble.y;
+		var deltaYSquared : Float = (y + height/2) - (bubble.y + height/2);
 		deltaYSquared *= deltaYSquared;
 
 		// Calculate the sum of the radii, then square it

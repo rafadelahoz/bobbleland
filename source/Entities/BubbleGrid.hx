@@ -20,7 +20,7 @@ class BubbleGrid extends FlxObject
 
 	public var canvas : FlxSprite;
 	
-	public var data : Array<Array<Int>>;
+	public var data : Array<Array<Bubble>>;
 	
 	public function new(X : Float, Y : Float, Width : Float, Height : Float)
 	{
@@ -124,19 +124,86 @@ class BubbleGrid extends FlxObject
 			
 			for (col in 0...columns)
 			{
-				data[row][col] = 0x0;
+				data[row][col] = null;
 			}
 		}
 	}
 	
-	public function setData(col : Float, row : Float, value : Int)
+	public function setData(col : Float, row : Float, bubble : Bubble)
 	{
-		trace("data[" + row + ", " + col + "]");
-		data[Std.int(row)][Std.int(col)] = value;
+		if (col >= 0 && col < columns && row >= 0 && row < rows)
+			data[Std.int(row)][Std.int(col)] = bubble;
+		else
+			throw("Trying to set invalid grid position (" + col + ", " + row + ")");
 	}
 	
-	public function getData(col : Float, row : Float) : Int
+	public function getData(col : Float, row : Float) : Bubble
 	{
-		return data[Std.int(row)][Std.int(col)];
+		if (col >= 0 && col < columns && row >= 0 && row < rows)
+			return data[Std.int(row)][Std.int(col)];
+		else
+			return null;
+	}
+	
+	public function locateBubbleGroup(bubble : Bubble) : Array<Bubble>
+	{
+		var bubbles : Array<Bubble> = [bubble];
+		var processed : Array<Bubble> = [bubble];
+		
+		var set : Array<Bubble> = [bubble];
+		
+		// Temporary variables
+		var current : Bubble;
+		var neighbour : Bubble;
+		var adjacentPositions : Array<FlxPoint>;
+		var position : FlxPoint;
+		var color : Int;
+		
+		while (set.length > 0)
+		{
+			current = set.shift();
+			
+			position = current.cellPosition;
+			color = current.color;
+			
+			adjacentPositions = getAdjacentPositions(position);
+			
+			for (adjPos in adjacentPositions)
+			{
+				neighbour = getData(adjPos.x, adjPos.y);
+				if (neighbour != null)
+				{
+					if (neighbour.color == color)
+					{
+						if (bubbles.indexOf(neighbour) < 0)
+							bubbles.push(neighbour);
+						
+						if (processed.indexOf(neighbour) < 0)
+							processed.push(neighbour);
+					}
+				}
+			}
+			
+			clearAdjacentPositions(adjacentPositions);
+		}
+		
+		return bubbles;
+	}
+	
+	function getAdjacentPositions(pos : FlxPoint) : Array<FlxPoint>
+	{
+		var x : Float = pos.x;
+		var y : Float = pos.y;
+		
+		return [FlxPoint.get(x  , y-1), FlxPoint.get(x-1, y-1), FlxPoint.get(x-1, y  ),
+				FlxPoint.get(x+1, y-1), FlxPoint.get(x+1, y  ), FlxPoint.get(x  , y+1)];
+	}
+
+	function clearAdjacentPositions(positions : Array<FlxPoint>)
+	{
+		for (point in positions)
+		{
+			point.put();
+		}
 	}
 }
