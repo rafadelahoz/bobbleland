@@ -63,6 +63,11 @@ class PlayerCursor extends FlxSprite
 		super.update();
 	}
 	
+	public function onShoot()
+	{
+		// ??
+	}
+	
 	override public function draw()
 	{
 		super.draw();
