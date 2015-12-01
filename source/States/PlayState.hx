@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.util.FlxRandom;
 import flixel.group.FlxTypedGroup;
 
 class PlayState extends FlxState
@@ -11,6 +12,7 @@ class PlayState extends FlxState
 
 	public var state : Int;
 
+	public var bubbleColors : Array<Int>;
 	public var bubbles : FlxTypedGroup<Bubble>;
 	
 	public var grid : BubbleGrid;
@@ -26,14 +28,20 @@ class PlayState extends FlxState
 	{
 		super.create();
 		
-		bubbles = new FlxTypedGroup<Bubble>();
-		add(bubbles);
-		
 		grid = new BubbleGrid(0, 0, FlxG.width, FlxG.height - 32);
 		add(grid);
 		
+		bubbles = new FlxTypedGroup<Bubble>();
+		add(bubbles);
+		
 		cursor = new PlayerCursor(FlxG.width / 2 - 16, FlxG.height - 32);
 		add(cursor);
+		
+		/*var debugBubble : Bubble = new Bubble(0, 0, this, 0xFFFFFFFF);
+		debugBubble.state = Bubble.StateDebug;
+		add(debugBubble);*/
+		
+		bubbleColors = [0xFFFF5151, 0xFF51FF51, 0xFF5151FF, 0xFFFFFF51];
 		
 		generateBubble();
 		state = StateAiming;
@@ -72,12 +80,6 @@ class PlayState extends FlxState
 	
 	public function onWaitingState()
 	{
-		/*if (!bubble.inWorldBounds())
-		{
-			bubble.destroy();
-			generateBubble();
-			state = StateAiming;
-		}*/
 	}
 	
 	public function onBubbleStop()
@@ -91,8 +93,13 @@ class PlayState extends FlxState
 	
 	public function generateBubble()
 	{
+		remove(bubble);
+		bubble = null;
+		
+		var nextColor : Int = FlxRandom.getObject(bubbleColors);
+		
 		bubble = new Bubble(cursor.x + cursor.aimOrigin.x - 8, 
-							cursor.y + cursor.aimOrigin.y - 8, this, 0xFF5151FF);
+							cursor.y + cursor.aimOrigin.y - 8, this, nextColor);
 		add(bubble);
 	}
 }

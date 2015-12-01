@@ -1,15 +1,18 @@
 package;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxSpriteUtil;
+import flixel.group.FlxTypedGroup;
 
 class Bubble extends FlxSprite
 {
 	public static var StateAiming : Int = 0;
 	public static var StateFlying : Int = 1;
 	public static var StateIdling : Int = 2;
+	public static var StateDebug  : Int = 3;
 	
 	public var Speed : Float = 200;
 	public var Size : Float = 9;
@@ -27,7 +30,9 @@ class Bubble extends FlxSprite
 		super(X, Y);
 		
 		makeGraphic(20, 20, 0x00000000);
-		FlxSpriteUtil.drawCircle(this, 10, 10, Size, Color);
+		FlxSpriteUtil.drawCircle(this, 10, 10, Size, 0xFFFFFFFF);
+		
+		color = Color;
 		
 		world = World;
 		grid = world.grid;
@@ -50,12 +55,19 @@ class Bubble extends FlxSprite
 				grid.getCellAt(x, y);
 				
 				// Bounce off walls
-				if (x - HalfSize <= grid.bounds.left || x + HalfSize >= grid.bounds.right)
+				if (x - Size <= grid.bounds.left || x + Size >= grid.bounds.right)
 					velocity.x *= -1;
-					
+				
+				// Stick to the ceiling
 				if (y - HalfSize <= grid.bounds.top)
 				{
 					onHitCeiling();
+				}
+				else
+				// Stick to the bubble mass
+				if (checkCollisionWithBubbles())
+				{
+					onHitBubbles();
 				}
 				
 			case Bubble.StateIdling:
@@ -66,8 +78,8 @@ class Bubble extends FlxSprite
 				// Positioning yourself slowly
 				if (Math.abs(x - cellPosition.x) > 1 || Math.abs(y - cellPosition.y) > 1)
 				{
-					x = FlxMath.lerp(x, cellPosition.x, 0.5);
-					y = FlxMath.lerp(y, cellPosition.y, 0.5);
+					x = FlxMath.lerp(x, cellPosition.x, 0.25);
+					y = FlxMath.lerp(y, cellPosition.y, 0.25);
 				}
 				else
 				{
@@ -75,6 +87,16 @@ class Bubble extends FlxSprite
 					y = cellPosition.y;
 				}
 				
+			case Bubble.StateDebug:
+				
+				var mousePos : FlxPoint = FlxG.mouse.getWorldPosition();
+				x = mousePos.x;
+				y = mousePos.y;
+		
+				if (checkCollisionWithBubbles())
+					alpha = 0.4;
+				else
+					alpha = 1;
 		}
 	
 		super.update();
@@ -95,13 +117,52 @@ class Bubble extends FlxSprite
 	
 	public function onHitCeiling()
 	{
-		// Rest!
-		state = StateIdling;
+		onHitSomething();
+	}
+	
+	public function onHitBubbles()
+	{
+		onHitSomething();
+	}
+	
+	public function onHitSomething()
+	{
+		if (state == StateFlying)
+		{
+			// Rest!
+			state = StateIdling;
+			
+			// Fetch your idling place
+			cellPosition = grid.getCenterOfCellAt(x, y);
+			
+			// And notify
+			world.onBubbleStop();
+		}
+	}
+	
+	public function checkCollisionWithBubbles() : Bool
+	{
+		var bubbles : FlxTypedGroup<Bubble> = world.bubbles;
+		for (bubble in bubbles)
+		{
+			if (bubble.touches(this))
+				return true;
+		}
 		
-		// Fetch your idling place
-		cellPosition = grid.getCenterOfCellAt(x, y);
-		
-		// And notify
-		world.onBubbleStop();
+		return false;
+	}
+	
+	public function touches(bubble : Bubble) : Bool
+	{
+		var deltaXSquared : Float = x - bubble.x;
+		deltaXSquared *= deltaXSquared;
+		var deltaYSquared : Float = y - bubble.y;
+		deltaYSquared *= deltaYSquared;
+
+		// Calculate the sum of the radii, then square it
+		var sumRadiiSquared : Float = Size + bubble.Size; 
+		sumRadiiSquared *= sumRadiiSquared;
+
+		return (deltaXSquared + deltaYSquared <= sumRadiiSquared);
 	}
 }
