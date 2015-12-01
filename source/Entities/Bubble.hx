@@ -21,13 +21,15 @@ class Bubble extends FlxSprite
 	public var world : PlayState;
 	public var grid : BubbleGrid;
 	
+	public var colorIndex : Int;
+
 	public var state : Int;
 	
 	public var lastPosition : FlxPoint;
 	public var cellPosition : FlxPoint;
 	public var cellCenterPosition : FlxPoint;
 	
-	public function new(X : Float, Y : Float, World : PlayState, Color : Int)
+	public function new(X : Float, Y : Float, World : PlayState, ColorIndex : Int)
 	{
 		super(X, Y);
 		
@@ -35,10 +37,11 @@ class Bubble extends FlxSprite
 		FlxSpriteUtil.drawCircle(this, 10, 10, Size, 0xFFFFFFFF);
 		offset.set(0, 0);
 		
-		color = Color;
-		
 		world = World;
 		grid = world.grid;
+
+		colorIndex = ColorIndex;
+		color = world.bubbleColors[colorIndex];
 		
 		cellPosition = new FlxPoint();
 		lastPosition = new FlxPoint();

@@ -151,41 +151,55 @@ class BubbleGrid extends FlxObject
 		var processed : Array<Bubble> = [bubble];
 		
 		var set : Array<Bubble> = [bubble];
-		
+		var targetColorIndex : Int = bubble.colorIndex;
+
 		// Temporary variables
 		var current : Bubble;
 		var neighbour : Bubble;
 		var adjacentPositions : Array<FlxPoint>;
 		var position : FlxPoint;
-		var color : Int;
-		
+		var colorIndex : Int;
+
 		while (set.length > 0)
 		{
 			current = set.shift();
+
+			processed.push(current);
 			
 			position = current.cellPosition;
-			color = current.color;
+			colorIndex = current.colorIndex;
+
+			trace(">>> Bubble@(" + position.x + ", " + position.y + "): " + colorIndex);
 			
 			adjacentPositions = getAdjacentPositions(position);
 			
 			for (adjPos in adjacentPositions)
 			{
 				neighbour = getData(adjPos.x, adjPos.y);
+				var deltaX : Float = adjPos.x - position.x;
+				var deltaY : Float = adjPos.y -  position.y;
+
 				if (neighbour != null)
 				{
-					if (neighbour.color == color)
+					trace("At " + deltaX + ", " + deltaY + ": " + (neighbour == null ? "null" : "" + neighbour.colorIndex));
+
+					if (neighbour.colorIndex == targetColorIndex)
 					{
 						if (bubbles.indexOf(neighbour) < 0)
 							bubbles.push(neighbour);
 						
 						if (processed.indexOf(neighbour) < 0)
-							processed.push(neighbour);
+							set.push(neighbour);
 					}
 				}
 			}
+
+			trace("Finished processing " + position);
 			
 			clearAdjacentPositions(adjacentPositions);
 		}
+
+		trace("==============\n");
 		
 		return bubbles;
 	}
@@ -195,8 +209,13 @@ class BubbleGrid extends FlxObject
 		var x : Float = pos.x;
 		var y : Float = pos.y;
 		
-		return [FlxPoint.get(x  , y-1), FlxPoint.get(x-1, y-1), FlxPoint.get(x-1, y  ),
-				FlxPoint.get(x+1, y-1), FlxPoint.get(x+1, y  ), FlxPoint.get(x  , y+1)];
+		/*return [FlxPoint.get(x  , y-1), FlxPoint.get(x+1, y-1), 
+				FlxPoint.get(x-1, y  ), FlxPoint.get(x+1, y  ),	
+				FlxPoint.get(x-1, y+1), FlxPoint.get(x  , y+1)];*/
+
+		return [FlxPoint.get(x  , y-1), FlxPoint.get(x+1, y-1), 
+				FlxPoint.get(x-1, y  ), FlxPoint.get(x+1, y  ),	
+				FlxPoint.get(x  , y+1), FlxPoint.get(x+1, y+1)];
 	}
 
 	function clearAdjacentPositions(positions : Array<FlxPoint>)

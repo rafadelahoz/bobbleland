@@ -42,7 +42,8 @@ class PlayState extends FlxState
 		debugBubble.state = Bubble.StateDebug;
 		add(debugBubble);*/
 		
-		bubbleColors = [0xFFFF5151, 0xFF51FF51, 0xFF5151FF, 0xFFFFFF51];
+		bubbleColors = [0xFFFFFFFF, 0xFF000000];
+		// bubbleColors = [0xFFFF5151, 0xFF51FF51, 0xFF5151FF, 0xFFFFFF51];
 		
 		generateBubble();
 		state = StateAiming;
@@ -97,7 +98,7 @@ class PlayState extends FlxState
 		{
 			for (bub in condemned)
 			{
-				bubbles.remove(bub);
+				// bubbles.remove(bub);
 				bub.kill();
 			}
 		}
@@ -112,7 +113,10 @@ class PlayState extends FlxState
 		remove(bubble);
 		bubble = null;
 		
-		var nextColor : Int = FlxRandom.getObject(bubbleColors);
+		trace(bubbleColors);
+
+		// var nextColor : Int = FlxRandom.getObject(bubbleColors);
+		var nextColor : Int = FlxRandom.intRanged(0, bubbleColors.length-1);
 		
 		bubble = new Bubble(cursor.x + cursor.aimOrigin.x - 8, 
 							cursor.y + cursor.aimOrigin.y - 8, this, nextColor);
@@ -130,6 +134,24 @@ class PlayState extends FlxState
 			b.state = Bubble.StateFlying;
 			b.cellPosition.set(cell.x, cell.y);
 			b.onHitSomething(false);
+		}
+
+		if (grid.bounds.containsFlxPoint(mouse))
+		{
+			var cell : FlxPoint = grid.getCellAt(mouse.x, mouse.y);
+			var testBub : Bubble = grid.getData(cell.x, cell.y);
+			if (testBub != null)
+			{
+				var group : Array<Bubble> = grid.locateBubbleGroup(testBub);
+				if (group.length > 0)
+				{
+					trace("group: " + group.length);
+					for (bub in group)
+					{
+						bub.alpha = 0.5;
+					}
+				}
+			}
 		}
 	}
 }
