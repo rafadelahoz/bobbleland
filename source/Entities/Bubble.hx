@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxTimer;
+import flixel.util.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 import flixel.group.FlxTypedGroup;
 import flixel.tweens.FlxTween;
@@ -27,6 +28,7 @@ class Bubble extends FlxSprite
 	public var colorIndex : Int;
 
 	public var state : Int;
+	public var falling : Bool;
 	
 	public var lastPosition : FlxPoint;
 	public var cellPosition : FlxPoint;
@@ -48,14 +50,11 @@ class Bubble extends FlxSprite
 		
 		cellPosition = new FlxPoint();
 		lastPosition = new FlxPoint();
+		cellCenterPosition = new FlxPoint();
 		
 		state = StateAiming;
-	}
-	
-	override public function kill()
-	{
-		alpha = 0.2;
-		trace("oh nO");
+		
+		falling = false;
 	}
 	
 	override public function update()
@@ -99,19 +98,31 @@ class Bubble extends FlxSprite
 				
 			case Bubble.StateIdling, Bubble.StatePopping:
 				
-				// Rest
-				velocity.set();
-				
-				// Positioning yourself slowly
-				if (Math.abs(x - cellCenterPosition.x) > 1 || Math.abs(y - cellCenterPosition.y) > 1)
+				if (!falling)
 				{
-					x = FlxMath.lerp(x, cellCenterPosition.x, 0.25);
-					y = FlxMath.lerp(y, cellCenterPosition.y, 0.25);
+					// Rest
+					velocity.set();
+					
+					// Positioning yourself slowly
+					if (Math.abs(x - cellCenterPosition.x) > 1 || Math.abs(y - cellCenterPosition.y) > 1)
+					{
+						x = FlxMath.lerp(x, cellCenterPosition.x, 0.25);
+						y = FlxMath.lerp(y, cellCenterPosition.y, 0.25);
+					}
+					else
+					{
+						x = cellCenterPosition.x;
+						y = cellCenterPosition.y;
+					}
 				}
 				else
 				{
-					x = cellCenterPosition.x;
-					y = cellCenterPosition.y;
+					acceleration.y = 400;
+					
+					if (y > FlxG.height)
+					{
+						onDeath();
+					}
 				}
 				
 			case Bubble.StateDebug:
@@ -126,7 +137,8 @@ class Bubble extends FlxSprite
 					alpha = 1;
 		}
 	
-		super.update();
+		if (alive)
+			super.update();
 	}
 	
 	public function shoot(direction : Float)
@@ -194,6 +206,14 @@ class Bubble extends FlxSprite
 		}
 	}
 	
+	public function onDeath()
+	{
+		velocity.set();
+		world.bubbles.remove(this);
+		this.kill();
+		this.destroy();
+	}
+	
 	public function triggerPop()
 	{
 		if (state != Bubble.StatePopping)
@@ -212,13 +232,30 @@ class Bubble extends FlxSprite
 								new FlxTimer(waitTime, function(__t:FlxTimer) {
 									FlxTween.tween(this.scale, {x : 3, y : 3}, popTime);
 									FlxTween.tween(this, {alpha : 0}, popTime, { complete : function(___t:FlxTween) {
-										world.bubbles.remove(this);
-										this.kill();
-										this.destroy();
+										onDeath();
 									}});
 								});
 							}
 						});
+		}
+	}
+	
+	public function triggerFall()
+	{
+		if (state != Bubble.StatePopping)
+		{
+			// Start your death procedure
+			state = Bubble.StatePopping;
+			
+			// Clear grid data
+			grid.setData(cellPosition.x, cellPosition.y, null);
+			
+			var jumpWaitTime : Float = 1;
+			new FlxTimer(jumpWaitTime, function (_t:FlxTimer) {
+				velocity.y = -100;
+				velocity.x = FlxRandom.intRanged(-20, 20);
+				falling = true;
+			});
 		}
 	}
 	
@@ -236,6 +273,9 @@ class Bubble extends FlxSprite
 	
 	public function touches(bubble : Bubble) : Bool
 	{
+		if (state == StatePopping || bubble.state == StatePopping)
+			return false;
+	
 		var squish : Float = 0.85;
 	
 		var deltaXSquared : Float = (x + width/2) - (bubble.x + width/2);
@@ -258,5 +298,20 @@ class Bubble extends FlxSprite
 	public static function compare(A : FlxPoint, B : FlxPoint) : Bool
 	{
 		return A.x == B.x && A.y == B.y;
+	}
+	
+	public static function CreateAt(X : Float, Y : Float, ColorIndex : Int, World : PlayState) : Bubble
+	{
+		var cellCenter : FlxPoint = World.grid.getCellCenter(Std.int(X), Std.int(Y));
+		
+		var bubble : Bubble = new Bubble(cellCenter.x, cellCenter.y, World, ColorIndex);
+		bubble.cellPosition.set(X, Y);
+		bubble.cellCenterPosition.set(cellCenter.x, cellCenter.y);
+		bubble.state = StateIdling;
+		
+		World.grid.setData(X, Y, bubble);
+		World.bubbles.add(bubble);
+		
+		return bubble;
 	}
 }

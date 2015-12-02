@@ -39,8 +39,6 @@ class PlayState extends FlxState
 		cursor = new PlayerCursor(FlxG.width / 2 - 16, FlxG.height - 32);
 		add(cursor);
 		
-		
-		
 		bubbleColors = [0xFFFF3131, 0xFF31FF31];
 		// bubbleColors = [0xFFFF5151, 0xFF51FF51, 0xFF5151FF, 0xFFFFFF51];
 		
@@ -101,6 +99,13 @@ class PlayState extends FlxState
 			{
 				bub.triggerPop();
 			}
+			
+			// If there was some destruction, check for disconnections
+			var disconnected : Array<Bubble> = grid.locateIsolatedBubbles();
+			for (bub in disconnected)
+			{
+				bub.triggerFall();
+			}
 		}
 		
 		// And generate a new one
@@ -113,14 +118,16 @@ class PlayState extends FlxState
 		remove(bubble);
 		bubble = null;
 		
-		trace(bubbleColors);
-
-		// var nextColor : Int = FlxRandom.getObject(bubbleColors);
-		var nextColor : Int = FlxRandom.intRanged(0, bubbleColors.length-1);
+		var nextColor : Int = getNextColor();
 		
 		bubble = new Bubble(cursor.x + cursor.aimOrigin.x - 8, 
 							cursor.y + cursor.aimOrigin.y - 8, this, nextColor);
 		add(bubble);
+	}
+	
+	public function getNextColor()
+	{
+		return FlxRandom.intRanged(0, bubbleColors.length-1);
 	}
 	
 	var mouseCell : FlxPoint;
@@ -135,6 +142,12 @@ class PlayState extends FlxState
 		mouseCell = new FlxPoint();
 		label = new FlxText(4, FlxG.height - 16);
 		add(label);
+		
+		// Generate inital row
+		for (col in 0...grid.columns)
+		{
+			Bubble.CreateAt(col, 0, getNextColor(), this);
+		}
 	}
 	
 	public function handleDebugRoutines()
@@ -146,26 +159,37 @@ class PlayState extends FlxState
 		{
 			if (grid.getData(cell.x, cell.y) != null)
 			{
+				bubbles.remove(grid.getData(cell.x, cell.y));
 				grid.getData(cell.x, cell.y).destroy();
 				grid.setData(cell.x, cell.y, null);
 			}
 			else
 			{
-				var b : Bubble = new Bubble(mouse.x, mouse.y, this, (FlxG.keys.justPressed.ONE ? 0 : 1));
-				b.state = Bubble.StateFlying;
-				b.cellPosition.set(cell.x, cell.y);
-				b.cellCenterPosition = grid.getCellCenter(Std.int(cell.x), Std.int(cell.y));
-				grid.setData(cell.x, cell.y, b);	
+				Bubble.CreateAt(cell.x, cell.y, (FlxG.keys.justPressed.ONE ? 0 : 1), this);
 			}
 		}
 
 		if (FlxG.mouse.justPressed && grid.bounds.containsFlxPoint(mouse))
 		{
 			var testBub : Bubble = grid.getData(cell.x, cell.y);
-			if (testBub != null)
+			/*if (testBub != null)
 			{
 				trace("("+testBub.cellPosition.x + ", " + testBub.cellPosition.y + ")=" + testBub.colorIndex);
 				var group : Array<Bubble> = grid.locateBubbleGroup(testBub);
+				if (group.length > 0)
+				{
+					trace("group: " + group.length);
+					for (bub in group)
+					{
+						bub.alpha = 0.5;
+					}
+				}
+			}*/
+			
+			if (testBub != null)
+			{
+				trace("("+testBub.cellPosition.x + ", " + testBub.cellPosition.y + ")=" + testBub.colorIndex);
+				var group : Array<Bubble> = grid.getConnectedBubbles(testBub);
 				if (group.length > 0)
 				{
 					trace("group: " + group.length);

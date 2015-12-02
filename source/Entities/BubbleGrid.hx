@@ -168,7 +168,7 @@ class BubbleGrid extends FlxObject
 		var position : FlxPoint;
 		var colorIndex : Int;
 
-		trace("\n======= Begin from " + bubble.cellPosition + "# " + bubble.colorIndex + " =======");
+		// trace("\n======= Begin from " + bubble.cellPosition + "# " + bubble.colorIndex + " =======");
 		
 		while (set.length > 0)
 		{
@@ -179,7 +179,7 @@ class BubbleGrid extends FlxObject
 			position = current.cellPosition;
 			colorIndex = current.colorIndex;
 
-			trace(">>> Bubble@(" + position.x + ", " + position.y + "): " + colorIndex);
+			// trace(">>> Bubble@(" + position.x + ", " + position.y + "): " + colorIndex);
 			
 			adjacentPositions = getAdjacentPositions(position);
 			
@@ -191,39 +191,126 @@ class BubbleGrid extends FlxObject
 
 				if (neighbour != null)
 				{
-					var msg : String = "At " + adjPos.x + ", " + adjPos.y + ": " + (neighbour == null ? "null" : "" + neighbour.colorIndex);
+					/*var msg : String = "At " + adjPos.x + ", " + adjPos.y + ": " + (neighbour == null ? "null" : "" + neighbour.colorIndex);*/
 
 					if (neighbour.colorIndex == targetColorIndex)
 					{
-						msg += " [Colour matches] ";
+						// msg += " [Colour matches] ";
 						
 						if (bubbles.indexOf(neighbour) < 0)
 						{
-							msg += "[Collected] ";
+							// msg += "[Collected] ";
 							bubbles.push(neighbour);
 						}
 						
 						if (processed.indexOf(neighbour) < 0)
 						{
-							msg += "[ToBeProc]";
+							// msg += "[ToBeProc]";
 							set.push(neighbour);
 						}
 					}
 					
-					trace(msg);
+					// trace(msg);
 				}
-				else
-					trace("Ignoring position (" + adjPos.x + ", " + adjPos.y + ")");
+				/*else
+					trace("Ignoring position (" + adjPos.x + ", " + adjPos.y + ")");*/
 			}
 
-			trace("<<< - " + set);
+			// trace("<<< - " + set);
 			
 			clearAdjacentPositions(adjacentPositions);
 		}
 
-		trace("==============\n");
+		// trace("==============\n");
 		
 		return bubbles;
+	}
+	
+	public function locateIsolatedBubbles() : Array<Bubble>
+	{
+		var isolated : Array<Bubble> = [];
+		var safe : Array<Bubble> = [];
+		
+		// Temporary variables
+		var current : Bubble;
+		
+		for (row in 0...rows)
+		{
+			for (col in 0...columns)
+			{
+				current = getData(col, row);
+				if (current != null && !contains(safe, current) && !contains(isolated, current))
+				{
+					var connected : Array<Bubble> = getConnectedBubbles(current);
+					connected.push(current);
+					
+					if (isGroupSafe(connected))
+					{
+						safe = safe.concat(connected);
+					}
+					else
+					{
+						isolated = isolated.concat(connected);
+					}
+				}
+			}
+		}
+		
+		return isolated;
+	}
+	
+	function isGroupSafe(group : Array<Bubble>) : Bool
+	{
+		for (bubble in group)
+		{
+			if (bubble.cellPosition.y == 0)
+				return true;
+		}
+		
+		return false;
+	}
+	
+	public function getConnectedBubbles(bubble : Bubble, ?connected : Array<Bubble> = null) : Array<Bubble>
+	{
+		if (connected == null)
+			connected = [];
+	
+		var tab : String = "";
+		for (i in 0...connected.length)
+			tab += " ";
+	
+		var position : FlxPoint = bubble.cellPosition;
+		
+		var adjacentPositions : Array<FlxPoint> = getAdjacentPositions(position);
+		
+		for (adjPos in adjacentPositions)
+		{
+			var neighbour : Bubble = getData(adjPos.x, adjPos.y);
+			var deltaX : Float = adjPos.x - position.x;
+			var deltaY : Float = adjPos.y -  position.y;
+
+			if (neighbour != null && !contains(connected, neighbour))
+			{
+				connected.push(neighbour);
+			
+				getConnectedBubbles(neighbour, connected);
+			}
+		}
+	
+		return connected;
+	}
+	
+	public function contains(list : Array<Bubble>, bubble : Bubble) : Bool
+	{
+		for (bub in list)
+		{
+			if (Bubble.compare(bubble.cellPosition, bub.cellPosition) && bubble.colorIndex == bub.colorIndex)
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	function getAdjacentPositions(pos : FlxPoint) : Array<FlxPoint>
@@ -248,6 +335,18 @@ class BubbleGrid extends FlxObject
 		{
 			point.put();
 		}
+	}
+	
+	public function printList(bubbles : Array<Bubble>) : String
+	{
+		var list : String = "";
+		
+		for (bubble in bubbles)
+		{
+			list += "(" + bubble.cellPosition.x + ", " + bubble.cellPosition.y + ")#" + bubble.colorIndex + ", ";
+		}
+		
+		return list;
 	}
 	
 	public function dumpData()
