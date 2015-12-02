@@ -4,15 +4,18 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
+import flixel.util.FlxTimer;
 import flixel.util.FlxSpriteUtil;
 import flixel.group.FlxTypedGroup;
+import flixel.tweens.FlxTween;
 
 class Bubble extends FlxSprite
 {
 	public static var StateAiming : Int = 0;
 	public static var StateFlying : Int = 1;
 	public static var StateIdling : Int = 2;
-	public static var StateDebug  : Int = 3;
+	public static var StatePopping : Int = 3;
+	public static var StateDebug  : Int = 4;
 	
 	public var Speed : Float = 400;
 	public var Size : Float = 9;
@@ -94,7 +97,7 @@ class Bubble extends FlxSprite
 					}
 				}
 				
-			case Bubble.StateIdling:
+			case Bubble.StateIdling, Bubble.StatePopping:
 				
 				// Rest
 				velocity.set();
@@ -188,6 +191,34 @@ class Bubble extends FlxSprite
 				// And notify
 				world.onBubbleStop();
 			}
+		}
+	}
+	
+	public function triggerPop()
+	{
+		if (state != Bubble.StatePopping)
+		{
+			// Start your death procedure
+			state = Bubble.StatePopping;
+			
+			// Clear grid data
+			grid.setData(cellPosition.x, cellPosition.y, null);
+			
+			var crunchTime : Float = 0.5;
+			var waitTime : Float = 0.5;
+			var popTime : Float = 0.15;
+			FlxTween.tween(this.scale, {x : 0.5, y : 0.5}, crunchTime, 
+							{ complete : function(_t:FlxTween) {
+								new FlxTimer(waitTime, function(__t:FlxTimer) {
+									FlxTween.tween(this.scale, {x : 3, y : 3}, popTime);
+									FlxTween.tween(this, {alpha : 0}, popTime, { complete : function(___t:FlxTween) {
+										world.bubbles.remove(this);
+										this.kill();
+										this.destroy();
+									}});
+								});
+							}
+						});
 		}
 	}
 	

@@ -99,8 +99,7 @@ class PlayState extends FlxState
 		{
 			for (bub in condemned)
 			{
-				// bubbles.remove(bub);
-				bub.kill();
+				bub.triggerPop();
 			}
 		}
 		
