@@ -39,7 +39,7 @@ class Bubble extends FlxSprite
 		super(X, Y);
 		
 		makeGraphic(20, 20, 0x00000000);
-		FlxSpriteUtil.drawCircle(this, 10, 10, 5, 0xFFFFFFFF);
+		FlxSpriteUtil.drawCircle(this, 10, 10, Size, 0xFFFFFFFF);
 		offset.set(0, 0);
 		
 		world = World;
@@ -72,7 +72,7 @@ class Bubble extends FlxSprite
 			case Bubble.StateFlying:
 				
 				// Bounce off walls
-				if (x + width/2 - Size * 1.5 <= grid.bounds.left || x + width/2 + Size * 1.5 >= grid.bounds.right)
+				if (x + width/2 - Size * 1 <= grid.bounds.left || x + width/2 + Size * 1 >= grid.bounds.right)
 					velocity.x *= -1;
 				
 				// Stick to the ceiling
@@ -196,7 +196,7 @@ class Bubble extends FlxSprite
 			
 			// Store your data
 			grid.setData(cellPosition.x, cellPosition.y, this);
-			trace("Storing bubble at " + cellPosition.x + ", " + cellPosition.y + " with " + colorIndex);
+			// trace("Storing bubble at " + cellPosition.x + ", " + cellPosition.y + " with " + colorIndex);
 			
 			if (!debug)
 			{	

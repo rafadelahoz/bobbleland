@@ -120,8 +120,8 @@ class PlayState extends FlxState
 		
 		var nextColor : Int = getNextColor();
 		
-		bubble = new Bubble(cursor.x + cursor.aimOrigin.x - 8, 
-							cursor.y + cursor.aimOrigin.y - 8, this, nextColor);
+		bubble = new Bubble(cursor.x + cursor.aimOrigin.x - 9, 
+							cursor.y + cursor.aimOrigin.y - 9, this, nextColor);
 		add(bubble);
 	}
 	
