@@ -30,7 +30,7 @@ class PlayerCursor extends FlxSprite
 		aimAngle = 0;
 		aimOrigin = FlxPoint.get(width / 2, height / 2);
 		
-		label = new FlxText(x + aimOrigin.x, y + aimOrigin.y + 2, "");
+		label = new FlxText(x + width, y + aimOrigin.y + 2, "");
 	}
 	
 	override public function update()

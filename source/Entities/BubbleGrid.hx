@@ -10,6 +10,8 @@ import flixel.util.FlxSpriteUtil;
 
 class BubbleGrid extends FlxObject
 {
+	public var world : PlayState;
+
 	public var bounds : FlxRect;
 	
 	public var columns : Int;
@@ -22,9 +24,11 @@ class BubbleGrid extends FlxObject
 	
 	public var data : Array<Array<Bubble>>;
 	
-	public function new(X : Float, Y : Float, Width : Float, Height : Float)
+	public function new(X : Float, Y : Float, Width : Float, Height : Float, World : PlayState)
 	{
 		super(X, Y, Width, Height);
+		
+		world = World;
 		
 		bounds = new FlxRect(X, Y, Width, Height);
 		columns = 8;
@@ -35,13 +39,10 @@ class BubbleGrid extends FlxObject
 		
 		highlightedCell = new FlxPoint(-1, -1);
 		
-		// trace(bounds.width + "/" + columns + "+0.5 = " + cellSize);
+		data = [];
+		clearData();
 		
 		renderCanvas();
-		
-		data = [];
-		
-		clearData();
 	}
 	
 	override public function update()
@@ -63,15 +64,16 @@ class BubbleGrid extends FlxObject
 	
 	public function getCellAt(X : Float, Y : Float) : FlxPoint
 	{
-		var yy : Int = Std.int((Y - bounds.y + halfCell) / cellSize);
-		var xx : Int = Std.int(((X - bounds.x + halfCell) - (yy % 2)*halfCell)/ cellSize);
+		var yy : Int = Std.int((Y - bounds.y) / cellSize);
+		var xx : Int = Std.int(((X - bounds.x) - (yy % 2)*halfCell)/ cellSize);
 		
-		xx = Std.int(FlxMath.bound(xx, 0, columns-1));
-		yy = Std.int(FlxMath.bound(yy, 0, rows-1));
+		xx = Std.int(FlxMath.bound(xx, 0, columns));
+		yy = Std.int(FlxMath.bound(yy, 0, rows));
 		
-		var highlightedCell : FlxPoint = FlxPoint.get(xx, yy);
+		highlightedCell.set(xx, yy);
 		
-		return highlightedCell;
+		var cell : FlxPoint = FlxPoint.get(xx, yy);
+		return cell;
 	}
 	
 	public function getCellCenter(column : Int, row : Int) : FlxPoint
@@ -108,6 +110,12 @@ class BubbleGrid extends FlxObject
 				if (highlightedCell.x == col && highlightedCell.y == row)
 				{
 					ccolor = 0xFFFF5151;
+				}
+				else if (getData(col, row) != null)
+				{
+					ccolor = world.bubbleColors[getData(col, row).colorIndex];
+					ccolor &= 0x00FFFFFF;
+					ccolor |= 0x40000000;
 				}
 			
 				FlxSpriteUtil.drawRect(canvas, col * cellSize + cellOffset, row * cellSize, cellSize, cellSize, ccolor, lineStyle);
@@ -160,6 +168,8 @@ class BubbleGrid extends FlxObject
 		var position : FlxPoint;
 		var colorIndex : Int;
 
+		trace("\n======= Begin from " + bubble.cellPosition + "# " + bubble.colorIndex + " =======");
+		
 		while (set.length > 0)
 		{
 			current = set.shift();
@@ -181,20 +191,32 @@ class BubbleGrid extends FlxObject
 
 				if (neighbour != null)
 				{
-					trace("At " + deltaX + ", " + deltaY + ": " + (neighbour == null ? "null" : "" + neighbour.colorIndex));
+					var msg : String = "At " + adjPos.x + ", " + adjPos.y + ": " + (neighbour == null ? "null" : "" + neighbour.colorIndex);
 
 					if (neighbour.colorIndex == targetColorIndex)
 					{
+						msg += " [Colour matches] ";
+						
 						if (bubbles.indexOf(neighbour) < 0)
+						{
+							msg += "[Collected] ";
 							bubbles.push(neighbour);
+						}
 						
 						if (processed.indexOf(neighbour) < 0)
+						{
+							msg += "[ToBeProc]";
 							set.push(neighbour);
+						}
 					}
+					
+					trace(msg);
 				}
+				else
+					trace("Ignoring position (" + adjPos.x + ", " + adjPos.y + ")");
 			}
 
-			trace("Finished processing " + position);
+			trace("<<< - " + set);
 			
 			clearAdjacentPositions(adjacentPositions);
 		}
@@ -206,16 +228,18 @@ class BubbleGrid extends FlxObject
 	
 	function getAdjacentPositions(pos : FlxPoint) : Array<FlxPoint>
 	{
-		var x : Float = pos.x;
-		var y : Float = pos.y;
+		var x : Int = Std.int(pos.x);
+		var y : Int = Std.int(pos.y);
 		
-		/*return [FlxPoint.get(x  , y-1), FlxPoint.get(x+1, y-1), 
-				FlxPoint.get(x-1, y  ), FlxPoint.get(x+1, y  ),	
-				FlxPoint.get(x-1, y+1), FlxPoint.get(x  , y+1)];*/
-
-		return [FlxPoint.get(x  , y-1), FlxPoint.get(x+1, y-1), 
-				FlxPoint.get(x-1, y  ), FlxPoint.get(x+1, y  ),	
-				FlxPoint.get(x  , y+1), FlxPoint.get(x+1, y+1)];
+		if (y % 2 == 1)
+			return [FlxPoint.get(x  , y-1), FlxPoint.get(x+1, y-1), 
+					FlxPoint.get(x-1, y  ), FlxPoint.get(x+1, y  ),	
+					FlxPoint.get(x  , y+1), FlxPoint.get(x+1, y+1)];
+		else
+			return [FlxPoint.get(x-1, y-1), FlxPoint.get(x  , y-1), 
+					FlxPoint.get(x-1, y  ), FlxPoint.get(x+1, y  ),	
+					FlxPoint.get(x-1, y+1), FlxPoint.get(x  , y+1)];
+		
 	}
 
 	function clearAdjacentPositions(positions : Array<FlxPoint>)
@@ -224,5 +248,29 @@ class BubbleGrid extends FlxObject
 		{
 			point.put();
 		}
+	}
+	
+	public function dumpData()
+	{
+		var dump : String = "\n";
+		for (row in 0...rows)
+		{
+			for (col in 0...columns)
+			{
+				var cell : Bubble = getData(col, row);
+				if (cell == null)
+				{
+					dump += "[ ]";
+				}
+				else
+				{
+					dump += "[" + cell.colorIndex + "]";
+				}
+			}
+			
+			dump += "\n";
+		}
+		
+		trace(dump);
 	}
 }

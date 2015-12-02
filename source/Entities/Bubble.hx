@@ -34,7 +34,7 @@ class Bubble extends FlxSprite
 		super(X, Y);
 		
 		makeGraphic(20, 20, 0x00000000);
-		FlxSpriteUtil.drawCircle(this, 10, 10, Size, 0xFFFFFFFF);
+		FlxSpriteUtil.drawCircle(this, 10, 10, 5, 0xFFFFFFFF);
 		offset.set(0, 0);
 		
 		world = World;
@@ -78,20 +78,20 @@ class Bubble extends FlxSprite
 				{
 					onHitCeiling();
 				}
-				else
-				
 				// Stick to the bubble mass
-				if (checkCollisionWithBubbles())
+				else if (checkCollisionWithBubbles())
 				{
 					onHitBubbles();
 				}
-				
-				// Remember your way
-				var currentPosition : FlxPoint = grid.getCellAt(x, y);
-				if (!compare(currentPosition, cellPosition))
+				else
 				{
-					lastPosition.set(cellPosition.x, cellPosition.y);
-					cellPosition.set(currentPosition.x, currentPosition.y);
+					// Remember your way
+					var currentPosition : FlxPoint = getCurrentCell();
+					if (!compare(currentPosition, cellPosition))
+					{
+						lastPosition.set(cellPosition.x, cellPosition.y);
+						cellPosition.set(currentPosition.x, currentPosition.y);
+					}
 				}
 				
 			case Bubble.StateIdling:
@@ -160,9 +160,9 @@ class Bubble extends FlxSprite
 			if (useNewPosition)
 			{
 				// Fetch your idling place
-				var currentPosition : FlxPoint = grid.getCellAt(x, y);
+				var currentPosition : FlxPoint = getCurrentCell();
 				cellPosition.set(currentPosition.x, currentPosition.y);
-				cellCenterPosition = grid.getCenterOfCellAt(x, y);
+				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 			}
 			else
 			{
@@ -174,11 +174,14 @@ class Bubble extends FlxSprite
 			if (grid.getData(cellPosition.x, cellPosition.y) != null)
 			{
 				trace(cellPosition + " is already occupied, returning to " + lastPosition);
-				cellCenterPosition = grid.getCellCenter(Std.int(lastPosition.x), Std.int(lastPosition.y));
+				cellPosition.set(lastPosition.x, lastPosition.y);
+				
+				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 			}
 			
 			// Store your data
 			grid.setData(cellPosition.x, cellPosition.y, this);
+			trace("Storing bubble at " + cellPosition.x + ", " + cellPosition.y + " with " + colorIndex);
 			
 			if (!debug)
 			{	
@@ -200,22 +203,29 @@ class Bubble extends FlxSprite
 		return false;
 	}
 	
-	public static function compare(A : FlxPoint, B : FlxPoint) : Bool
-	{
-		return A.x == B.x && A.y == B.y;
-	}
-	
 	public function touches(bubble : Bubble) : Bool
 	{
+		var squish : Float = 0.85;
+	
 		var deltaXSquared : Float = (x + width/2) - (bubble.x + width/2);
 		deltaXSquared *= deltaXSquared;
 		var deltaYSquared : Float = (y + height/2) - (bubble.y + height/2);
 		deltaYSquared *= deltaYSquared;
 
 		// Calculate the sum of the radii, then square it
-		var sumRadiiSquared : Float = Size * 0.9 + bubble.Size * 0.9;
+		var sumRadiiSquared : Float = Size * squish + bubble.Size * squish;
 		sumRadiiSquared *= sumRadiiSquared;
 
 		return (deltaXSquared + deltaYSquared <= sumRadiiSquared);
+	}
+	
+	public function getCurrentCell()
+	{
+		return grid.getCellAt(x+10, y+10);
+	}
+	
+	public static function compare(A : FlxPoint, B : FlxPoint) : Bool
+	{
+		return A.x == B.x && A.y == B.y;
 	}
 }

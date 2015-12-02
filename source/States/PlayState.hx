@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.text.FlxText;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.group.FlxTypedGroup;
@@ -29,7 +30,7 @@ class PlayState extends FlxState
 	{
 		super.create();
 		
-		grid = new BubbleGrid(0, 0, FlxG.width, FlxG.height - 32);
+		grid = new BubbleGrid(0, 0, FlxG.width, FlxG.height - 32, this);
 		add(grid);
 		
 		bubbles = new FlxTypedGroup<Bubble>();
@@ -38,15 +39,15 @@ class PlayState extends FlxState
 		cursor = new PlayerCursor(FlxG.width / 2 - 16, FlxG.height - 32);
 		add(cursor);
 		
-		/*var debugBubble : Bubble = new Bubble(0, 0, this, 0xFFFFFFFF);
-		debugBubble.state = Bubble.StateDebug;
-		add(debugBubble);*/
 		
-		bubbleColors = [0xFFFFFFFF, 0xFF000000];
+		
+		bubbleColors = [0xFFFF3131, 0xFF31FF31];
 		// bubbleColors = [0xFFFF5151, 0xFF51FF51, 0xFF5151FF, 0xFFFFFF51];
 		
 		generateBubble();
 		state = StateAiming;
+		
+		handleDebugInit();
 	}
 	
 	override public function update()
@@ -123,25 +124,48 @@ class PlayState extends FlxState
 		add(bubble);
 	}
 	
+	var mouseCell : FlxPoint;
+	var label : FlxText;
+	
+	public function handleDebugInit()
+	{
+		/*var debugBubble : Bubble = new Bubble(0, 0, this, 0xFFFFFFFF);
+		debugBubble.state = Bubble.StateDebug;
+		add(debugBubble);*/
+		
+		mouseCell = new FlxPoint();
+		label = new FlxText(4, FlxG.height - 16);
+		add(label);
+	}
+	
 	public function handleDebugRoutines()
 	{
 		var mouse : FlxPoint = FlxG.mouse.getWorldPosition();
-		if (FlxG.keys.justPressed.ONE)
+		var cell = grid.getCellAt(mouse.x, mouse.y);
+		
+		if (FlxG.keys.justPressed.ONE || FlxG.keys.justPressed.TWO)
 		{
-			var cell = grid.getCellAt(mouse.x, mouse.y);
-			
-			var b : Bubble = new Bubble(mouse.x, mouse.y, this, 0xFF5151FF);
-			b.state = Bubble.StateFlying;
-			b.cellPosition.set(cell.x, cell.y);
-			b.onHitSomething(false);
+			if (grid.getData(cell.x, cell.y) != null)
+			{
+				grid.getData(cell.x, cell.y).destroy();
+				grid.setData(cell.x, cell.y, null);
+			}
+			else
+			{
+				var b : Bubble = new Bubble(mouse.x, mouse.y, this, (FlxG.keys.justPressed.ONE ? 0 : 1));
+				b.state = Bubble.StateFlying;
+				b.cellPosition.set(cell.x, cell.y);
+				b.cellCenterPosition = grid.getCellCenter(Std.int(cell.x), Std.int(cell.y));
+				grid.setData(cell.x, cell.y, b);	
+			}
 		}
 
-		if (grid.bounds.containsFlxPoint(mouse))
+		if (FlxG.mouse.justPressed && grid.bounds.containsFlxPoint(mouse))
 		{
-			var cell : FlxPoint = grid.getCellAt(mouse.x, mouse.y);
 			var testBub : Bubble = grid.getData(cell.x, cell.y);
 			if (testBub != null)
 			{
+				trace("("+testBub.cellPosition.x + ", " + testBub.cellPosition.y + ")=" + testBub.colorIndex);
 				var group : Array<Bubble> = grid.locateBubbleGroup(testBub);
 				if (group.length > 0)
 				{
@@ -153,5 +177,14 @@ class PlayState extends FlxState
 				}
 			}
 		}
+		
+		if (FlxG.keys.justPressed.D)
+		{
+			grid.dumpData();
+		}
+		
+		mouseCell.set(cell.x, cell.y);
+		label.text = "" + cell;
+		FlxG.watch.addQuick("Cell", cell);
 	}
 }
