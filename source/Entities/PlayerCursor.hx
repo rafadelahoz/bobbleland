@@ -13,14 +13,20 @@ class PlayerCursor extends FlxSprite
 	public var Length : Float;
 	public var AngleDelta : Float;
 
+	public var world : PlayState;
+	public var enabled : Bool;
+	
 	public var aimAngle : Float;
 	public var aimOrigin : FlxPoint;
 	
 	public var label : FlxText;
 
-	public function new(X : Float, Y : Float)
+	public function new(X : Float, Y : Float, World : PlayState)
 	{
 		super(X, Y);
+		
+		world = World;
+		enabled = true;
 		
 		makeGraphic(32, 32, 0x00000000);
 		
@@ -37,21 +43,29 @@ class PlayerCursor extends FlxSprite
 	
 	override public function update()
 	{
-		var oldAngle : Float = aimAngle;
-	
-		if (FlxG.keys.pressed.LEFT)
-			aimAngle -= AngleDelta;
-		else if (FlxG.keys.pressed.RIGHT)
-			aimAngle += AngleDelta;
-			
-		aimAngle = FlxMath.bound(aimAngle, 30, 150);
-		
-		if (oldAngle != aimAngle)
+		if (enabled)
 		{
-			redraw();
-		}
+			var oldAngle : Float = aimAngle;
 		
-		label.update();
+			if (FlxG.keys.pressed.LEFT)
+				aimAngle += AngleDelta;
+			else if (FlxG.keys.pressed.RIGHT)
+				aimAngle -= AngleDelta;
+				
+			aimAngle = FlxMath.bound(aimAngle, 30, 150);
+			
+			if (oldAngle != aimAngle)
+			{
+				redraw();
+			}
+			
+			if (world.notifyAiming)
+				color = 0xFFFF5151;
+			else
+				color = 0xFFFFFFFF;
+			
+			label.update();
+		}
 		
 		super.update();
 	}
@@ -79,5 +93,15 @@ class PlayerCursor extends FlxSprite
 		FlxSpriteUtil.fill(this, 0x00000000);
 		FlxSpriteUtil.drawCircle(this, aimOrigin.x, aimOrigin.y, Length * 0.3, 0xFFFFFFFF);
 		FlxSpriteUtil.drawLine(this, aimOrigin.x, aimOrigin.y, targetX, targetY, { color : 0xFFFFFFFF, thickness: 3 });
+	}
+	
+	public function disable()
+	{
+		if (enabled)
+		{
+			enabled = false;
+			
+			// Do something with the graphic
+		}
 	}
 }

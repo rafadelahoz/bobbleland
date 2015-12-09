@@ -241,14 +241,22 @@ class Bubble extends FlxSprite
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 			}
 			
+			// Check whether we are losing
+			if (cellPosition.y >= grid.rows)
+			{
+				reposition(cellPosition.x, cellPosition.y);
+				triggerRot();
+				world.handleLosing();
+				return;
+			}
+			
 			// Store your data
 			grid.setData(cellPosition.x, cellPosition.y, this);
-			// trace("Storing bubble at " + cellPosition.x + ", " + cellPosition.y + " with " + colorIndex);
 			
 			if (!debug)
 			{	
 				// And notify
-				world.onBubbleStop();
+				world.handleBubbleStop();
 			}
 		}
 	}
@@ -270,7 +278,9 @@ class Bubble extends FlxSprite
 	public function onDeath()
 	{
 		velocity.set();
+		
 		world.bubbles.remove(this);
+		
 		this.kill();
 		this.destroy();
 	}
@@ -283,7 +293,8 @@ class Bubble extends FlxSprite
 			state = Bubble.StatePopping;
 			
 			// Clear grid data
-			grid.setData(cellPosition.x, cellPosition.y, null);
+			if (grid.isPositionValid(cellPosition))
+				grid.setData(cellPosition.x, cellPosition.y, null);
 			
 			FlxTween.tween(this.scale, {x : 0.5, y : 0.5}, crunchTime, 
 							{ complete : function(_t:FlxTween) {
@@ -306,7 +317,8 @@ class Bubble extends FlxSprite
 			state = Bubble.StatePopping;
 			
 			// Clear grid data
-			grid.setData(cellPosition.x, cellPosition.y, null);
+			if (grid.isPositionValid(cellPosition))
+				grid.setData(cellPosition.x, cellPosition.y, null);
 			
 			FlxTween.tween(this.scale, {x : 0.9, y : 0.9}, jumpWaitTime*0.5);
 			
@@ -317,6 +329,18 @@ class Bubble extends FlxSprite
 				falling = true;
 			});
 		}
+	}
+	
+	public function triggerRot()
+	{
+		state = StateIdling;
+		
+		var rotTime : Float = (grid.rows - cellPosition.y)*0.25 + (cellPosition.y)*0.15;
+		
+		new FlxTimer(rotTime, function (_t:FlxTimer) {
+			color = 0xFF606060;
+			triggerFall();
+		});
 	}
 	
 	public function checkCollisionWithBubbles() : Bool

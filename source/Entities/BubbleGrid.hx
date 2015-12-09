@@ -176,6 +176,8 @@ class BubbleGrid extends FlxObject
 	
 	public function generateBubbleRow(emptyRow : Bool)
 	{
+		var lostGame : Bool = false;
+	
 		switchPadding();
 	
 		// Shift bubble rows down
@@ -190,7 +192,11 @@ class BubbleGrid extends FlxObject
 				if (row >= rows-1)
 				{
 					if (bubble != null)
-						throw "You lose";
+					{
+						bubble.reposition(col, row+1);
+						bubble.triggerRot();
+						lostGame = true;
+					}
 				}
 				else // Move the bubble (or the space!) down
 				{
@@ -217,6 +223,11 @@ class BubbleGrid extends FlxObject
 			}
 			
 			topRow++;
+		}
+		
+		if (lostGame)
+		{
+			world.handleLosing();
 		}
 	}
 	
