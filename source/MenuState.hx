@@ -3,39 +3,47 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.text.FlxText;
-import flixel.ui.FlxButton;
-import flixel.util.FlxMath;
+import flixel.addons.ui.FlxButtonPlus;
 
-/**
- * A FlxState which can be used for the game's menu.
- */
 class MenuState extends FlxState
 {
-	/**
-	 * Function that is called up when to state is created to set it up. 
-	 */
+	public var btnArcade : FlxButtonPlus;
+	public var btnPuzzle : FlxButtonPlus;
+
 	override public function create():Void
 	{
 		super.create();
 		
-		trace("why hello there");
+		btnArcade = new FlxButtonPlus(32, 32, onArcadeButtonPressed, "Arcade", 96, 32);
+		btnPuzzle = new FlxButtonPlus(32, 80, onPuzzleButtonPressed, "Puzzle", 96, 32);
+		
+		btnArcade.updateActiveButtonColors([0xFF202020, 0xFF101010]);
+		btnArcade.updateInactiveButtonColors([0xFF101010, 0xFF000000]);
+		
+		btnPuzzle.updateActiveButtonColors([0xFF202020, 0xFF101010]);
+		btnPuzzle.updateInactiveButtonColors([0xFF101010, 0xFF000000]);
+		
+		add(btnArcade);
+		add(btnPuzzle);
 	}
 	
-	/**
-	 * Function that is called when this state is destroyed - you might want to 
-	 * consider setting all objects this state uses to null to help garbage collection.
-	 */
 	override public function destroy():Void
 	{
 		super.destroy();
 	}
 
-	/**
-	 * Function that is called once every frame.
-	 */
 	override public function update():Void
 	{
 		super.update();
 	}	
+	
+	public function onArcadeButtonPressed() : Void
+	{
+		GameController.StartArcadeGame();
+	}
+	
+	public function onPuzzleButtonPressed() : Void
+	{
+		GameController.StartPuzzleGame();
+	}
 }

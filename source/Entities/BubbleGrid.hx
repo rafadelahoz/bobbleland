@@ -18,6 +18,7 @@ class BubbleGrid extends FlxObject
 	
 	public var columns : Int;
 	public var rows : Int;
+	public var topRow : Int;
 	
 	public var cellSize : Float;
 	public var halfCell : Float;
@@ -35,6 +36,8 @@ class BubbleGrid extends FlxObject
 		bounds = new FlxRect(X, Y, Width, Height);
 		columns = 8;
 		rows = 10;
+		
+		topRow = 0;
 		
 		cellSize = Width / (columns+0.5);
 		halfCell = cellSize / 2;
@@ -103,12 +106,13 @@ class BubbleGrid extends FlxObject
 		var cellOffset : Float;
 		var cellColor : Int = 0x20FFFFFF;
 		
-		for (row in 0...rows)
+		for (row in topRow...rows)
 		{
 			cellOffset = padRow(row)*halfCell;
 			for (col in 0...columns)
 			{
 				var ccolor : Int = cellColor;
+				
 				if (highlightedCell.x == col && highlightedCell.y == row)
 				{
 					ccolor = 0xFFFF5151;
@@ -155,7 +159,7 @@ class BubbleGrid extends FlxObject
 			return null;
 	}
 	
-	public function generateBubbleRow()
+	public function generateBubbleRow(emptyRow : Bool)
 	{
 		switchPadding();
 	
@@ -166,25 +170,38 @@ class BubbleGrid extends FlxObject
 			for (col in 0...columns)
 			{
 				var bubble : Bubble = getData(col, row);
-				if (bubble != null)
+				
+				// Bubbles that overflow from the bottom mean gameover
+				if (row >= rows-1)
 				{
-					if (row >= rows-1)
-					{
+					if (bubble != null)
 						throw "You lose";
-					}
-					else
-					{
-						setData(col, row+1, bubble);
+				}
+				else // Move the bubble (or the space!) down
+				{
+					setData(col, row+1, bubble);
+					if (bubble != null)
 						bubble.reposition(col, row+1);
-					}
 				}
 			}
 		}
 	
-		// Generate inital row
-		for (col in 0...columns)
+		if (!emptyRow)
 		{
-			Bubble.CreateAt(col, 0, world.getNextColor(), world);
+			// Generate inital row
+			for (col in 0...columns)
+			{
+				Bubble.CreateAt(col, 0, world.getNextColor(), world);
+			}
+		}
+		else
+		{
+			for (col in 0...columns)
+			{
+				setData(col, 0, null);
+			}
+			
+			topRow++;
 		}
 	}
 	
@@ -298,7 +315,7 @@ class BubbleGrid extends FlxObject
 	{
 		for (bubble in group)
 		{
-			if (bubble.cellPosition.y == 0)
+			if (bubble.cellPosition.y == topRow)
 				return true;
 		}
 		
@@ -386,6 +403,21 @@ class BubbleGrid extends FlxObject
 	public function padRow(row : Int) : Int
 	{
 		return (row+padded) % 2;
+	}
+	
+	public function getLeft() : Float
+	{
+		return bounds.left;
+	}
+	
+	public function getRight() : Float
+	{
+		return bounds.right;
+	}
+	
+	public function getTop() : Float
+	{
+		return bounds.y + topRow * cellSize;
 	}
 	
 	public function printList(bubbles : Array<Bubble>) : String

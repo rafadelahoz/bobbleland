@@ -10,9 +10,17 @@ import flixel.group.FlxTypedGroup;
 
 class PlayState extends FlxState
 {
+	public static var ModeArcade : Int = 0;
+	public static var ModePuzzle : Int = 1;
+
 	public static var StateAiming : Int = 0;
 	public static var StateWaiting : Int = 1;
+	public static var StateRemoving : Int = 2;
 
+	public static var WaitTime : Float = 1;
+	
+	public var mode : Int;
+	
 	public var state : Int;
 
 	public var bubbleColors : Array<Int>;
@@ -24,10 +32,14 @@ class PlayState extends FlxState
 	
 	public var dropDelay : Float;
 	public var dropTimer : FlxTimer;
+	public var waitTimer : FlxTimer;
 
-	public function new()
+	public function new(Mode : Int)
 	{
 		super();
+		
+		mode = Mode;
+		trace("Mode: " + mode);
 	}
 
 	override public function create()
@@ -48,6 +60,7 @@ class PlayState extends FlxState
 		
 		dropDelay = 2;
 		dropTimer = new FlxTimer(dropDelay, onDropTimer);
+		waitTimer = new FlxTimer();
 		
 		generateBubble();
 		state = StateAiming;
@@ -63,6 +76,8 @@ class PlayState extends FlxState
 				onAimingState();
 			case PlayState.StateWaiting:
 				onWaitingState();
+			case PlayState.StateRemoving:
+				onRemovingState();
 		}
 		
 		handleDebugRoutines();
@@ -92,8 +107,12 @@ class PlayState extends FlxState
 	{
 	}
 	
-	public function onBubbleStop()
+	public function onRemovingState()
 	{
+	}
+	
+	public function onBubbleStop()
+	{	
 		// Store bubble
 		bubbles.add(bubble);
 		
@@ -113,23 +132,37 @@ class PlayState extends FlxState
 			{
 				bub.triggerFall();
 			}
+			
+			// Things are happing, so wait!
+			state = StateRemoving;
+			waitTimer.start(WaitTime, function(_t:FlxTimer) {
+				state = StateAiming;
+			});
+		}
+		else
+		{
+			state = StateAiming;
 		}
 		
 		// And generate a new one
 		generateBubble();
-		state = StateAiming;
 	}
 	
 	public function onDropTimer(t : FlxTimer) : Void
 	{
-		trace("Drop timer! Generating bubble row");
-	
-		// Generate new bubble row, move all others down or something
-		grid.generateBubbleRow();
-		
-		trace("And setting timer again for " + dropDelay);
-		// Set drop timer again
-		dropTimer.start(dropDelay, onDropTimer);
+		if (state == StateRemoving)
+		{
+			// If there are bubbles being removed, wait a second!
+			dropTimer.start(0.5, onDropTimer);
+		}
+		else
+		{
+			// Generate new bubble row, move all others down or something
+			grid.generateBubbleRow(mode == ModePuzzle);
+			
+			// Set drop timer again
+			dropTimer.start(dropDelay, onDropTimer);
+		}
 	}
 	
 	public function generateBubble()
@@ -154,10 +187,6 @@ class PlayState extends FlxState
 	
 	public function handleDebugInit()
 	{
-		/*var debugBubble : Bubble = new Bubble(0, 0, this, 0xFFFFFFFF);
-		debugBubble.state = Bubble.StateDebug;
-		add(debugBubble);*/
-		
 		mouseCell = new FlxPoint();
 		label = new FlxText(4, FlxG.height - 16);
 		add(label);

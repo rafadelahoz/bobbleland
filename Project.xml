@@ -34,6 +34,7 @@
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	<classpath name="source/Text" />
+	<classpath name="source/Meta" />
 	<classpath name="source/States" />
 	<classpath name="source/Entities" />
 	

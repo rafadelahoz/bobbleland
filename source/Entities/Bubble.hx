@@ -74,11 +74,11 @@ class Bubble extends FlxSprite
 			case Bubble.StateFlying:
 				
 				// Bounce off walls
-				if (x + width/2 - Size * 1 <= grid.bounds.left || x + width/2 + Size * 1 >= grid.bounds.right)
+				if (x + width/2 - Size * 1 <= grid.getLeft() || x + width/2 + Size * 1 >= grid.getRight())
 					velocity.x *= -1;
 				
 				// Stick to the ceiling
-				if (y - HalfSize <= grid.bounds.top)
+				if (y - HalfSize <= grid.getTop())
 				{
 					onHitCeiling();
 				}
@@ -303,8 +303,6 @@ class Bubble extends FlxSprite
 		
 		cellPosition.set(Std.int(X), Std.int(Y));
 		cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
-		
-		trace("[" + state+ "] From " + oldPos + " to " + cellPosition);
 	}
 	
 	public static function compare(A : FlxPoint, B : FlxPoint) : Bool
