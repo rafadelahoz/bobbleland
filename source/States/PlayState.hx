@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.util.FlxPoint;
+import flixel.util.FlxTimer;
 import flixel.util.FlxRandom;
 import flixel.group.FlxTypedGroup;
 
@@ -20,6 +21,9 @@ class PlayState extends FlxState
 	public var grid : BubbleGrid;
 	public var cursor : PlayerCursor;
 	public var bubble : Bubble;
+	
+	public var dropDelay : Float;
+	public var dropTimer : FlxTimer;
 
 	public function new()
 	{
@@ -41,6 +45,9 @@ class PlayState extends FlxState
 		
 		bubbleColors = [0xFFFF3131, 0xFF31FF31];
 		// bubbleColors = [0xFFFF5151, 0xFF51FF51, 0xFF5151FF, 0xFFFFFF51];
+		
+		dropDelay = 2;
+		dropTimer = new FlxTimer(dropDelay, onDropTimer);
 		
 		generateBubble();
 		state = StateAiming;
@@ -111,6 +118,18 @@ class PlayState extends FlxState
 		// And generate a new one
 		generateBubble();
 		state = StateAiming;
+	}
+	
+	public function onDropTimer(t : FlxTimer) : Void
+	{
+		trace("Drop timer! Generating bubble row");
+	
+		// Generate new bubble row, move all others down or something
+		grid.generateBubbleRow();
+		
+		trace("And setting timer again for " + dropDelay);
+		// Set drop timer again
+		dropTimer.start(dropDelay, onDropTimer);
 	}
 	
 	public function generateBubble()

@@ -18,8 +18,10 @@ class Bubble extends FlxSprite
 	public static var StatePopping : Int = 3;
 	public static var StateDebug  : Int = 4;
 	
+	public static var SIZE : Float = 9;
+	
 	public var Speed : Float = 400;
-	public var Size : Float = 9;
+	public var Size : Float = SIZE;
 	public var HalfSize : Float = 4.5;
 	
 	public var world : PlayState;
@@ -290,9 +292,19 @@ class Bubble extends FlxSprite
 		return (deltaXSquared + deltaYSquared <= sumRadiiSquared);
 	}
 	
-	public function getCurrentCell()
+	public function getCurrentCell() : FlxPoint
 	{
 		return grid.getCellAt(x+10, y+10);
+	}
+	
+	public function reposition(X : Float, Y : Float)
+	{
+		var oldPos : FlxPoint = new FlxPoint(cellPosition.x, cellPosition.y);
+		
+		cellPosition.set(Std.int(X), Std.int(Y));
+		cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
+		
+		trace("[" + state+ "] From " + oldPos + " to " + cellPosition);
 	}
 	
 	public static function compare(A : FlxPoint, B : FlxPoint) : Bool
@@ -304,7 +316,7 @@ class Bubble extends FlxSprite
 	{
 		var cellCenter : FlxPoint = World.grid.getCellCenter(Std.int(X), Std.int(Y));
 		
-		var bubble : Bubble = new Bubble(cellCenter.x, cellCenter.y, World, ColorIndex);
+		var bubble : Bubble = new Bubble(cellCenter.x, cellCenter.y - SIZE, World, ColorIndex);
 		bubble.cellPosition.set(X, Y);
 		bubble.cellCenterPosition.set(cellCenter.x, cellCenter.y);
 		bubble.state = StateIdling;

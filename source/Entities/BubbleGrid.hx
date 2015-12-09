@@ -14,6 +14,8 @@ class BubbleGrid extends FlxObject
 
 	public var bounds : FlxRect;
 	
+	public var padded : Int = 0;
+	
 	public var columns : Int;
 	public var rows : Int;
 	
@@ -65,7 +67,7 @@ class BubbleGrid extends FlxObject
 	public function getCellAt(X : Float, Y : Float) : FlxPoint
 	{
 		var yy : Int = Std.int((Y - bounds.y) / cellSize);
-		var xx : Int = Std.int(((X - bounds.x) - (yy % 2)*halfCell)/ cellSize);
+		var xx : Int = Std.int(((X - bounds.x) - padRow(yy)*halfCell)/ cellSize);
 		
 		xx = Std.int(FlxMath.bound(xx, 0, columns));
 		yy = Std.int(FlxMath.bound(yy, 0, rows));
@@ -78,7 +80,7 @@ class BubbleGrid extends FlxObject
 	
 	public function getCellCenter(column : Int, row : Int) : FlxPoint
 	{
-		var cellOffset : Float = (row % 2)*halfCell;
+		var cellOffset : Float = padRow(row)*halfCell;
 		var center : FlxPoint = new FlxPoint(Std.int(column * cellSize + cellOffset), Std.int(row * cellSize));
 		return center;
 	}
@@ -103,7 +105,7 @@ class BubbleGrid extends FlxObject
 		
 		for (row in 0...rows)
 		{
-			cellOffset = (row % 2)*halfCell;
+			cellOffset = padRow(row)*halfCell;
 			for (col in 0...columns)
 			{
 				var ccolor : Int = cellColor;
@@ -151,6 +153,39 @@ class BubbleGrid extends FlxObject
 			return data[Std.int(row)][Std.int(col)];
 		else
 			return null;
+	}
+	
+	public function generateBubbleRow()
+	{
+		switchPadding();
+	
+		// Shift bubble rows down
+		for (r in -(rows-1) ...1)
+		{
+			var row : Int = -r;
+			for (col in 0...columns)
+			{
+				var bubble : Bubble = getData(col, row);
+				if (bubble != null)
+				{
+					if (row >= rows-1)
+					{
+						throw "You lose";
+					}
+					else
+					{
+						setData(col, row+1, bubble);
+						bubble.reposition(col, row+1);
+					}
+				}
+			}
+		}
+	
+		// Generate inital row
+		for (col in 0...columns)
+		{
+			Bubble.CreateAt(col, 0, world.getNextColor(), world);
+		}
 	}
 	
 	public function locateBubbleGroup(bubble : Bubble) : Array<Bubble>
@@ -318,7 +353,7 @@ class BubbleGrid extends FlxObject
 		var x : Int = Std.int(pos.x);
 		var y : Int = Std.int(pos.y);
 		
-		if (y % 2 == 1)
+		if (isPadded(y))
 			return [FlxPoint.get(x  , y-1), FlxPoint.get(x+1, y-1), 
 					FlxPoint.get(x-1, y  ), FlxPoint.get(x+1, y  ),	
 					FlxPoint.get(x  , y+1), FlxPoint.get(x+1, y+1)];
@@ -335,6 +370,22 @@ class BubbleGrid extends FlxObject
 		{
 			point.put();
 		}
+	}
+	
+	public function switchPadding()
+	{
+		// Switches the padded row
+		padded = (padded + 1) % 2;
+	}
+	
+	public function isPadded(row : Int) : Bool
+	{
+		return padRow(row) == 1;
+	}
+	
+	public function padRow(row : Int) : Int
+	{
+		return (row+padded) % 2;
 	}
 	
 	public function printList(bubbles : Array<Bubble>) : String
