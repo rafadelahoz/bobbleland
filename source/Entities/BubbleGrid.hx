@@ -84,7 +84,7 @@ class BubbleGrid extends FlxObject
 	public function getCellCenter(column : Int, row : Int) : FlxPoint
 	{
 		var cellOffset : Float = padRow(row)*halfCell;
-		var center : FlxPoint = new FlxPoint(Std.int(column * cellSize + cellOffset), Std.int(row * cellSize));
+		var center : FlxPoint = new FlxPoint(bounds.x + Std.int(column * cellSize + cellOffset), bounds.y + Std.int(row * cellSize));
 		return center;
 	}
 	
@@ -96,6 +96,8 @@ class BubbleGrid extends FlxObject
 	
 	public function renderCanvas()
 	{
+		return;
+		
 		if (canvas == null)
 			canvas = new FlxSprite(bounds.x, bounds.y).makeGraphic(Std.int(bounds.width), Std.int(bounds.height), 0xFF250516);
 		else
@@ -119,9 +121,12 @@ class BubbleGrid extends FlxObject
 				}
 				else if (getData(col, row) != null)
 				{
-					ccolor = world.bubbleColors[getData(col, row).colorIndex];
-					ccolor &= 0x00FFFFFF;
-					ccolor |= 0x40000000;
+					if (getData(col, row).colorIndex >= 0)
+					{
+						ccolor = world.bubbleColors[getData(col, row).colorIndex];
+						ccolor &= 0x00FFFFFF;
+						ccolor |= 0x40000000;
+					}
 				}
 			
 				FlxSpriteUtil.drawRect(canvas, col * cellSize + cellOffset, row * cellSize, cellSize, cellSize, ccolor, lineStyle);
@@ -141,6 +146,16 @@ class BubbleGrid extends FlxObject
 				data[row][col] = null;
 			}
 		}
+	}
+	
+	public function isPositionValid(position : FlxPoint) : Bool
+	{
+		return isValid(position.x, position.y);
+	}
+	
+	public function isValid(col : Float, row : Float) : Bool
+	{
+		return (col >= 0 && row >= topRow && col < columns && row < rows);
 	}
 	
 	public function setData(col : Float, row : Float, bubble : Bubble)
@@ -315,7 +330,7 @@ class BubbleGrid extends FlxObject
 	{
 		for (bubble in group)
 		{
-			if (bubble.cellPosition.y == topRow)
+			if (bubble.isSafe() || bubble.cellPosition.y == topRow)
 				return true;
 		}
 		
@@ -352,6 +367,42 @@ class BubbleGrid extends FlxObject
 		return connected;
 	}
 	
+	// Applies the provided method to every bubble (that complies with the provided filter)
+	public function forEach(handler : Bubble -> Void, ?filter : Bubble -> Bool = null)
+	{
+		for (row in 0...rows)
+		{
+			for (col in 0...columns)
+			{
+				var bubble : Bubble = getData(col, row);
+				
+				if (bubble != null && 
+					(filter == null || filter(bubble)))
+				{
+					handler(bubble);
+				}
+			}
+		}
+		
+	}
+	
+	public function getNeighbours(bubble : Bubble) : Array<Bubble>
+	{
+		var neighbours : Array<Bubble> = [];
+		
+		var position : FlxPoint = bubble.cellPosition;
+		var adjacentPositions : Array<FlxPoint> = getAdjacentPositions(position);
+		
+		for (adjPos in adjacentPositions)
+		{
+			var neighbour : Bubble = getData(adjPos.x, adjPos.y);
+			if (neighbour != null)
+				neighbours.push(neighbour);
+		}
+		
+		return neighbours;
+	}
+	
 	public function contains(list : Array<Bubble>, bubble : Bubble) : Bool
 	{
 		for (bub in list)
@@ -365,7 +416,7 @@ class BubbleGrid extends FlxObject
 		return false;
 	}
 	
-	function getAdjacentPositions(pos : FlxPoint) : Array<FlxPoint>
+	public function getAdjacentPositions(pos : FlxPoint) : Array<FlxPoint>
 	{
 		var x : Int = Std.int(pos.x);
 		var y : Int = Std.int(pos.y);

@@ -39,14 +39,13 @@ class PlayState extends FlxState
 		super();
 		
 		mode = Mode;
-		trace("Mode: " + mode);
 	}
 
 	override public function create()
 	{
 		super.create();
 		
-		grid = new BubbleGrid(0, 0, FlxG.width, FlxG.height - 32, this);
+		grid = new BubbleGrid(FlxG.width / 2 - 64, 16, 128, FlxG.height - 32, this);
 		add(grid);
 		
 		bubbles = new FlxTypedGroup<Bubble>();
@@ -55,10 +54,10 @@ class PlayState extends FlxState
 		cursor = new PlayerCursor(FlxG.width / 2 - 16, FlxG.height - 32);
 		add(cursor);
 		
-		bubbleColors = [0xFFFF3131, 0xFF31FF31];
-		// bubbleColors = [0xFFFF5151, 0xFF51FF51, 0xFF5151FF, 0xFFFFFF51];
+		// bubbleColors = [0xFFFF3131, 0xFF31FF31];
+		bubbleColors = [0xFFFF5151, 0xFF51FF51, 0xFF5151FF, 0xFFFFFF51];
 		
-		dropDelay = 2;
+		dropDelay = 20;
 		dropTimer = new FlxTimer(dropDelay, onDropTimer);
 		waitTimer = new FlxTimer();
 		
@@ -123,7 +122,7 @@ class PlayState extends FlxState
 		{
 			for (bub in condemned)
 			{
-				bub.triggerPop();
+				bub.triggerFall();
 			}
 			
 			// If there was some destruction, check for disconnections
@@ -132,6 +131,10 @@ class PlayState extends FlxState
 			{
 				bub.triggerFall();
 			}
+			
+			grid.forEach(function (bubble : Bubble) {
+				bubble.onBubblesPopped();
+			});
 			
 			// Things are happing, so wait!
 			state = StateRemoving;
@@ -219,34 +222,31 @@ class PlayState extends FlxState
 
 		if (FlxG.mouse.justPressed && grid.bounds.containsFlxPoint(mouse))
 		{
-			var testBub : Bubble = grid.getData(cell.x, cell.y);
-			/*if (testBub != null)
+			// Create an anchor
+			var anchor : Bubble = Bubble.CreateAt(cell.x, cell.y, -1, this);
+			var adjacentCells : Array<FlxPoint> = grid.getAdjacentPositions(cell);
+			for (pos in adjacentCells)
 			{
-				trace("("+testBub.cellPosition.x + ", " + testBub.cellPosition.y + ")=" + testBub.colorIndex);
-				var group : Array<Bubble> = grid.locateBubbleGroup(testBub);
-				if (group.length > 0)
+				if (pos.x >= 0 && pos.y >= 0 && pos.x < grid.columns && pos.y < grid.rows)
 				{
-					trace("group: " + group.length);
-					for (bub in group)
+					var old : Bubble = grid.getData(pos.x, pos.y);
+					if (old != null)
 					{
-						bub.alpha = 0.5;
+						old.triggerPop();
 					}
-				}
-			}*/
-			
-			if (testBub != null)
-			{
-				trace("("+testBub.cellPosition.x + ", " + testBub.cellPosition.y + ")=" + testBub.colorIndex);
-				var group : Array<Bubble> = grid.getConnectedBubbles(testBub);
-				if (group.length > 0)
-				{
-					trace("group: " + group.length);
-					for (bub in group)
-					{
-						bub.alpha = 0.5;
-					}
+					
+					Bubble.CreateAt(pos.x, pos.y, getNextColor(), this);
 				}
 			}
+		}
+		
+		if (FlxG.keys.justPressed.UP)
+		{
+			dropDelay += 2;
+		}
+		else if (FlxG.keys.justPressed.DOWN)
+		{
+			dropDelay -= 2;
 		}
 		
 		if (FlxG.keys.justPressed.D)
@@ -255,7 +255,7 @@ class PlayState extends FlxState
 		}
 		
 		mouseCell.set(cell.x, cell.y);
-		label.text = "" + cell;
+		label.text = "" + cell + " | " + dropDelay;
 		FlxG.watch.addQuick("Cell", cell);
 	}
 }

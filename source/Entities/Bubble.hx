@@ -12,23 +12,31 @@ import flixel.tweens.FlxTween;
 
 class Bubble extends FlxSprite
 {
+	public static var SpecialNone : Int = 0;
+	public static var SpecialAnchor : Int = -1;
+
 	public static var StateAiming : Int = 0;
 	public static var StateFlying : Int = 1;
 	public static var StateIdling : Int = 2;
 	public static var StatePopping : Int = 3;
 	public static var StateDebug  : Int = 4;
 	
-	public static var SIZE : Float = 9;
+	public var crunchTime : Float = 0.25;
+	public var waitTime : Float = 0.25;
+	public var popTime : Float = 0.2;
+	public var jumpWaitTime : Float = 0.4;
 	
 	public var Speed : Float = 400;
-	public var Size : Float = SIZE;
-	public var HalfSize : Float = 4.5;
+	public var Size : Float;
+	public var HalfSize : Float;
 	
 	public var world : PlayState;
 	public var grid : BubbleGrid;
 	
 	public var colorIndex : Int;
 
+	public var safe : Bool;
+	
 	public var state : Int;
 	public var falling : Bool;
 	
@@ -36,19 +44,19 @@ class Bubble extends FlxSprite
 	public var cellPosition : FlxPoint;
 	public var cellCenterPosition : FlxPoint;
 	
+	public var special : Int;
+	
 	public function new(X : Float, Y : Float, World : PlayState, ColorIndex : Int)
 	{
 		super(X, Y);
 		
-		makeGraphic(20, 20, 0x00000000);
-		FlxSpriteUtil.drawCircle(this, 10, 10, Size, 0xFFFFFFFF);
-		offset.set(0, 0);
-		
 		world = World;
 		grid = world.grid;
 
+		Size = world.grid.cellSize / 2 * 0.9;
+		HalfSize = Size / 2;
+		
 		colorIndex = ColorIndex;
-		color = world.bubbleColors[colorIndex];
 		
 		cellPosition = new FlxPoint();
 		lastPosition = new FlxPoint();
@@ -56,7 +64,45 @@ class Bubble extends FlxSprite
 		
 		state = StateAiming;
 		
+		safe = false;
 		falling = false;
+		
+		// Negative color indexes mean special bubbles
+		special = SpecialNone;
+		if (colorIndex < 0)
+		{
+			handleSpecialBubble(ColorIndex);
+		}
+		
+		handleGraphic();
+	}
+	
+	public function handleSpecialBubble(index : Int)
+	{
+		switch (index)
+		{
+			case Bubble.SpecialAnchor:
+				special = index;
+				safe = true;
+			default:
+		}
+	}
+	
+	public function handleGraphic()
+	{
+		switch (special)
+		{
+			case Bubble.SpecialAnchor:
+				makeGraphic(Std.int((Size+1)*2), Std.int((Size+1)*2), 0x00000000);
+				// FlxSpriteUtil.drawRoundRect(this, 1, 1, Size*2, Size*2, 4, 4, 0xFF414471);
+				FlxSpriteUtil.drawCircle(this, width/2, height/2, Size, 0xFFFFFFFF);
+				// offset.set(0, 0);
+			default:
+				loadGraphic("assets/images/bubble.png");
+				/*FlxSpriteUtil.drawCircle(this, width/2, height/2, Size, 0xFFFFFFFF);
+				offset.set(0, 0);*/
+				color = world.bubbleColors[colorIndex];
+		}
 	}
 	
 	override public function update()
@@ -108,8 +154,8 @@ class Bubble extends FlxSprite
 					// Positioning yourself slowly
 					if (Math.abs(x - cellCenterPosition.x) > 1 || Math.abs(y - cellCenterPosition.y) > 1)
 					{
-						x = FlxMath.lerp(x, cellCenterPosition.x, 0.25);
-						y = FlxMath.lerp(y, cellCenterPosition.y, 0.25);
+						x = FlxMath.lerp(x, cellCenterPosition.x, 0.5);
+						y = FlxMath.lerp(y, cellCenterPosition.y, 0.5);
 					}
 					else
 					{
@@ -188,11 +234,10 @@ class Bubble extends FlxSprite
 			}
 			
 			// If it's already occupied, go to the last one free you got
-			if (grid.getData(cellPosition.x, cellPosition.y) != null)
+			if (grid.isPositionValid(cellPosition) && grid.getData(cellPosition.x, cellPosition.y) != null)
 			{
 				trace(cellPosition + " is already occupied, returning to " + lastPosition);
 				cellPosition.set(lastPosition.x, lastPosition.y);
-				
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 			}
 			
@@ -205,6 +250,20 @@ class Bubble extends FlxSprite
 				// And notify
 				world.onBubbleStop();
 			}
+		}
+	}
+	
+	public function onBubblesPopped()
+	{
+		switch (special)
+		{
+			case Bubble.SpecialAnchor:
+				var neighbours : Array<Bubble> = grid.getNeighbours(this);
+				if (neighbours.length == 0)
+				{
+					triggerPop();
+				}
+			default:
 		}
 	}
 	
@@ -226,9 +285,6 @@ class Bubble extends FlxSprite
 			// Clear grid data
 			grid.setData(cellPosition.x, cellPosition.y, null);
 			
-			var crunchTime : Float = 0.5;
-			var waitTime : Float = 0.5;
-			var popTime : Float = 0.15;
 			FlxTween.tween(this.scale, {x : 0.5, y : 0.5}, crunchTime, 
 							{ complete : function(_t:FlxTween) {
 								new FlxTimer(waitTime, function(__t:FlxTimer) {
@@ -252,10 +308,12 @@ class Bubble extends FlxSprite
 			// Clear grid data
 			grid.setData(cellPosition.x, cellPosition.y, null);
 			
-			var jumpWaitTime : Float = 1;
+			FlxTween.tween(this.scale, {x : 0.9, y : 0.9}, jumpWaitTime*0.5);
+			
 			new FlxTimer(jumpWaitTime, function (_t:FlxTimer) {
 				velocity.y = -100;
-				velocity.x = FlxRandom.intRanged(-20, 20);
+				scale.set(1, 1);
+				// velocity.x = FlxRandom.intRanged(-20, 20);
 				falling = true;
 			});
 		}
@@ -294,7 +352,7 @@ class Bubble extends FlxSprite
 	
 	public function getCurrentCell() : FlxPoint
 	{
-		return grid.getCellAt(x+10, y+10);
+		return grid.getCellAt(x+Size, y+Size);
 	}
 	
 	public function reposition(X : Float, Y : Float)
@@ -303,6 +361,11 @@ class Bubble extends FlxSprite
 		
 		cellPosition.set(Std.int(X), Std.int(Y));
 		cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
+	}
+	
+	public function isSafe() : Bool
+	{
+		return special == SpecialAnchor;
 	}
 	
 	public static function compare(A : FlxPoint, B : FlxPoint) : Bool
@@ -314,7 +377,7 @@ class Bubble extends FlxSprite
 	{
 		var cellCenter : FlxPoint = World.grid.getCellCenter(Std.int(X), Std.int(Y));
 		
-		var bubble : Bubble = new Bubble(cellCenter.x, cellCenter.y - SIZE, World, ColorIndex);
+		var bubble : Bubble = new Bubble(cellCenter.x, cellCenter.y - World.grid.cellSize, World, ColorIndex);
 		bubble.cellPosition.set(X, Y);
 		bubble.cellCenterPosition.set(cellCenter.x, cellCenter.y);
 		bubble.state = StateIdling;
