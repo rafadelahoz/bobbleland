@@ -2,15 +2,27 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.text.FlxText;
 import flixel.util.FlxPoint;
+import flixel.util.FlxTimer;
 import flixel.util.FlxRandom;
 import flixel.group.FlxTypedGroup;
 
 class PlayState extends FlxState
 {
-	public static var StateAiming : Int = 0;
-	public static var StateWaiting : Int = 1;
+	public static var ModeArcade 	: Int = 0;
+	public static var ModePuzzle 	: Int = 1;
 
+	public static var StateAiming 	: Int = 0;
+	public static var StateWaiting 	: Int = 1;
+	public static var StateRemoving : Int = 2;
+	public static var StateLosing 	: Int = 3;
+
+	public static var WaitTime 		: Float = 1;
+	public static var AimingTime 	: Float = 10;
+	
+	public var mode : Int;
+	
 	public var state : Int;
 
 	public var bubbleColors : Array<Int>;
@@ -19,34 +31,46 @@ class PlayState extends FlxState
 	public var grid : BubbleGrid;
 	public var cursor : PlayerCursor;
 	public var bubble : Bubble;
+	
+	public var dropDelay : Float;
+	public var dropTimer : FlxTimer;
+	public var waitTimer : FlxTimer;
+	public var aimingTimer : FlxTimer;
+	
+	public var notifyAiming : Bool;
 
-	public function new()
+	public function new(Mode : Int)
 	{
 		super();
+		
+		mode = Mode;
 	}
 
 	override public function create()
 	{
 		super.create();
 		
-		grid = new BubbleGrid(0, 0, FlxG.width, FlxG.height - 32);
+		grid = new BubbleGrid(FlxG.width / 2 - 64, 16, 128, FlxG.height - 32, this);
 		add(grid);
 		
 		bubbles = new FlxTypedGroup<Bubble>();
 		add(bubbles);
 		
-		cursor = new PlayerCursor(FlxG.width / 2 - 16, FlxG.height - 32);
+		cursor = new PlayerCursor(FlxG.width / 2 - 16, FlxG.height - 32, this);
 		add(cursor);
 		
-		/*var debugBubble : Bubble = new Bubble(0, 0, this, 0xFFFFFFFF);
-		debugBubble.state = Bubble.StateDebug;
-		add(debugBubble);*/
+		// bubbleColors = [0xFFFF3131, 0xFF31FF31];
+		bubbleColors = [0xFFFF5151, 0xFF51FF51, 0xFF5151FF, 0xFFFFFF51];
 		
-		bubbleColors = [0xFFFFFFFF, 0xFF000000];
-		// bubbleColors = [0xFFFF5151, 0xFF51FF51, 0xFF5151FF, 0xFFFFFF51];
+		dropDelay = 3;
+		dropTimer = new FlxTimer(dropDelay, onDropTimer);
+		waitTimer = new FlxTimer();
+		aimingTimer = new FlxTimer();
 		
 		generateBubble();
-		state = StateAiming;
+		switchState(StateAiming);
+		
+		handleDebugInit();
 	}
 	
 	override public function update()
@@ -57,6 +81,10 @@ class PlayState extends FlxState
 				onAimingState();
 			case PlayState.StateWaiting:
 				onWaitingState();
+			case PlayState.StateRemoving:
+				onRemovingState();
+			case PlayState.StateLosing:
+				onLosingState();
 		}
 		
 		handleDebugRoutines();
@@ -64,30 +92,147 @@ class PlayState extends FlxState
 		super.update();
 	}
 	
-	public function onAimingState()
+	/* State handling */
+	
+	public function switchState(State : Int)
 	{
-		if (FlxG.keys.justPressed.A)
+		if (state == StateLosing)
+			return;
+	
+		state = State;
+		
+		switch (state)
 		{
-			// Play anim or whatever
-			cursor.onShoot();
+			case PlayState.StateAiming:
+				aimingTimer.start(AimingTime, onForcedShot);
 			
-			var aimAngle : Float = cursor.aimAngle;
-			
-			bubble.x = cursor.x + cursor.aimOrigin.x - (bubble.width / 2);
-			bubble.y = cursor.y + cursor.aimOrigin.y - (bubble.height / 2);
-			
-			bubble.shoot(aimAngle);
-			
-			state = StateWaiting;
+			case PlayState.StateLosing:
+				
+				// Prepare for losing
+				
+				// Cancel timers
+				dropTimer.cancel();
+				waitTimer.cancel();
+				aimingTimer.cancel();
+				
+				// Disable cursor
+				cursor.disable();
+				
+			default:
+				aimingTimer.cancel();
 		}
 	}
 	
-	public function onWaitingState()
+	function onAimingState()
+	{
+		if (!notifyAiming && aimingTimer.timeLeft < AimingTime / 2)
+		{
+			notifyAiming = true;
+			trace("HURRY UP!");
+		}
+	
+		if (FlxG.keys.justPressed.A)
+		{
+			shoot();
+		}
+	}
+	
+	function onWaitingState()
 	{
 	}
 	
-	public function onBubbleStop()
+	function onRemovingState()
 	{
+	}
+	
+	function onLosingState()
+	{
+		if (bubbles.countLiving() <= 0)
+		{
+			trace("You lose, lamer");
+			GameController.ToMenu();
+		}
+	}
+	
+	/* Private methods */
+	
+	// Handler for the forced shot timer
+	function onForcedShot(_t:FlxTimer)
+	{
+		if (state == StateAiming)
+		{
+			shoot();
+		}
+	}
+	
+	// Shoot function: sets the current bubble in motion and changes to wait state
+	function shoot()
+	{
+		// Play anim or whatever
+		cursor.onShoot();
+		
+		var aimAngle : Float = cursor.aimAngle;
+		
+		bubble.x = cursor.x + cursor.aimOrigin.x - (bubble.width / 2);
+		bubble.y = cursor.y + cursor.aimOrigin.y - (bubble.height / 2);
+		
+		bubble.shoot(aimAngle);
+		
+		switchState(StateWaiting);
+		
+		notifyAiming = false;
+	}
+	
+	// Handler for the drop more bubbles timer
+	function onDropTimer(t : FlxTimer) : Void
+	{
+		if (state == StateLosing)
+		{
+			// Do nothing and stop already
+		}
+		else if (state == StateRemoving)
+		{
+			// If there are bubbles being removed, wait a second!
+			dropTimer.start(0.5, onDropTimer);
+		}
+		else
+		{
+			// Generate new bubble row, move all others down or something
+			grid.generateBubbleRow(mode == ModePuzzle);
+			
+			// Set drop timer again
+			dropTimer.start(dropDelay, onDropTimer);
+		}
+	}
+	
+	// Generates a new shootable bubble
+	function generateBubble()
+	{
+		remove(bubble);
+		bubble = null;
+		
+		var nextColor : Int = getNextColor();
+		
+		bubble = new Bubble(cursor.x + cursor.aimOrigin.x - grid.cellSize / 2, 
+							cursor.y + cursor.aimOrigin.y - grid.cellSize / 2, this, nextColor);
+		add(bubble);
+	}
+	
+	/* Public API for others */
+	
+	// Handler for when losing happens :(
+	public function handleLosing()
+	{
+		switchState(StateLosing);
+		
+		grid.forEach(function (bubble : Bubble) {
+			bubble.triggerRot();
+		});
+	}
+	
+	// Handler for bubble stopped event (triggered from Bubble)
+	public function handleBubbleStop()
+	{	
 		// Store bubble
 		bubbles.add(bubble);
 		
@@ -98,60 +243,117 @@ class PlayState extends FlxState
 		{
 			for (bub in condemned)
 			{
-				// bubbles.remove(bub);
-				bub.kill();
+				bub.triggerFall();
 			}
+			
+			// If there was some destruction, check for disconnections
+			var disconnected : Array<Bubble> = grid.locateIsolatedBubbles();
+			for (bub in disconnected)
+			{
+				bub.triggerFall();
+			}
+			
+			grid.forEach(function (bubble : Bubble) {
+				bubble.onBubblesPopped();
+			});
+			
+			// Things are happing, so wait!
+			switchState(StateRemoving);
+			waitTimer.start(WaitTime, function(_t:FlxTimer) {
+				switchState(StateAiming);
+			});
+		}
+		else
+		{
+			switchState(StateAiming);
 		}
 		
 		// And generate a new one
 		generateBubble();
-		state = StateAiming;
 	}
 	
-	public function generateBubble()
+	/* Returns an appropriate next color for a bubble */
+	public function getNextColor()
 	{
-		remove(bubble);
-		bubble = null;
-		
-		trace(bubbleColors);
-
-		// var nextColor : Int = FlxRandom.getObject(bubbleColors);
-		var nextColor : Int = FlxRandom.intRanged(0, bubbleColors.length-1);
-		
-		bubble = new Bubble(cursor.x + cursor.aimOrigin.x - 8, 
-							cursor.y + cursor.aimOrigin.y - 8, this, nextColor);
-		add(bubble);
+		return FlxRandom.intRanged(0, bubbleColors.length-1);
 	}
 	
-	public function handleDebugRoutines()
+	/* Debug things */
+	
+	var mouseCell : FlxPoint;
+	var label : FlxText;
+	
+	function handleDebugInit()
+	{
+		mouseCell = new FlxPoint();
+		label = new FlxText(4, FlxG.height - 16);
+		add(label);
+		
+		// Generate inital row
+		for (row in 0...5)
+		{
+			for (col in 0...grid.columns)
+			{
+				Bubble.CreateAt(col, row, getNextColor(), this);
+			}
+		}
+	}
+	
+	function handleDebugRoutines()
 	{
 		var mouse : FlxPoint = FlxG.mouse.getWorldPosition();
-		if (FlxG.keys.justPressed.ONE)
+		var cell = grid.getCellAt(mouse.x, mouse.y);
+		
+		if (FlxG.keys.justPressed.ONE || FlxG.keys.justPressed.TWO)
 		{
-			var cell = grid.getCellAt(mouse.x, mouse.y);
-			
-			var b : Bubble = new Bubble(mouse.x, mouse.y, this, 0xFF5151FF);
-			b.state = Bubble.StateFlying;
-			b.cellPosition.set(cell.x, cell.y);
-			b.onHitSomething(false);
+			if (grid.getData(cell.x, cell.y) != null)
+			{
+				bubbles.remove(grid.getData(cell.x, cell.y));
+				grid.getData(cell.x, cell.y).destroy();
+				grid.setData(cell.x, cell.y, null);
+			}
+			else
+			{
+				Bubble.CreateAt(cell.x, cell.y, (FlxG.keys.justPressed.ONE ? 0 : 1), this);
+			}
 		}
 
-		if (grid.bounds.containsFlxPoint(mouse))
+		if (FlxG.mouse.justPressed && grid.bounds.containsFlxPoint(mouse))
 		{
-			var cell : FlxPoint = grid.getCellAt(mouse.x, mouse.y);
-			var testBub : Bubble = grid.getData(cell.x, cell.y);
-			if (testBub != null)
+			// Create an anchor
+			var anchor : Bubble = Bubble.CreateAt(cell.x, cell.y, -1, this);
+			var adjacentCells : Array<FlxPoint> = grid.getAdjacentPositions(cell);
+			for (pos in adjacentCells)
 			{
-				var group : Array<Bubble> = grid.locateBubbleGroup(testBub);
-				if (group.length > 0)
+				if (pos.x >= 0 && pos.y >= 0 && pos.x < grid.columns && pos.y < grid.rows)
 				{
-					trace("group: " + group.length);
-					for (bub in group)
+					var old : Bubble = grid.getData(pos.x, pos.y);
+					if (old != null)
 					{
-						bub.alpha = 0.5;
+						old.triggerPop();
 					}
+					
+					Bubble.CreateAt(pos.x, pos.y, getNextColor(), this);
 				}
 			}
 		}
+		
+		if (FlxG.keys.justPressed.UP)
+		{
+			dropDelay += 2;
+		}
+		else if (FlxG.keys.justPressed.DOWN)
+		{
+			dropDelay -= 2;
+		}
+		
+		if (FlxG.keys.justPressed.D)
+		{
+			grid.dumpData();
+		}
+		
+		mouseCell.set(cell.x, cell.y);
+		label.text = "" + cell + " | " + dropDelay;
+		FlxG.watch.addQuick("Cell", cell);
 	}
 }
