@@ -254,8 +254,7 @@ class PlayState extends FlxState
 		{
 			for (bub in condemned)
 			{
-				scoreDisplay.add(Constants.ScBubblePop);
-				
+				scoreDisplay.add(bub.getPopPoints());
 				bub.triggerFall();
 			}
 			
@@ -263,7 +262,7 @@ class PlayState extends FlxState
 			var disconnected : Array<Bubble> = grid.locateIsolatedBubbles();
 			for (bub in disconnected)
 			{
-				scoreDisplay.add(Constants.ScBubbleFall);
+				scoreDisplay.add(bub.getFallPoints());
 				bub.triggerFall();
 			}
 			
