@@ -482,6 +482,24 @@ class BubbleGrid extends FlxObject
 		return bounds.y + topRow * cellSize;
 	}
 	
+	public function getCount() : Int
+	{
+		var count : Int = 0;
+		
+		for (row in 0...rows)
+		{
+			for (col in 0...columns)
+			{
+				if (getData(col, row) != null)
+				{
+					count++;
+				}
+			}
+		}
+		
+		return count;
+	}
+	
 	public function printList(bubbles : Array<Bubble>) : String
 	{
 		var list : String = "";
