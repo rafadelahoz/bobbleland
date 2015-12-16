@@ -18,4 +18,10 @@ class GameController
 	{
 		FlxG.switchState(new PlayState(PlayState.ModePuzzle));
 	}
+	
+	public static function GameOver(mode : Int, score : Int)
+	{
+		// TODO: Handle mode or...?
+		FlxG.switchState(new GameOverState(score));
+	}
 }

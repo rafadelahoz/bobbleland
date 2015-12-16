@@ -7,7 +7,6 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxTimer;
 import flixel.util.FlxRandom;
 import flixel.group.FlxTypedGroup;
-import flixel.text.FlxBitmapTextField;
 
 class PlayState extends FlxState
 {
@@ -160,8 +159,7 @@ class PlayState extends FlxState
 	{
 		if (bubbles.countLiving() <= 0)
 		{
-			trace("You lose, lamer");
-			GameController.ToMenu();
+			GameController.GameOver(mode, scoreDisplay.score);
 		}
 	}
 	
