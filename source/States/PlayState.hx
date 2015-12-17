@@ -157,6 +157,8 @@ class PlayState extends FlxState
 	
 	function onLosingState()
 	{
+		scoreDisplay.active = true;
+		
 		if (bubbles.countLiving() <= 0)
 		{
 			GameController.GameOver(mode, scoreDisplay.score);
