@@ -1,0 +1,8 @@
+ ## Switching bg
+bg Forest
+# hi there
+say "Buddy" "Come on, we are nearly there"
+say "Ok"
+bg City 12
+say "Two" "Ok ok?!!"
+#end
