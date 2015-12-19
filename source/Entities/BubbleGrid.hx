@@ -26,7 +26,7 @@ class BubbleGrid extends FlxObject
 	public var canvas : FlxSprite;
 	
 	public var data : Array<Array<Bubble>>;
-	
+
 	public function new(X : Float, Y : Float, Width : Float, Height : Float, World : PlayState)
 	{
 		super(X, Y, Width, Height);
@@ -35,7 +35,7 @@ class BubbleGrid extends FlxObject
 		
 		bounds = new FlxRect(X, Y, Width, Height);
 		columns = 8;
-		rows = 10;
+		rows = 12;
 		
 		topRow = 0;
 		
@@ -45,6 +45,7 @@ class BubbleGrid extends FlxObject
 		highlightedCell = new FlxPoint(-1, -1);
 		
 		data = [];
+
 		clearData();
 		
 		renderCanvas();
@@ -96,7 +97,7 @@ class BubbleGrid extends FlxObject
 	
 	public function renderCanvas()
 	{
-		return;
+		// return;
 		
 		if (canvas == null)
 			canvas = new FlxSprite(bounds.x, bounds.y).makeGraphic(Std.int(bounds.width), Std.int(bounds.height), 0xFF250516);
@@ -104,6 +105,16 @@ class BubbleGrid extends FlxObject
 			FlxSpriteUtil.fill(canvas, 0x00000000);
 			
 		var lineStyle : flixel.util.LineStyle = { color : 0x50FFFFFF, thickness : 1 };
+
+		if (topRow > 0)
+		{
+			FlxSpriteUtil.drawRect(canvas, 0, 0, width-1, topRow*cellSize, 0x50FFFFFF, {thickness: 0});
+		}
+
+		FlxSpriteUtil.drawRect(canvas, 0, 0, width-1, height-1, 0x000000, lineStyle);
+		FlxSpriteUtil.drawRect(canvas, 0, rows*cellSize-1, width-1, 2, 0x000000, { color : 0x90FF5151, thickness: 2 });
+
+		return;
 		
 		var cellOffset : Float;
 		var cellColor : Int = 0x20FFFFFF;
@@ -161,7 +172,9 @@ class BubbleGrid extends FlxObject
 	public function setData(col : Float, row : Float, bubble : Bubble)
 	{
 		if (col >= 0 && col < columns && row >= 0 && row < rows)
+		{
 			data[Std.int(row)][Std.int(col)] = bubble;
+		}
 		else
 			throw("Trying to set invalid grid position (" + col + ", " + row + ")");
 	}
@@ -482,6 +495,23 @@ class BubbleGrid extends FlxObject
 		return bounds.y + topRow * cellSize;
 	}
 	
+	public function getUsedColors() : Array<Int>
+	{
+		var colors = [];
+
+		for (row in 0...rows)
+		{
+			for (col in 0...columns)
+			{
+				var bubble : Bubble = getData(col, row);
+				if (bubble != null && colors.indexOf(bubble.colorIndex) < 0)
+					colors.push(bubble.colorIndex);
+			}
+		}
+
+		return colors;
+	}
+
 	public function printList(bubbles : Array<Bubble>) : String
 	{
 		var list : String = "";

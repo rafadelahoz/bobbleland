@@ -234,7 +234,7 @@ class Bubble extends FlxSprite
 			}
 			
 			// If it's already occupied, go to the last one free you got
-			if (grid.isPositionValid(cellPosition) && grid.getData(cellPosition.x, cellPosition.y) != null)
+			if (!grid.isPositionValid(cellPosition) || grid.getData(cellPosition.x, cellPosition.y) != null)
 			{
 				trace(cellPosition + " is already occupied, returning to " + lastPosition);
 				cellPosition.set(lastPosition.x, lastPosition.y);
@@ -337,8 +337,13 @@ class Bubble extends FlxSprite
 		
 		var rotTime : Float = (grid.rows - cellPosition.y)*0.25 + (cellPosition.y)*0.15;
 		
-		new FlxTimer(rotTime, function (_t:FlxTimer) {
+		// Rot quickly
+		new FlxTimer(rotTime * 0.25, function (_t:FlxTimer) {
 			color = 0xFF606060;
+		});
+
+		// Fall less quickly
+		new FlxTimer(rotTime, function (_t:FlxTimer) {
 			triggerFall();
 		});
 	}

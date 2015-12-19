@@ -62,7 +62,7 @@ class PlayState extends FlxState
 		// bubbleColors = [0xFFFF3131, 0xFF31FF31];
 		bubbleColors = [0xFFFF5151, 0xFF51FF51, 0xFF5151FF, 0xFFFFFF51];
 		
-		dropDelay = 3;
+		dropDelay = 30;
 		dropTimer = new FlxTimer(dropDelay, onDropTimer);
 		waitTimer = new FlxTimer();
 		aimingTimer = new FlxTimer();
@@ -272,10 +272,23 @@ class PlayState extends FlxState
 		generateBubble();
 	}
 	
-	/* Returns an appropriate next color for a bubble */
-	public function getNextColor()
+	/* Returns a random color index for a bubble */
+	public function getRandomColor() : Int
 	{
-		return FlxRandom.intRanged(0, bubbleColors.length-1);
+		return FlxRandom.intRanged(0, bubbleColors.length - 1);	
+	}
+
+	/* Returns an appropriate color index for a bubble */
+	public function getNextColor() : Int
+	{
+		var usedColors : Array<Int> = grid.getUsedColors();
+		
+		if (usedColors.length <= 0)
+		{
+			return getRandomColor();
+		}
+
+		return FlxRandom.getObject(usedColors);
 	}
 	
 	/* Debug things */
@@ -294,7 +307,7 @@ class PlayState extends FlxState
 		{
 			for (col in 0...grid.columns)
 			{
-				Bubble.CreateAt(col, row, getNextColor(), this);
+				Bubble.CreateAt(col, row, getRandomColor(), this);
 			}
 		}
 	}
@@ -333,18 +346,18 @@ class PlayState extends FlxState
 						old.triggerPop();
 					}
 					
-					Bubble.CreateAt(pos.x, pos.y, getNextColor(), this);
+					Bubble.CreateAt(pos.x, pos.y, getRandomColor(), this);
 				}
 			}
 		}
 		
 		if (FlxG.keys.justPressed.UP)
 		{
-			dropDelay += 2;
+			dropDelay += 1;
 		}
 		else if (FlxG.keys.justPressed.DOWN)
 		{
-			dropDelay -= 2;
+			dropDelay -= 1;
 		}
 		
 		if (FlxG.keys.justPressed.D)
@@ -353,7 +366,8 @@ class PlayState extends FlxState
 		}
 		
 		mouseCell.set(cell.x, cell.y);
-		label.text = "" + cell + " | " + dropDelay;
+		// label.text = "" + cell + " | " + dropDelay;
+		label.text = grid.getUsedColors().toString();
 		FlxG.watch.addQuick("Cell", cell);
 	}
 }
