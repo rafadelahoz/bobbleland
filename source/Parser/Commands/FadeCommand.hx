@@ -25,7 +25,7 @@ class FadeCommand extends Command
 	
 	override public function print() : String
 	{
-		return "Fade " + (mode == MODE_IN ? " in to " : " out from ") + color + " in " + duration + " seconds";
+		return "Fade " + (mode == MODE_IN ? "in to " : "out from ") + color + " in " + duration + " seconds";
 	}
 	
 	public static function parse(line : String) : Command
@@ -44,11 +44,15 @@ class FadeCommand extends Command
 					mode = MODE_IN;
 				case "out":
 					mode = MODE_OUT;
-				// case 
+				default:
+					if (comp.indexOf("0x") == 0)
+						color = Std.parseInt(comp);
+					else
+						duration = Std.parseFloat(comp);
 			}
 		}
 		
-		var command : Command = new BgCommand(id);
+		var command : Command = new FadeCommand(mode, duration, color);
 		return command;
 	}
 }

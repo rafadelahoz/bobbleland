@@ -1,6 +1,6 @@
 # Sample script
 # fade to black in 1 second
-fade out 1 0xFF000000
+fade out 1.5 0xFFA0A0A0
 # display a message said by buddy
 say "Buddy" "Come on, we are nearly there"
 # change the background to "Forest" image
@@ -14,7 +14,7 @@ char Buddy, happy
 # center at 0.3, 0.5, 0.7
 char Pungo
 # fade from whatever color we are in (in 1 second, default)
-fade in
+fade in 0.025
 # message with no owner
 say "Hey there"
-puzzle pungo-1
+puzzle pungo-1 sample-script

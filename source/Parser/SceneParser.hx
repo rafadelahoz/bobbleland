@@ -64,6 +64,10 @@ class SceneParser
 					command = SayCommand.parse(line);
 				case "bg":
 					command = BgCommand.parse(line);
+				case "fade":
+					command = FadeCommand.parse(line);
+				case "puzzle":
+					command = PuzzleCommand.parse(line);
 				default:
 					trace("Unrecognized command: " + line);
 			}
