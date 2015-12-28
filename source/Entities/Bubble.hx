@@ -30,6 +30,9 @@ class Bubble extends FlxSprite
 	public var Size : Float;
 	public var HalfSize : Float;
 	
+	public var popPoints : Int;
+	public var fallPoints : Int;
+	
 	public var world : PlayState;
 	public var grid : BubbleGrid;
 	
@@ -74,6 +77,8 @@ class Bubble extends FlxSprite
 			handleSpecialBubble(ColorIndex);
 		}
 		
+		handlePoints();
+		
 		handleGraphic();
 	}
 	
@@ -85,6 +90,22 @@ class Bubble extends FlxSprite
 				special = index;
 				safe = true;
 			default:
+		}
+	}
+	
+	public function handlePoints()
+	{
+		switch (special)
+		{
+			case Bubble.SpecialNone:
+				popPoints = Constants.ScBubblePop;
+				fallPoints = Constants.ScBubbleFall;
+			case Bubble.SpecialAnchor:
+				popPoints = Constants.ScBubblePop * 2;
+				fallPoints = Constants.ScBubbleFall * 2;
+			default:
+				popPoints = Constants.ScBubblePop * 2;
+				fallPoints = Constants.ScBubbleFall * 2;
 		}
 	}
 	
@@ -395,6 +416,16 @@ class Bubble extends FlxSprite
 	public function isSafe() : Bool
 	{
 		return special == SpecialAnchor;
+	}
+	
+	public function getPopPoints() : Int
+	{
+		return popPoints;
+	}
+	
+	public function getFallPoints() : Int
+	{
+		return fallPoints;
 	}
 	
 	public static function compare(A : FlxPoint, B : FlxPoint) : Bool

@@ -38,6 +38,8 @@ class PlayState extends FlxState
 	public var aimingTimer : FlxTimer;
 	
 	public var notifyAiming : Bool;
+	
+	public var scoreDisplay : ScoreDisplay;
 
 	public function new(Mode : Int)
 	{
@@ -67,6 +69,9 @@ class PlayState extends FlxState
 		waitTimer = new FlxTimer();
 		aimingTimer = new FlxTimer();
 		
+		scoreDisplay = new ScoreDisplay(0, 0, mode);
+		add(scoreDisplay);
+		
 		generateBubble();
 		switchState(StateAiming);
 		
@@ -85,7 +90,7 @@ class PlayState extends FlxState
 				onRemovingState();
 			case PlayState.StateLosing:
 				onLosingState();
-		}
+		}		
 		
 		handleDebugRoutines();
 		
@@ -125,6 +130,8 @@ class PlayState extends FlxState
 	
 	function onAimingState()
 	{
+		scoreDisplay.active = true;
+	
 		if (!notifyAiming && aimingTimer.timeLeft < AimingTime / 2)
 		{
 			notifyAiming = true;
@@ -133,12 +140,15 @@ class PlayState extends FlxState
 	
 		if (FlxG.keys.justPressed.A)
 		{
+			scoreDisplay.add(Constants.ScBubbleShot);
+		
 			shoot();
 		}
 	}
 	
 	function onWaitingState()
 	{
+		scoreDisplay.active = false;
 	}
 	
 	function onRemovingState()
@@ -147,10 +157,11 @@ class PlayState extends FlxState
 	
 	function onLosingState()
 	{
+		scoreDisplay.active = true;
+		
 		if (bubbles.countLiving() <= 0)
 		{
-			trace("You lose, lamer");
-			GameController.ToMenu();
+			GameController.GameOver(mode, scoreDisplay.score);
 		}
 	}
 	
@@ -243,6 +254,7 @@ class PlayState extends FlxState
 		{
 			for (bub in condemned)
 			{
+				scoreDisplay.add(bub.getPopPoints());
 				bub.triggerFall();
 			}
 			
@@ -250,16 +262,24 @@ class PlayState extends FlxState
 			var disconnected : Array<Bubble> = grid.locateIsolatedBubbles();
 			for (bub in disconnected)
 			{
+				scoreDisplay.add(bub.getFallPoints());
 				bub.triggerFall();
 			}
 			
 			grid.forEach(function (bubble : Bubble) {
 				bubble.onBubblesPopped();
 			});
-			
+
+			// Check whether the field is empty to award bonuses
+			if (grid.getCount() == 0)
+			{
+				scoreDisplay.add(Constants.ScClearField);
+			}
+
 			// Things are happing, so wait!
 			switchState(StateRemoving);
 			waitTimer.start(WaitTime, function(_t:FlxTimer) {
+				scoreDisplay.active = true;
 				switchState(StateAiming);
 			});
 		}
@@ -290,7 +310,7 @@ class PlayState extends FlxState
 
 		return FlxRandom.getObject(usedColors);
 	}
-	
+
 	/* Debug things */
 	
 	var mouseCell : FlxPoint;

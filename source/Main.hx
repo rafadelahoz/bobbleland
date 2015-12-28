@@ -60,6 +60,8 @@ class Main extends Sprite
 	{
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
+		
+		trace(stageWidth + ", " + stageHeight);
 
 		if (zoom == -1)
 		{
