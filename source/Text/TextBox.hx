@@ -21,25 +21,25 @@ class TextBox extends FlxGroup
 {
 	var originX : Int = 120;
 	var originY : Int = 64;
-	
+
 	var borderX : Int = 8;
 	var borderY : Int = 8;
-		
+
 	var boxWidth : Int = Std.int(240);
 	var boxHeight: Int = Std.int(32);
-	
-	
+
+
 	private static var world : FlxState;
 	private static var textBox : TextBox;
-	
-	public static function Init(World : World)
+
+	public static function Init(World : FlxState)
 	{
 		world = World;
 	}
-	
+
 	public static function Message(name : String, message : String, ?completeCallback:Dynamic)
 	{
-		if (textBox == null) 
+		if (textBox == null)
 		{
 			textBox = new TextBox(name);
 			textBox._callback = completeCallback;
@@ -54,15 +54,15 @@ class TextBox extends FlxGroup
 	private var _isTalking:Bool;
 	private var _skip:FlxBitmapTextField;
 	private var _callback:Dynamic;
-	
+
 	override public function new(Name:String):Void
 	{
 		super();
-		
+
 		// Initialize the background image, you can use a simple FlxSprite fill with one color
 		_background = new FlxSprite(originX, originY).makeGraphic(boxWidth, boxHeight, 0xFF010101);
 		_background.scrollFactor.set(0, 0);
-		
+
 	 	// The name of the person who talk, from the arguments
 		_name = PixelText.New(originX, originY, Name, 0xffbcbcbc);
 		_name.scrollFactor.set(0, 0);
@@ -82,7 +82,7 @@ class TextBox extends FlxGroup
 		add(_skip);
 	}
 
-	public function hide():Void	
+	public function hide():Void
 	{
 		remove(_background);
 		remove(_name);
@@ -94,21 +94,21 @@ class TextBox extends FlxGroup
 	}
 
 	public function talk(TEXT:String):Void
-	{	
+	{
 		if(!_isTalking) {
 			_isTalking = true;
-			
+
 			_name.visible = false;
 			_skip.visible = false;
-			
+
 			show();
-			
-			_background.scale.y = 0;			
+
+			_background.scale.y = 0;
 			FlxTween.tween(_background.scale, {y: 1}, 0.08, { complete: function(_t:FlxTween) {
 				// Set up a new TypeWriter for each text
-				_typetext = new TypeWriter(originX + borderX, 
-										   originY + borderY, 
-										   boxWidth - borderX*2, 
+				_typetext = new TypeWriter(originX + borderX,
+										   originY + borderY,
+										   boxWidth - borderX*2,
 										   boxHeight - borderY*2,
 										   TEXT, 0xffdedede, 12);
 
@@ -117,26 +117,26 @@ class TextBox extends FlxGroup
 				// _typetext.cursorBlinkSpeed = 1.0;
 				_typetext.setTypingVariation(0.75, true);
 				_typetext.useDefaultSound = true;
-				
+
 				// Add it to the screen and start it
 				add(_typetext);
-				
+
 				_name.visible = true;
 				_skip.visible = true;
-				
+
 				_typetext.start(0.01, onCompleted);
 			}});
 		}
 	}
 
-	public function onCompleted(TIMER:FlxTimer = null):Void 
+	public function onCompleted(TIMER:FlxTimer = null):Void
 	{
 		_name.visible = false;
 		_skip.visible = false;
 		_typetext.visible = false;
-		
+
 		FlxTween.tween(_background.scale, {y: 0}, 0.08, { complete: function(_t:FlxTween) {
-			hide();	
+			hide();
 			_isTalking = false;
 
 			if (_callback != null)
@@ -152,9 +152,9 @@ class TextBox extends FlxGroup
 	override public function update():Void
 	{
 		super.update();
-		
+
 		if (_typetext != null)
-		{	
+		{
 			if (_typetext.finished)
 			{
 				if (_typetext.thereIsMoreText)
@@ -166,12 +166,12 @@ class TextBox extends FlxGroup
 			{
 				_skip.text = "[...]";
 			}
-				
-			
-			if (GamePad.checkButton(GamePad.Right))
+
+
+			if (FlxG.keys.justPressed.A)
 				_skip.color = 0xFFffb300;
 			else
 				_skip.color = 0xFFbcbcbc;
 		}
-	}	
+	}
 }

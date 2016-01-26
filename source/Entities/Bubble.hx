@@ -20,68 +20,68 @@ class Bubble extends FlxSprite
 	public static var StateIdling : Int = 2;
 	public static var StatePopping : Int = 3;
 	public static var StateDebug  : Int = 4;
-	
+
 	public var crunchTime : Float = 0.25;
 	public var waitTime : Float = 0.25;
 	public var popTime : Float = 0.2;
 	public var jumpWaitTime : Float = 0.4;
-	
+
 	public var Speed : Float = 400;
 	public var Size : Float;
 	public var HalfSize : Float;
-	
+
 	public var popPoints : Int;
 	public var fallPoints : Int;
-	
+
 	public var world : PlayState;
 	public var grid : BubbleGrid;
-	
+
 	public var colorIndex : Int;
 
 	public var safe : Bool;
-	
+
 	public var state : Int;
 	public var falling : Bool;
-	
+
 	public var lastPosition : FlxPoint;
 	public var cellPosition : FlxPoint;
 	public var cellCenterPosition : FlxPoint;
-	
+
 	public var special : Int;
-	
+
 	public function new(X : Float, Y : Float, World : PlayState, ColorIndex : Int)
 	{
 		super(X, Y);
-		
+
 		world = World;
 		grid = world.grid;
 
 		Size = world.grid.cellSize / 2 * 0.9;
 		HalfSize = Size / 2;
-		
+
 		colorIndex = ColorIndex;
-		
+
 		cellPosition = new FlxPoint();
 		lastPosition = new FlxPoint();
 		cellCenterPosition = new FlxPoint();
-		
+
 		state = StateAiming;
-		
+
 		safe = false;
 		falling = false;
-		
+
 		// Negative color indexes mean special bubbles
 		special = SpecialNone;
 		if (colorIndex < 0)
 		{
 			handleSpecialBubble(ColorIndex);
 		}
-		
+
 		handlePoints();
-		
+
 		handleGraphic();
 	}
-	
+
 	public function handleSpecialBubble(index : Int)
 	{
 		switch (index)
@@ -92,7 +92,7 @@ class Bubble extends FlxSprite
 			default:
 		}
 	}
-	
+
 	public function handlePoints()
 	{
 		switch (special)
@@ -108,7 +108,7 @@ class Bubble extends FlxSprite
 				fallPoints = Constants.ScBubbleFall * 2;
 		}
 	}
-	
+
 	public function handleGraphic()
 	{
 		switch (special)
@@ -125,25 +125,25 @@ class Bubble extends FlxSprite
 				color = world.bubbleColors[colorIndex];
 		}
 	}
-	
+
 	override public function update()
 	{
 		switch (state)
 		{
 			case Bubble.StateAiming:
-				
+
 				// Do nothing
 				velocity.set();
-				
+
 				cellPosition.set(-1, -1);
 				lastPosition.set(-1, -1);
-				
+
 			case Bubble.StateFlying:
-				
+
 				// Bounce off walls
 				if (x + width/2 - Size * 1 <= grid.getLeft() || x + width/2 + Size * 1 >= grid.getRight())
 					velocity.x *= -1;
-				
+
 				// Stick to the ceiling
 				if (y - HalfSize <= grid.getTop())
 				{
@@ -164,14 +164,14 @@ class Bubble extends FlxSprite
 						cellPosition.set(currentPosition.x, currentPosition.y);
 					}
 				}
-				
+
 			case Bubble.StateIdling, Bubble.StatePopping:
-				
+
 				if (!falling)
 				{
 					// Rest
 					velocity.set();
-					
+
 					// Positioning yourself slowly
 					if (Math.abs(x - cellCenterPosition.x) > 1 || Math.abs(y - cellCenterPosition.y) > 1)
 					{
@@ -187,59 +187,59 @@ class Bubble extends FlxSprite
 				else
 				{
 					acceleration.y = 400;
-					
+
 					if (y > FlxG.height)
 					{
 						onDeath();
 					}
 				}
-				
+
 			case Bubble.StateDebug:
-				
+
 				var mousePos : FlxPoint = FlxG.mouse.getWorldPosition();
 				x = mousePos.x;
 				y = mousePos.y;
-		
+
 				if (checkCollisionWithBubbles())
 					alpha = 0.4;
 				else
 					alpha = 1;
 		}
-	
+
 		if (alive)
 			super.update();
 	}
-	
+
 	public function shoot(direction : Float)
 	{
 		state = Bubble.StateFlying;
-		
+
 		var cos : Float = Math.cos(direction * (Math.PI/180));
 		var sin : Float = Math.sin(direction * (Math.PI/180));
 
 		var velocityX : Float = cos * Speed;
 		var velocityY : Float = -sin * Speed;
-		
+
 		velocity.set(velocityX, velocityY);
 	}
-	
+
 	public function onHitCeiling()
 	{
 		onHitSomething(true);
 	}
-	
+
 	public function onHitBubbles()
 	{
 		onHitSomething(false);
 	}
-	
+
 	public function onHitSomething(useNewPosition : Bool, debug : Bool = false)
 	{
 		if (debug || state == StateFlying)
 		{
 			// Rest!
 			state = StateIdling;
-			
+
 			// Discriminate between ceiling and bubble hit
 			if (useNewPosition)
 			{
@@ -253,7 +253,7 @@ class Bubble extends FlxSprite
 				// Consider the last valid position visited
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 			}
-			
+
 			// If it's already occupied, go to the last one free you got
 			if (!grid.isPositionValid(cellPosition) || grid.getData(cellPosition.x, cellPosition.y) != null)
 			{
@@ -261,7 +261,7 @@ class Bubble extends FlxSprite
 				cellPosition.set(lastPosition.x, lastPosition.y);
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 			}
-			
+
 			// Check whether we are losing
 			if (cellPosition.y >= grid.rows)
 			{
@@ -270,18 +270,18 @@ class Bubble extends FlxSprite
 				world.handleLosing();
 				return;
 			}
-			
+
 			// Store your data
 			grid.setData(cellPosition.x, cellPosition.y, this);
-			
+
 			if (!debug)
-			{	
+			{
 				// And notify
 				world.handleBubbleStop();
 			}
 		}
 	}
-	
+
 	public function onBubblesPopped()
 	{
 		switch (special)
@@ -295,29 +295,29 @@ class Bubble extends FlxSprite
 			default:
 		}
 	}
-	
+
 	public function onDeath()
 	{
 		velocity.set();
-		
+
 		world.bubbles.remove(this);
-		
+
 		this.kill();
 		this.destroy();
 	}
-	
+
 	public function triggerPop()
 	{
 		if (state != Bubble.StatePopping)
 		{
 			// Start your death procedure
 			state = Bubble.StatePopping;
-			
+
 			// Clear grid data
 			if (grid.isPositionValid(cellPosition))
 				grid.setData(cellPosition.x, cellPosition.y, null);
-			
-			FlxTween.tween(this.scale, {x : 0.5, y : 0.5}, crunchTime, 
+
+			FlxTween.tween(this.scale, {x : 0.5, y : 0.5}, crunchTime,
 							{ complete : function(_t:FlxTween) {
 								new FlxTimer(waitTime, function(__t:FlxTimer) {
 									FlxTween.tween(this.scale, {x : 3, y : 3}, popTime);
@@ -329,20 +329,20 @@ class Bubble extends FlxSprite
 						});
 		}
 	}
-	
+
 	public function triggerFall()
 	{
 		if (state != Bubble.StatePopping)
 		{
 			// Start your death procedure
 			state = Bubble.StatePopping;
-			
+
 			// Clear grid data
 			if (grid.isPositionValid(cellPosition))
 				grid.setData(cellPosition.x, cellPosition.y, null);
-			
+
 			FlxTween.tween(this.scale, {x : 0.9, y : 0.9}, jumpWaitTime*0.5);
-			
+
 			new FlxTimer(jumpWaitTime, function (_t:FlxTimer) {
 				velocity.y = -100;
 				scale.set(1, 1);
@@ -351,13 +351,13 @@ class Bubble extends FlxSprite
 			});
 		}
 	}
-	
+
 	public function triggerRot()
 	{
 		state = StateIdling;
-		
+
 		var rotTime : Float = (grid.rows - cellPosition.y)*0.25 + (cellPosition.y)*0.15;
-		
+
 		// Rot quickly
 		new FlxTimer(rotTime * 0.25, function (_t:FlxTimer) {
 			color = 0xFF606060;
@@ -368,7 +368,7 @@ class Bubble extends FlxSprite
 			triggerFall();
 		});
 	}
-	
+
 	public function checkCollisionWithBubbles() : Bool
 	{
 		var bubbles : FlxTypedGroup<Bubble> = world.bubbles;
@@ -377,17 +377,17 @@ class Bubble extends FlxSprite
 			if (bubble.touches(this))
 				return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	public function touches(bubble : Bubble) : Bool
 	{
 		if (state == StatePopping || bubble.state == StatePopping)
 			return false;
-	
+
 		var squish : Float = 0.85;
-	
+
 		var deltaXSquared : Float = (x + width/2) - (bubble.x + width/2);
 		deltaXSquared *= deltaXSquared;
 		var deltaYSquared : Float = (y + height/2) - (bubble.y + height/2);
@@ -399,52 +399,52 @@ class Bubble extends FlxSprite
 
 		return (deltaXSquared + deltaYSquared <= sumRadiiSquared);
 	}
-	
+
 	public function getCurrentCell() : FlxPoint
 	{
 		return grid.getCellAt(x+Size, y+Size);
 	}
-	
+
 	public function reposition(X : Float, Y : Float)
 	{
 		var oldPos : FlxPoint = new FlxPoint(cellPosition.x, cellPosition.y);
-		
+
 		cellPosition.set(Std.int(X), Std.int(Y));
 		cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 	}
-	
+
 	public function isSafe() : Bool
 	{
 		return special == SpecialAnchor;
 	}
-	
+
 	public function getPopPoints() : Int
 	{
 		return popPoints;
 	}
-	
+
 	public function getFallPoints() : Int
 	{
 		return fallPoints;
 	}
-	
+
 	public static function compare(A : FlxPoint, B : FlxPoint) : Bool
 	{
 		return A.x == B.x && A.y == B.y;
 	}
-	
+
 	public static function CreateAt(X : Float, Y : Float, ColorIndex : Int, World : PlayState) : Bubble
 	{
 		var cellCenter : FlxPoint = World.grid.getCellCenter(Std.int(X), Std.int(Y));
-		
+
 		var bubble : Bubble = new Bubble(cellCenter.x, cellCenter.y - World.grid.cellSize, World, ColorIndex);
 		bubble.cellPosition.set(X, Y);
 		bubble.cellCenterPosition.set(cellCenter.x, cellCenter.y);
 		bubble.state = StateIdling;
-		
+
 		World.grid.setData(X, Y, bubble);
 		World.bubbles.add(bubble);
-		
+
 		return bubble;
 	}
 }

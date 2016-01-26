@@ -5,16 +5,16 @@ import parser.commands.*;
 class SceneParser
 {
 	public var filename : String;
-	
+
 	public var commands : Array<Command>;
-	
+
 	public function new(filename : String)
 	{
 		this.filename = filename;
-		
+
 		commands = [];
 	}
-	
+
 	public function print()
 	{
 		trace("Script: " + filename);
@@ -25,37 +25,39 @@ class SceneParser
 			trace(index + " |\t" + command.print());
 		}
 	}
-	
-	public function parse()
+
+	public function parse() : Array<Command>
 	{
 		var basePath : String = "assets/scenes/";
 		var file : sys.io.FileInput = sys.io.File.read(basePath + filename);
 		if (file == null)
 			throw "Could not locate file: " + filename;
-			
+
 		while (!file.eof())
 		{
 			parseLine(file.readLine());
 		}
-		
+
 		print();
+
+		return commands;
 	}
-	
+
 	function parseLine(line : String)
 	{
 		// Is it a comment?
 		if (line.charAt(0) == "#")
 			return;
-	
+
 		var command : Command = null;
-	
+
 		// Locate command
 		var spacePos : Int = line.indexOf(" ");
 		if (spacePos >= 0)
 		{
 			var commandName : String = line.substring(0, spacePos);
 			line = line.substring(spacePos+1, line.length);
-			
+
 			switch (commandName)
 			{
 				case "char":
@@ -72,7 +74,7 @@ class SceneParser
 					trace("Unrecognized command: " + line);
 			}
 		}
-		
+
 		// Store command
 		if (command != null)
 		{
