@@ -1,5 +1,7 @@
 package parser;
 
+import openfl.Assets;
+
 import parser.commands.*;
 
 class SceneParser
@@ -29,13 +31,13 @@ class SceneParser
 	public function parse()
 	{
 		var basePath : String = "assets/scenes/";
-		var file : sys.io.FileInput = sys.io.File.read(basePath + filename);
-		if (file == null)
-			throw "Could not locate file: " + filename;
-			
-		while (!file.eof())
+
+		var fileContents : String = Assets.getText(basePath + filename);
+		var lines : Array<String> = fileContents.split("\n");
+
+		for (line in lines)
 		{
-			parseLine(file.readLine());
+			parseLine(line);
 		}
 		
 		print();
