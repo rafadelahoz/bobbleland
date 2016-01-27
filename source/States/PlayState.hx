@@ -52,13 +52,13 @@ class PlayState extends FlxState
 	{
 		super.create();
 
-		grid = new BubbleGrid(FlxG.width / 2 - 64, 16, 128, FlxG.height - 32, this);
+		grid = new BubbleGrid(FlxG.width / 2 - 64, 16, 128, 240 - 32, this);
 		add(grid);
 
 		bubbles = new FlxTypedGroup<Bubble>();
 		add(bubbles);
 
-		cursor = new PlayerCursor(FlxG.width / 2 - 16, FlxG.height - 32, this);
+		cursor = new PlayerCursor(FlxG.width / 2 - 16, 240 - 32, this);
 		add(cursor);
 
 		// bubbleColors = [0xFFFF3131, 0xFF31FF31];
