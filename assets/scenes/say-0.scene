@@ -1,8 +1,14 @@
- ## Switching bg
-bg Forest
-# hi there
+# bg Forest
+fade in 1 0xFF000000
 say "Buddy" "Come on, we are nearly there"
-say "Ok"
-bg City 12
-say "Two" "Ok ok?!!"
+fade out 0.2 0xFFFFFFFF
+fade in 0.2 0xFFFFFFFF
+say "Two" "Ok"
+# bg City 12
+say "Buddy" "You mean it?"
+say "Two" "Yeah"
+say "Buddy" "That's real nice you know? I wish I was more like you."
+say "Buddy" "So what are we going to do once we get there?"
+say "Two" "I thought you had that figured out!"
+say "Buddy" "Oh boy no! Haha now you know you can't depend on me"
 #end

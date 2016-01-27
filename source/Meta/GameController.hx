@@ -13,12 +13,17 @@ class GameController
 	{
 		FlxG.switchState(new PlayState(PlayState.ModeArcade));
 	}
-	
+
 	public static function StartPuzzleGame()
 	{
 		FlxG.switchState(new PlayState(PlayState.ModePuzzle));
 	}
-	
+
+	public static function BeginScene(scene : String)
+	{
+		FlxG.switchState(new SceneState(scene));
+	}
+
 	public static function GameOver(mode : Int, score : Int)
 	{
 		// TODO: Handle mode or...?

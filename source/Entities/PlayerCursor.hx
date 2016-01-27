@@ -78,7 +78,7 @@ class PlayerCursor extends FlxSprite
 	override public function draw()
 	{
 		super.draw();
-		label.draw();
+		// label.draw();
 	}
 	
 	public function redraw() : Void
