@@ -1,5 +1,7 @@
 package parser.commands;
 
+import flixel.FlxG;
+
 class SayCommand extends Command
 {
 	public var message : String;
@@ -17,15 +19,12 @@ class SayCommand extends Command
 	{
 		super.init(scene);
 
-		trace("SAY " + print);
-
-		text.TextBox.Init(scene);
+		text.TextBox.Init(scene, 0, FlxG.height-64, 160, 64);
 		text.TextBox.Message(actor, message, onMessageCompletion);
 	}
 
 	function onMessageCompletion()
 	{
-		trace("Message finished");
 		onComplete();
 	}
 

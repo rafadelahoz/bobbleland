@@ -19,28 +19,41 @@ import openfl.Assets;
 
 class TextBox extends FlxGroup
 {
-	var originX : Int = 120;
-	var originY : Int = 64;
+	static var originX : Int = 120;
+	static var originY : Int = 64;
 
-	var borderX : Int = 8;
-	var borderY : Int = 8;
+	static var borderX : Int = 4;
+	static var borderY : Int = 8;
 
-	var boxWidth : Int = Std.int(240);
-	var boxHeight: Int = Std.int(32);
+	static var boxWidth : Int = 240;
+	static var boxHeight: Int = 32;
 
 
 	private static var world : FlxState;
 	private static var textBox : TextBox;
 
-	public static function Init(World : FlxState)
+	public static function Init(World : FlxState, ?OriginX : Float = -1, ?OriginY : Float = -1, ?Width : Int = -1, ?Height : Int = -1)
 	{
 		world = World;
+
+		if (OriginX > -1)
+			originX = Std.int(OriginX);
+		if (OriginY > -1)
+			originY = Std.int(OriginY);
+
+		if (Width > 0)
+			boxWidth = Std.int(Width);
+		if (Height > 0)
+			boxHeight = Std.int(Height);
 	}
 
 	public static function Message(name : String, message : String, ?completeCallback:Dynamic)
 	{
 		if (textBox == null)
 		{
+			if (name == null)
+				name = "";
+
 			textBox = new TextBox(name);
 			textBox._callback = completeCallback;
 			textBox.talk(message);
@@ -93,7 +106,7 @@ class TextBox extends FlxGroup
 		textBox = null;
 	}
 
-	public function talk(TEXT:String):Void
+	public function talk(Message:String):Void
 	{
 		if(!_isTalking) {
 			_isTalking = true;
@@ -110,7 +123,7 @@ class TextBox extends FlxGroup
 										   originY + borderY,
 										   boxWidth - borderX*2,
 										   boxHeight - borderY*2,
-										   TEXT, 0xffdedede, 12);
+										   Message, 0xffdedede, 12);
 
 				_typetext.scrollFactor.set();
 				// _typetext.showCursor = true;

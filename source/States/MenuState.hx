@@ -50,7 +50,7 @@ class MenuState extends FlxState
 
 	public function onParseButtonPressed() : Void
 	{
-		GameController.BeginScene("sample-script.scene");
+		GameController.BeginScene("say-0.scene");
 	}
 
 	function decorateButton(button : FlxButtonPlus)

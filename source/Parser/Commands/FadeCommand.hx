@@ -29,7 +29,6 @@ class FadeCommand extends Command
 
 	public function onFadeComplete() : Void
 	{
-		trace("Fade " + (mode == MODE_IN ? "in " : "out ") + "completed");
 		onComplete();
 	}
 
