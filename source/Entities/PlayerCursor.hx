@@ -47,9 +47,9 @@ class PlayerCursor extends FlxSprite
 		{
 			var oldAngle : Float = aimAngle;
 		
-			if (FlxG.keys.pressed.LEFT)
+			if (GamePad.checkButton(GamePad.Left))
 				aimAngle += AngleDelta;
-			else if (FlxG.keys.pressed.RIGHT)
+			else if (GamePad.checkButton(GamePad.Right))
 				aimAngle -= AngleDelta;
 				
 			aimAngle = FlxMath.bound(aimAngle, 30, 150);

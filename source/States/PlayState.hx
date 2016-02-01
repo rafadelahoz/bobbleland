@@ -32,6 +32,8 @@ class PlayState extends FlxState
 	public var cursor : PlayerCursor;
 	public var bubble : Bubble;
 
+	public var screenButtons : ScreenButtons;
+
 	public var dropDelay : Float;
 	public var dropTimer : FlxTimer;
 	public var waitTimer : FlxTimer;
@@ -51,6 +53,8 @@ class PlayState extends FlxState
 	override public function create()
 	{
 		super.create();
+
+		GamePad.init();
 
 		grid = new BubbleGrid(FlxG.width / 2 - 64, 16, 128, 240 - 32, this);
 		add(grid);
@@ -75,11 +79,16 @@ class PlayState extends FlxState
 		generateBubble();
 		switchState(StateAiming);
 
+		screenButtons = new ScreenButtons(0, cursor.y + cursor.height, this);
+		add(screenButtons);
+
 		handleDebugInit();
 	}
 
 	override public function update()
 	{
+		GamePad.handlePadState();
+
 		switch (state)
 		{
 			case PlayState.StateAiming:
@@ -138,7 +147,7 @@ class PlayState extends FlxState
 			trace("HURRY UP!");
 		}
 
-		if (FlxG.keys.justPressed.A)
+		if (GamePad.justPressed(GamePad.Shoot))
 		{
 			scoreDisplay.add(Constants.ScBubbleShot);
 
@@ -337,7 +346,7 @@ class PlayState extends FlxState
 		var mouse : FlxPoint = FlxG.mouse.getWorldPosition();
 		var cell = grid.getCellAt(mouse.x, mouse.y);
 
-		if (FlxG.keys.justPressed.ONE || FlxG.keys.justPressed.TWO)
+		/*if (FlxG.keys.justPressed.ONE || FlxG.keys.justPressed.TWO)
 		{
 			if (grid.getData(cell.x, cell.y) != null)
 			{
@@ -349,9 +358,9 @@ class PlayState extends FlxState
 			{
 				Bubble.CreateAt(cell.x, cell.y, (FlxG.keys.justPressed.ONE ? 0 : 1), this);
 			}
-		}
+		}*/
 
-		if (FlxG.mouse.justPressed && grid.bounds.containsFlxPoint(mouse))
+		/*if (FlxG.mouse.justPressed && grid.bounds.containsFlxPoint(mouse))
 		{
 			// Create an anchor
 			var anchor : Bubble = Bubble.CreateAt(cell.x, cell.y, -1, this);
@@ -369,15 +378,11 @@ class PlayState extends FlxState
 					Bubble.CreateAt(pos.x, pos.y, getRandomColor(), this);
 				}
 			}
-		}
+		}*/
 
-		if (FlxG.keys.justPressed.UP)
+		if (FlxG.keys.justPressed.DOWN)
 		{
-			dropDelay += 1;
-		}
-		else if (FlxG.keys.justPressed.DOWN)
-		{
-			dropDelay -= 1;
+			grid.generateBubbleRow(mode == ModePuzzle);
 		}
 
 		if (FlxG.keys.justPressed.D)
