@@ -13,7 +13,7 @@
 
 	<!--------------------------------WINDOW SETTINGS------------------------------->
 
-	<set name="work"/>
+	<!--set name="work"/-->
 
 	<!--These window settings apply to all targets-->
 	<window width="720" height="1280" fps="60" background="#212121" hardware="true" vsync="true" />
@@ -26,7 +26,7 @@
 	<window if="desktop" orientation="portrait" fullscreen="false" resizable="true" />
 
 	<!--Mobile-specific-->
-	<window if="mobile" orientation="portrait" fullscreen="true" width="0" height="0" />
+	<window if="mobile" orientation="portrait" fullscreen="true" width="0" height="0" background="#000000"/>
 	<android target-sdk-version="19"/>
 
 	<!--------------------------------PATHS SETTINGS-------------------------------->
