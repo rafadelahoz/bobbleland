@@ -27,9 +27,9 @@ class ScreenButtons extends FlxSpriteGroup
 		var halfHeight = Std.int(_height / 2);
 
 		// Add the buttons
-		add(leftButton = new FlxSprite(0, halfHeight).makeGraphic(halfWidth, halfHeight, 0xFFFF5151));
-		add(rightButton = new FlxSprite(halfWidth, halfHeight).makeGraphic(halfWidth, halfHeight, 0xFF5151FF));
-		add(shootButton = new FlxSprite(0, 0).makeGraphic(_width, halfHeight, 0xFF51FF51));
+		add(leftButton = new FlxSprite(0, halfHeight).makeGraphic(halfWidth, halfHeight, 0x33FF5151));
+		add(rightButton = new FlxSprite(halfWidth, halfHeight).makeGraphic(halfWidth, halfHeight, 0x335151FF));
+		add(shootButton = new FlxSprite(0, 0).makeGraphic(_width, halfHeight, 0x3351FF51));
 	}
 
 	override public function update()
