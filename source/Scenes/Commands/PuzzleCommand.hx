@@ -1,4 +1,4 @@
-package parser.commands;
+package scenes.commands;
 
 class PuzzleCommand extends Command
 {

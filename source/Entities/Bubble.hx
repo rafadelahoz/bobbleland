@@ -119,7 +119,7 @@ class Bubble extends FlxSprite
 				FlxSpriteUtil.drawCircle(this, width/2, height/2, Size, 0xFFFFFFFF);
 				// offset.set(0, 0);
 			default:
-				loadGraphic("assets/images/bubble3.png");
+				loadGraphic("assets/images/bubble2.png");
 				/*FlxSpriteUtil.drawCircle(this, width/2, height/2, Size, 0xFFFFFFFF);
 				offset.set(0, 0);*/
 				color = world.bubbleColors[colorIndex];

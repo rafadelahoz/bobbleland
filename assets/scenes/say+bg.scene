@@ -1,0 +1,17 @@
+# fade in 1 0x000000
+say "Endure it a little longer, we are nearly there"
+# fade out 0.5 0xAAAAFF
+bg day
+# fade in 0.5 0xAAAAFF
+say "Doggo" "Welcome to the park!"
+say "Doggo" "What do you think?"
+say "Doggo" "Neat, huh?"
+say "Pungo" "Ho! I like the park!"
+say "Narrator" "Next, Doggo proceeds to give an specially long explanation about why the park is so special. You are not really paying attention."
+bg dawn
+say "Doggo" "And thats why the park is so special"
+say "Pungo" "Unnng so many things to remember. I probably can't :("
+say "Doggo" "Don't worry Pungo!"
+say "Doggo" "I'll explain again!"
+fade out 1 0x000000
+#end

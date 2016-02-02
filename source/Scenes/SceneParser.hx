@@ -1,8 +1,8 @@
-package parser;
+package scenes;
 
 import openfl.Assets;
 
-import parser.commands.*;
+import scenes.commands.*;
 
 class SceneParser
 {

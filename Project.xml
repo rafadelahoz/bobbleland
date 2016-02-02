@@ -13,7 +13,7 @@
 
 	<!--------------------------------WINDOW SETTINGS------------------------------->
 
-	<!--set name="work"/-->
+	<!--<set name="work"/>-->
 
 	<!--These window settings apply to all targets-->
 	<window width="720" height="1280" fps="60" background="#212121" hardware="true" vsync="true" />
@@ -34,8 +34,8 @@
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	<classpath name="source/Text" />
-	<classpath name="source/Parser" />
-	<classpath name="source/Parser/Commands" />
+	<classpath name="source/Scenes" />
+	<classpath name="source/Scenes/Commands" />
 	<classpath name="source/Meta" />
 	<classpath name="source/States" />
 	<classpath name="source/Entities" />

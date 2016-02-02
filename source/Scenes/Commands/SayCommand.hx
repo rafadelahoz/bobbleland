@@ -1,4 +1,4 @@
-package parser.commands;
+package scenes.commands;
 
 import flixel.FlxG;
 

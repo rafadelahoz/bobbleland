@@ -1,8 +1,8 @@
 # bg Forest
-fade in 1 0xFFFF00
+# fade in 1 0xFFFF00
 say "Buddy" "Happy birthday!"
-fade out 0.5 0xFFAAFF
-fade in 0.5 0xFFAAFF
+# fade out 0.5 0xFFAAFF
+# fade in 0.5 0xFFAAFF
 say "Buddy" "Did you think I would forget your about your birthday?"
 # bg City 12
 say "Buddy" "I have your present at home, why don't you with me and get it?"

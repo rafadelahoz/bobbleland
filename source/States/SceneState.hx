@@ -1,13 +1,19 @@
 package;
 
+import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxState;
 
-import parser.commands.Command;
+import scenes.SceneParser;
+import scenes.BackgroundDatabase;
+import scenes.commands.Command;
 
 class SceneState extends FlxState
 {
     public var commandQueue : Array<Command>;
     public var currentCommand : Command;
+    
+    public var background : FlxSprite;
 
     public var sceneFile : String;
 
@@ -25,8 +31,13 @@ class SceneState extends FlxState
         super.create();
 
         GamePad.init();
+        BackgroundDatabase.Init();
 
-        var parser : parser.SceneParser = new parser.SceneParser(sceneFile);
+        background = new FlxSprite(0, 0);
+        background.makeGraphic(Std.int(FlxG.width), Std.int(FlxG.height), 0xFF000000);
+        add(background);
+
+        var parser : SceneParser = new SceneParser(sceneFile);
 		commandQueue = parser.parse();
 
         if (commandQueue != null)
@@ -62,6 +73,18 @@ class SceneState extends FlxState
         // Get next command, init it, execute
         // Maybe wait before doing that?
         nextCommand();
+    }
+    
+    public function changeBackground(backgroundId : String) : Void
+    {
+        background.loadGraphic(BackgroundDatabase.GetBackground(backgroundId));
+        /*var scaleX : Float = (FlxG.width / background.width);
+        var scaleY : Float = (FlxG.height / background.height);
+        trace("Scale: " + scaleX + " " + scaleY);
+        background.scale.x = scaleX;
+        background.scale.y = scaleY;*/
+        background.setGraphicSize(FlxG.width);
+        background.setGraphicSize(FlxG.height);
     }
 
     function nextCommand()
