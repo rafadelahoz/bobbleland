@@ -3,3 +3,4 @@ export/
 */.DS_Store
 *.sublime-workspace
 *.sublime-project
+*.hxml
