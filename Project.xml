@@ -16,7 +16,7 @@
 	<!--<set name="work"/>-->
 
 	<!--These window settings apply to all targets-->
-	<window width="720" height="1280" fps="60" background="#212121" hardware="true" vsync="true" />
+	<window width="360" height="640" fps="60" background="#212121" hardware="true" vsync="true" />
 	<window if="work" width="180" height="320" fps="60" background="#212121" hardware="true" vsync="true" />
 
 	<!--Web-specific-->

@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.util.FlxPoint;
 import flixel.util.FlxTimer;
@@ -34,6 +35,10 @@ class PlayState extends FlxState
 
 	public var screenButtons : ScreenButtons;
 
+	public var background : FlxSprite;
+	public var overlay : FlxSprite;
+	public var shadow : FlxSprite;
+
 	public var dropDelay : Float;
 	public var dropTimer : FlxTimer;
 	public var waitTimer : FlxTimer;
@@ -56,13 +61,23 @@ class PlayState extends FlxState
 
 		GamePad.init();
 
+		background = new FlxSprite(0, 0, "assets/backgrounds/" + (FlxRandom.chanceRoll(50) ? "bg0.png" : "bg1.png"));
+		add(background);
+
+		shadow = new FlxSprite(FlxG.width / 2 - 64, 16).makeGraphic(128, 240-32, 0xFF000000);
+		shadow.alpha = 0.68;
+		add(shadow);
+
 		grid = new BubbleGrid(FlxG.width / 2 - 64, 16, 128, 240 - 32, this);
 		add(grid);
 
 		bubbles = new FlxTypedGroup<Bubble>();
 		add(bubbles);
 
-		cursor = new PlayerCursor(FlxG.width / 2 - 16, 240 - 32, this);
+		overlay = new FlxSprite(0, 0, "assets/images/play-overlay.png");
+		add(overlay);
+
+		cursor = new PlayerCursor(FlxG.width / 2 - 16, 240 - 40, this);
 		add(cursor);
 
 		// bubbleColors = [0xFFFF3131, 0xFF31FF31];
@@ -73,13 +88,13 @@ class PlayState extends FlxState
 		waitTimer = new FlxTimer();
 		aimingTimer = new FlxTimer();
 
-		scoreDisplay = new ScoreDisplay(0, 0, mode);
+		scoreDisplay = new ScoreDisplay(2, 4, mode);
 		add(scoreDisplay);
 
 		generateBubble();
 		switchState(StateAiming);
 
-		screenButtons = new ScreenButtons(0, cursor.y + cursor.height, this);
+		screenButtons = new ScreenButtons(0, 240, this);
 		add(screenButtons);
 
 		handleDebugInit();

@@ -119,10 +119,18 @@ class Bubble extends FlxSprite
 				FlxSpriteUtil.drawCircle(this, width/2, height/2, Size, 0xFFFFFFFF);
 				// offset.set(0, 0);
 			default:
-				loadGraphic("assets/images/bubble2.png");
-				/*FlxSpriteUtil.drawCircle(this, width/2, height/2, Size, 0xFFFFFFFF);
-				offset.set(0, 0);*/
-				color = world.bubbleColors[colorIndex];
+				loadGraphic("assets/images/bubbles_sheet.png", true, 16, 16);
+				if (colorIndex < 5)
+				{
+					animation.add("idle", [colorIndex]);
+				}
+				else
+				{
+					animation.add("idle", [5]);
+					color = world.bubbleColors[colorIndex];
+				}
+
+				animation.play("idle");
 		}
 	}
 

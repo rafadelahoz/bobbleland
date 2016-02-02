@@ -27,16 +27,24 @@ class ScreenButtons extends FlxSpriteGroup
 		var halfHeight = Std.int(_height / 2);
 
 		// Add the buttons
-		add(leftButton = new FlxSprite(0, halfHeight).makeGraphic(halfWidth, halfHeight, 0x33FF5151));
-		add(rightButton = new FlxSprite(halfWidth, halfHeight).makeGraphic(halfWidth, halfHeight, 0x335151FF));
-		add(shootButton = new FlxSprite(0, 0).makeGraphic(_width, halfHeight, 0x3351FF51));
+		add(leftButton = new FlxSprite(0, halfHeight).loadGraphic("assets/images/btnLeft.png", true, 90, 40));
+		add(rightButton = new FlxSprite(halfWidth, halfHeight).loadGraphic("assets/images/btnRight.png", true, 90, 40));
+		add(shootButton = new FlxSprite(0, 0).loadGraphic("assets/images/btnShoot.png", true, 180, 40));
+
+		for (button in [leftButton, rightButton, shootButton])
+		{
+			button.animation.add("idle", [0]);
+			button.animation.add("pressed", [1]);
+			button.animation.play("idle");
+		}
 	}
 
 	override public function update()
 	{
-		leftButton.alpha = 0.5;
-		rightButton.alpha = 0.5;
-		shootButton.alpha = 0.5;
+		for (button in [leftButton, rightButton, shootButton])
+		{
+			button.animation.play("idle");
+		}
 
 		// Check whether any of the touches affects the buttons
 		for (touch in FlxG.touches.list)
@@ -46,17 +54,17 @@ class ScreenButtons extends FlxSpriteGroup
 				if (touch.overlaps(leftButton))
 				{
 					GamePad.setPressed(GamePad.Left);
-					leftButton.alpha = 0.8;
+					leftButton.animation.play("pressed");
 				}
 				else if (touch.overlaps(rightButton))
 				{
 					GamePad.setPressed(GamePad.Right);
-					rightButton.alpha = 0.8;
+					rightButton.animation.play("pressed");
 				}
 				else if (touch.overlaps(shootButton))
 				{
 					GamePad.setPressed(GamePad.Shoot);
-					shootButton.alpha = 0.8;
+					shootButton.animation.play("pressed");
 				}
 			}
 		}
