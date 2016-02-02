@@ -24,6 +24,8 @@ class SceneState extends FlxState
     {
         super.create();
 
+        GamePad.init();
+
         var parser : parser.SceneParser = new parser.SceneParser(sceneFile);
 		commandQueue = parser.parse();
 
@@ -35,6 +37,8 @@ class SceneState extends FlxState
 
     override public function update()
     {
+        GamePad.handlePadState();
+
         if (currentCommand != null)
         {
             currentCommand.update();

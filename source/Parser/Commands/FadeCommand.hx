@@ -9,7 +9,7 @@ class FadeCommand extends Command
 
 	public var mode : Int;
 	public var duration : Float;
-	public var fadeColor : Int;
+	public var _color : Int;
 
 	public function new(Mode : Int, ?Duration : Float = 1, ?Color : Int = 0xFF000000)
 	{
@@ -17,14 +17,14 @@ class FadeCommand extends Command
 
 		mode = Mode;
 		duration = Duration;
-		fadeColor = Color;
+		_color = Color;
 	}
 
 	override public function init(Scene : SceneState)
 	{
 		super.init(Scene);
 
-		FlxG.camera.fade(fadeColor, duration, (mode == MODE_IN), onFadeComplete, true);
+		FlxG.camera.fade(_color, duration, (mode == MODE_IN), onFadeComplete, true);
 	}
 
 	public function onFadeComplete() : Void
@@ -36,7 +36,7 @@ class FadeCommand extends Command
 
 	override public function print() : String
 	{
-		return "Fade " + (mode == MODE_IN ? "in to " : "out from ") + color + " in " + duration + " seconds";
+		return "Fade " + (mode == MODE_IN ? "in to " : "out from ") + _color + " in " + duration + " seconds";
 	}
 
 	public static function parse(line : String) : Command
@@ -49,6 +49,8 @@ class FadeCommand extends Command
 
 		for (comp in components)
 		{
+			comp = StringTools.trim(comp);
+			
 			switch (comp)
 			{
 				case "in":
@@ -57,7 +59,9 @@ class FadeCommand extends Command
 					mode = MODE_OUT;
 				default:
 					if (comp.indexOf("0x") == 0)
+					{
 						color = Std.parseInt(comp);
+					}
 					else
 						duration = Std.parseFloat(comp);
 			}

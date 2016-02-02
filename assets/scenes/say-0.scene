@@ -1,14 +1,15 @@
 # bg Forest
-fade in 1 0xFF000000
-say "Buddy" "Come on, we are nearly there"
-fade out 0.2 0xFFFFFFFF
-fade in 0.2 0xFFFFFFFF
-say "Two" "Ok"
+fade in 1 0xFFFF00
+say "Buddy" "Happy birthday!"
+fade out 0.5 0xFFAAFF
+fade in 0.5 0xFFAAFF
+say "Buddy" "Did you think I would forget your about your birthday?"
 # bg City 12
-say "Buddy" "You mean it?"
-say "Two" "Yeah"
-say "Buddy" "That's real nice you know? I wish I was more like you."
-say "Buddy" "So what are we going to do once we get there?"
-say "Two" "I thought you had that figured out!"
-say "Buddy" "Oh boy no! Haha now you know you can't depend on me"
+say "Buddy" "I have your present at home, why don't you with me and get it?"
+say "Buddy" "I'm sure you will like it :D"
+fade out 0.5 0xFF00FF
+fade in 0.5 0xFF00FF
+say "Buddy" "So what do you think it is?"
+say "Buddy" "Aren't you anxious?"
+say "Buddy" "I would!"
 #end

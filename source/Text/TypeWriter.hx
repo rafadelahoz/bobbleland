@@ -464,20 +464,11 @@ class TypeWriter extends FlxBitmapTextField
 
 	override public function update():Void
 	{
-		// If the skip key was pressed, complete the animation.
-
-		/*#if !FLX_NO_KEYBOARD
-		if (skipKeys != null && skipKeys.length > 0 && FlxG.keys.anyJustPressed(skipKeys))
-		{
-			skip();
-		}
-		#end*/
-
 		// When the message has finished, wait for the user to
 		// press a key before closing or continuing with the text
 		if (finished)
 		{
-			if (FlxG.keys.justPressed.A)
+			if (GamePad.justPressed(GamePad.Shoot))
 			{
 				finished = false;
 				// If there is more text, we have not finished
@@ -518,12 +509,12 @@ class TypeWriter extends FlxBitmapTextField
 		{
 			if (_length < _finalText.length && _typing)
 			{
-				_timer += FlxG.elapsed * (FlxG.keys.justPressed.A ? 10 : 1);
+				_timer += FlxG.elapsed * (GamePad.checkButton(GamePad.Shoot) ? 10 : 1);
 			}
 
 			if (_length > 0 && _erasing)
 			{
-				_timer += FlxG.elapsed * (FlxG.keys.justPressed.A ? 10 : 1);
+				_timer += FlxG.elapsed * (GamePad.checkButton(GamePad.Shoot) ? 10 : 1);
 			}
 		}
 

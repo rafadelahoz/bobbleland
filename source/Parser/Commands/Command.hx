@@ -1,8 +1,8 @@
 package parser.commands;
 
-import flixel.FlxSprite;
+import flixel.FlxObject;
 
-class Command extends FlxSprite
+class Command extends FlxObject
 {
 	public var scene : SceneState;
 	public var finished : Bool;
