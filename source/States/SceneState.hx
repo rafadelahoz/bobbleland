@@ -14,6 +14,7 @@ class SceneState extends FlxState
     public var currentCommand : Command;
     
     public var background : FlxSprite;
+    public var sceneButtons : SceneButtons;
 
     public var sceneFile : String;
 
@@ -36,6 +37,9 @@ class SceneState extends FlxState
         background = new FlxSprite(0, 0);
         background.makeGraphic(Std.int(FlxG.width), Std.int(FlxG.height), 0xFF000000);
         add(background);
+        
+        sceneButtons = new SceneButtons(0, 0);
+        add(sceneButtons);
 
         var parser : SceneParser = new SceneParser(sceneFile);
 		commandQueue = parser.parse();
