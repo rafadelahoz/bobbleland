@@ -26,7 +26,7 @@ class Bubble extends FlxSprite
 	public var popTime : Float = 0.2;
 	public var jumpWaitTime : Float = 0.4;
 
-	public var Speed : Float = 400;
+	public var Speed : Float = 300;
 	public var Size : Float;
 	public var HalfSize : Float;
 
@@ -271,7 +271,7 @@ class Bubble extends FlxSprite
 			}
 
 			// Check whether we are losing
-			if (cellPosition.y >= grid.rows)
+			if (cellPosition.y >= grid.bottomRow)
 			{
 				reposition(cellPosition.x, cellPosition.y);
 				triggerRot();

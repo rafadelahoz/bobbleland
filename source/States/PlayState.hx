@@ -36,8 +36,13 @@ class PlayState extends FlxState
 	public var screenButtons : ScreenButtons;
 
 	public var background : FlxSprite;
-	public var overlay : FlxSprite;
+	public var baseDecoration : FlxSprite;
+	public var character : PlayerCharacter;
+	public var lever : Lever;
 	public var shadow : FlxSprite;
+	public var bottomBar : FlxSprite;
+	public var overlay : FlxSprite;
+
 
 	public var dropDelay : Float;
 	public var dropTimer : FlxTimer;
@@ -64,20 +69,38 @@ class PlayState extends FlxState
 		background = new FlxSprite(0, 0, "assets/backgrounds/" + (FlxRandom.chanceRoll(50) ? "bg0.png" : "bg1.png"));
 		add(background);
 
-		shadow = new FlxSprite(FlxG.width / 2 - 64, 16).makeGraphic(128, 240-32, 0xFF000000);
+		baseDecoration = new FlxSprite(FlxG.width / 2 - 64, 181).loadGraphic("assets/images/base-decoration.png", true, 128, 60);
+		// baseDecoration.animation.add("idle", [0]);
+		baseDecoration.animation.add("move", [0, 1], 10, true);
+		baseDecoration.animation.play("move");
+		baseDecoration.animation.paused = true;
+		add(baseDecoration);
+
+		character = new PlayerCharacter(baseDecoration.x + 24, baseDecoration.y + 32, this);
+		add(character);
+
+		lever = new Lever(baseDecoration.x + 24, baseDecoration.y + 40, this);
+		add(lever);
+
+		shadow = new FlxSprite(FlxG.width / 2 - 64, 16).makeGraphic(128, 240-48, 0xFF000000);
 		shadow.alpha = 0.68;
 		add(shadow);
 
 		grid = new BubbleGrid(FlxG.width / 2 - 64, 16, 128, 240 - 32, this);
 		add(grid);
 
-		bubbles = new FlxTypedGroup<Bubble>();
-		add(bubbles);
-
 		overlay = new FlxSprite(0, 0, "assets/images/play-overlay.png");
 		add(overlay);
 
-		cursor = new PlayerCursor(FlxG.width / 2 - 16, 240 - 40, this);
+		bubbles = new FlxTypedGroup<Bubble>();
+		add(bubbles);
+
+		var bottomBarPosition : FlxPoint = grid.getBottomBarPosition();
+		bottomBar = new FlxSprite(bottomBarPosition.x, bottomBarPosition.y).loadGraphic("assets/images/red-bar.png");
+		add(bottomBar);
+
+
+		cursor = new PlayerCursor(FlxG.width / 2 - 10, 240 - 40, this);
 		add(cursor);
 
 		// bubbleColors = [0xFFFF3131, 0xFF31FF31];
@@ -161,6 +184,8 @@ class PlayState extends FlxState
 			notifyAiming = true;
 			trace("HURRY UP!");
 		}
+
+		baseDecoration.animation.paused = !cursor.moving;
 
 		if (GamePad.justPressed(GamePad.Shoot))
 		{

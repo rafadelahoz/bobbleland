@@ -16,6 +16,7 @@ class PlayerCursor extends FlxSprite
 	public var world : PlayState;
 	public var enabled : Bool;
 
+	public var moving : Bool;
 	public var aimAngle : Float;
 	public var aimOrigin : FlxPoint;
 
@@ -28,7 +29,6 @@ class PlayerCursor extends FlxSprite
 		world = World;
 		enabled = true;
 
-		// makeGraphic(32, 32, 0x00000000);
 		loadGraphic("assets/images/cursor.png");
 		centerOffsets();
 		centerOrigin();
@@ -38,14 +38,17 @@ class PlayerCursor extends FlxSprite
 
 		aimAngle = 90;
 		aimOrigin = FlxPoint.get(width / 2, height / 2);
+		moving = false;
+
+		updateSpriteAngle();
 
 		label = new FlxText(x + width, y + aimOrigin.y + 2, "");
-
-		redraw();
 	}
 
 	override public function update()
 	{
+		moving = false;
+
 		if (enabled)
 		{
 			var oldAngle : Float = aimAngle;
@@ -59,7 +62,9 @@ class PlayerCursor extends FlxSprite
 
 			if (oldAngle != aimAngle)
 			{
-				redraw();
+				moving = true;
+				updateSpriteAngle();
+				// redraw();
 			}
 
 			if (world.notifyAiming)
@@ -86,9 +91,6 @@ class PlayerCursor extends FlxSprite
 
 	public function redraw() : Void
 	{
-		angle = -1*(aimAngle - 270);
-		return;
-
 		var cos : Float = Math.cos(aimAngle * (Math.PI/180));
 		var sin : Float = Math.sin(aimAngle * (Math.PI/180));
 
@@ -109,5 +111,10 @@ class PlayerCursor extends FlxSprite
 
 			// Do something with the graphic
 		}
+	}
+
+	function updateSpriteAngle()
+	{
+		angle = -1*(aimAngle - 270);
 	}
 }

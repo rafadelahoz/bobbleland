@@ -19,6 +19,7 @@ class BubbleGrid extends FlxObject
 	public var columns : Int;
 	public var rows : Int;
 	public var topRow : Int;
+	public var bottomRow : Int;
 
 	public var cellSize : Float;
 	public var halfCell : Float;
@@ -38,6 +39,7 @@ class BubbleGrid extends FlxObject
 		rows = 12;
 
 		topRow = 0;
+		bottomRow = 11;
 
 		cellSize = Width / (columns+0.5);
 		halfCell = cellSize / 2;
@@ -48,12 +50,12 @@ class BubbleGrid extends FlxObject
 
 		clearData();
 
-		renderCanvas();
+		// renderCanvas();
 	}
 
 	override public function update()
 	{
-		renderCanvas();
+		// renderCanvas();
 
 		super.update();
 	}
@@ -62,8 +64,8 @@ class BubbleGrid extends FlxObject
 	{
 		super.draw();
 
-		/*if (canvas != null)
-			canvas.draw();*/
+		if (canvas != null)
+			canvas.draw();
 	}
 
 	public var highlightedCell : FlxPoint;
@@ -97,7 +99,7 @@ class BubbleGrid extends FlxObject
 
 	public function renderCanvas()
 	{
-		// return;
+		return;
 
 		if (canvas == null)
 			canvas = new FlxSprite(bounds.x, bounds.y).makeGraphic(Std.int(bounds.width), Std.int(bounds.height), 0xFF250516);
@@ -106,13 +108,17 @@ class BubbleGrid extends FlxObject
 
 		var lineStyle : flixel.util.LineStyle = { color : 0x50FFFFFF, thickness : 1 };
 
+		// TODO: Extract this from here: draw the ceiling falling in Puzzle Mode
 		if (topRow > 0)
 		{
 			FlxSpriteUtil.drawRect(canvas, 0, 0, width-1, topRow*cellSize, 0x50FFFFFF, {thickness: 0});
 		}
 
-		FlxSpriteUtil.drawRect(canvas, 0, 0, width-1, height-1, 0x000000, lineStyle);
-		FlxSpriteUtil.drawRect(canvas, 0, rows*cellSize-1, width-1, 2, 0x000000, { color : 0x90FF5151, thickness: 2 });
+		// Draw the canvas borders
+		// FlxSpriteUtil.drawRect(canvas, 0, 0, width-1, height-1, 0x000000, lineStyle);
+
+		// TODO: Extract this from here: draw the limit line
+		FlxSpriteUtil.drawRect(canvas, 0, bottomRow*cellSize-1, width-1, 2, 0x000000, { color : 0x90FF5151, thickness: 2 });
 
 		return;
 
@@ -143,6 +149,11 @@ class BubbleGrid extends FlxObject
 				FlxSpriteUtil.drawRect(canvas, col * cellSize + cellOffset, row * cellSize, cellSize, cellSize, ccolor, lineStyle);
 			}
 		}
+	}
+
+	public function getBottomBarPosition() : FlxPoint
+	{
+		return new FlxPoint(x, y+(bottomRow*cellSize-1));
 	}
 
 	public function clearData()
