@@ -14,18 +14,4 @@
 		<row colors="1,2,3,4,1,2,3,4,1,2"/>
 		<row colors="1,2,3,4,1,2,3,4,1,2"/>
 	</rows>
-	<rows>
-		<row>
-			<bubble color="1"/>
-			<bubble color="2"/>
-			<bubble color="1"/>
-			<bubble color="2"/>
-			<bubble color="1"/>
-			<bubble color="2"/>
-			<bubble color="1"/>
-			<bubble color="2"/>
-			<bubble color="1"/>
-			<bubble color="2"/>
-		</row>
-	</rows>
 </puzzle>
