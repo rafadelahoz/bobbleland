@@ -185,8 +185,6 @@ class PlayState extends FlxState
 			trace("HURRY UP!");
 		}
 
-		baseDecoration.animation.paused = !cursor.moving;
-
 		if (GamePad.justPressed(GamePad.Shoot))
 		{
 			scoreDisplay.add(Constants.ScBubbleShot);

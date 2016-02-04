@@ -74,6 +74,8 @@ class PlayerCursor extends FlxSprite
 
 			label.update();
 		}
+		
+		world.baseDecoration.animation.paused = !moving;
 
 		super.update();
 	}
