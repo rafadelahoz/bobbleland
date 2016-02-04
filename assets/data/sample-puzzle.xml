@@ -1,0 +1,31 @@
+<puzzle>
+	<mode name="clear" />
+	<!--<mode name="hold" seconds="90" />
+	<mode name="target" seconds="90" />-->
+	<background id="park" />
+	<bubble-set id="candy" />
+	<initial rows="5" colors="1,2,3,4,5" />
+	<rows>
+		<row colors="1,2,3,4,1,2,3,4,1,2"/>
+		<row colors="0,0,0,4,1,2,3,0,0,0"/>
+		<row colors="0,0,0,0,2,2,0,0,0,0"/>
+		<row colors="1,2,3,4,1,2,3,4,1,2"/>
+		<row colors="1,2,3,4,1,2,3,4,1,2"/>
+		<row colors="1,2,3,4,1,2,3,4,1,2"/>
+		<row colors="1,2,3,4,1,2,3,4,1,2"/>
+	</rows>
+	<rows>
+		<row>
+			<bubble color="1"/>
+			<bubble color="2"/>
+			<bubble color="1"/>
+			<bubble color="2"/>
+			<bubble color="1"/>
+			<bubble color="2"/>
+			<bubble color="1"/>
+			<bubble color="2"/>
+			<bubble color="1"/>
+			<bubble color="2"/>
+		</row>
+	</rows>
+</puzzle>

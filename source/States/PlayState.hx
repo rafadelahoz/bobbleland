@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
+import flixel.util.FlxSort;
 import flixel.text.FlxText;
 import flixel.util.FlxPoint;
 import flixel.util.FlxTimer;
@@ -28,6 +29,7 @@ class PlayState extends FlxState
 
 	public var bubbleColors : Array<Int>;
 	public var bubbles : FlxTypedGroup<Bubble>;
+	public var fallingBubbles : FlxTypedGroup<Bubble>;
 
 	public var grid : BubbleGrid;
 	public var cursor : PlayerCursor;
@@ -99,6 +101,8 @@ class PlayState extends FlxState
 		bottomBar = new FlxSprite(bottomBarPosition.x, bottomBarPosition.y).loadGraphic("assets/images/red-bar.png");
 		add(bottomBar);
 
+		fallingBubbles = new FlxTypedGroup<Bubble>();
+		add(fallingBubbles);
 
 		cursor = new PlayerCursor(FlxG.width / 2 - 10, 240 - 40, this);
 		add(cursor);
@@ -206,7 +210,7 @@ class PlayState extends FlxState
 	{
 		scoreDisplay.active = true;
 
-		if (bubbles.countLiving() <= 0)
+		if (bubbles.countLiving() <= 0 && fallingBubbles.countLiving() <= 0)
 		{
 			GameController.GameOver(mode, scoreDisplay.score);
 		}
@@ -285,6 +289,8 @@ class PlayState extends FlxState
 
 		grid.forEach(function (bubble : Bubble) {
 			bubble.triggerRot();
+			bubbles.remove(bubble);
+			fallingBubbles.add(bubble);
 		});
 	}
 
@@ -303,6 +309,8 @@ class PlayState extends FlxState
 			{
 				scoreDisplay.add(bub.getPopPoints());
 				bub.triggerFall();
+				bubbles.remove(bub);
+				fallingBubbles.add(bub);
 			}
 
 			// If there was some destruction, check for disconnections
@@ -311,6 +319,8 @@ class PlayState extends FlxState
 			{
 				scoreDisplay.add(bub.getFallPoints());
 				bub.triggerFall();
+				bubbles.remove(bub);
+				fallingBubbles.add(bub);
 			}
 
 			grid.forEach(function (bubble : Bubble) {
@@ -338,7 +348,7 @@ class PlayState extends FlxState
 		// And generate a new one
 		generateBubble();
 	}
-
+	
 	/* Returns a random color index for a bubble */
 	public function getRandomColor() : Int
 	{

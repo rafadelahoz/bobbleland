@@ -205,7 +205,7 @@ class BubbleGrid extends FlxObject
 		switchPadding();
 
 		// Shift bubble rows down
-		for (r in -(rows-1) ...1)
+		for (r in -(rows-1)...1)
 		{
 			var row : Int = -r;
 			for (col in 0...columns)
@@ -213,7 +213,7 @@ class BubbleGrid extends FlxObject
 				var bubble : Bubble = getData(col, row);
 
 				// Bubbles that overflow from the bottom mean gameover
-				if (row >= rows-1)
+				if (row >= bottomRow - 1)
 				{
 					if (bubble != null)
 					{
