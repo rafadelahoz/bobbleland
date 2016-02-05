@@ -10,6 +10,8 @@ import flixel.util.FlxTimer;
 import flixel.util.FlxRandom;
 import flixel.group.FlxTypedGroup;
 
+import database.BackgroundDatabase;
+
 class PlayState extends FlxState
 {
 	public static var ModeArcade 	: Int = 0;
@@ -24,6 +26,8 @@ class PlayState extends FlxState
 	public static var AimingTime 	: Float = 10;
 
 	public var mode : Int;
+	public var puzzleName : String;
+	public var puzzleData : puzzle.PuzzleData;
 
 	public var state : Int;
 
@@ -55,11 +59,17 @@ class PlayState extends FlxState
 
 	public var scoreDisplay : ScoreDisplay;
 
-	public function new(Mode : Int)
+	public function new(Mode : Int, PuzzleName : String)
 	{
 		super();
 
 		mode = Mode;
+		puzzleName = PuzzleName;
+
+		if (mode == ModePuzzle)
+		{
+			parsePuzzle(puzzleName);
+		}
 	}
 
 	override public function create()
@@ -68,21 +78,9 @@ class PlayState extends FlxState
 
 		GamePad.init();
 
-		background = new FlxSprite(0, 0, "assets/backgrounds/" + (FlxRandom.chanceRoll(50) ? "bg0.png" : "bg1.png"));
-		add(background);
+		prepareBackground();
 
-		baseDecoration = new FlxSprite(FlxG.width / 2 - 64, 181).loadGraphic("assets/images/base-decoration.png", true, 128, 60);
-		// baseDecoration.animation.add("idle", [0]);
-		baseDecoration.animation.add("move", [0, 1], 10, true);
-		baseDecoration.animation.play("move");
-		baseDecoration.animation.paused = true;
-		add(baseDecoration);
-
-		character = new PlayerCharacter(baseDecoration.x + 24, baseDecoration.y + 32, this);
-		add(character);
-
-		lever = new Lever(baseDecoration.x + 24, baseDecoration.y + 40, this);
-		add(lever);
+		prepareBaseDecoration();
 
 		shadow = new FlxSprite(FlxG.width / 2 - 64, 16).makeGraphic(128, 240-48, 0xFF000000);
 		shadow.alpha = 0.68;
@@ -115,7 +113,7 @@ class PlayState extends FlxState
 		waitTimer = new FlxTimer();
 		aimingTimer = new FlxTimer();
 
-		scoreDisplay = new ScoreDisplay(2, 4, mode);
+		scoreDisplay = new ScoreDisplay(2, 2, mode);
 		add(scoreDisplay);
 
 		generateBubble();
@@ -348,7 +346,7 @@ class PlayState extends FlxState
 		// And generate a new one
 		generateBubble();
 	}
-	
+
 	/* Returns a random color index for a bubble */
 	public function getRandomColor() : Int
 	{
@@ -366,6 +364,41 @@ class PlayState extends FlxState
 		}
 
 		return FlxRandom.getObject(usedColors);
+	}
+
+	public function parsePuzzle(puzzleName : String)
+	{
+		var parser : puzzle.PuzzleParser = new puzzle.PuzzleParser(puzzleName);
+		puzzleData = parser.parse();
+	}
+
+	function prepareBackground()
+	{
+		var bg : String = null;
+
+		if (puzzleData == null || puzzleData.background == null)
+			bg = "assets/backgrounds/" + (FlxRandom.chanceRoll(50) ? "bg0.png" : "bg1.png");
+		else
+			bg = BackgroundDatabase.GetBackground(puzzleData.background);
+
+		background = new FlxSprite(0, 0, bg);
+		add(background);
+	}
+
+	function prepareBaseDecoration()
+	{
+		baseDecoration = new FlxSprite(FlxG.width / 2 - 64, 181).loadGraphic("assets/images/base-decoration.png", true, 128, 60);
+		// baseDecoration.animation.add("idle", [0]);
+		baseDecoration.animation.add("move", [0, 1], 10, true);
+		baseDecoration.animation.play("move");
+		baseDecoration.animation.paused = true;
+		add(baseDecoration);
+
+		character = new PlayerCharacter(baseDecoration.x + 24, baseDecoration.y + 32, this);
+		add(character);
+
+		lever = new Lever(baseDecoration.x + 24, baseDecoration.y + 40, this);
+		add(lever);
 	}
 
 	/* Debug things */

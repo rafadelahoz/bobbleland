@@ -2,7 +2,7 @@
 	<mode name="clear" />
 	<!--<mode name="hold" seconds="90" />
 	<mode name="target" seconds="90" />-->
-	<background id="park" />
+	<background id="dark" />
 	<bubble-set id="candy" />
 	<initial rows="5" colors="1,2,3,4,5" />
 	<rows>

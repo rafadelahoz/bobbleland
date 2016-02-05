@@ -39,6 +39,7 @@
 	<classpath name="source/Meta" />
 	<classpath name="source/States" />
 	<classpath name="source/Entities" />
+	<classpath name="source/Entities/Puzzle" />
 
 	<assets path="assets" />
 

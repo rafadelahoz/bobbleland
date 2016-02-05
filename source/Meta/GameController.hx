@@ -4,6 +4,11 @@ import flixel.FlxG;
 
 class GameController
 {
+	public static function Init()
+	{
+		database.BackgroundDatabase.Init();
+	}
+
 	public static function ToMenu()
 	{
 		FlxG.switchState(new MenuState());
@@ -11,12 +16,12 @@ class GameController
 
 	public static function StartArcadeGame()
 	{
-		FlxG.switchState(new PlayState(PlayState.ModeArcade));
+		FlxG.switchState(new PlayState(PlayState.ModeArcade, null));
 	}
 
 	public static function StartPuzzleGame()
 	{
-		FlxG.switchState(new PlayState(PlayState.ModePuzzle));
+		FlxG.switchState(new PlayState(PlayState.ModePuzzle, "sample-puzzle.xml"));
 	}
 
 	public static function BeginScene(scene : String)

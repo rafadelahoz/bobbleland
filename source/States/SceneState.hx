@@ -4,15 +4,16 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 
+import database.BackgroundDatabase;
+
 import scenes.SceneParser;
-import scenes.BackgroundDatabase;
 import scenes.commands.Command;
 
 class SceneState extends FlxState
 {
     public var commandQueue : Array<Command>;
     public var currentCommand : Command;
-    
+
     public var background : FlxSprite;
     public var sceneButtons : SceneButtons;
 
@@ -37,7 +38,7 @@ class SceneState extends FlxState
         background = new FlxSprite(0, 0);
         background.makeGraphic(Std.int(FlxG.width), Std.int(FlxG.height), 0xFF000000);
         add(background);
-        
+
         sceneButtons = new SceneButtons(0, 0);
         add(sceneButtons);
 
@@ -78,7 +79,7 @@ class SceneState extends FlxState
         // Maybe wait before doing that?
         nextCommand();
     }
-    
+
     public function changeBackground(backgroundId : String) : Void
     {
         background.loadGraphic(BackgroundDatabase.GetBackground(backgroundId));
