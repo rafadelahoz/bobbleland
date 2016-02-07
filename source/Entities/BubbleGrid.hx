@@ -138,9 +138,9 @@ class BubbleGrid extends FlxObject
 				}
 				else if (getData(col, row) != null)
 				{
-					if (getData(col, row).colorIndex >= 0)
+					if (getData(col, row).bubbleColor.colorIndex >= 0)
 					{
-						ccolor = world.bubbleColors[getData(col, row).colorIndex];
+						ccolor = getData(col, row).bubbleColor.getColor();
 						ccolor &= 0x00FFFFFF;
 						ccolor |= 0x40000000;
 					}
@@ -198,7 +198,7 @@ class BubbleGrid extends FlxObject
 			return null;
 	}
 
-	public function generateBubbleRow(row : Array<Int>)
+	public function generateBubbleRow(row : Array<BubbleColor>)
 	{
 		// Shift bubble rows down, considering the game over scenario
 		var lostGame : Bool = shiftRowsDown();
@@ -275,7 +275,7 @@ class BubbleGrid extends FlxObject
 		var processed : Array<Bubble> = [bubble];
 
 		var set : Array<Bubble> = [bubble];
-		var targetColorIndex : Int = bubble.colorIndex;
+		var targetColorIndex : Int = bubble.bubbleColor.colorIndex;
 
 		// Temporary variables
 		var current : Bubble;
@@ -293,7 +293,7 @@ class BubbleGrid extends FlxObject
 			processed.push(current);
 
 			position = current.cellPosition;
-			colorIndex = current.colorIndex;
+			colorIndex = current.bubbleColor.colorIndex;
 
 			// trace(">>> Bubble@(" + position.x + ", " + position.y + "): " + colorIndex);
 
@@ -309,7 +309,7 @@ class BubbleGrid extends FlxObject
 				{
 					/*var msg : String = "At " + adjPos.x + ", " + adjPos.y + ": " + (neighbour == null ? "null" : "" + neighbour.colorIndex);*/
 
-					if (neighbour.colorIndex == targetColorIndex)
+					if (neighbour.bubbleColor.colorIndex == targetColorIndex)
 					{
 						// msg += " [Colour matches] ";
 
@@ -456,7 +456,7 @@ class BubbleGrid extends FlxObject
 	{
 		for (bub in list)
 		{
-			if (Bubble.compare(bubble.cellPosition, bub.cellPosition) && bubble.colorIndex == bub.colorIndex)
+			if (Bubble.compare(bubble.cellPosition, bub.cellPosition) && bubble.bubbleColor.colorIndex == bub.bubbleColor.colorIndex)
 			{
 				return true;
 			}
@@ -520,7 +520,7 @@ class BubbleGrid extends FlxObject
 		return bounds.y + topRow * cellSize;
 	}
 
-	public function getUsedColors() : Array<Int>
+	public function getUsedColors() : Array<BubbleColor>
 	{
 		var colors = [];
 
@@ -529,8 +529,8 @@ class BubbleGrid extends FlxObject
 			for (col in 0...columns)
 			{
 				var bubble : Bubble = getData(col, row);
-				if (bubble != null && colors.indexOf(bubble.colorIndex) < 0)
-					colors.push(bubble.colorIndex);
+				if (bubble != null && colors.indexOf(bubble.bubbleColor) < 0)
+					colors.push(bubble.bubbleColor);
 			}
 		}
 
@@ -561,7 +561,7 @@ class BubbleGrid extends FlxObject
 
 		for (bubble in bubbles)
 		{
-			list += "(" + bubble.cellPosition.x + ", " + bubble.cellPosition.y + ")#" + bubble.colorIndex + ", ";
+			list += "(" + bubble.cellPosition.x + ", " + bubble.cellPosition.y + ")#" + bubble.bubbleColor.colorIndex + ", ";
 		}
 
 		return list;
@@ -581,7 +581,7 @@ class BubbleGrid extends FlxObject
 				}
 				else
 				{
-					dump += "[" + cell.colorIndex + "]";
+					dump += "[" + cell.bubbleColor.colorIndex + "]";
 				}
 			}
 

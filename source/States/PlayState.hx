@@ -31,7 +31,7 @@ class PlayState extends FlxState
 
 	public var state : Int;
 
-	public var bubbleColors : Array<Int>;
+	public var availableColors : Array<BubbleColor>;
 	public var bubbles : FlxTypedGroup<Bubble>;
 	public var fallingBubbles : FlxTypedGroup<Bubble>;
 
@@ -67,10 +67,7 @@ class PlayState extends FlxState
 		mode = Mode;
 		puzzleName = PuzzleName;
 
-		if (mode == ModePuzzle)
-		{
-			parsePuzzle(puzzleName);
-		}
+		parsePuzzle(puzzleName);
 	}
 
 	override public function create()
@@ -106,8 +103,7 @@ class PlayState extends FlxState
 		cursor = new PlayerCursor(FlxG.width / 2 - 10, 240 - 40, this);
 		add(cursor);
 
-		// bubbleColors = [0xFFFF3131, 0xFF31FF31];
-		bubbleColors = [0xFFFF5151, 0xFF51FF51, 0xFF5151FF, 0xFFFFFF51];
+		availableColors = puzzleData.usedColors;
 
 		dropDelay = 30;
 		dropTimer = new FlxTimer(dropDelay, onDropTimer);
@@ -275,7 +271,7 @@ class PlayState extends FlxState
 		remove(bubble);
 		bubble = null;
 
-		var nextColor : Int = generator.getNextBubbleColor();
+		var nextColor : BubbleColor = generator.getNextBubbleColor();
 
 		bubble = new Bubble(cursor.x + cursor.aimOrigin.x - grid.cellSize / 2,
 							cursor.y + cursor.aimOrigin.y - grid.cellSize / 2, this, nextColor);
@@ -353,8 +349,25 @@ class PlayState extends FlxState
 
 	public function parsePuzzle(puzzleName : String)
 	{
-		var parser : puzzle.PuzzleParser = new puzzle.PuzzleParser(puzzleName);
-		puzzleData = parser.parse();
+		if (mode == ModePuzzle)
+		{
+			var parser : puzzle.PuzzleParser = new puzzle.PuzzleParser(puzzleName);
+			puzzleData = parser.parse();
+		}
+		else
+		{
+			puzzleData = new puzzle.PuzzleData();
+			puzzleData.mode = puzzle.PuzzleData.ModeEndless;
+			puzzleData.background = null;
+			puzzleData.bubbleSet = null;
+			puzzleData.initialRows = 5;
+			puzzleData.usedColors = [];
+			for (i in 0...5)
+			{
+				puzzleData.usedColors.push(new BubbleColor(i));
+			}
+			puzzleData.seconds = -1;
+		}
 	}
 
 	function prepareBackground()
@@ -449,7 +462,7 @@ class PlayState extends FlxState
 
 		mouseCell.set(cell.x, cell.y);
 		// label.text = "" + cell + " | " + dropDelay;
-		label.text = grid.getUsedColors().toString();
+		// label.text = grid.getUsedColors().toString();
 		FlxG.watch.addQuick("Cell", cell);
 	}
 }

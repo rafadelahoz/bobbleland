@@ -12,9 +12,6 @@ import flixel.tweens.FlxTween;
 
 class Bubble extends FlxSprite
 {
-	public static var SpecialNone : Int = 0;
-	public static var SpecialAnchor : Int = -1;
-
 	public static var StateAiming : Int = 0;
 	public static var StateFlying : Int = 1;
 	public static var StateIdling : Int = 2;
@@ -36,7 +33,7 @@ class Bubble extends FlxSprite
 	public var world : PlayState;
 	public var grid : BubbleGrid;
 
-	public var colorIndex : Int;
+	public var bubbleColor : BubbleColor;
 
 	public var safe : Bool;
 
@@ -49,7 +46,7 @@ class Bubble extends FlxSprite
 
 	public var special : Int;
 
-	public function new(X : Float, Y : Float, World : PlayState, ColorIndex : Int)
+	public function new(X : Float, Y : Float, World : PlayState, Color : BubbleColor)
 	{
 		super(X, Y);
 
@@ -59,7 +56,7 @@ class Bubble extends FlxSprite
 		Size = world.grid.cellSize / 2 * 0.9;
 		HalfSize = Size / 2;
 
-		colorIndex = ColorIndex;
+		bubbleColor = Color;
 
 		cellPosition = new FlxPoint();
 		lastPosition = new FlxPoint();
@@ -71,10 +68,10 @@ class Bubble extends FlxSprite
 		falling = false;
 
 		// Negative color indexes mean special bubbles
-		special = SpecialNone;
-		if (colorIndex < 0)
+		special = BubbleColor.SpecialNone;
+		if (bubbleColor.isSpecial)
 		{
-			handleSpecialBubble(ColorIndex);
+			handleSpecialBubble(bubbleColor);
 		}
 
 		handlePoints();
@@ -82,12 +79,12 @@ class Bubble extends FlxSprite
 		handleGraphic();
 	}
 
-	public function handleSpecialBubble(index : Int)
+	public function handleSpecialBubble(color : BubbleColor)
 	{
-		switch (index)
+		switch (color.colorIndex)
 		{
-			case Bubble.SpecialAnchor:
-				special = index;
+			case BubbleColor.SpecialAnchor:
+				special = color.colorIndex;
 				safe = true;
 			default:
 		}
@@ -97,10 +94,10 @@ class Bubble extends FlxSprite
 	{
 		switch (special)
 		{
-			case Bubble.SpecialNone:
+			case BubbleColor.SpecialNone:
 				popPoints = Constants.ScBubblePop;
 				fallPoints = Constants.ScBubbleFall;
-			case Bubble.SpecialAnchor:
+			case BubbleColor.SpecialAnchor:
 				popPoints = Constants.ScBubblePop * 2;
 				fallPoints = Constants.ScBubbleFall * 2;
 			default:
@@ -113,21 +110,20 @@ class Bubble extends FlxSprite
 	{
 		switch (special)
 		{
-			case Bubble.SpecialAnchor:
+			case BubbleColor.SpecialAnchor:
 				makeGraphic(Std.int((Size+1)*2), Std.int((Size+1)*2), 0x00000000);
 				// FlxSpriteUtil.drawRoundRect(this, 1, 1, Size*2, Size*2, 4, 4, 0xFF414471);
 				FlxSpriteUtil.drawCircle(this, width/2, height/2, Size, 0xFFFFFFFF);
 				// offset.set(0, 0);
 			default:
 				loadGraphic("assets/images/bubbles_sheet.png", true, 16, 16);
-				if (colorIndex < 5)
+				if (bubbleColor.colorIndex < 5)
 				{
-					animation.add("idle", [colorIndex]);
+					animation.add("idle", [bubbleColor.colorIndex]);
 				}
 				else
 				{
 					animation.add("idle", [5]);
-					color = world.bubbleColors[colorIndex];
 				}
 
 				animation.play("idle");
@@ -294,7 +290,7 @@ class Bubble extends FlxSprite
 	{
 		switch (special)
 		{
-			case Bubble.SpecialAnchor:
+			case BubbleColor.SpecialAnchor:
 				var neighbours : Array<Bubble> = grid.getNeighbours(this);
 				if (neighbours.length == 0)
 				{
@@ -423,7 +419,7 @@ class Bubble extends FlxSprite
 
 	public function isSafe() : Bool
 	{
-		return special == SpecialAnchor;
+		return special == BubbleColor.SpecialAnchor;
 	}
 
 	public function getPopPoints() : Int
@@ -441,7 +437,7 @@ class Bubble extends FlxSprite
 		return A.x == B.x && A.y == B.y;
 	}
 
-	public static function CreateAt(X : Float, Y : Float, ColorIndex : Int, World : PlayState) : Bubble
+	public static function CreateAt(X : Float, Y : Float, ColorIndex : BubbleColor, World : PlayState) : Bubble
 	{
 		var cellCenter : FlxPoint = World.grid.getCellCenter(Std.int(X), Std.int(Y));
 

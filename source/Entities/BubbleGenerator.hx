@@ -41,14 +41,14 @@ class BubbleGenerator
     }
 
     /* Returns an appropriate color index for a bubble */
-    public function getNextBubbleColor() : Int
+    public function getNextBubbleColor() : BubbleColor
     {
         return getNextGridColor();
     }
 
     public function generateRow()
     {
-        var row : Array<Int> = [];
+        var row : Array<BubbleColor> = [];
         switch (world.mode)
         {
             case PlayState.ModeArcade:
@@ -60,13 +60,11 @@ class BubbleGenerator
         grid.generateBubbleRow(row);
     }
 
-    function getArcadeRow(row : Array<Int>) : Array<Int>
+    function getArcadeRow(row : Array<BubbleColor>) : Array<BubbleColor>
     {
         for (col in 0...grid.columns)
         {
-            var bubble : Int = -1;
-
-            bubble = getRandomColor();
+            var bubble : BubbleColor = getRandomColor();
 
             row.push(bubble);
         }
@@ -74,7 +72,7 @@ class BubbleGenerator
         return row;
     }
 
-    function getPuzzleRow(row : Array<Int>) : Array<Int>
+    function getPuzzleRow(row : Array<BubbleColor>) : Array<BubbleColor>
     {
         if (puzzle.mode == PuzzleData.ModeClear ||
             puzzle.mode == PuzzleData.ModeTarget)
@@ -98,9 +96,9 @@ class BubbleGenerator
         return row;
     }
 
-	function getNextGridColor() : Int
+	function getNextGridColor() : BubbleColor
 	{
-		var usedColors : Array<Int> = grid.getUsedColors();
+		var usedColors : Array<BubbleColor> = grid.getUsedColors();
 
 		if (usedColors.length <= 0)
 		{
@@ -111,9 +109,9 @@ class BubbleGenerator
 	}
 
     /* Returns a random color index for a bubble */
-	function getRandomColor() : Int
+	function getRandomColor() : BubbleColor
 	{
-		return FlxRandom.intRanged(0, world.bubbleColors.length - 1);
+		return world.availableColors[FlxRandom.intRanged(0, world.availableColors.length - 1)];
 	}
 
 

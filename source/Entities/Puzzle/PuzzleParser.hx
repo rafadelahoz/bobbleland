@@ -64,21 +64,21 @@ class PuzzleParser
         }
     }
 
-    function parseColorList(colorList : String) : Array<Int>
+    function parseColorList(colorList : String) : Array<BubbleColor>
     {
-        var list : Array<Int> = [];
+        var list : Array<BubbleColor> = [];
 
         for (color in colorList.split(","))
         {
-            list.push(Std.parseInt(color));
+            list.push(new BubbleColor(Std.parseInt(color)));
         }
 
         return list;
     }
 
-    function parseRows(fast  : Fast) : Array<Array<Int>>
+    function parseRows(fast  : Fast) : Array<Array<BubbleColor>>
     {
-        var rows : Array<Array<Int>> = [];
+        var rows : Array<Array<BubbleColor>> = [];
 
         for (elem in fast.elements)
         {
@@ -88,9 +88,9 @@ class PuzzleParser
         return rows;
     }
 
-    function parseRow(fast : Fast) : Array<Int>
+    function parseRow(fast : Fast) : Array<BubbleColor>
     {
-        var row : Array<Int> = [];
+        var row : Array<BubbleColor> = [];
 
         var rowString : String = fast.att.colors;
         for (color in rowString.split(","))
@@ -98,7 +98,7 @@ class PuzzleParser
             if (color == "x")
                 row.push(null);
             else
-                row.push(Std.parseInt(color));
+                row.push(new BubbleColor(Std.parseInt(color)));
         }
 
         return row;
