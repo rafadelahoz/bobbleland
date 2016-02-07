@@ -22,12 +22,15 @@ class Lever extends FlxSprite
 
     override public function update()
     {
-        if (GamePad.checkButton(GamePad.Left))
-            animation.play("left");
-        else if (GamePad.checkButton(GamePad.Right))
-            animation.play("right");
-        else
-            animation.play("center");
+        if (world.cursor.enabled)
+        {
+            if (GamePad.checkButton(GamePad.Left))
+                animation.play("left");
+            else if (GamePad.checkButton(GamePad.Right))
+                animation.play("right");
+            else
+                animation.play("center");
+        }
 
         super.update();
     }

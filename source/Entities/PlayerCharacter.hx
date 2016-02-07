@@ -4,7 +4,7 @@ import flixel.FlxSprite;
 
 class PlayerCharacter extends FlxSprite
 {
-    public var world : PlayState;    
+    public var world : PlayState;
 
     public function new(X : Float, Y : Float, World : PlayState)
     {
@@ -22,12 +22,15 @@ class PlayerCharacter extends FlxSprite
 
     override public function update()
     {
-        if (GamePad.checkButton(GamePad.Left))
-            animation.play("left");
-        else if (GamePad.checkButton(GamePad.Right))
-            animation.play("right");
-        else
-            animation.play("center");
+        if (world.cursor.enabled)
+        {
+            if (GamePad.checkButton(GamePad.Left))
+                animation.play("left");
+            else if (GamePad.checkButton(GamePad.Right))
+                animation.play("right");
+            else
+                animation.play("center");
+        }
 
         super.update();
     }

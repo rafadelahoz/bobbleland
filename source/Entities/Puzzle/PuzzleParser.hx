@@ -27,8 +27,6 @@ class PuzzleParser
         var fast = new Fast(xmlContents.firstElement());
 
         // Start processing!
-        trace(fast.name);
-        trace(fast.elements);
         for (element in fast.elements)
         {
             parseElement(element);
@@ -97,7 +95,10 @@ class PuzzleParser
         var rowString : String = fast.att.colors;
         for (color in rowString.split(","))
         {
-            row.push(Std.parseInt(color));
+            if (color == "x")
+                row.push(null);
+            else
+                row.push(Std.parseInt(color));
         }
 
         return row;

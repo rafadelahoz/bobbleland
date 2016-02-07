@@ -35,6 +35,7 @@ class PlayState extends FlxState
 	public var bubbles : FlxTypedGroup<Bubble>;
 	public var fallingBubbles : FlxTypedGroup<Bubble>;
 
+	public var generator : BubbleGenerator;
 	public var grid : BubbleGrid;
 	public var cursor : PlayerCursor;
 	public var bubble : Bubble;
@@ -115,6 +116,9 @@ class PlayState extends FlxState
 
 		scoreDisplay = new ScoreDisplay(2, 2, mode);
 		add(scoreDisplay);
+
+		generator = new BubbleGenerator(this);
+		generator.initalizeGrid();
 
 		generateBubble();
 		switchState(StateAiming);
@@ -258,7 +262,7 @@ class PlayState extends FlxState
 		else
 		{
 			// Generate new bubble row, move all others down or something
-			grid.generateBubbleRow(mode == ModePuzzle);
+			generator.generateRow();
 
 			// Set drop timer again
 			dropTimer.start(dropDelay, onDropTimer);
@@ -271,7 +275,7 @@ class PlayState extends FlxState
 		remove(bubble);
 		bubble = null;
 
-		var nextColor : Int = getNextColor();
+		var nextColor : Int = generator.getNextBubbleColor();
 
 		bubble = new Bubble(cursor.x + cursor.aimOrigin.x - grid.cellSize / 2,
 							cursor.y + cursor.aimOrigin.y - grid.cellSize / 2, this, nextColor);
@@ -347,25 +351,6 @@ class PlayState extends FlxState
 		generateBubble();
 	}
 
-	/* Returns a random color index for a bubble */
-	public function getRandomColor() : Int
-	{
-		return FlxRandom.intRanged(0, bubbleColors.length - 1);
-	}
-
-	/* Returns an appropriate color index for a bubble */
-	public function getNextColor() : Int
-	{
-		var usedColors : Array<Int> = grid.getUsedColors();
-
-		if (usedColors.length <= 0)
-		{
-			return getRandomColor();
-		}
-
-		return FlxRandom.getObject(usedColors);
-	}
-
 	public function parsePuzzle(puzzleName : String)
 	{
 		var parser : puzzle.PuzzleParser = new puzzle.PuzzleParser(puzzleName);
@@ -411,15 +396,6 @@ class PlayState extends FlxState
 		mouseCell = new FlxPoint();
 		label = new FlxText(4, FlxG.height - 16);
 		add(label);
-
-		// Generate inital row
-		for (row in 0...5)
-		{
-			for (col in 0...grid.columns)
-			{
-				Bubble.CreateAt(col, row, getRandomColor(), this);
-			}
-		}
 	}
 
 	function handleDebugRoutines()
@@ -463,7 +439,7 @@ class PlayState extends FlxState
 
 		if (FlxG.keys.justPressed.DOWN)
 		{
-			grid.generateBubbleRow(mode == ModePuzzle);
+			generator.generateRow();
 		}
 
 		if (FlxG.keys.justPressed.D)

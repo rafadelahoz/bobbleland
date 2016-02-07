@@ -198,7 +198,42 @@ class BubbleGrid extends FlxObject
 			return null;
 	}
 
-	public function generateBubbleRow(emptyRow : Bool)
+	public function generateBubbleRow(row : Array<Int>)
+	{
+		// Shift bubble rows down, considering the game over scenario
+		var lostGame : Bool = shiftRowsDown();
+
+		// Check whether we need to generate an empty bubble row
+		var emptyRow : Bool = (row == null || row.length == 0);
+
+		if (!emptyRow)
+		{
+			// Generate inital row
+			for (col in 0...columns)
+			{
+				if (row[col] != null)
+					Bubble.CreateAt(col, 0, row[col], world);
+				else
+					setData(col, 0, null);
+			}
+		}
+		else
+		{
+			for (col in 0...columns)
+			{
+				setData(col, 0, null);
+			}
+
+			topRow++;
+		}
+
+		if (lostGame)
+		{
+			world.handleLosing();
+		}
+	}
+
+	function shiftRowsDown() : Bool
 	{
 		var lostGame : Bool = false;
 
@@ -231,28 +266,7 @@ class BubbleGrid extends FlxObject
 			}
 		}
 
-		if (!emptyRow)
-		{
-			// Generate inital row
-			for (col in 0...columns)
-			{
-				Bubble.CreateAt(col, 0, world.getNextColor(), world);
-			}
-		}
-		else
-		{
-			for (col in 0...columns)
-			{
-				setData(col, 0, null);
-			}
-
-			topRow++;
-		}
-
-		if (lostGame)
-		{
-			world.handleLosing();
-		}
+		return lostGame;
 	}
 
 	public function locateBubbleGroup(bubble : Bubble) : Array<Bubble>
