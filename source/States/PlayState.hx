@@ -48,8 +48,8 @@ class PlayState extends FlxState
 	public var lever : Lever;
 	public var shadow : FlxSprite;
 	public var bottomBar : FlxSprite;
+	public var ceiling : Ceiling;
 	public var overlay : FlxSprite;
-
 
 	public var dropDelay : Float;
 	public var dropTimer : FlxTimer;
@@ -86,6 +86,9 @@ class PlayState extends FlxState
 
 		grid = new BubbleGrid(FlxG.width / 2 - 64, 16, 128, 240 - 32, this);
 		add(grid);
+
+		ceiling = new Ceiling(this);
+		add(ceiling);
 
 		overlay = new FlxSprite(0, 0, "assets/images/play-overlay.png");
 		add(overlay);
