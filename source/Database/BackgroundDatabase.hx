@@ -17,6 +17,7 @@ class BackgroundDatabase
             database.set("dawn", "bg-red.png");
             database.set("pink", "bg0.png");
             database.set("dark", "bg1.png");
+            database.set("park", "park.png");
         }
     }
 

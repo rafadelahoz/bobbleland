@@ -1,5 +1,5 @@
 fade out 0 0x000000
-bg dark now
+bg park now
 fade in 0.5 0x000000
 say "The first puzzle is about to start"
 puzzle puzzle-0.xml 1.scene
