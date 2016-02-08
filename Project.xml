@@ -13,7 +13,8 @@
 
 	<!--------------------------------WINDOW SETTINGS------------------------------->
 
-	<!--<set name="work"/>-->
+	<set name="work"/>
+	<haxedef name="work"/>
 
 	<!--These window settings apply to all targets-->
 	<window width="360" height="640" fps="60" background="#212121" hardware="true" vsync="true" />

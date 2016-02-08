@@ -5,12 +5,14 @@ import flixel.tweens.FlxTween;
 class BgCommand extends Command
 {
 	public var id : String;
+	public var duration : Float;
 
-	public function new(Id : String)
+	public function new(Id : String, ?Immediate : Bool = false)
 	{
 		super();
 
 		id = Id;
+		duration = (Immediate ? 0.0 : 0.5);
 	}
 
 	override public function init(Scene : SceneState)
@@ -18,13 +20,29 @@ class BgCommand extends Command
 		super.init(Scene);
 
 		// Fade the former background to black (for smooth transition)
-		FlxTween.tween(scene.background, {alpha : 0}, 0.5, { complete : onFadeOutComplete });
+		if (duration <= 0)
+		{
+			onFadeOutComplete(null);
+		}
+		else 
+		{
+			FlxTween.tween(scene.background, {alpha : 0}, duration, { complete : onFadeOutComplete });	
+		}
+		
 	}
 
 	public function onFadeOutComplete(tween : FlxTween) : Void
 	{
 		scene.changeBackground(id);
-		FlxTween.tween(scene.background, {alpha : 1}, 0.5, { complete : onFadeInComplete });
+		
+		if (duration <= 0)
+		{
+			onFadeInComplete(null);
+		} 
+		else 
+		{
+			FlxTween.tween(scene.background, {alpha : 1}, duration, { complete : onFadeInComplete });
+		}
 	}
 	
 	public function onFadeInComplete(tween : FlxTween) : Void
@@ -34,14 +52,20 @@ class BgCommand extends Command
 
 	override public function print() : String
 	{
-		return "Switch Background to " + id;
+		return "Switch Background to " + id + (duration <= 0 ? " now" : "");
 	}
 
 	public static function parse(line : String) : Command
 	{
-		var id : String = StringTools.trim(line);
+		var comps : Array<String> = line.split(" ");
+		var id : String = StringTools.trim(comps[0]);
+		var immediate : Bool = false;
+		if (comps.length > 1)
+		{
+			immediate = comps[1] == "now";
+		}
 
-		var command : Command = new BgCommand(id);
+		var command : Command = new BgCommand(id, immediate);
 		return command;
 	}
 }

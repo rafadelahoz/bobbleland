@@ -21,6 +21,7 @@ class PlayState extends FlxState
 	public static var StateWaiting 	: Int = 1;
 	public static var StateRemoving : Int = 2;
 	public static var StateLosing 	: Int = 3;
+	public static var StateWinning	: Int = 4;
 
 	public static var WaitTime 		: Float = 1;
 	public static var AimingTime 	: Float = 10;
@@ -142,6 +143,8 @@ class PlayState extends FlxState
 				onRemovingState();
 			case PlayState.StateLosing:
 				onLosingState();
+			case PlayState.StateWinning:
+				onWinningState();
 		}
 
 		handleDebugRoutines();
@@ -153,7 +156,7 @@ class PlayState extends FlxState
 
 	public function switchState(State : Int)
 	{
-		if (state == StateLosing)
+		if (state == StateLosing || state == StateWinning)
 			return;
 
 		state = State;
@@ -164,7 +167,6 @@ class PlayState extends FlxState
 				aimingTimer.start(AimingTime, onForcedShot);
 
 			case PlayState.StateLosing:
-
 				// Prepare for losing
 
 				// Cancel timers
@@ -174,6 +176,21 @@ class PlayState extends FlxState
 
 				// Disable cursor
 				cursor.disable();
+				
+			case PlayState.StateWinning:
+				// Prepare for winning
+
+				// Cancel timers
+				dropTimer.cancel();
+				waitTimer.cancel();
+				aimingTimer.cancel();
+
+				// Disable cursor
+				cursor.disable();
+				
+				add(new FlxText(FlxG.width/2 - 32, grid.y + grid.height/2, "Clear!", 16));
+
+				FlxG.camera.fade(0xFF000000, 3, onGameplayEnd);
 
 			default:
 				aimingTimer.cancel();
@@ -215,6 +232,19 @@ class PlayState extends FlxState
 		{
 			GameController.GameOver(mode, scoreDisplay.score);
 		}
+	}
+	
+	function onWinningState()
+	{
+		
+	}
+	
+	function onGameplayEnd() 
+	{
+		if (mode == ModeArcade)
+			GameController.OnGameplayEnd();
+		else if (mode == ModePuzzle)
+			GameController.OnPuzzleCompleted();
 	}
 
 	/* Private methods */
@@ -329,7 +359,7 @@ class PlayState extends FlxState
 			});
 
 			// Check whether the field is empty to award bonuses
-			if (grid.getCount() == 0)
+			if (grid.getCount() == 0 && mode == ModeArcade)
 			{
 				scoreDisplay.add(Constants.ScClearField);
 			}
@@ -337,8 +367,16 @@ class PlayState extends FlxState
 			// Things are happing, so wait!
 			switchState(StateRemoving);
 			waitTimer.start(WaitTime, function(_t:FlxTimer) {
-				scoreDisplay.active = true;
-				switchState(StateAiming);
+				if (puzzleData.mode == puzzle.PuzzleData.ModeClear && 
+					grid.getCount() == 0)
+				{
+					switchState(StateWinning);
+				}
+				else
+				{
+					scoreDisplay.active = true;
+					switchState(StateAiming);
+				}
 			});
 		}
 		else
@@ -377,10 +415,12 @@ class PlayState extends FlxState
 	{
 		var bg : String = null;
 
+		#if !work
 		if (puzzleData == null || puzzleData.background == null)
 			bg = "assets/backgrounds/" + (FlxRandom.chanceRoll(50) ? "bg0.png" : "bg1.png");
 		else
 			bg = BackgroundDatabase.GetBackground(puzzleData.background);
+		#end
 
 		background = new FlxSprite(0, 0, bg);
 		add(background);
@@ -388,6 +428,8 @@ class PlayState extends FlxState
 
 	function prepareBaseDecoration()
 	{
+		#if work
+		#else
 		baseDecoration = new FlxSprite(FlxG.width / 2 - 64, 181).loadGraphic("assets/images/base-decoration.png", true, 128, 60);
 		// baseDecoration.animation.add("idle", [0]);
 		baseDecoration.animation.add("move", [0, 1], 10, true);
@@ -400,6 +442,7 @@ class PlayState extends FlxState
 
 		lever = new Lever(baseDecoration.x + 24, baseDecoration.y + 40, this);
 		add(lever);
+		#end
 	}
 
 	/* Debug things */

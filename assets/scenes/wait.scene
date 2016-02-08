@@ -1,0 +1,21 @@
+fade out 0.0 0x000000
+bg pink
+fade in 0.85 0x000000
+say "Our heroes find themselves in a weird rhomboid place! Oh no!"
+say "HeroA" "Oh no! We are no a weird rhomboid place!"
+say "HeroB" "What are we to do!?"
+say "HeroA" "So I say! Let me think for a while..."
+say "So they wait"
+wait 1.5
+say "And wait"
+wait 2.5
+say "And wait a little longer"
+wait 1
+bg dark
+wait 1
+say "So it was night"
+say "HeroA" "I know! Let's get back through where we entered!"
+say "HeroB" "You are right. That is the only way"
+wait 0.5
+say "Away they went"
+fade out 1 0x000000

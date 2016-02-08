@@ -1,9 +1,13 @@
 package scenes.commands;
 
+import flixel.tweens.FlxTween;
+
 class PuzzleCommand extends Command
 {
 	public var puzzle : String;
 	public var nextScene : String;
+	
+	var announcement : PuzzleAnnouncement;
 
 	public function new(Puzzle : String, Scene : String)
 	{
@@ -13,9 +17,32 @@ class PuzzleCommand extends Command
 		nextScene = Scene;
 	}
 
+	override public function init(Scene : SceneState)
+	{
+		super.init(Scene);
+		
+		announcement = new PuzzleAnnouncement(0, 0);
+		scene.add(announcement);
+		announcement.init(onAnnouncementPositioned);
+	}
+	
+	function onAnnouncementPositioned() : Void
+	{
+		FlxTween.tween(announcement.scale, {x : 10, y: 10}, 1, { 	
+				complete : function(_t:FlxTween) {
+					onComplete();
+				}
+			});
+	}
+	
+	override function onComplete() 
+	{
+		GameController.OnSceneCompleted(puzzle, nextScene);
+	}
+
 	override public function print() : String
 	{
-		return "Next puzzle is: " + puzzle + ", and then scene " + scene;
+		return "Next puzzle is: " + puzzle + ", and then scene " + nextScene;
 	}
 
 	public static function parse(line : String) : Command

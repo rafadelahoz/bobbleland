@@ -24,17 +24,14 @@ class MenuState extends FlxState
 		btnArcade = new FlxButtonPlus(32, 32, onArcadeButtonPressed, "Arcade", w, h);
 		btnPuzzle = new FlxButtonPlus(32, 80, onPuzzleButtonPressed, "Puzzle", w, h);
 		btnScene = new FlxButtonPlus(32, 128, onSceneButtonPressed, "Scene", w, h);
-		btnParsePuzzle = new FlxButtonPlus(32, 156, onParsePuzzleButtonPressed, "Parse Puzzle", w, h);
-
+		
 		decorateButton(btnArcade);
 		decorateButton(btnPuzzle);
 		decorateButton(btnScene);
-		decorateButton(btnParsePuzzle);
-
+		
 		add(btnArcade);
 		add(btnPuzzle);
 		add(btnScene);
-		add(btnParsePuzzle);
 	}
 
 	override public function destroy():Void
@@ -59,14 +56,7 @@ class MenuState extends FlxState
 
 	public function onSceneButtonPressed() : Void
 	{
-		GameController.BeginScene("say+bg.scene");
-	}
-
-	public function onParsePuzzleButtonPressed() : Void
-	{
-		var puzzleParser : puzzle.PuzzleParser = new puzzle.PuzzleParser("sample-puzzle.xml");
-		var puzzleData : puzzle.PuzzleData = puzzleParser.parse();
-		trace(puzzleData);
+		GameController.BeginScene("wait.scene");
 	}
 
 	function decorateButton(button : FlxButtonPlus)

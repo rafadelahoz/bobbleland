@@ -40,8 +40,6 @@ class SceneParser
 			parseLine(line);
 		}
 
-		print();
-
 		return commands;
 	}
 
@@ -72,6 +70,8 @@ class SceneParser
 					command = FadeCommand.parse(line);
 				case "puzzle":
 					command = PuzzleCommand.parse(line);
+				case "wait":
+					command = WaitCommand.parse(line);
 				default:
 					trace("Unrecognized command: " + line);
 			}

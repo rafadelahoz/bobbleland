@@ -83,13 +83,6 @@ class SceneState extends FlxState
     public function changeBackground(backgroundId : String) : Void
     {
         background.loadGraphic(BackgroundDatabase.GetBackground(backgroundId));
-        /*var scaleX : Float = (FlxG.width / background.width);
-        var scaleY : Float = (FlxG.height / background.height);
-        trace("Scale: " + scaleX + " " + scaleY);
-        background.scale.x = scaleX;
-        background.scale.y = scaleY;*/
-        background.setGraphicSize(FlxG.width);
-        background.setGraphicSize(FlxG.height);
     }
 
     function nextCommand()
