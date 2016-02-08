@@ -1,7 +1,11 @@
 package;
 
-class PuzzleGameStatus
+import flixel.util.FlxSave;
+
+class AdventureGameStatus
 {
+    static var savefile : String = "savefile";
+    
     static var currentPuzzle : String;
     static var nextPuzzle : String;
     
@@ -10,14 +14,38 @@ class PuzzleGameStatus
     
     public static function savegameExists() : Bool
     {
-        // Check for savegame
-        return false;
+        var save : FlxSave = new FlxSave();
+        save.bind(savefile);
+        
+        return (save.data.scene != null);
+    }
+    
+    public static function save()
+    {
+        trace("Saving...");
+        
+        var save : FlxSave = new FlxSave();
+        save.bind(savefile);
+        save.data.scene = currentScene;
+        save.close();
+    }
+    
+    public static function clearData()
+    {
+        trace("Clearing data...");
+        
+        var save : FlxSave = new FlxSave();
+        save.bind(savefile);
+        save.data.scene = null;
+        save.close();
     }
     
     public static function loadSavegame()
     {
-        // set currentScene?
-        // does the game always resume on the pre-scene?
+        var save : FlxSave = new FlxSave();
+        save.bind(savefile);
+        
+        nextScene = save.data.scene;        
     }
     
     public static function startNewGame()
@@ -38,7 +66,7 @@ class PuzzleGameStatus
     public static function setNext(puzzle : String, scene : String)
     {
         nextPuzzle = puzzle;
-        nextScene = scene;
+        nextScene = scene;        
     }
     
     public static function next() : Void

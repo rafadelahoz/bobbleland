@@ -13,32 +13,39 @@ class GameController
 	{
 		FlxG.switchState(new MenuState());
 	}
+	
+	public static function ToOptions()
+	{
+		FlxG.switchState(new OptionsState());
+	}
 
 	public static function StartArcadeGame()
 	{
 		FlxG.switchState(new PlayState(PlayState.ModeArcade, null));
 	}
 
-	public static function StartPuzzleGame()
+	public static function StartAdventureGame()
 	{
 		// FlxG.switchState(new PlayState(PlayState.ModePuzzle, "puzzle-0.xml"));
-		if (PuzzleGameStatus.savegameExists())
+		if (AdventureGameStatus.savegameExists())
 		{
-			PuzzleGameStatus.loadSavegame();
+			trace("Save game found!");
+			AdventureGameStatus.loadSavegame();
 		}
 		else 
 		{
-			PuzzleGameStatus.startNewGame();
+			trace("Starting new game");
+			AdventureGameStatus.startNewGame();
 		}
 		
-		PuzzleGameStatus.next();
+		AdventureGameStatus.next();
 		NextScene();
 	}
 	
 	public static function OnSceneCompleted(nextPuzzle : String, nextScene : String)
 	{
-		PuzzleGameStatus.setNext(nextPuzzle, nextScene);
-		PuzzleGameStatus.next();
+		AdventureGameStatus.setNext(nextPuzzle, nextScene);
+		AdventureGameStatus.next();
 		
 		BeginPuzzle();
 	}
@@ -46,18 +53,19 @@ class GameController
 	public static function BeginPuzzle() 
 	{
 		FlxG.switchState(
-			new PlayState(PlayState.ModePuzzle, PuzzleGameStatus.getCurrentPuzzle())
+			new PlayState(PlayState.ModePuzzle, AdventureGameStatus.getCurrentPuzzle())
 		);
 	}
 	
 	public static function OnPuzzleCompleted()
 	{
+		AdventureGameStatus.save();
 		NextScene();
 	}
 	
 	static function NextScene()
 	{
-		BeginScene(PuzzleGameStatus.getCurrentScene());
+		BeginScene(AdventureGameStatus.getCurrentScene());
 	}
 	
 	public static function OnGameplayEnd()
@@ -75,5 +83,10 @@ class GameController
 	{
 		// TODO: Handle mode or...?
 		FlxG.switchState(new GameOverState(score));
+	}
+	
+	public static function ClearSaveData() 
+	{
+		AdventureGameStatus.clearData();
 	}
 }

@@ -9,8 +9,7 @@ class MenuState extends FlxState
 {
 	public var btnArcade : FlxButtonPlus;
 	public var btnPuzzle : FlxButtonPlus;
-	public var btnScene: FlxButtonPlus;
-	public var btnParsePuzzle : FlxButtonPlus;
+	public var btnOptions : FlxButtonPlus;
 
 	override public function create():Void
 	{
@@ -22,16 +21,16 @@ class MenuState extends FlxState
 		var h : Int = 32;
 
 		btnArcade = new FlxButtonPlus(32, 32, onArcadeButtonPressed, "Arcade", w, h);
-		btnPuzzle = new FlxButtonPlus(32, 80, onPuzzleButtonPressed, "Puzzle", w, h);
-		btnScene = new FlxButtonPlus(32, 128, onSceneButtonPressed, "Scene", w, h);
+		btnPuzzle = new FlxButtonPlus(32, 80, onPuzzleButtonPressed, "Adventure", w, h);
+		btnOptions = new FlxButtonPlus(32, FlxG.height / 2, onOptionsButtonPressed, "Options", w, h);
 		
 		decorateButton(btnArcade);
 		decorateButton(btnPuzzle);
-		decorateButton(btnScene);
+		decorateButton(btnOptions);
 		
 		add(btnArcade);
 		add(btnPuzzle);
-		add(btnScene);
+		add(btnOptions);
 	}
 
 	override public function destroy():Void
@@ -51,12 +50,12 @@ class MenuState extends FlxState
 
 	public function onPuzzleButtonPressed() : Void
 	{
-		GameController.StartPuzzleGame();
+		GameController.StartAdventureGame();
 	}
-
-	public function onSceneButtonPressed() : Void
+	
+	public function onOptionsButtonPressed() : Void
 	{
-		GameController.BeginScene("wait.scene");
+		GameController.ToOptions();
 	}
 
 	function decorateButton(button : FlxButtonPlus)

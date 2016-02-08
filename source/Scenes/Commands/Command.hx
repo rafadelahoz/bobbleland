@@ -17,7 +17,7 @@ class Command extends FlxObject
 		scene = Scene;
 		finished = false;
 		
-		trace(print());
+		// trace(print());
 	}
 
 	public function onComplete()
