@@ -135,6 +135,7 @@ class PlayState extends FlxState
 
 		if (GamePad.justPressed(GamePad.Pause))
 		{
+			onPauseStart();
 			openSubState(new PauseSubstate());
 		}
 
@@ -155,6 +156,20 @@ class PlayState extends FlxState
 		handleDebugRoutines();
 
 		super.update();
+	}
+
+	function onPauseStart()
+	{
+		dropTimer.active = false;
+		waitTimer.active = false;
+		aimingTimer.active = false;
+	}
+
+	function onPauseEnd()
+	{
+		dropTimer.active = true;
+		waitTimer.active = true;
+		aimingTimer.active = true;
 	}
 
 	/* State handling */
@@ -181,7 +196,7 @@ class PlayState extends FlxState
 
 				// Disable cursor
 				cursor.disable();
-				
+
 			case PlayState.StateWinning:
 				// Prepare for winning
 
@@ -192,7 +207,7 @@ class PlayState extends FlxState
 
 				// Disable cursor
 				cursor.disable();
-				
+
 				add(new FlxText(FlxG.width/2 - 32, grid.y + grid.height/2, "Clear!", 16));
 
 				FlxG.camera.fade(0xFF000000, 3, onGameplayEnd);
@@ -238,13 +253,13 @@ class PlayState extends FlxState
 			GameController.GameOver(mode, scoreDisplay.score);
 		}
 	}
-	
+
 	function onWinningState()
 	{
-		
+
 	}
-	
-	function onGameplayEnd() 
+
+	function onGameplayEnd()
 	{
 		if (mode == ModeArcade)
 			GameController.OnGameplayEnd();
@@ -372,7 +387,7 @@ class PlayState extends FlxState
 			// Things are happing, so wait!
 			switchState(StateRemoving);
 			waitTimer.start(WaitTime, function(_t:FlxTimer) {
-				if (puzzleData.mode == puzzle.PuzzleData.ModeClear && 
+				if (puzzleData.mode == puzzle.PuzzleData.ModeClear &&
 					grid.getCount() == 0)
 				{
 					switchState(StateWinning);
