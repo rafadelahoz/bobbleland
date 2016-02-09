@@ -12,7 +12,7 @@ class GamePad
 
 	public static function init() : Void
 	{	
-		initPadState();
+		initState();
 	}
 	
 	public static function handlePadState() : Void
@@ -23,11 +23,9 @@ class GamePad
 		currentPadState.set(Left, currentPadState.get(Left) || FlxG.keys.pressed.LEFT);
 		currentPadState.set(Right, currentPadState.get(Right) || FlxG.keys.pressed.RIGHT);
 		currentPadState.set(Shoot, currentPadState.get(Shoot) || FlxG.keys.pressed.A);
+		currentPadState.set(Pause, currentPadState.get(Pause) || FlxG.keys.pressed.ESCAPE);
 
-		bufferPadState = new Map<Int, Bool>();
-		bufferPadState.set(Left, false);
-		bufferPadState.set(Right, false);
-		bufferPadState.set(Shoot, false);
+		bufferPadState = initPadState();
 	}
 	
 	public static function setPressed(button : Int)
@@ -55,25 +53,26 @@ class GamePad
 		initPadState();
 	}
 	
-	private static function initPadState() : Void
+	private static function initState() : Void
 	{
-		bufferPadState = new Map<Int, Bool>();
-		bufferPadState.set(Left, false);
-		bufferPadState.set(Right, false);
-		bufferPadState.set(Shoot, false);
-
-		currentPadState = new Map<Int, Bool>();
-		currentPadState.set(Left, false);
-		currentPadState.set(Right, false);
-		currentPadState.set(Shoot, false);
-
-		previousPadState = new Map<Int, Bool>();
-		previousPadState.set(Left, false);
-		previousPadState.set(Right, false);
-		previousPadState.set(Shoot, false);
+		bufferPadState = initPadState();
+		currentPadState = initPadState();
+		previousPadState = initPadState();
+	}
+	
+	private static function initPadState() : Map<Int, Bool>
+	{
+		var padState : Map<Int, Bool> = new Map<Int, Bool>();
+		padState.set(Left, false);
+		padState.set(Right, false);
+		padState.set(Shoot, false);
+		padState.set(Pause, false);
+		
+		return padState;
 	}
 
 	public static var Left 	: Int = 0;
 	public static var Right : Int = 1;
 	public static var Shoot	: Int = 2;
+	public static var Pause : Int = 3;
 }

@@ -123,7 +123,7 @@ class PlayState extends FlxState
 		generateBubble();
 		switchState(StateAiming);
 
-		screenButtons = new ScreenButtons(0, 240, this);
+		screenButtons = new ScreenButtons(0, 0, this, 240);
 		add(screenButtons);
 
 		handleDebugInit();
@@ -132,6 +132,11 @@ class PlayState extends FlxState
 	override public function update()
 	{
 		GamePad.handlePadState();
+
+		if (GamePad.justPressed(GamePad.Pause))
+		{
+			openSubState(new PauseSubstate());
+		}
 
 		switch (state)
 		{

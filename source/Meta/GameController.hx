@@ -73,6 +73,11 @@ class GameController
 		// Depending on the state, do things?
 		ToMenu();
 	}
+	
+	public static function OnPuzzleGiveup()
+	{
+		GameOver(-1, 0);
+	}
 
 	public static function BeginScene(scene : String)
 	{

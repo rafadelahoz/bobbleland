@@ -11,26 +11,28 @@ class ScreenButtons extends FlxSpriteGroup
 	var leftButton : FlxSprite;
 	var rightButton : FlxSprite;
 	var shootButton : FlxSprite;
+	var pauseButton : FlxSprite;
 
 	var _width : Int;
 	var _height : Int;
 
-	public function new(X : Float, Y : Float, State : PlayState)
+	public function new(X : Float, Y : Float, State : PlayState, BottomHeight : Float)
 	{
 		super(X, Y);
 
 		state = State;
 
 		_width = Std.int(FlxG.width);
-		_height = Std.int(FlxG.height - y);
+		_height = Std.int(FlxG.height - BottomHeight);
 		var halfWidth = Std.int(_width / 2);
 		var halfHeight = Std.int(_height / 2);
 
 		// Add the buttons
-		add(leftButton = new FlxSprite(0, halfHeight).loadGraphic("assets/images/btnLeft.png", true, 90, 40));
-		add(rightButton = new FlxSprite(halfWidth, halfHeight).loadGraphic("assets/images/btnRight.png", true, 90, 40));
-		add(shootButton = new FlxSprite(0, 0).loadGraphic("assets/images/btnShoot.png", true, 180, 40));
-
+		add(pauseButton = new FlxSprite(halfWidth, 0).makeGraphic(halfWidth, 40, 0x00FFFFFF));
+		add(leftButton = new FlxSprite(0, BottomHeight + halfHeight).loadGraphic("assets/images/btnLeft.png", true, 90, 40));
+		add(rightButton = new FlxSprite(halfWidth, BottomHeight + halfHeight).loadGraphic("assets/images/btnRight.png", true, 90, 40));
+		add(shootButton = new FlxSprite(0, BottomHeight).loadGraphic("assets/images/btnShoot.png", true, 180, 40));
+		
 		for (button in [leftButton, rightButton, shootButton])
 		{
 			button.animation.add("idle", [0]);
@@ -65,6 +67,10 @@ class ScreenButtons extends FlxSpriteGroup
 				{
 					GamePad.setPressed(GamePad.Shoot);
 					shootButton.animation.play("pressed");
+				}
+				else if (touch.overlaps(pauseButton))
+				{
+					GamePad.setPressed(GamePad.Pause);
 				}
 			}
 		}
