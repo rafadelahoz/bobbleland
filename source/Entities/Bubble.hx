@@ -21,7 +21,7 @@ class Bubble extends FlxSprite
 	public var crunchTime : Float = 0.25;
 	public var waitTime : Float = 0.25;
 	public var popTime : Float = 0.2;
-	public var jumpWaitTime : Float = 0.4;
+	public var jumpWaitTime : Float = 0.075;
 
 	public var Speed : Float = 350;
 	public var Size : Float;

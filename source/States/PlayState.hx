@@ -8,6 +8,8 @@ import flixel.text.FlxText;
 import flixel.util.FlxPoint;
 import flixel.util.FlxTimer;
 import flixel.util.FlxRandom;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.group.FlxTypedGroup;
 
 import database.BackgroundDatabase;
@@ -40,6 +42,7 @@ class PlayState extends FlxState
 	public var grid : BubbleGrid;
 	public var cursor : PlayerCursor;
 	public var bubble : Bubble;
+	public var nextBubble : Bubble;
 
 	public var screenButtons : ScreenButtons;
 
@@ -324,11 +327,30 @@ class PlayState extends FlxState
 		remove(bubble);
 		bubble = null;
 
+		if (nextBubble == null)
+		{
+			generateNextBubble();
+		}
+		
+		bubble = nextBubble;
+		FlxTween.tween(bubble, { 
+				x: cursor.x + cursor.aimOrigin.x - grid.cellSize / 2, 
+				y: cursor.y + cursor.aimOrigin.y - grid.cellSize / 2
+			}, 0.1, {});
+		
+		generateNextBubble();
+	}
+	
+	function generateNextBubble()
+	{		
 		var nextColor : BubbleColor = generator.getNextBubbleColor();
 
-		bubble = new Bubble(cursor.x + cursor.aimOrigin.x - grid.cellSize / 2,
-							cursor.y + cursor.aimOrigin.y - grid.cellSize / 2, this, nextColor);
-		add(bubble);
+		nextBubble = new Bubble(cursor.x + cursor.aimOrigin.x - grid.cellSize / 2 + 20,
+							cursor.y + cursor.aimOrigin.y - grid.cellSize / 2 + 8, this, nextColor);
+		nextBubble.scale.x = 0;
+		nextBubble.scale.y = 0;
+		FlxTween.tween(nextBubble.scale, {x : 1, y : 1}, 0.3, {startDelay : 0.05, ease: FlxEase.elasticOut});
+		add(nextBubble);
 	}
 
 	/* Public API for others */
