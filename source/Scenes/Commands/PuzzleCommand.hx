@@ -55,7 +55,9 @@ class PuzzleCommand extends Command
 		if (components.length < 2)
 			throw "Invalid puzzle command, missing arguments: " + line;
 
-		var command : Command = new PuzzleCommand(components[0], components[1]);
+		var command : Command = 
+			new PuzzleCommand(StringTools.trim(components[0]), 
+								StringTools.trim(components[1]));
 		return command;
 	}
 }

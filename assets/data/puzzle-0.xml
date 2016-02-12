@@ -4,8 +4,8 @@
 	<mode name="target" seconds="90" />-->
 	<background id="park" />
 	<bubble-set id="bananas" />
-	<initial rows="6" colors="0,1" />
+	<initial rows="6" colors="0,1,2,3" />
 	<rows>
-		<row colors="x,x,x,0,0,x,x,x"/>
+		<row colors="x,x,x,0,3,x,x,x"/>
 	</rows>
 </puzzle>

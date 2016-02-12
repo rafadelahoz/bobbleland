@@ -104,11 +104,11 @@ class PlayState extends FlxState
 		bottomBar = new FlxSprite(bottomBarPosition.x, bottomBarPosition.y).loadGraphic("assets/images/red-bar.png");
 		add(bottomBar);
 
-		fallingBubbles = new FlxTypedGroup<Bubble>();
-		add(fallingBubbles);
-
 		cursor = new PlayerCursor(FlxG.width / 2 - 10, 240 - 40, this);
 		add(cursor);
+		
+		fallingBubbles = new FlxTypedGroup<Bubble>();
+		add(fallingBubbles);
 
 		availableColors = puzzleData.usedColors;
 
