@@ -91,6 +91,7 @@ class BubbleGenerator
         else if (puzzle.mode == PuzzleData.ModeHold)
         {
             row = getArcadeRow(row);
+            currentRow++;
         }
 
         return row;

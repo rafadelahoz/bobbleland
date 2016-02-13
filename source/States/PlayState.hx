@@ -54,6 +54,7 @@ class PlayState extends FlxState
 	public var bottomBar : FlxSprite;
 	public var ceiling : Ceiling;
 	public var overlay : FlxSprite;
+	public var timeDisplay : ScreenTimer;
 
 	public var dropDelay : Float;
 	public var dropTimer : FlxTimer;
@@ -82,8 +83,6 @@ class PlayState extends FlxState
 
 		prepareBackground();
 
-		prepareBaseDecoration();
-
 		shadow = new FlxSprite(FlxG.width / 2 - 64, 16).makeGraphic(128, 240-48, 0xFF000000);
 		shadow.alpha = 0.68;
 		add(shadow);
@@ -97,22 +96,27 @@ class PlayState extends FlxState
 		overlay = new FlxSprite(0, 0, "assets/images/play-overlay.png");
 		add(overlay);
 
+		prepareBaseDecoration();
+
 		bubbles = new FlxTypedGroup<Bubble>();
 		add(bubbles);
 
 		var bottomBarPosition : FlxPoint = grid.getBottomBarPosition();
-		bottomBar = new FlxSprite(bottomBarPosition.x, bottomBarPosition.y).loadGraphic("assets/images/red-bar.png");
+		bottomBar = new FlxSprite(bottomBarPosition.x, bottomBarPosition.y - 1).loadGraphic("assets/images/red-bar.png");
 		add(bottomBar);
 
 		cursor = new PlayerCursor(FlxG.width / 2 - 10, 240 - 40, this);
 		add(cursor);
-		
+
 		fallingBubbles = new FlxTypedGroup<Bubble>();
 		add(fallingBubbles);
 
 		availableColors = puzzleData.usedColors;
 
-		dropDelay = 30;
+		if (puzzleData.dropDelay > 0)
+			dropDelay = puzzleData.dropDelay;
+		else
+			dropDelay = 30;
 		dropTimer = new FlxTimer(dropDelay, onDropTimer);
 		waitTimer = new FlxTimer();
 		aimingTimer = new FlxTimer();
@@ -120,14 +124,27 @@ class PlayState extends FlxState
 		scoreDisplay = new ScoreDisplay(2, 2, mode);
 		add(scoreDisplay);
 
+		if (puzzleData.mode == puzzle.PuzzleData.ModeHold)
+		{
+			timeDisplay = new ScreenTimer(112, 0, puzzleData.seconds, onTimeOver);
+			add(timeDisplay);
+			trace("Added timer");
+		}
+
 		generator = new BubbleGenerator(this);
 		generator.initalizeGrid();
+
+		trace("Grid initialized");
 
 		generateBubble();
 		switchState(StateAiming);
 
+		trace("First bubbles");
+
 		screenButtons = new ScreenButtons(0, 0, this, 240);
 		add(screenButtons);
+
+		trace("Buttons initialized");
 
 		handleDebugInit();
 	}
@@ -227,7 +244,6 @@ class PlayState extends FlxState
 		if (!notifyAiming && aimingTimer.timeLeft < AimingTime / 2)
 		{
 			notifyAiming = true;
-			trace("HURRY UP!");
 		}
 
 		if (GamePad.justPressed(GamePad.Shoot))
@@ -331,18 +347,18 @@ class PlayState extends FlxState
 		{
 			generateNextBubble();
 		}
-		
+
 		bubble = nextBubble;
-		FlxTween.tween(bubble, { 
-				x: cursor.x + cursor.aimOrigin.x - grid.cellSize / 2, 
+		FlxTween.tween(bubble, {
+				x: cursor.x + cursor.aimOrigin.x - grid.cellSize / 2,
 				y: cursor.y + cursor.aimOrigin.y - grid.cellSize / 2
 			}, 0.1, {});
-		
+
 		generateNextBubble();
 	}
-	
+
 	function generateNextBubble()
-	{		
+	{
 		var nextColor : BubbleColor = generator.getNextBubbleColor();
 
 		nextBubble = new Bubble(cursor.x + cursor.aimOrigin.x - grid.cellSize / 2 + 20,
@@ -412,7 +428,7 @@ class PlayState extends FlxState
 				if (puzzleData.mode == puzzle.PuzzleData.ModeClear &&
 					grid.getCount() == 0)
 				{
-					switchState(StateWinning);
+					handlePuzzleCompleted();
 				}
 				else
 				{
@@ -430,6 +446,18 @@ class PlayState extends FlxState
 		generateBubble();
 	}
 
+	function onTimeOver()
+	{
+		handlePuzzleCompleted();
+	}
+
+	function handlePuzzleCompleted()
+	{
+		// Pause bubbles moving here or something!
+
+		switchState(StateWinning);
+	}
+
 	public function parsePuzzle(puzzleName : String)
 	{
 		if (mode == ModePuzzle)
@@ -445,11 +473,11 @@ class PlayState extends FlxState
 			puzzleData.bubbleSet = null;
 			puzzleData.initialRows = 5;
 			puzzleData.usedColors = [];
-			for (i in 0...5)
+			for (i in 0...6)
 			{
 				puzzleData.usedColors.push(new BubbleColor(i));
 			}
-			puzzleData.seconds = -1;
+			puzzleData.seconds = 90;
 		}
 	}
 
@@ -479,11 +507,11 @@ class PlayState extends FlxState
 		baseDecoration.animation.paused = true;
 		add(baseDecoration);
 
-		character = new PlayerCharacter(baseDecoration.x + 24, baseDecoration.y + 32, this);
+		character = new PlayerCharacter(baseDecoration.x + 16, baseDecoration.y + 24, this);
 		add(character);
 
-		lever = new Lever(baseDecoration.x + 24, baseDecoration.y + 40, this);
-		add(lever);
+		/*lever = new Lever(baseDecoration.x + 24, baseDecoration.y + 40, this);
+		add(lever);*/
 		#end
 	}
 

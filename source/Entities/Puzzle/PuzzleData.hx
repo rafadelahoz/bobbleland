@@ -11,6 +11,7 @@ class PuzzleData
     public var background : String;
     public var bubbleSet : String;
 
+    public var dropDelay : Int;
     public var seconds : Int;
     public var initialRows : Int;
     public var usedColors : Array<BubbleColor>;
@@ -18,12 +19,13 @@ class PuzzleData
 
     public function new()
     {
-        mode = -1;
-        background = null;
-        bubbleSet = null;
-        seconds = -1;
+        mode        = -1;
+        background  = null;
+        bubbleSet   = null;
+        dropDelay   = -1;
+        seconds     = -1;
         initialRows = 0;
-        usedColors = [];
-        rows = [];
+        usedColors  = [];
+        rows        = [];
     }
 }

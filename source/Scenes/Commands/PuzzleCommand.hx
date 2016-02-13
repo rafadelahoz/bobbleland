@@ -24,7 +24,7 @@ class PuzzleCommand extends Command
 
 		announcement = new PuzzleAnnouncement(0, 0);
 		scene.add(announcement);
-		announcement.init(100, onAnnouncementPositioned);
+		announcement.init(400, onAnnouncementPositioned);
 	}
 
 	function onAnnouncementPositioned() : Void
@@ -55,8 +55,8 @@ class PuzzleCommand extends Command
 		if (components.length < 2)
 			throw "Invalid puzzle command, missing arguments: " + line;
 
-		var command : Command = 
-			new PuzzleCommand(StringTools.trim(components[0]), 
+		var command : Command =
+			new PuzzleCommand(StringTools.trim(components[0]),
 								StringTools.trim(components[1]));
 		return command;
 	}

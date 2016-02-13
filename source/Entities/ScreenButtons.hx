@@ -28,22 +28,25 @@ class ScreenButtons extends FlxSpriteGroup
 		var halfHeight = Std.int(_height / 2);
 
 		// Add the buttons
-		add(pauseButton = new FlxSprite(halfWidth, 0).makeGraphic(halfWidth, 40, 0x00FFFFFF));
+		add(pauseButton = new FlxSprite(halfWidth, 0).loadGraphic("assets/images/btnPause.png", true, 20, 16));
 		add(leftButton = new FlxSprite(0, BottomHeight + halfHeight).loadGraphic("assets/images/btnLeft.png", true, 90, 40));
 		add(rightButton = new FlxSprite(halfWidth, BottomHeight + halfHeight).loadGraphic("assets/images/btnRight.png", true, 90, 40));
 		add(shootButton = new FlxSprite(0, BottomHeight).loadGraphic("assets/images/btnShoot.png", true, 180, 40));
-		
-		for (button in [leftButton, rightButton, shootButton])
+
+		for (button in [leftButton, rightButton, shootButton, pauseButton])
 		{
 			button.animation.add("idle", [0]);
 			button.animation.add("pressed", [1]);
 			button.animation.play("idle");
 		}
+
+		pauseButton.setSize(halfWidth, halfHeight);
+		pauseButton.offset.set(-(halfWidth-20), 0);
 	}
 
 	override public function update()
 	{
-		for (button in [leftButton, rightButton, shootButton])
+		for (button in [leftButton, rightButton, shootButton, pauseButton])
 		{
 			button.animation.play("idle");
 		}
@@ -71,6 +74,7 @@ class ScreenButtons extends FlxSpriteGroup
 				else if (touch.overlaps(pauseButton))
 				{
 					GamePad.setPressed(GamePad.Pause);
+					pauseButton.animation.play("pressed");
 				}
 			}
 		}

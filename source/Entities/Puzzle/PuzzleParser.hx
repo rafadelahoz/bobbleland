@@ -59,6 +59,8 @@ class PuzzleParser
             case "initial":
                 data.initialRows = Std.parseInt(fast.att.rows);
                 data.usedColors = parseColorList(fast.att.colors);
+                if (fast.has.dropdelay)
+                    data.dropDelay = Std.parseInt(fast.att.dropdelay);
             case "rows":
                 data.rows = parseRows(fast);
         }
@@ -68,9 +70,12 @@ class PuzzleParser
     {
         var list : Array<BubbleColor> = [];
 
-        for (color in colorList.split(","))
+        if (colorList != null)
         {
-            list.push(new BubbleColor(Std.parseInt(color)));
+            for (color in colorList.split(","))
+            {
+                list.push(new BubbleColor(Std.parseInt(color)));
+            }
         }
 
         return list;
