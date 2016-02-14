@@ -43,7 +43,8 @@ class BubbleGenerator
     /* Returns an appropriate color index for a bubble */
     public function getNextBubbleColor() : BubbleColor
     {
-        return getNextGridColor();
+        var color : BubbleColor = getNextGridColor();
+        return color;
     }
 
     public function generateRow()
@@ -80,6 +81,11 @@ class BubbleGenerator
             if (puzzle.rows.length > 0)
             {
                 row = puzzle.rows.pop();
+                // If the stored row is empty, it means it is a random row
+                if (row.length == 0)
+                {
+                    row = getArcadeRow(row);
+                }
             }
             else
             {
@@ -101,19 +107,23 @@ class BubbleGenerator
 	{
 		var usedColors : Array<BubbleColor> = grid.getUsedColors();
 
-		if (usedColors.length <= 0)
+		if (usedColors.filter(onlyPositiveIndexes).length <= 0)
 		{
 			return getRandomColor();
 		}
 
-		return FlxRandom.getObject(usedColors);
+		return FlxRandom.getObject(usedColors.filter(onlyPositiveIndexes));
 	}
 
     /* Returns a random color index for a bubble */
 	function getRandomColor() : BubbleColor
 	{
-		return world.availableColors[FlxRandom.intRanged(0, world.availableColors.length - 1)];
+        var list : Array<BubbleColor> = world.availableColors.filter(onlyPositiveIndexes);
+		return list[FlxRandom.intRanged(0, list.length - 1)];
 	}
 
-
+    function onlyPositiveIndexes(color : BubbleColor) : Bool
+    {
+        return (color != null && color.colorIndex >= 0);
+    }
 }

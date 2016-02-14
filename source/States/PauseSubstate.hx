@@ -93,6 +93,15 @@ class PauseSubstate extends FlxSubState
             }
         }
 
+        if (GamePad.justPressed(GamePad.Pause))
+        {
+            onResumeButtonPressed();
+        }
+        else if (GamePad.justPressed(GamePad.Shoot) || FlxG.keys.justPressed.ENTER)
+        {
+            onExitButtonPressed();
+        }
+
         super.update();
     }
 

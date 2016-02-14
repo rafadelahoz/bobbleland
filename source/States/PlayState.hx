@@ -446,6 +446,11 @@ class PlayState extends FlxState
 		generateBubble();
 	}
 
+	public function onTargetBubbleHit()
+	{
+		handlePuzzleCompleted();
+	}
+
 	function onTimeOver()
 	{
 		handlePuzzleCompleted();

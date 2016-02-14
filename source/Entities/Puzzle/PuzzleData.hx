@@ -10,6 +10,7 @@ class PuzzleData
     public var mode : Int;
     public var background : String;
     public var bubbleSet : String;
+    public var target : String;
 
     public var dropDelay : Int;
     public var seconds : Int;

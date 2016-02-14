@@ -50,7 +50,8 @@ class PuzzleParser
                         data.seconds = Std.parseInt(fast.att.seconds);
                     case "target":
                         data.mode = PuzzleData.ModeTarget;
-                        data.seconds = Std.parseInt(fast.att.seconds);
+                        if (fast.has.seconds)
+                            data.seconds = Std.parseInt(fast.att.seconds);
                 }
             case "background":
                 data.background = fast.att.id;
@@ -61,6 +62,8 @@ class PuzzleParser
                 data.usedColors = parseColorList(fast.att.colors);
                 if (fast.has.dropdelay)
                     data.dropDelay = Std.parseInt(fast.att.dropdelay);
+            case "target":
+                data.target = fast.att.graphic;
             case "rows":
                 data.rows = parseRows(fast);
         }
@@ -87,7 +90,24 @@ class PuzzleParser
 
         for (elem in fast.elements)
         {
-            rows.push(parseRow(elem));
+            // Special random rows are identified by the random="true" attribute
+            if (elem.has.random && elem.att.random == "true")
+            {
+                var number : Int = 1;
+                // Multiple random rows may be specified at once, lets see
+                if (elem.has.number)
+                    number = Std.parseInt(elem.att.number);
+
+                // Random rows are empty
+                for (i in 0...number)
+                {
+                    rows.push([]);
+                }
+            }
+            else
+            {
+                rows.push(parseRow(elem));
+            }
         }
 
         return rows;
@@ -102,6 +122,8 @@ class PuzzleParser
         {
             if (color == "x")
                 row.push(null);
+            else if (color == "T")
+                row.push(new BubbleColor(BubbleColor.SpecialTarget, true))
             else
                 row.push(new BubbleColor(Std.parseInt(color)));
         }

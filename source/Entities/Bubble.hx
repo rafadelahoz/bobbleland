@@ -8,6 +8,7 @@ import flixel.util.FlxTimer;
 import flixel.util.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 import flixel.group.FlxTypedGroup;
+import flixel.group.FlxTypedGroupIterator;
 import flixel.tweens.FlxTween;
 
 class Bubble extends FlxSprite
@@ -81,10 +82,13 @@ class Bubble extends FlxSprite
 
 	public function handleSpecialBubble(color : BubbleColor)
 	{
-		switch (color.colorIndex)
+		special = color.colorIndex;
+
+		switch (special)
 		{
+			case BubbleColor.SpecialTarget:
+				// Special things here
 			case BubbleColor.SpecialAnchor:
-				special = color.colorIndex;
 				safe = true;
 			default:
 		}
@@ -115,6 +119,10 @@ class Bubble extends FlxSprite
 				// FlxSpriteUtil.drawRoundRect(this, 1, 1, Size*2, Size*2, 4, 4, 0xFF414471);
 				FlxSpriteUtil.drawCircle(this, width/2, height/2, Size, 0xFFFFFFFF);
 				// offset.set(0, 0);
+			case BubbleColor.SpecialTarget:
+				trace("Target bubble instantiated");
+				var sprite : String = world.puzzleData.target + ".png";
+				loadGraphic("assets/images/" + sprite);
 			default:
 				loadGraphic("assets/images/bubbles_sheet.png", true, 16, 16);
 				if (bubbleColor.colorIndex < 5)
@@ -154,6 +162,11 @@ class Bubble extends FlxSprite
 					onHitCeiling();
 				}
 				// Stick to the bubble mass
+				else if (checkCollisionWithTarget())
+				{
+					// What?
+					onHitBubbles();
+				}
 				else if (checkCollisionWithBubbles())
 				{
 					onHitBubbles();
@@ -225,6 +238,16 @@ class Bubble extends FlxSprite
 		var velocityY : Float = -sin * Speed;
 
 		velocity.set(velocityX, velocityY);
+	}
+
+	public function onTargetHit(other : Bubble)
+	{
+		if (special == BubbleColor.SpecialTarget)
+		{
+			trace("Target bubble hit!");
+			world.onTargetBubbleHit();
+			// Some effect to the target or something?
+		}
 	}
 
 	public function onHitCeiling()
@@ -373,6 +396,29 @@ class Bubble extends FlxSprite
 		});
 	}
 
+	public function checkCollisionWithTarget() : Bool
+	{
+		var bubbles : FlxTypedGroup<Bubble> = world.bubbles;
+		var iterator : FlxTypedGroupIterator<Bubble> =
+										bubbles.iterator(onlyTargetBubbles);
+		while (iterator.hasNext())
+		{
+			var bubble : Bubble = iterator.next();
+			if (bubble.touches(this))
+			{
+				bubble.onTargetHit(this);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	function onlyTargetBubbles(bubble : Bubble) : Bool
+	{
+		return (bubble != null && bubble.special == BubbleColor.SpecialTarget);
+	}
+
 	public function checkCollisionWithBubbles() : Bool
 	{
 		var bubbles : FlxTypedGroup<Bubble> = world.bubbles;
@@ -437,11 +483,11 @@ class Bubble extends FlxSprite
 		return A.x == B.x && A.y == B.y;
 	}
 
-	public static function CreateAt(X : Float, Y : Float, ColorIndex : BubbleColor, World : PlayState) : Bubble
+	public static function CreateAt(X : Float, Y : Float, Color : BubbleColor, World : PlayState) : Bubble
 	{
 		var cellCenter : FlxPoint = World.grid.getCellCenter(Std.int(X), Std.int(Y));
 
-		var bubble : Bubble = new Bubble(cellCenter.x, cellCenter.y - World.grid.cellSize, World, ColorIndex);
+		var bubble : Bubble = new Bubble(cellCenter.x, cellCenter.y - World.grid.cellSize, World, Color);
 		bubble.cellPosition.set(X, Y);
 		bubble.cellCenterPosition.set(cellCenter.x, cellCenter.y);
 		bubble.state = StateIdling;
