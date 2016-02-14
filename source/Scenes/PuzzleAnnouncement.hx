@@ -2,57 +2,63 @@ package scenes;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.group.FlxSpriteGroup;
-import flixel.text.FlxBitmapTextField;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 
-import text.PixelText;
-
-class PuzzleAnnouncement extends FlxSpriteGroup
+class PuzzleAnnouncement extends FlxSprite
 {
-    var w : Int;
-    var h : Int;
-
-    var background : FlxSprite;
-    var message : FlxBitmapTextField;
-    var warning : FlxBitmapTextField;
-
     var completionHandler : Void -> Void;
+
+    var angleTween : FlxTween;
 
     public function new(X : Float, Y : Float)
     {
         super(X, Y);
 
-        w = 16+2526+16;
-        h = 16+20+16;
+        loadGraphic("assets/images/announcement-puzzle.png");
 
-        x = FlxG.width / 2 - w/2;
-        y = -h;
+        x -= width/2;
+        y -= height;
 
-        background = new FlxSprite(x, y).makeGraphic(w, h, 0xFF000000);
-        message = PixelText.New(16, 16, "A PUZZLE CHALLENGE IS COMING", w -32);
-        warning = PixelText.New(16, 26, "     !PREPARE YOURSELF!     ", w - 32);
+        // Compose the graphic with a random  message
+        var message : FlxSprite = new FlxSprite(0, 0).loadGraphic("assets/images/puzzle-announcement-messages.png", true, 88, 16);
+        message.animation.add("msgs", [0, 1, 2, 3], 0);
+        message.animation.play("msgs");
+        message.animation.paused = true;
+        message.animation.randomFrame();
 
-        add(background);
-        add(message);
-        add(warning);
+        stamp(message, 24, 52);
+
+        message.destroy();
+        message = null;
     }
 
-    public function init(?Speed : Float = 300, ?OnComplete : Void -> Void = null) : Void
+    public function init(?OnComplete : Void -> Void = null) : Void
     {
-        velocity.y = Speed;
         completionHandler = OnComplete;
+
+        setupRotation(0.75);
+
+        FlxTween.tween(this, {y : 240/2-height/2}, 0.8, { ease : FlxEase.elasticOut, complete: function(_t:FlxTween) {
+            angleTween.cancel();
+            if (completionHandler != null)
+                completionHandler();
+            }});
+    }
+
+    function setupRotation(time : Float)
+    {
+        if (angleTween != null)
+            angleTween.cancel();
+
+        angleTween = FlxTween.angle(this, -720, 7, time, {ease : FlxEase.cubeInOut, complete : function(_t:FlxTween) {
+            angleTween.cancel();
+            //setupRotation(time * 2);
+        }});
     }
 
     override public function update()
     {
-        if (velocity.y > 0 && y >= 240 - height/2)
-        {
-            velocity.y = 0;
-            y = 240 - height/2;
-            if (completionHandler != null)
-                completionHandler();
-        }
-
         super.update();
     }
 }

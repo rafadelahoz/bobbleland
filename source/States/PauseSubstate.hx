@@ -81,6 +81,8 @@ class PauseSubstate extends FlxSubState
 
     override public function update()
     {
+        GamePad.handlePadState();
+
         for (touch in FlxG.touches.list)
 		{
 			if (touch.pressed)
@@ -93,13 +95,16 @@ class PauseSubstate extends FlxSubState
             }
         }
 
-        if (GamePad.justPressed(GamePad.Pause))
+        if (enabled)
         {
-            onResumeButtonPressed();
-        }
-        else if (GamePad.justPressed(GamePad.Shoot) || FlxG.keys.justPressed.ENTER)
-        {
-            onExitButtonPressed();
+            if (GamePad.justPressed(GamePad.Pause))
+            {
+                onResumeButtonPressed();
+            }
+            else if (GamePad.justPressed(GamePad.Shoot) || FlxG.keys.justPressed.ENTER)
+            {
+                onExitButtonPressed();
+            }
         }
 
         super.update();

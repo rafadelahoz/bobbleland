@@ -2,11 +2,11 @@
 	<mode name="target" seconds="90" />
 	<background id="dark" />
 	<bubble-set id="candy" />
-	<initial rows="6" colors="1,2,3,4,5" />
+	<initial rows="6" colors="1,2,3,4,5" dropdelay="15"/>
 	<target graphic="eggplant"/>
 	<rows>
 		<row colors="x,x,x,x,T,x,x,x"/>
-		<!--<row random="true" number="3"/>
+		<row random="true" number="3"/>
 		<row random="true"/>
 		<row random="true"/>
 		<row colors="x,2,0,1,0,1,2,x"/>
@@ -14,6 +14,6 @@
 		<row colors="x,x,0,1,0,1,x,x"/>
 		<row colors="x,x,2,0,1,2,x,x"/>
 		<row colors="x,x,x,1,0,x,x,x"/>
-		<row colors="x,x,x,0,1,x,x,x"/>-->
+		<row colors="x,x,x,0,1,x,x,x"/>
 	</rows>
 </puzzle>

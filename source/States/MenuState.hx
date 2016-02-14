@@ -23,11 +23,11 @@ class MenuState extends FlxState
 		btnArcade = new FlxButtonPlus(32, 32, onArcadeButtonPressed, "Arcade", w, h);
 		btnPuzzle = new FlxButtonPlus(32, 80, onPuzzleButtonPressed, "Adventure", w, h);
 		btnOptions = new FlxButtonPlus(32, FlxG.height / 2, onOptionsButtonPressed, "Options", w, h);
-		
+
 		decorateButton(btnArcade);
 		decorateButton(btnPuzzle);
 		decorateButton(btnOptions);
-		
+
 		add(btnArcade);
 		add(btnPuzzle);
 		add(btnOptions);
@@ -40,6 +40,15 @@ class MenuState extends FlxState
 
 	override public function update():Void
 	{
+		if (FlxG.keys.justPressed.G)
+		{
+			var announcement = new scenes.PuzzleAnnouncement(FlxG.width/2, 0);
+			add(announcement);
+			announcement.init(function() {
+				// haha
+			});
+		}
+
 		super.update();
 	}
 
@@ -52,7 +61,7 @@ class MenuState extends FlxState
 	{
 		GameController.StartAdventureGame();
 	}
-	
+
 	public function onOptionsButtonPressed() : Void
 	{
 		GameController.ToOptions();

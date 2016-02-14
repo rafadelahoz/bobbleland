@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.util.FlxRandom;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
@@ -17,10 +18,7 @@ class PlayerCharacter extends FlxSprite
         super(X, Y);
         world = World;
 
-        loadGraphic("assets/images/char-pug-sheet.png", true, 32, 24);
-        animation.add("idle", [0, 7], 3);
-        animation.add("run", [0, 1, 2, 3, 4, 5, 6], 20);
-        animation.add("bark", [8, 9, 10, 11, 12, 13], 30, false);
+        prepareGraphic();
         animation.play("idle");
 
         facing = FlxObject.RIGHT;
@@ -36,11 +34,32 @@ class PlayerCharacter extends FlxSprite
         FlxTween.tween(hurry.scale, {x : 1, y : 1}, 0.25, { ease : FlxEase.elasticInOut, loopDelay: 0.15, type : FlxTween.PINGPONG });
     }
 
+    function prepareGraphic()
+    {
+        if (FlxRandom.chanceRoll(50))
+        {
+            loadGraphic("assets/images/char-pug-sheet.png", true, 32, 24);
+            animation.add("idle", [0, 7], 3);
+            animation.add("run", [0, 1, 2, 3, 4, 5, 6], 20);
+            animation.add("action", [8, 9, 10, 11, 12, 13], 30, false);
+            animation.add("happy", [14, 15, 16, 17, 17, 16, 15, 14], 20);
+        }
+        else
+        {
+            loadGraphic("assets/images/char-cat-sheet.png", true, 32, 24);
+            animation.add("idle", [0]);
+            animation.add("run", [5, 6, 7, 1, 2, 3, 4], 20);
+            animation.add("action", [0, 8, 9, 10, 11, 12, 13, 14, 15], 30, false);
+            animation.add("happy", [0, 8, 9, 10, 11, 12, 13, 14, 15], 30);
+        }
+
+    }
+
     override public function update()
     {
         if (world.cursor.enabled)
         {
-            if (animation.name == "bark")
+            if (animation.name == "action")
             {
                 if (animation.finished)
                 {
@@ -51,7 +70,7 @@ class PlayerCharacter extends FlxSprite
             {
                 if (GamePad.checkButton(GamePad.Shoot))
                 {
-                    animation.play("bark");
+                    animation.play("action");
                     belt.animation.paused = true;
                 }
                 else if (GamePad.checkButton(GamePad.Left))
@@ -81,9 +100,17 @@ class PlayerCharacter extends FlxSprite
         }
         else
         {
+            if (world.state == PlayState.StateWinning)
+            {
+                animation.play("happy");
+            }
+            else
+            {
+                animation.play("idle");
+            }
+
             belt.animation.paused = true;
             hurry.visible = false;
-            animation.play("idle");
         }
 
         belt.update();

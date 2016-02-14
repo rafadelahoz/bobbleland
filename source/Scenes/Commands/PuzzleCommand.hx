@@ -1,5 +1,6 @@
 package scenes.commands;
 
+import flixel.FlxG;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
 
@@ -22,14 +23,15 @@ class PuzzleCommand extends Command
 	{
 		super.init(Scene);
 
-		announcement = new PuzzleAnnouncement(0, 0);
+		announcement = new PuzzleAnnouncement(FlxG.width/2, 0);
 		scene.add(announcement);
-		announcement.init(400, onAnnouncementPositioned);
+		announcement.init(onAnnouncementPositioned);
 	}
 
 	function onAnnouncementPositioned() : Void
 	{
 		var timer : FlxTimer = new FlxTimer(0.6, function(_t:FlxTimer) {
+			FlxG.camera.fade(0xFF000000, 1);
 			FlxTween.tween(announcement.scale, {x : 10, y: 10}, 1, {
 					complete : function(_t:FlxTween) {
 						onComplete();
