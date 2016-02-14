@@ -228,9 +228,15 @@ class PlayState extends FlxState
 				// Disable cursor
 				cursor.disable();
 
-				add(new FlxText(FlxG.width/2 - 32, grid.y + grid.height/2, "Clear!", 16));
+				var clearMessage : PuzzleClear = new PuzzleClear(FlxG.width/2, 0);
+				add(clearMessage);
+				clearMessage.init(function() {
+					new FlxTimer(1.5, function(_t:FlxTimer){
+						FlxG.camera.fade(0xFF000000, 1.5, onGameplayEnd);
+					});
+				});
 
-				FlxG.camera.fade(0xFF000000, 3, onGameplayEnd);
+
 
 			default:
 				aimingTimer.cancel();
@@ -574,6 +580,11 @@ class PlayState extends FlxState
 		if (FlxG.keys.justPressed.DOWN)
 		{
 			generator.generateRow();
+		}
+
+		if (FlxG.keys.justPressed.W)
+		{
+			handlePuzzleCompleted();
 		}
 
 		if (FlxG.keys.justPressed.D)
