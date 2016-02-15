@@ -236,8 +236,6 @@ class PlayState extends FlxState
 					});
 				});
 
-
-
 			default:
 				aimingTimer.cancel();
 		}
@@ -440,30 +438,48 @@ class PlayState extends FlxState
 				bubble.onBubblesPopped();
 			});
 
-			// Check whether the field is empty to award bonuses
-			if (grid.getCount() == 0 && mode == ModeArcade)
-			{
-				scoreDisplay.add(Constants.ScClearField);
-			}
-
 			// Things are happing, so wait!
 			switchState(StateRemoving);
 			waitTimer.start(WaitTime, function(_t:FlxTimer) {
-				if (puzzleData.mode == puzzle.PuzzleData.ModeClear &&
-					grid.getCount() == 0)
-				{
-					handlePuzzleCompleted();
-				}
-				else
-				{
-					scoreDisplay.active = true;
-					switchState(StateAiming);
-				}
+				afterRemoving();
 			});
 		}
 
 		// And generate a new one
 		generateBubble();
+	}
+	
+	public function afterRemoving()
+	{
+		if (puzzleData.mode == puzzle.PuzzleData.ModeClear && 
+			grid.getCount() == 0)
+		{
+			handlePuzzleCompleted();
+		}
+		// Check whether the field is empty to award bonuses
+		else if (mode == ModeArcade && grid.getCount() == 0)
+		{
+			scoreDisplay.add(Constants.ScClearField);
+			var pc : PuzzleClear = new PuzzleClear(FlxG.width/2, 0);
+			add(pc);
+			pc.init(function() {
+				pc.exit();
+				generator.generateRow();
+				new FlxTimer(0.7, function(_t:FlxTimer) {
+					generator.generateRow();
+				});
+				new FlxTimer(1.4, function(_t:FlxTimer) {
+					generator.generateRow();
+					scoreDisplay.active = true;
+					switchState(StateAiming);
+				});
+			});
+		}
+		else 
+		{
+			scoreDisplay.active = true;
+			switchState(StateAiming);
+		}
 	}
 
 	public function onTargetBubbleHit()
@@ -492,17 +508,7 @@ class PlayState extends FlxState
 		}
 		else
 		{
-			puzzleData = new puzzle.PuzzleData();
-			puzzleData.mode = puzzle.PuzzleData.ModeEndless;
-			puzzleData.background = null;
-			puzzleData.bubbleSet = null;
-			puzzleData.initialRows = 5;
-			puzzleData.usedColors = [];
-			for (i in 0...6)
-			{
-				puzzleData.usedColors.push(new BubbleColor(i));
-			}
-			puzzleData.seconds = 90;
+			puzzleData = ArcadeGameStatus.getData();
 		}
 	}
 

@@ -26,7 +26,7 @@ class BubbleGenerator
 
         if (world.mode == PlayState.ModeArcade)
         {
-            for (row in 0...5)
+            for (row in 0...puzzle.initialRows)
             {
                 generateRow();
             }

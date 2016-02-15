@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
@@ -32,6 +33,22 @@ class PuzzleClear extends FlxSprite
             if (completionHandler != null)
                 completionHandler();
             }});
+    }
+
+    public function exit(?OnComplete : Void -> Void = null) : Void
+    {
+        var angleTween : FlxTween = FlxTween.angle(this, 720, -7, 0.5, {ease : FlxEase.cubeInOut, complete : function(_t:FlxTween) {
+            angleTween.cancel();
+        }});
+            
+        new FlxTimer(0.4, function(_t:FlxTimer) {
+            FlxTween.tween(this, {y : FlxG.height+height/2}, 0.7, { ease : FlxEase.elasticOut, complete: function(_t:FlxTween) {                
+                if (OnComplete != null)
+                    OnComplete();
+                }
+            });
+        });
+        
     }
 
     function setupRotation(time : Float)

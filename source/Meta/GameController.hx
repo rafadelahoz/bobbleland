@@ -21,6 +21,7 @@ class GameController
 
 	public static function StartArcadeGame()
 	{
+		ArcadeGameStatus.init();
 		FlxG.switchState(new PlayState(PlayState.ModeArcade, null));
 	}
 
