@@ -407,7 +407,7 @@ class PlayState extends FlxState
 				handleLosing();
 			}
 			// Otherwise just continue
-			else 
+			else
 			{
 				switchState(StateAiming);
 			}
@@ -448,10 +448,10 @@ class PlayState extends FlxState
 		// And generate a new one
 		generateBubble();
 	}
-	
+
 	public function afterRemoving()
 	{
-		if (puzzleData.mode == puzzle.PuzzleData.ModeClear && 
+		if (puzzleData.mode == puzzle.PuzzleData.ModeClear &&
 			grid.getCount() == 0)
 		{
 			handlePuzzleCompleted();
@@ -460,22 +460,32 @@ class PlayState extends FlxState
 		else if (mode == ModeArcade && grid.getCount() == 0)
 		{
 			scoreDisplay.add(Constants.ScClearField);
-			var pc : PuzzleClear = new PuzzleClear(FlxG.width/2, 0);
-			add(pc);
-			pc.init(function() {
-				pc.exit();
+			var congratsSign : ArcadeClear = new ArcadeClear(FlxG.width/2, 0);
+			add(congratsSign);
+			congratsSign.init(function() {
+
+				// Exit after appearing
+				congratsSign.exit(function() {
+					// Destroying yourself in the process
+					congratsSign.destroy();
+				});
+
+				// Generate a row while exiting
 				generator.generateRow();
+				// Generate a row after a while
 				new FlxTimer(0.7, function(_t:FlxTimer) {
 					generator.generateRow();
 				});
+				// Generate another row after a while more
 				new FlxTimer(1.4, function(_t:FlxTimer) {
 					generator.generateRow();
+					// And resume playing
 					scoreDisplay.active = true;
 					switchState(StateAiming);
 				});
 			});
 		}
-		else 
+		else
 		{
 			scoreDisplay.active = true;
 			switchState(StateAiming);

@@ -6,7 +6,7 @@ import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
-class PuzzleClear extends FlxSprite
+class ArcadeClear extends FlxSprite
 {
     var completionHandler : Void -> Void;
 
@@ -16,7 +16,7 @@ class PuzzleClear extends FlxSprite
     {
         super(X, Y);
 
-        loadGraphic("assets/images/puzzle-clear.png");
+        loadGraphic("assets/images/arcade-clear.png");
 
         x -= width/2;
         y -= height;
@@ -28,7 +28,7 @@ class PuzzleClear extends FlxSprite
 
         setupRotation(0.75);
 
-        FlxTween.tween(this, {y : FlxG.height/2-height/2}, 0.8, { ease : FlxEase.elasticOut, complete: function(_t:FlxTween) {
+        FlxTween.tween(this, {y : FlxG.height/2-height}, 0.8, { ease : FlxEase.elasticOut, complete: function(_t:FlxTween) {
             angleTween.cancel();
             if (completionHandler != null)
                 completionHandler();
@@ -48,6 +48,7 @@ class PuzzleClear extends FlxSprite
                 }
             });
         });
+
     }
 
     function setupRotation(time : Float)
