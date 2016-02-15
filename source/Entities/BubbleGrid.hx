@@ -97,60 +97,6 @@ class BubbleGrid extends FlxObject
 		return getCellCenter(Std.int(cell.x), Std.int(cell.y));
 	}
 
-	public function renderCanvas()
-	{
-		return;
-
-		if (canvas == null)
-			canvas = new FlxSprite(bounds.x, bounds.y).makeGraphic(Std.int(bounds.width), Std.int(bounds.height), 0xFF250516);
-		else
-			FlxSpriteUtil.fill(canvas, 0x00000000);
-
-		var lineStyle : flixel.util.LineStyle = { color : 0x50FFFFFF, thickness : 1 };
-
-		// TODO: Extract this from here: draw the ceiling falling in Puzzle Mode
-		if (topRow > 0)
-		{
-			FlxSpriteUtil.drawRect(canvas, 0, 0, width-1, topRow*cellSize, 0x50FFFFFF, {thickness: 0});
-		}
-
-		// Draw the canvas borders
-		// FlxSpriteUtil.drawRect(canvas, 0, 0, width-1, height-1, 0x000000, lineStyle);
-
-		// TODO: Extract this from here: draw the limit line
-		FlxSpriteUtil.drawRect(canvas, 0, bottomRow*cellSize-1, width-1, 2, 0x000000, { color : 0x90FF5151, thickness: 2 });
-
-		return;
-
-		var cellOffset : Float;
-		var cellColor : Int = 0x20FFFFFF;
-
-		for (row in topRow...rows)
-		{
-			cellOffset = padRow(row)*halfCell;
-			for (col in 0...columns)
-			{
-				var ccolor : Int = cellColor;
-
-				if (highlightedCell.x == col && highlightedCell.y == row)
-				{
-					ccolor = 0xFFFF5151;
-				}
-				else if (getData(col, row) != null)
-				{
-					if (getData(col, row).bubbleColor.colorIndex >= 0)
-					{
-						ccolor = getData(col, row).bubbleColor.getColor();
-						ccolor &= 0x00FFFFFF;
-						ccolor |= 0x40000000;
-					}
-				}
-
-				FlxSpriteUtil.drawRect(canvas, col * cellSize + cellOffset, row * cellSize, cellSize, cellSize, ccolor, lineStyle);
-			}
-		}
-	}
-
 	public function getBottomBarPosition() : FlxPoint
 	{
 		return new FlxPoint(x, y+(bottomRow*cellSize-1));
@@ -589,5 +535,59 @@ class BubbleGrid extends FlxObject
 		}
 
 		trace(dump);
+	}
+	
+	public function renderCanvas()
+	{
+		return;
+
+		if (canvas == null)
+			canvas = new FlxSprite(bounds.x, bounds.y).makeGraphic(Std.int(bounds.width), Std.int(bounds.height), 0xFF250516);
+		else
+			FlxSpriteUtil.fill(canvas, 0x00000000);
+
+		var lineStyle : flixel.util.LineStyle = { color : 0x50FFFFFF, thickness : 1 };
+
+		// TODO: Extract this from here: draw the ceiling falling in Puzzle Mode
+		if (topRow > 0)
+		{
+			FlxSpriteUtil.drawRect(canvas, 0, 0, width-1, topRow*cellSize, 0x50FFFFFF, {thickness: 0});
+		}
+
+		// Draw the canvas borders
+		// FlxSpriteUtil.drawRect(canvas, 0, 0, width-1, height-1, 0x000000, lineStyle);
+
+		// TODO: Extract this from here: draw the limit line
+		FlxSpriteUtil.drawRect(canvas, 0, bottomRow*cellSize-1, width-1, 2, 0x000000, { color : 0x90FF5151, thickness: 2 });
+
+		return;
+
+		var cellOffset : Float;
+		var cellColor : Int = 0x20FFFFFF;
+
+		for (row in topRow...rows)
+		{
+			cellOffset = padRow(row)*halfCell;
+			for (col in 0...columns)
+			{
+				var ccolor : Int = cellColor;
+
+				if (highlightedCell.x == col && highlightedCell.y == row)
+				{
+					ccolor = 0xFFFF5151;
+				}
+				else if (getData(col, row) != null)
+				{
+					if (getData(col, row).bubbleColor.colorIndex >= 0)
+					{
+						ccolor = getData(col, row).bubbleColor.getColor();
+						ccolor &= 0x00FFFFFF;
+						ccolor |= 0x40000000;
+					}
+				}
+
+				FlxSpriteUtil.drawRect(canvas, col * cellSize + cellOffset, row * cellSize, cellSize, cellSize, ccolor, lineStyle);
+			}
+		}
 	}
 }

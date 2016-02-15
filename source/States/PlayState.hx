@@ -390,7 +390,7 @@ class PlayState extends FlxState
 	}
 
 	// Handler for bubble stopped event (triggered from Bubble)
-	public function handleBubbleStop()
+	public function handleBubbleStop(?mayHaveLost : Bool = false)
 	{
 		// Store bubble
 		bubbles.add(bubble);
@@ -398,8 +398,26 @@ class PlayState extends FlxState
 		// Check for group of three
 		var condemned : Array<Bubble> = grid.locateBubbleGroup(bubble);
 
-		if (condemned.length >= 3)
+		// If we have not achieved the group of three
+		if (condemned.length < 3)
 		{
+			// And the bubble was bellow the line
+			if (mayHaveLost)
+			{
+				// We have lost :(
+				bubble.triggerRot();
+				handleLosing();
+			}
+			// Otherwise just continue
+			else 
+			{
+				switchState(StateAiming);
+			}
+		}
+		// Else if we have achieved the group
+		else
+		{
+			// Start making things fall
 			for (bub in condemned)
 			{
 				scoreDisplay.add(bub.getPopPoints());
@@ -442,10 +460,6 @@ class PlayState extends FlxState
 					switchState(StateAiming);
 				}
 			});
-		}
-		else
-		{
-			switchState(StateAiming);
 		}
 
 		// And generate a new one

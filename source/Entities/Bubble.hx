@@ -289,13 +289,12 @@ class Bubble extends FlxSprite
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 			}
 
-			// Check whether we are losing
+			var mayHaveLost : Bool = false;
+			// Check whether the bubble is below the target line
 			if (cellPosition.y >= grid.bottomRow)
 			{
 				reposition(cellPosition.x, cellPosition.y);
-				triggerRot();
-				world.handleLosing();
-				return;
+				mayHaveLost = true;
 			}
 
 			// Store your data
@@ -303,8 +302,8 @@ class Bubble extends FlxSprite
 
 			if (!debug)
 			{
-				// And notify
-				world.handleBubbleStop();
+				// And notify the world
+				world.handleBubbleStop(mayHaveLost);
 			}
 		}
 	}
