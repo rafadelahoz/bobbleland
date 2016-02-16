@@ -27,6 +27,8 @@ class Bubble extends FlxSprite
 	public var Speed : Float = 350;
 	public var Size : Float;
 	public var HalfSize : Float;
+	
+	public var UseMoveToContact : Bool = false;
 
 	public var popPoints : Int;
 	public var fallPoints : Int;
@@ -155,8 +157,8 @@ class Bubble extends FlxSprite
 				// Bounce off walls
 				if (x + width/2 - Size * 1 <= grid.getLeft() || x + width/2 + Size * 1 >= grid.getRight())
 					velocity.x *= -1;
-
 				// Stick to the ceiling
+
 				if (y - HalfSize <= grid.getTop())
 				{
 					onHitCeiling();
@@ -169,6 +171,11 @@ class Bubble extends FlxSprite
 				}
 				else if (checkCollisionWithBubbles())
 				{
+					onHitBubbles();
+				}
+				else if (UseMoveToContact && checkCollisionWithBubblesAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed)) 
+				{
+					moveToContact(x + velocity.x * FlxG.elapsed,  y + velocity.y * FlxG.elapsed);
 					onHitBubbles();
 				}
 				else
@@ -416,6 +423,54 @@ class Bubble extends FlxSprite
 	function onlyTargetBubbles(bubble : Bubble) : Bool
 	{
 		return (bubble != null && bubble.special == BubbleColor.SpecialTarget);
+	}
+
+	public function checkCollisionWithBubblesAt(X : Float, Y : Float) : Bool
+	{
+		var tx : Float = x;
+		var ty : Float = y;
+		
+		x = X;
+		y = Y;
+		
+		var collision : Bool = checkCollisionWithBubbles();
+		
+		x = tx;
+		y = ty;
+		
+		return collision;
+	}
+	
+	function moveToContact(X : Float, Y : Float) 
+	{
+		var from : FlxPoint = new FlxPoint(x, y);
+		var to : FlxPoint = new FlxPoint(X, Y);
+		
+		for (i in 0...11)
+		{
+			var t : Float = 1 - i/10;
+			var position : FlxPoint = interpolatePosition(from, to, t);
+			if (!checkCollisionWithBubblesAt(position.x, position.y))
+			{
+				trace("Found contact position with t=" + t);
+				x = position.x;
+				y = position.y;
+				
+				velocity.x = 0;
+				velocity.y = 0;
+				return;
+			}
+		}
+	}
+	
+	function interpolatePosition(from : FlxPoint, to : FlxPoint, t : Float) : FlxPoint
+	{
+		var point : FlxPoint = new FlxPoint();
+		
+		point.x = from.x + (to.x - from.x) * t;
+        point.y = from.y + (to.y - from.y) * t;
+		
+		return point;
 	}
 
 	public function checkCollisionWithBubbles() : Bool
