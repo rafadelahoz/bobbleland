@@ -19,7 +19,7 @@ class SayCommand extends Command
 	{
 		super.init(scene);
 
-		text.TextBox.Init(scene, 0, FlxG.height-64, FlxG.width, 64);
+		text.TextBox.Init(scene, 0, FlxG.height-80, FlxG.width, 80);
 		text.TextBox.Message(actor, message, onMessageCompletion);
 	}
 

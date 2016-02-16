@@ -15,6 +15,7 @@ class SceneState extends FlxState
     public var currentCommand : Command;
 
     public var background : FlxSprite;
+    public var border : FlxSprite;
     public var sceneButtons : SceneButtons;
 
     public var sceneFile : String;
@@ -38,6 +39,9 @@ class SceneState extends FlxState
         background = new FlxSprite(0, 0);
         background.makeGraphic(Std.int(FlxG.width), Std.int(FlxG.height), 0xFF000000);
         add(background);
+        
+        border = new FlxSprite(0, 240).makeGraphic(Std.int(FlxG.width), 80, 0xFF000000);
+        add(border);
 
         sceneButtons = new SceneButtons(0, 0);
         add(sceneButtons);

@@ -200,7 +200,7 @@ class TypeWriter extends FlxBitmapTextField
 		fixedWidth = true;
 		width = Width;
 		multiLine = true;
-		lineSpacing = 4;
+		lineSpacing = 0;
 
 		_finalText = Text;
 
