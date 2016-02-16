@@ -41,6 +41,7 @@ class PlayState extends FlxState
 	public var generator : BubbleGenerator;
 	public var grid : BubbleGrid;
 	public var cursor : PlayerCursor;
+	public var cursorBubbles : FlxTypedGroup<Bubble>;
 	public var bubble : Bubble;
 	public var nextBubble : Bubble;
 
@@ -107,6 +108,9 @@ class PlayState extends FlxState
 
 		cursor = new PlayerCursor(FlxG.width / 2 - 10, 240 - 40, this);
 		add(cursor);
+		
+		cursorBubbles = new FlxTypedGroup<Bubble>();
+		add(cursorBubbles);
 
 		fallingBubbles = new FlxTypedGroup<Bubble>();
 		add(fallingBubbles);
@@ -344,7 +348,7 @@ class PlayState extends FlxState
 	// Generates a new shootable bubble
 	function generateBubble()
 	{
-		remove(bubble);
+		cursorBubbles.remove(bubble);
 		bubble = null;
 
 		if (nextBubble == null)
@@ -370,7 +374,7 @@ class PlayState extends FlxState
 		nextBubble.scale.x = 0;
 		nextBubble.scale.y = 0;
 		FlxTween.tween(nextBubble.scale, {x : 1, y : 1}, 0.3, {startDelay : 0.05, ease: FlxEase.elasticOut});
-		add(nextBubble);
+		cursorBubbles.add(nextBubble);
 	}
 
 	/* Public API for others */
