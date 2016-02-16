@@ -14,7 +14,7 @@
 	<!--------------------------------WINDOW SETTINGS------------------------------->
 
 	<set name="work"/>
-	<haxedef name="work"/>
+	<!--<haxedef name="work"/>-->
 
 	<!--These window settings apply to all targets-->
 	<window width="360" height="640" fps="60" background="#212121" hardware="true" vsync="true" />
@@ -94,4 +94,9 @@
 	<!--------------------------------CUSTOM---------------------------------------->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
+	<icon path="assets/images/icon16.png" size="16" />
+	<icon path="assets/images/icon32.png" size="32" />
+	<icon path="assets/images/icon48.png" size="48" />
+	<icon path="assets/images/icon64.png" size="64" />
+	<icon path="assets/images/icon128.png" size="128" />
 </project>

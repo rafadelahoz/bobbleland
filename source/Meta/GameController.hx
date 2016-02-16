@@ -13,7 +13,7 @@ class GameController
 	{
 		FlxG.switchState(new MenuState());
 	}
-	
+
 	public static function ToOptions()
 	{
 		FlxG.switchState(new OptionsState());
@@ -22,6 +22,11 @@ class GameController
 	public static function StartArcadeGame()
 	{
 		ArcadeGameStatus.init();
+		FlxG.switchState(new ArcadePreState());
+	}
+
+	public static function BeginArcade()
+	{
 		FlxG.switchState(new PlayState(PlayState.ModeArcade, null));
 	}
 
@@ -33,48 +38,48 @@ class GameController
 			trace("Save game found!");
 			AdventureGameStatus.loadSavegame();
 		}
-		else 
+		else
 		{
 			trace("Starting new game");
 			AdventureGameStatus.startNewGame();
 		}
-		
+
 		AdventureGameStatus.next();
 		NextScene();
 	}
-	
+
 	public static function OnSceneCompleted(nextPuzzle : String, nextScene : String)
 	{
 		AdventureGameStatus.setNext(nextPuzzle, nextScene);
 		AdventureGameStatus.next();
-		
+
 		BeginPuzzle();
 	}
-	
-	public static function BeginPuzzle() 
+
+	public static function BeginPuzzle()
 	{
 		FlxG.switchState(
 			new PlayState(PlayState.ModePuzzle, AdventureGameStatus.getCurrentPuzzle())
 		);
 	}
-	
+
 	public static function OnPuzzleCompleted()
 	{
 		AdventureGameStatus.save();
 		NextScene();
 	}
-	
+
 	static function NextScene()
 	{
 		BeginScene(AdventureGameStatus.getCurrentScene());
 	}
-	
+
 	public static function OnGameplayEnd()
 	{
 		// Depending on the state, do things?
 		ToMenu();
 	}
-	
+
 	public static function OnPuzzleGiveup()
 	{
 		GameOver(-1, 0);
@@ -90,8 +95,8 @@ class GameController
 		// TODO: Handle mode or...?
 		FlxG.switchState(new GameOverState(score));
 	}
-	
-	public static function ClearSaveData() 
+
+	public static function ClearSaveData()
 	{
 		AdventureGameStatus.clearData();
 	}

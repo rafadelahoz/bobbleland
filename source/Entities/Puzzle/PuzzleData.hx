@@ -8,8 +8,11 @@ class PuzzleData
     public static var ModeTarget   : Int = 2;
 
     public var mode : Int;
+
     public var background : String;
     public var bubbleSet : String;
+    public var character : String;
+
     public var target : String;
 
     public var dropDelay : Int;
@@ -21,8 +24,11 @@ class PuzzleData
     public function new()
     {
         mode        = -1;
+
         background  = null;
         bubbleSet   = null;
+        character   = null;
+
         dropDelay   = -1;
         seconds     = -1;
         initialRows = 0;

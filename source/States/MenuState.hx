@@ -40,15 +40,6 @@ class MenuState extends FlxState
 
 	override public function update():Void
 	{
-		if (FlxG.keys.justPressed.G)
-		{
-			var announcement = new scenes.PuzzleAnnouncement(FlxG.width/2, 0);
-			add(announcement);
-			announcement.init(function() {
-				// haha
-			});
-		}
-
 		super.update();
 	}
 

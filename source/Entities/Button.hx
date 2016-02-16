@@ -27,6 +27,20 @@ class Button extends FlxSprite
     {
         animation.play("idle");
 
+        if (mouseOver())
+        {
+            if (FlxG.mouse.pressed)
+            {
+                animation.play("pressed");
+            }
+            else if (FlxG.mouse.justReleased)
+            {
+                animation.play("idle");
+                if (callback != null)
+                    callback();
+            }
+        }
+
         for (touch in FlxG.touches.list)
 		{
             if (touch.overlaps(this))
@@ -34,7 +48,7 @@ class Button extends FlxSprite
     			if (touch.pressed)
     			{
     				animation.play("pressed");
-                    return;
+                    break;
                 }
                 else if (touch.justReleased)
                 {
@@ -42,9 +56,17 @@ class Button extends FlxSprite
                     if (callback != null)
                         callback();
 
-                    return;
+                    break ;
                 }
             }
         }
+
+        super.update();
+    }
+
+    function mouseOver()
+    {
+        return FlxG.mouse.x >= x && FlxG.mouse.x < (x + width) &&
+              FlxG.mouse.y >= y && FlxG.mouse.y < (y + height);
     }
 }
