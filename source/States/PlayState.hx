@@ -65,6 +65,8 @@ class PlayState extends FlxState
 	public var notifyAiming : Bool;
 
 	public var scoreDisplay : ScoreDisplay;
+	
+	public var flowController : PlayFlowController;
 
 	public function new(Mode : Int, PuzzleName : String)
 	{
@@ -139,6 +141,8 @@ class PlayState extends FlxState
 		generator.initalizeGrid();
 
 		// trace("Grid initialized");
+		
+		flowController = new PlayFlowController(this);
 
 		generateBubble();
 		switchState(StateAiming);
@@ -187,6 +191,8 @@ class PlayState extends FlxState
 		dropTimer.active = false;
 		waitTimer.active = false;
 		aimingTimer.active = false;
+		
+		flowController.pause();
 	}
 
 	function onPauseEnd()
@@ -194,6 +200,8 @@ class PlayState extends FlxState
 		dropTimer.active = true;
 		waitTimer.active = true;
 		aimingTimer.active = true;
+		
+		flowController.resume();
 	}
 
 	/* State handling */
@@ -208,6 +216,9 @@ class PlayState extends FlxState
 		switch (state)
 		{
 			case PlayState.StateAiming:
+				// Compute a flow controller play step
+				flowController.onPlayStep();
+			
 				aimingTimer.start(AimingTime, onForcedShot);
 
 			case PlayState.StateLosing:
@@ -338,11 +349,18 @@ class PlayState extends FlxState
 		else
 		{
 			// Generate new bubble row, move all others down or something
-			generator.generateRow();
+			generateRow();
 
 			// Set drop timer again
 			dropTimer.start(dropDelay, onDropTimer);
 		}
+	}
+	
+	function generateRow()
+	{
+		generator.generateRow();
+		
+		flowController.onRowGenerated();
 	}
 
 	// Generates a new shootable bubble
@@ -426,6 +444,8 @@ class PlayState extends FlxState
 				bub.triggerFall();
 				bubbles.remove(bub);
 				fallingBubbles.add(bub);
+				
+				flowController.onBubbleDestroyed();
 			}
 
 			// If there was some destruction, check for disconnections
@@ -436,6 +456,8 @@ class PlayState extends FlxState
 				bub.triggerFall();
 				bubbles.remove(bub);
 				fallingBubbles.add(bub);
+				
+				flowController.onBubbleDestroyed();
 			}
 
 			grid.forEach(function (bubble : Bubble) {
@@ -463,6 +485,8 @@ class PlayState extends FlxState
 		// Check whether the field is empty to award bonuses
 		else if (mode == ModeArcade && grid.getCount() == 0)
 		{
+			flowController.onScreenCleared();
+			
 			scoreDisplay.add(Constants.ScClearField);
 			var congratsSign : ArcadeClear = new ArcadeClear(FlxG.width/2, 0);
 			add(congratsSign);
@@ -475,14 +499,14 @@ class PlayState extends FlxState
 				});
 
 				// Generate a row while exiting
-				generator.generateRow();
+				generateRow();
 				// Generate a row after a while
 				new FlxTimer(0.7, function(_t:FlxTimer) {
-					generator.generateRow();
+					generateRow();
 				});
 				// Generate another row after a while more
 				new FlxTimer(1.4, function(_t:FlxTimer) {
-					generator.generateRow();
+					generateRow();
 					// And resume playing
 					scoreDisplay.active = true;
 					switchState(StateAiming);
@@ -615,7 +639,7 @@ class PlayState extends FlxState
 
 		if (FlxG.keys.justPressed.DOWN)
 		{
-			generator.generateRow();
+			generateRow();
 		}
 
 		if (FlxG.keys.justPressed.W)
