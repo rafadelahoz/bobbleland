@@ -110,15 +110,17 @@ class PlayFlowController
         
         lastIncreaseTime = playTime;
         
-        if (timesIncreased < 2)
-        {
-            lowerDropDelay();
-        }
-        else if (timesIncreased == 2)
+        // Some times, add a bubble color (this should be revisited)
+        if ([2, 6, 10, 14, 20, 30].indexOf(timesIncreased) > -1)
         {
             // Add a color
             if (!addColor())
                 lowerDropDelay();
+        } 
+        // Generally, make things drop quicker
+        else
+        {
+            lowerDropDelay();
         }
         
         timesIncreased++;
