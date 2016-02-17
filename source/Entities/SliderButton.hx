@@ -67,8 +67,8 @@ class SliderButton extends Button
                 // Handle limits
                 if (x < left + width/2)
                     x = left + width/2;
-                else if (x >= right - width/2)
-                    x = right - 1 - width/2;
+                else if (x > right - width/2)
+                    x = right - width/2;
 
                 // Check for release
                 if (FlxG.mouse.justReleased ||

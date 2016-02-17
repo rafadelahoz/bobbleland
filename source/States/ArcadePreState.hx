@@ -18,16 +18,18 @@ class ArcadePreState extends FlxState
     {
         super.create();
 
+        #if (work)
         var bg : String = "assets/backgrounds/" +
                         (FlxRandom.chanceRoll(50) ? "bg0.png" : "bg1.png");
         background = new FlxBackdrop(bg, 2, 2);
         background.velocity.set(10, 10);
         add(background);
+        #end
 
         bgOverlay = new FlxSprite(0, 0, "assets/ui/arcade-config.png");
         add(bgOverlay);
 
-        sldDifficulty = new SliderButton(32, 88/*, snapToDifficultyGrid*/);
+        sldDifficulty = new SliderButton(32, 88, snapToDifficultyGrid);
         sldDifficulty.loadSpritesheet("assets/ui/slider.png", 16, 32);
         sldDifficulty.setLimits(24, 136);
         add(sldDifficulty);
@@ -55,9 +57,8 @@ class ArcadePreState extends FlxState
     function snapToDifficultyGrid()
     {
         var xx = sldDifficulty.x;
-        var snapX = 32 + ((xx)/6);
-        trace(xx + "->" + snapX);
+        var snapX = 32 + Math.round((xx-32)/24)*24;
 
-        FlxTween.tween(sldDifficulty, {x : snapX}, 0.25);
+        FlxTween.tween(sldDifficulty, {x : snapX}, 0.1);
     }
 }
