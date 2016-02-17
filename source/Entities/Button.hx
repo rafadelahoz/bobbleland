@@ -27,6 +27,7 @@ class Button extends FlxSprite
     {
         animation.play("idle");
 
+        #if desktop
         if (mouseOver())
         {
             if (FlxG.mouse.pressed)
@@ -40,7 +41,9 @@ class Button extends FlxSprite
                     callback();
             }
         }
+        #end
 
+        #if mobile
         for (touch in FlxG.touches.list)
 		{
             if (touch.overlaps(this))
@@ -60,6 +63,7 @@ class Button extends FlxSprite
                 }
             }
         }
+        #end
 
         super.update();
     }

@@ -12,6 +12,10 @@ class ArcadePreState extends FlxState
     var bgOverlay : FlxSprite;
 
     var sldDifficulty : SliderButton;
+    
+    var btnDog : HoldButton;
+    var btnCat : HoldButton;
+    
     var btnStart : Button;
 
     override public function create()
@@ -33,10 +37,37 @@ class ArcadePreState extends FlxState
         sldDifficulty.loadSpritesheet("assets/ui/slider.png", 16, 32);
         sldDifficulty.setLimits(24, 136);
         add(sldDifficulty);
+        
+        generateCharacterButtons();
 
         btnStart = new Button(40, 264, onStartButtonPressed);
         btnStart.loadSpritesheet("assets/ui/btn-start.png", 96, 40);
         add(btnStart);
+    }
+
+    function generateCharacterButtons()
+    {
+        btnDog = new HoldButton(32, 168, onCharDogPressed);
+        btnDog.loadSpritesheet("assets/ui/char-dog.png", 32, 32);
+        add(btnDog);
+        
+        btnCat = new HoldButton(72, 168, onCharCatPressed);
+        btnCat.loadSpritesheet("assets/ui/char-cat.png", 32, 32);
+        add(btnCat);
+    }
+    
+    function onCharDogPressed()
+    {
+        ArcadeGameStatus.getData().character = "pug";
+        // Deactivate other buttons
+        btnCat.setPressed(false);
+    }
+    
+    function onCharCatPressed()
+    {
+        ArcadeGameStatus.getData().character = "cat";
+        // Deactivate other buttons
+        btnDog.setPressed(false);
     }
 
     override public function destroy()

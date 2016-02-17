@@ -11,8 +11,11 @@ class ArcadeGameStatus
             arcadeGameData = new puzzle.PuzzleData();
             
             arcadeGameData.mode = puzzle.PuzzleData.ModeEndless;
+            
             arcadeGameData.background = null;
             arcadeGameData.bubbleSet = null;
+            arcadeGameData.character = null;
+            
             arcadeGameData.initialRows = 4;
             arcadeGameData.dropDelay = 20;
             arcadeGameData.seconds = -1;
