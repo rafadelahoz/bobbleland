@@ -9,14 +9,17 @@ class HoldButton extends Button
     static var StatePressed : Int = 1;
     
     var pressedCallback : Void -> Void;
+    var releasedCallback : Void -> Void;
     
     var state : Int;
     
-    public function new(X : Float, Y : Float, ?Callback : Void -> Void = null)
+    public function new(X : Float, Y : Float, ?PressedCallback : Void -> Void = null, ?ReleasedCallback : Void -> Void = null)
     {
         super(X, Y, onReleased);
 
-        pressedCallback = Callback;
+        pressedCallback = PressedCallback;
+        releasedCallback = ReleasedCallback;
+        
         state = StateIdle;
     }
 
@@ -30,6 +33,8 @@ class HoldButton extends Button
                     pressedCallback();
             case HoldButton.StatePressed:
                 state = HoldButton.StateIdle;
+                if (releasedCallback != null)
+                    releasedCallback();
         }
     }
     
@@ -46,6 +51,8 @@ class HoldButton extends Button
         {
             state = HoldButton.StateIdle;
             animation.play("idle");
+            if (invokeCallback && releasedCallback != null)
+                releasedCallback();
         }
     }
 

@@ -19,12 +19,39 @@ class ArcadeGameStatus
             arcadeGameData.initialRows = 4;
             arcadeGameData.dropDelay = 20;
             arcadeGameData.seconds = -1;
-            arcadeGameData.usedColors = [];
-            for (i in 0...5)
-            {
-                arcadeGameData.usedColors.push(new BubbleColor(i));
-            }
+            arcadeGameData.usedColors = generateColorSet(5);
         }
+    }
+    
+    public static function setInitialRows(rows : Int)
+    {
+        arcadeGameData.initialRows = rows;
+    }
+    
+    public static function setDropDelay(seconds : Int)
+    {
+        arcadeGameData.dropDelay = seconds;
+    }
+    
+    public static function setUsedColors(number : Int)
+    {
+        arcadeGameData.usedColors = generateColorSet(number);
+    }
+    
+    public static function setCharacter(id : String)
+    {
+        arcadeGameData.character = id;
+    }
+    
+    static function generateColorSet(number : Int) : Array<BubbleColor>
+    {
+        var usedColors : Array<BubbleColor> = [];
+        for (index in 0...number)
+        {
+            usedColors.push(new BubbleColor(index));
+        }
+        
+        return usedColors;
     }
     
     public static function getData() : puzzle.PuzzleData

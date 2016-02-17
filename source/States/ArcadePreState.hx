@@ -22,7 +22,7 @@ class ArcadePreState extends FlxState
     {
         super.create();
 
-        #if (work)
+        #if !work
         var bg : String = "assets/backgrounds/" +
                         (FlxRandom.chanceRoll(50) ? "bg0.png" : "bg1.png");
         background = new FlxBackdrop(bg, 2, 2);
@@ -45,31 +45,6 @@ class ArcadePreState extends FlxState
         add(btnStart);
     }
 
-    function generateCharacterButtons()
-    {
-        btnDog = new HoldButton(32, 168, onCharDogPressed);
-        btnDog.loadSpritesheet("assets/ui/char-dog.png", 32, 32);
-        add(btnDog);
-        
-        btnCat = new HoldButton(72, 168, onCharCatPressed);
-        btnCat.loadSpritesheet("assets/ui/char-cat.png", 32, 32);
-        add(btnCat);
-    }
-    
-    function onCharDogPressed()
-    {
-        ArcadeGameStatus.getData().character = "pug";
-        // Deactivate other buttons
-        btnCat.setPressed(false);
-    }
-    
-    function onCharCatPressed()
-    {
-        ArcadeGameStatus.getData().character = "cat";
-        // Deactivate other buttons
-        btnDog.setPressed(false);
-    }
-
     override public function destroy()
     {
         super.destroy();
@@ -82,14 +57,82 @@ class ArcadePreState extends FlxState
 
     function onStartButtonPressed()
     {
+        prepareDifficultySetting();
         GameController.BeginArcade();
+    }
+    
+    function prepareDifficultySetting()
+    {
+        var difficulty : Int = getSnapSlot(sldDifficulty.x, 24, 32);
+
+        switch (difficulty)
+        {
+            case 0:
+                ArcadeGameStatus.setDropDelay(30);
+                ArcadeGameStatus.setInitialRows(5);
+                ArcadeGameStatus.setUsedColors(4);
+            case 1:
+                ArcadeGameStatus.setDropDelay(25);
+                ArcadeGameStatus.setInitialRows(5);
+                ArcadeGameStatus.setUsedColors(4);
+            case 2:
+                ArcadeGameStatus.setDropDelay(20);
+                ArcadeGameStatus.setInitialRows(5);
+                ArcadeGameStatus.setUsedColors(5);
+            case 3:
+                ArcadeGameStatus.setDropDelay(20);
+                ArcadeGameStatus.setInitialRows(6);
+                ArcadeGameStatus.setUsedColors(6);
+            case 4:
+                ArcadeGameStatus.setDropDelay(15);
+                ArcadeGameStatus.setInitialRows(6);
+                ArcadeGameStatus.setUsedColors(6);
+        }
+    }
+
+    function generateCharacterButtons()
+    {
+        btnDog = new HoldButton(32, 168, onCharDogPressed, onCharReleased);
+        btnDog.loadSpritesheet("assets/ui/char-dog.png", 32, 32);
+        add(btnDog);
+        
+        btnCat = new HoldButton(72, 168, onCharCatPressed, onCharReleased);
+        btnCat.loadSpritesheet("assets/ui/char-cat.png", 32, 32);
+        add(btnCat);
+    }
+    
+    function onCharReleased()
+    {
+        ArcadeGameStatus.setCharacter(null);
+    }
+    
+    function onCharDogPressed()
+    {
+        ArcadeGameStatus.setCharacter("pug");
+        // Deactivate other buttons
+        btnCat.setPressed(false);
+    }
+    
+    function onCharCatPressed()
+    {
+        ArcadeGameStatus.setCharacter("cat");
+        // Deactivate other buttons
+        btnDog.setPressed(false);
     }
 
     function snapToDifficultyGrid()
     {
-        var xx = sldDifficulty.x;
-        var snapX = 32 + Math.round((xx-32)/24)*24;
-
+        var snapX = snapToSlots(sldDifficulty.x, 24, 32);
         FlxTween.tween(sldDifficulty, {x : snapX}, 0.1);
+    }
+    
+    function snapToSlots(value : Float, slotWidth : Int, ?offset : Int = 0) : Float
+    {
+        return offset + getSnapSlot(value, slotWidth, offset)*slotWidth;
+    }
+    
+    function getSnapSlot(value : Float, slotWidth : Int, ?offset : Int = 0) : Int
+    {
+        return Std.int(Math.round(value-offset)/slotWidth);
     }
 }

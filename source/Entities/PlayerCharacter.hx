@@ -10,13 +10,16 @@ class PlayerCharacter extends FlxSprite
 {
     public var world : PlayState;
 
+    public var characterId : String;
+
     public var belt : FlxSprite;
     public var hurry : FlxSprite;
 
-    public function new(X : Float, Y : Float, World : PlayState)
+    public function new(X : Float, Y : Float, World : PlayState, CharacterId : String)
     {
         super(X, Y);
         world = World;
+        characterId = CharacterId;
 
         prepareGraphic();
         animation.play("idle");
@@ -36,23 +39,33 @@ class PlayerCharacter extends FlxSprite
 
     function prepareGraphic()
     {
-        if (FlxRandom.chanceRoll(50))
+        if (characterId == null)
+            characterId = getRandomCharacterId();
+        
+        switch (characterId)
         {
-            loadGraphic("assets/images/char-pug-sheet.png", true, 32, 24);
-            animation.add("idle", [0, 7], 3);
-            animation.add("run", [0, 1, 2, 3, 4, 5, 6], 20);
-            animation.add("action", [8, 9, 10, 11, 12, 13], 30, false);
-            animation.add("happy", [14, 15, 16, 17, 17, 16, 15, 14], 20);
-        }
-        else
-        {
-            loadGraphic("assets/images/char-cat-sheet.png", true, 32, 24);
-            animation.add("idle", [0]);
-            animation.add("run", [5, 6, 7, 1, 2, 3, 4], 20);
-            animation.add("action", [0, 8, 9, 10, 11, 12, 13, 14, 15], 30, false);
-            animation.add("happy", [0, 8, 9, 10, 11, 12, 13, 14, 15], 30);
+            case "pug":
+                loadGraphic("assets/images/char-pug-sheet.png", true, 32, 24);
+                animation.add("idle", [0, 7], 3);
+                animation.add("run", [0, 1, 2, 3, 4, 5, 6], 20);
+                animation.add("action", [8, 9, 10, 11, 12, 13], 30, false);
+                animation.add("happy", [14, 15, 16, 17, 17, 16, 15, 14], 20);
+            case "cat":
+                loadGraphic("assets/images/char-cat-sheet.png", true, 32, 24);
+                animation.add("idle", [0]);
+                animation.add("run", [5, 6, 7, 1, 2, 3, 4], 20);
+                animation.add("action", [0, 8, 9, 10, 11, 12, 13, 14, 15], 30, false);
+                animation.add("happy", [0, 8, 9, 10, 11, 12, 13, 14, 15], 30);
         }
 
+    }
+    
+    function getRandomCharacterId() : String
+    {
+        if (FlxRandom.chanceRoll(50))
+            return "pug";
+        else
+            return "cat";
     }
 
     override public function update()

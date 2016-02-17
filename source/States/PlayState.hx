@@ -132,23 +132,23 @@ class PlayState extends FlxState
 		{
 			timeDisplay = new ScreenTimer(112, 0, puzzleData.seconds, onTimeOver);
 			add(timeDisplay);
-			trace("Added timer");
+			// trace("Added timer");
 		}
 
 		generator = new BubbleGenerator(this);
 		generator.initalizeGrid();
 
-		trace("Grid initialized");
+		// trace("Grid initialized");
 
 		generateBubble();
 		switchState(StateAiming);
 
-		trace("First bubbles");
+		// trace("First bubbles");
 
 		screenButtons = new ScreenButtons(0, 0, this, 240);
 		add(screenButtons);
 
-		trace("Buttons initialized");
+		// trace("Buttons initialized");
 
 		handleDebugInit();
 	}
@@ -545,18 +545,20 @@ class PlayState extends FlxState
 	{
 		#if work
 		#else
-		baseDecoration = new FlxSprite(FlxG.width / 2 - 64, 181).loadGraphic("assets/images/base-decoration.png", true, 128, 60);
-		// baseDecoration.animation.add("idle", [0]);
+		baseDecoration = new FlxSprite(FlxG.width / 2 - 64, 181);
+		baseDecoration.loadGraphic("assets/images/base-decoration.png", 
+									true, 128, 60);		
 		baseDecoration.animation.add("move", [0, 1], 10, true);
 		baseDecoration.animation.play("move");
 		baseDecoration.animation.paused = true;
 		add(baseDecoration);
 
-		character = new PlayerCharacter(baseDecoration.x + 16, baseDecoration.y + 24, this);
+		var characterId : String = puzzleData.character;
+		character = new PlayerCharacter(baseDecoration.x + 16, 
+										baseDecoration.y + 24, 
+										this, characterId);
 		add(character);
 
-		/*lever = new Lever(baseDecoration.x + 24, baseDecoration.y + 40, this);
-		add(lever);*/
 		#end
 	}
 
