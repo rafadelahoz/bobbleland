@@ -8,6 +8,8 @@ class HoldButton extends Button
     static var StateIdle : Int = 0;
     static var StatePressed : Int = 1;
     
+    var beingTapped : Bool;
+    
     var pressedCallback : Void -> Void;
     var releasedCallback : Void -> Void;
     
@@ -21,6 +23,7 @@ class HoldButton extends Button
         releasedCallback = ReleasedCallback;
         
         state = StateIdle;
+        beingTapped = false;
     }
 
     function onReleased()
@@ -60,12 +63,35 @@ class HoldButton extends Button
     {
         super.update();
         
-        switch (state)
+        beingTapped = false;
+        
+        #if desktop
+        if (mouseOver() && FlxG.mouse.pressed)
         {
-            case HoldButton.StateIdle:
-                animation.play("idle");
-            case HoldButton.StatePressed:
-                animation.play("pressed");
+            beingTapped = true;
+        }
+        #end
+        
+        #if mobile
+        for (touch in FlxG.touches.list)
+		{
+            if (touch.overlaps(this) && touch.pressed)
+            {
+				beingTapped = true;
+                break;
+            }
+        }
+        #end
+        
+        if (!beingTapped)
+        {
+            switch (state)
+            {
+                case HoldButton.StateIdle:
+                    animation.play("idle");
+                case HoldButton.StatePressed:
+                    animation.play("pressed");
+            }
         }
     }
 }

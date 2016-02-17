@@ -128,7 +128,7 @@ class ArcadePreState extends FlxState
     
     function snapToSlots(value : Float, slotWidth : Int, ?offset : Int = 0) : Float
     {
-        return offset + getSnapSlot(value, slotWidth, offset)*slotWidth;
+        return offset + Math.round((value-offset)/slotWidth)*slotWidth;
     }
     
     function getSnapSlot(value : Float, slotWidth : Int, ?offset : Int = 0) : Int
