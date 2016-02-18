@@ -9,11 +9,14 @@ import database.BackgroundDatabase;
 import scenes.SceneParser;
 import scenes.commands.Command;
 
+import scenes.CharacterManager;
+
 class SceneState extends FlxState
 {
     public var commandQueue : Array<Command>;
-    public var storedCommand : Command;
     public var currentCommand : Command;
+
+    public var characterManager : CharacterManager;
 
     public var background : FlxSprite;
     public var border : FlxSprite;
@@ -36,6 +39,8 @@ class SceneState extends FlxState
 
         GamePad.init();
         BackgroundDatabase.Init();
+        
+        characterManager = new CharacterManager(this);
 
         background = new FlxSprite(0, 0);
         background.makeGraphic(Std.int(FlxG.width), Std.int(FlxG.height), 0xFF000000);

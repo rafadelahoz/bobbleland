@@ -69,6 +69,8 @@ class SceneParser
 			{
 				case "char":
 					command = CharCommand.parse(line);
+				case "exit":
+					command = ExitCommand.parse(line);
 				case "say":
 					command = SayCommand.parse(line);
 				case "bg":

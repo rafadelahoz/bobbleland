@@ -7,6 +7,7 @@ class GameController
 	public static function Init()
 	{
 		database.BackgroundDatabase.Init();
+		database.SceneCharacterDatabase.Init();
 	}
 
 	public static function ToMenu()

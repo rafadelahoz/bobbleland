@@ -1,5 +1,7 @@
 package scenes.commands;
 
+import scenes.Character;
+
 class CharCommand extends Command
 {
 	public var character : String;
@@ -11,6 +13,30 @@ class CharCommand extends Command
 
 		character = Character;
 		expression = Expression;
+	}
+	
+	override public function init(Scene : SceneState)
+	{
+		super.init(Scene);
+
+		// Look for the character in the current manager
+		var char : Character = scene.characterManager.get(character);
+		
+		// If it is not present, create it and reposition everyone accordingly
+		if (char == null)
+		{
+			scene.characterManager.add(character, expression, onCharacterDisplayed);
+		}
+		// If it IS present, change its expression to match the provided one
+		else 
+		{
+			char.changeExpression(expression, onCharacterDisplayed);
+		}
+	}
+
+	public function onCharacterDisplayed() : Void
+	{
+		onComplete();
 	}
 
 	override public function print() : String

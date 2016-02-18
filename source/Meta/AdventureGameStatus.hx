@@ -50,7 +50,7 @@ class AdventureGameStatus
     
     public static function startNewGame()
     {
-        nextScene = "say+bg.scene";
+        nextScene = "char.scene";
     }
     
     public static function getCurrentPuzzle() : String
