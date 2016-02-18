@@ -27,7 +27,7 @@ class Bubble extends FlxSprite
 	public var Speed : Float = 350;
 	public var Size : Float;
 	public var HalfSize : Float;
-	
+
 	public var UseMoveToContact : Bool = false;
 
 	public var popPoints : Int;
@@ -126,7 +126,7 @@ class Bubble extends FlxSprite
 				var sprite : String = world.puzzleData.target + ".png";
 				loadGraphic("assets/images/" + sprite);
 			default:
-				loadGraphic("assets/images/bubbles_sheet.png", true, 16, 16);
+				loadGraphic("assets/images/" + Bubble.GetSprite() + ".png", true, 16, 16);
 				if (bubbleColor.colorIndex < 5)
 				{
 					animation.add("idle", [bubbleColor.colorIndex]);
@@ -173,7 +173,7 @@ class Bubble extends FlxSprite
 				{
 					onHitBubbles();
 				}
-				else if (UseMoveToContact && checkCollisionWithBubblesAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed)) 
+				else if (UseMoveToContact && checkCollisionWithBubblesAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed))
 				{
 					moveToContact(x + velocity.x * FlxG.elapsed,  y + velocity.y * FlxG.elapsed);
 					onHitBubbles();
@@ -429,23 +429,23 @@ class Bubble extends FlxSprite
 	{
 		var tx : Float = x;
 		var ty : Float = y;
-		
+
 		x = X;
 		y = Y;
-		
+
 		var collision : Bool = checkCollisionWithBubbles();
-		
+
 		x = tx;
 		y = ty;
-		
+
 		return collision;
 	}
-	
-	function moveToContact(X : Float, Y : Float) 
+
+	function moveToContact(X : Float, Y : Float)
 	{
 		var from : FlxPoint = new FlxPoint(x, y);
 		var to : FlxPoint = new FlxPoint(X, Y);
-		
+
 		for (i in 0...11)
 		{
 			var t : Float = 1 - i/10;
@@ -455,21 +455,21 @@ class Bubble extends FlxSprite
 				trace("Found contact position with t=" + t);
 				x = position.x;
 				y = position.y;
-				
+
 				velocity.x = 0;
 				velocity.y = 0;
 				return;
 			}
 		}
 	}
-	
+
 	function interpolatePosition(from : FlxPoint, to : FlxPoint, t : Float) : FlxPoint
 	{
 		var point : FlxPoint = new FlxPoint();
-		
+
 		point.x = from.x + (to.x - from.x) * t;
         point.y = from.y + (to.y - from.y) * t;
-		
+
 		return point;
 	}
 
@@ -550,5 +550,10 @@ class Bubble extends FlxSprite
 		World.bubbles.add(bubble);
 
 		return bubble;
+	}
+
+	public static function GetSprite()
+	{
+		return "bubbles_sheet";
 	}
 }
