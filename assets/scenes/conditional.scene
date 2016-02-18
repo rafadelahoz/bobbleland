@@ -1,0 +1,15 @@
+fade out 0 0x000000
+bg park now
+fade in 0.1 0x000000
+say "CharA" "Hello, would you like some ice cream?"
+# Unimplemented
+# decide "Yes" "No" branchA branchB
+# branch branchA
+#   say "You said yes"
+#   say "Ok!"
+# end
+# branch branchB
+#   say "You said no?"
+#   say "Why not!?"
+# end
+puzzle target.xml 1.scene

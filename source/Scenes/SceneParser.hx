@@ -9,12 +9,13 @@ class SceneParser
 	public var filename : String;
 
 	public var commands : Array<Command>;
+	public var currentBlock : Array<Command>;
 
 	public function new(filename : String)
 	{
 		this.filename = filename;
 
-		commands = [];
+		commands = [];		
 	}
 
 	public function print()
@@ -31,6 +32,9 @@ class SceneParser
 	public function parse() : Array<Command>
 	{
 		var basePath : String = "assets/scenes/";
+
+		commands = [];
+		currentBlock = commands;
 
 		var fileContents : String = Assets.getText(basePath + filename);
 		var lines : Array<String> = fileContents.split("\n");
@@ -50,6 +54,9 @@ class SceneParser
 			return;
 
 		var command : Command = null;
+
+		// Trim the line
+		line = StringTools.trim(line);
 
 		// Locate command
 		var spacePos : Int = line.indexOf(" ");
@@ -72,12 +79,29 @@ class SceneParser
 					command = PuzzleCommand.parse(line);
 				case "wait":
 					command = WaitCommand.parse(line);
+				/*case "decide":
+					command = DecideCommand.parse(line);
+				case "branch":
+					// When a branch command is found
+					command = BranchCommand.parse(line);
+					// Use its command list as the current block
+					var commAsBranch : BranchCommand = cast command;
+					currentBlock = commAsBranch.commands;
+					// Until the end element is found, all commands will be
+					// stored inside the branch command command list
+				case "end":
+					currentBlock = commands;*/
 				default:
 					trace("Unrecognized command: " + line);
 			}
 		}
 
 		// Store command
+		storeCommand(command);
+	}
+	
+	function storeCommand(command)
+	{
 		if (command != null)
 		{
 			commands.push(command);

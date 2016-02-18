@@ -12,6 +12,7 @@ import scenes.commands.Command;
 class SceneState extends FlxState
 {
     public var commandQueue : Array<Command>;
+    public var storedCommand : Command;
     public var currentCommand : Command;
 
     public var background : FlxSprite;
@@ -91,13 +92,13 @@ class SceneState extends FlxState
 
     function nextCommand()
     {
-       if (currentCommand != null)
-           currentCommand.destroy();
+        if (currentCommand != null)
+            currentCommand.destroy();
 
-       currentCommand = commandQueue.shift();
-       if (currentCommand != null)
-       {
-           currentCommand.init(this);
-       }
+        currentCommand = commandQueue.shift();
+        if (currentCommand != null)
+        {
+            currentCommand.init(this);
+        }    
     }
 }

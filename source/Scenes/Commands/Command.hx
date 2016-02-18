@@ -6,6 +6,8 @@ class Command extends FlxObject
 {
 	public var scene : SceneState;
 	public var finished : Bool;
+	
+	public var composite : Bool;
 
 	public function new()
 	{
@@ -16,6 +18,7 @@ class Command extends FlxObject
 	{
 		scene = Scene;
 		finished = false;
+		composite = false;
 		
 		// trace(print());
 	}
@@ -23,6 +26,11 @@ class Command extends FlxObject
 	public function onComplete()
 	{
 		scene.onCommandFinish();
+	}
+	
+	public function nextCommand()
+	{
+		// Override me
 	}
 
 	public static function parse(line : String) : Command
