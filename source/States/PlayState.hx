@@ -400,6 +400,12 @@ class PlayState extends FlxState
 	// Handler for when losing happens :(
 	public function handleLosing()
 	{
+		if (state == StateWaiting)
+		{
+			// There is a flying bubble
+			bubble.triggerRot();
+		}
+		
 		switchState(StateLosing);
 
 		grid.forEach(function (bubble : Bubble) {
