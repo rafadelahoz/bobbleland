@@ -70,7 +70,16 @@ class Button extends FlxSprite
 
     function mouseOver()
     {
-        return FlxG.mouse.x >= x && FlxG.mouse.x < (x + width) &&
-              FlxG.mouse.y >= y && FlxG.mouse.y < (y + height);
+        var mouseX : Float = FlxG.mouse.x;
+        var mouseY : Float = FlxG.mouse.y;
+        
+        if (scrollFactor.x == 0)
+            mouseX = FlxG.mouse.screenX;
+            
+        if (scrollFactor.y == 0)
+            mouseY = FlxG.mouse.screenY;
+                
+        return mouseX >= x && mouseX < (x + width) &&
+               mouseY >= y && mouseY < (y + height);
     }
 }

@@ -1,48 +1,65 @@
 package;
 
-import flixel.FlxSprite;
+import flixel.FlxG;
 import flixel.FlxState;
+import flixel.FlxObject;
+import flixel.FlxSprite;
+import flixel.FlxCamera;
 import flixel.util.FlxRandom;
+import flixel.group.FlxSpriteGroup;
+import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.addons.display.FlxBackdrop;
 
+import text.PixelText;
+
 class ArcadePreState extends FlxState
 {
-    var background : FlxBackdrop;
-    var bgOverlay : FlxSprite;
-
+    /** Play settings screen **/
+    var centerScreen : FlxSpriteGroup;
     var sldDifficulty : SliderButton;
-    
     var btnDog : HoldButton;
     var btnCat : HoldButton;
-    
     var btnStart : Button;
+    
+    /** History screen **/
+    var historyScreen : FlxSpriteGroup;
+        
+    /** Common elements **/
+    var background : FlxBackdrop;
+    var btnBack : Button;
+    
+    var target : FlxObject;
 
     override public function create()
     {
         super.create();
+        
+        centerScreen = new FlxSpriteGroup(0, 0);
 
         #if !work
         var bg : String = "assets/backgrounds/" +
                         (FlxRandom.chanceRoll(50) ? "bg0.png" : "bg1.png");
-        background = new FlxBackdrop(bg, 2, 2);
+        background = new FlxBackdrop(bg, 0.35, 0.35);
         background.velocity.set(10, 10);
         add(background);
         #end
-
-        bgOverlay = new FlxSprite(0, 0, "assets/ui/arcade-config.png");
-        add(bgOverlay);
-
-        sldDifficulty = new SliderButton(32, 88, snapToDifficultyGrid);
-        sldDifficulty.loadSpritesheet("assets/ui/slider.png", 16, 32);
-        sldDifficulty.setLimits(24, 136);
-        add(sldDifficulty);
         
-        generateCharacterButtons();
+        historyScreen = buildHistoryScreen();
+        add(historyScreen);
+        
+        centerScreen = buildCenterScreen();
+        add(centerScreen);
+        
+        btnBack = new HoldButton(0, 0, onBackButtonPressed);
+        btnBack.loadSpritesheet("assets/ui/btn-back.png", 32, 24);
+        btnBack.scrollFactor.set();
+        add(btnBack);
+        
+        target = new FlxObject(FlxG.width/2, FlxG.height/2);
+        add(target);
 
-        btnStart = new Button(40, 264, onStartButtonPressed);
-        btnStart.loadSpritesheet("assets/ui/btn-start.png", 96, 40);
-        add(btnStart);
+        FlxG.camera.follow(target);
     }
 
     override public function destroy()
@@ -53,6 +70,11 @@ class ArcadePreState extends FlxState
     override public function update()
     {
         super.update();
+    }
+
+    function onBackButtonPressed()
+    {
+        GameController.ToMenu();
     }
 
     function onStartButtonPressed()
@@ -90,15 +112,72 @@ class ArcadePreState extends FlxState
         }
     }
 
-    function generateCharacterButtons()
+    function buildCenterScreen() : FlxSpriteGroup
+    {
+        var centerScreen : FlxSpriteGroup = new FlxSpriteGroup(0, 0);
+        
+        var centerOverlay : FlxSprite = new FlxSprite(0, 0, "assets/ui/arcade-config.png");
+        centerScreen.add(centerOverlay);
+
+        sldDifficulty = new SliderButton(32, 88, snapToDifficultyGrid);
+        sldDifficulty.loadSpritesheet("assets/ui/slider.png", 16, 32);
+        sldDifficulty.setLimits(24, 136);
+        centerScreen.add(sldDifficulty);
+        
+        generateCharacterButtons(centerScreen);
+
+        centerScreen.add(buildScrollButton(0, FlxG.height/2, true));
+        centerScreen.add(buildScrollButton(FlxG.width - 12, FlxG.height/2, false));
+
+        btnStart = new Button(40, 264, onStartButtonPressed);
+        btnStart.loadSpritesheet("assets/ui/btn-start.png", 96, 40);
+        centerScreen.add(btnStart);
+        
+        return centerScreen;
+    }
+    
+    function buildHistoryScreen() : FlxSpriteGroup
+    {
+        var screen : FlxSpriteGroup = new FlxSpriteGroup(-FlxG.width, 0);
+        
+        var bg : FlxSprite = new FlxSprite(8, 96).makeGraphic(64, 96, 0xFF000000);
+        screen.add(bg);
+        
+        screen.add(PixelText.New(16, 128, "HIGH SCORE: 10000\nBubbles: 99\nTime: 00:30'", 0xFFFFFFFF, 128));
+        
+        btnDog = new HoldButton(32, 168);
+        btnDog.loadSpritesheet("assets/ui/char-dog.png", 32, 32);
+        screen.add(btnDog);
+        
+        btnStart = new Button(40, 264);
+        btnStart.loadSpritesheet("assets/ui/btn-start.png", 96, 40);
+        screen.add(btnStart);
+        
+        screen.add(buildScrollButton(FlxG.width - 12, FlxG.height/2, false));
+        
+        return screen;
+    }
+
+    function buildScrollButton(x : Float, y : Float, left : Bool) : Button
+    {
+        var button : Button = new Button(x, y, function() {
+            FlxTween.tween(target, {x : target.x + (left ? -1 : 1)*FlxG.width}, 0.5, { ease : FlxEase.cubeInOut });
+        });
+        button.loadSpritesheet("assets/ui/btn-side.png", 12, 32);
+        button.flipX = left;
+        
+        return button;
+    }
+
+    function generateCharacterButtons(group : FlxSpriteGroup)
     {
         btnDog = new HoldButton(32, 168, onCharDogPressed, onCharReleased);
         btnDog.loadSpritesheet("assets/ui/char-dog.png", 32, 32);
-        add(btnDog);
+        group.add(btnDog);
         
         btnCat = new HoldButton(72, 168, onCharCatPressed, onCharReleased);
         btnCat.loadSpritesheet("assets/ui/char-cat.png", 32, 32);
-        add(btnCat);
+        group.add(btnCat);
     }
     
     function onCharReleased()
