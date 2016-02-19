@@ -21,20 +21,20 @@ class ArcadePreState extends FlxState
     var btnDog : HoldButton;
     var btnCat : HoldButton;
     var btnStart : Button;
-    
+
     /** History screen **/
     var historyScreen : FlxSpriteGroup;
-        
+
     /** Common elements **/
     var background : FlxBackdrop;
     var btnBack : Button;
-    
+
     var target : FlxObject;
 
     override public function create()
     {
         super.create();
-        
+
         centerScreen = new FlxSpriteGroup(0, 0);
 
         #if !work
@@ -44,22 +44,40 @@ class ArcadePreState extends FlxState
         background.velocity.set(10, 10);
         add(background);
         #end
-        
+
         historyScreen = buildHistoryScreen();
         add(historyScreen);
-        
+
         centerScreen = buildCenterScreen();
         add(centerScreen);
-        
+
         btnBack = new HoldButton(0, 0, onBackButtonPressed);
         btnBack.loadSpritesheet("assets/ui/btn-back.png", 32, 24);
         btnBack.scrollFactor.set();
         add(btnBack);
-        
+
         target = new FlxObject(FlxG.width/2, FlxG.height/2);
         add(target);
 
         FlxG.camera.follow(target);
+
+        initData();
+    }
+
+    function initData()
+    {
+        var data = ArcadeGameStatus.getConfigData();
+        var difficulty = data.difficulty;
+        sldDifficulty.x = getSlotPosition(difficulty, 24, 32);
+
+        var character = data.character;
+        switch (character)
+        {
+            case "pug":
+                btnDog.setPressed(true, true);
+            case "cat":
+                btnCat.setPressed(true, true);
+        }
     }
 
     override public function destroy()
@@ -74,15 +92,30 @@ class ArcadePreState extends FlxState
 
     function onBackButtonPressed()
     {
+        updateArcadeConfig();
+
+        ArcadeGameStatus.saveArcadeConfigData();
         GameController.ToMenu();
     }
 
     function onStartButtonPressed()
     {
+        updateArcadeConfig();
+
+        ArcadeGameStatus.saveArcadeConfigData();
         prepareDifficultySetting();
         GameController.BeginArcade();
     }
-    
+
+    function updateArcadeConfig()
+    {
+        var data = ArcadeGameStatus.getConfigData();
+        data.difficulty = getSnapSlot(sldDifficulty.x, 24, 32);
+        data.character = ArcadeGameStatus.getCharacter();
+        ArcadeGameStatus.setConfigData(data);
+        trace(ArcadeGameStatus.getConfigData());
+    }
+
     function prepareDifficultySetting()
     {
         var difficulty : Int = getSnapSlot(sldDifficulty.x, 24, 32);
@@ -115,7 +148,7 @@ class ArcadePreState extends FlxState
     function buildCenterScreen() : FlxSpriteGroup
     {
         var centerScreen : FlxSpriteGroup = new FlxSpriteGroup(0, 0);
-        
+
         var centerOverlay : FlxSprite = new FlxSprite(0, 0, "assets/ui/arcade-config.png");
         centerScreen.add(centerOverlay);
 
@@ -123,38 +156,48 @@ class ArcadePreState extends FlxState
         sldDifficulty.loadSpritesheet("assets/ui/slider.png", 16, 32);
         sldDifficulty.setLimits(24, 136);
         centerScreen.add(sldDifficulty);
-        
+
         generateCharacterButtons(centerScreen);
 
-        centerScreen.add(buildScrollButton(0, FlxG.height/2, true));
-        centerScreen.add(buildScrollButton(FlxG.width - 12, FlxG.height/2, false));
+        centerScreen.add(buildScrollButton(0, 144, true));
+        centerScreen.add(buildScrollButton(FlxG.width - 12, 144, false));
 
         btnStart = new Button(40, 264, onStartButtonPressed);
         btnStart.loadSpritesheet("assets/ui/btn-start.png", 96, 40);
         centerScreen.add(btnStart);
-        
+
         return centerScreen;
     }
-    
+
     function buildHistoryScreen() : FlxSpriteGroup
     {
+        var white : Int = 0xFFFF1E8;
+
         var screen : FlxSpriteGroup = new FlxSpriteGroup(-FlxG.width, 0);
-        
-        var bg : FlxSprite = new FlxSprite(8, 96).makeGraphic(64, 96, 0xFF000000);
-        screen.add(bg);
-        
-        screen.add(PixelText.New(16, 128, "HIGH SCORE: 10000\nBubbles: 99\nTime: 00:30'", 0xFFFFFFFF, 128));
-        
-        btnDog = new HoldButton(32, 168);
-        btnDog.loadSpritesheet("assets/ui/char-dog.png", 32, 32);
-        screen.add(btnDog);
-        
-        btnStart = new Button(40, 264);
-        btnStart.loadSpritesheet("assets/ui/btn-start.png", 96, 40);
-        screen.add(btnStart);
-        
-        screen.add(buildScrollButton(FlxG.width - 12, FlxG.height/2, false));
-        
+
+        var background : FlxSprite = new FlxSprite(0, 0, "assets/ui/arcade-history.png");
+        screen.add(background);
+
+        screen.add(PixelText.New(16, 88, "HIGH SCORE", white, 128));
+        screen.add(PixelText.New(24, 100, "999999999", white, 128));
+        screen.add(PixelText.New(16, 116, "LONGEST GAME", white, 128));
+        screen.add(PixelText.New(24, 128, "50:59'", white, 128));
+        screen.add(PixelText.New(16, 144, "Max BUBBLES", white, 128));
+        screen.add(PixelText.New(24, 156, "1999", white, 128));
+
+        screen.add(PixelText.New(16, 200, "BUBBLES ", white, 128));
+        screen.add(PixelText.New(80, 200, "99999999", white, 128));
+        screen.add(PixelText.New(16, 212, "TIME ", white, 128));
+        screen.add(PixelText.New(88, 212, "1294:59'", white, 128));
+        screen.add(PixelText.New(16, 224, "CLEAN SCS", white, 128));
+        screen.add(PixelText.New(120, 224, "999'", white, 128));
+
+        var btnClearData : Button = new Button(40, 272);
+        btnClearData.loadSpritesheet("assets/ui/btn-cleardata.png", 96, 24);
+        screen.add(btnClearData);
+
+        screen.add(buildScrollButton(FlxG.width - 12, 144, false));
+
         return screen;
     }
 
@@ -165,7 +208,7 @@ class ArcadePreState extends FlxState
         });
         button.loadSpritesheet("assets/ui/btn-side.png", 12, 32);
         button.flipX = left;
-        
+
         return button;
     }
 
@@ -174,24 +217,24 @@ class ArcadePreState extends FlxState
         btnDog = new HoldButton(32, 168, onCharDogPressed, onCharReleased);
         btnDog.loadSpritesheet("assets/ui/char-dog.png", 32, 32);
         group.add(btnDog);
-        
+
         btnCat = new HoldButton(72, 168, onCharCatPressed, onCharReleased);
         btnCat.loadSpritesheet("assets/ui/char-cat.png", 32, 32);
         group.add(btnCat);
     }
-    
+
     function onCharReleased()
     {
         ArcadeGameStatus.setCharacter(null);
     }
-    
+
     function onCharDogPressed()
     {
         ArcadeGameStatus.setCharacter("pug");
         // Deactivate other buttons
         btnCat.setPressed(false);
     }
-    
+
     function onCharCatPressed()
     {
         ArcadeGameStatus.setCharacter("cat");
@@ -204,14 +247,19 @@ class ArcadePreState extends FlxState
         var snapX = snapToSlots(sldDifficulty.x, 24, 32);
         FlxTween.tween(sldDifficulty, {x : snapX}, 0.1);
     }
-    
+
     function snapToSlots(value : Float, slotWidth : Int, ?offset : Int = 0) : Float
     {
         return offset + Math.round((value-offset)/slotWidth)*slotWidth;
     }
-    
+
     function getSnapSlot(value : Float, slotWidth : Int, ?offset : Int = 0) : Int
     {
         return Std.int(Math.round(value-offset)/slotWidth);
+    }
+
+    function getSlotPosition(slot : Int, slotWidth : Int, ?offset : Int = 0) : Int
+    {
+        return offset + slot*slotWidth;
     }
 }
