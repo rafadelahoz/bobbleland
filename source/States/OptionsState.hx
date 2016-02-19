@@ -19,10 +19,10 @@ class OptionsState extends FlxState
 
 		btnClearData = new FlxButtonPlus(32, 96, onClearDataPressed, "Clear Adventure Data", w, h);
 		btnBack = new FlxButtonPlus(FlxG.width/2 - w/4, FlxG.height/2 + 32, onBackButtonPressed, "Back", Std.int(w / 2), Std.int(h / 2));
-		
+
 		decorateButton(btnClearData);
 		decorateButton(btnBack);
-		
+
 		add(btnClearData);
 		add(btnBack);
 	}

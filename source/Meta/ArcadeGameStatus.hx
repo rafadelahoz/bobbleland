@@ -6,7 +6,7 @@ class ArcadeGameStatus
 {
     static var savefile : String = "savefile";
 
-    static var arcadeConfigData : ArcadeData;
+    static var arcadeData : ArcadeData;
     static var arcadeGameData : puzzle.PuzzleData;
 
     public static function init()
@@ -27,12 +27,21 @@ class ArcadeGameStatus
             arcadeGameData.usedColors = generateColorSet(5);
         }
 
-        if (arcadeConfigData == null)
+        if (arcadeData == null)
         {
-            arcadeConfigData = loadArcadeConfigData();
-            if (arcadeConfigData == null)
+            trace("No arcadeData, loading");
+            arcadeData = loadArcadeConfigData();
+            if (arcadeData == null)
             {
-                arcadeConfigData = {difficulty: 3, character: null};
+                trace("Nothing to load, init");
+                arcadeData = {
+                    difficulty: 3, character: null,
+                    highScore: 0, maxBubbles: 0, longestGame: 0,
+                    totalBubbles: 0, totalTime: 0, totalCleans: 0
+                };
+
+                trace(arcadeData);
+
                 saveArcadeConfigData();
             }
         }
@@ -40,12 +49,25 @@ class ArcadeGameStatus
 
     public static function getConfigData() : ArcadeData
     {
-        return arcadeConfigData;
+        return arcadeData;
     }
 
     public static function setConfigData(data : ArcadeData)
     {
-        arcadeConfigData = data;
+        arcadeData = data;
+    }
+
+    public static function storePlayData(playData : Dynamic)
+    {
+        if (playData.bubbles > arcadeData.maxBubbles)
+            arcadeData.maxBubbles = playData.bubbles;
+
+        if (playData.time > arcadeData.longestGame)
+            arcadeData.longestGame = playData.time;
+
+        arcadeData.totalBubbles += playData.bubbles;
+        arcadeData.totalTime += playData.time;
+        arcadeData.totalCleans += playData.cleans;
     }
 
     static function loadArcadeConfigData() : ArcadeData
@@ -61,8 +83,18 @@ class ArcadeGameStatus
         var save : FlxSave = new FlxSave();
         save.bind(savefile);
 
-        save.data.arcadeConfig = arcadeConfigData;
+        save.data.arcadeConfig = arcadeData;
 
+        save.close();
+    }
+
+    public static function clearConfigData()
+    {
+        trace("Clearing data...");
+
+        var save : FlxSave = new FlxSave();
+        save.bind(savefile);
+        save.data.arcadeConfig = null;
         save.close();
     }
 
@@ -111,4 +143,12 @@ class ArcadeGameStatus
 typedef ArcadeData = {
     var difficulty : Int;
     var character : String;
+
+    var highScore : Int;
+    var longestGame : Int;
+    var maxBubbles : Int;
+
+    var totalBubbles: Int;
+    var totalTime : Int;
+    var totalCleans : Int;
 }

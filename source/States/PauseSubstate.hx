@@ -17,6 +17,8 @@ import text.PixelText;
 
 class PauseSubstate extends FlxSubState
 {
+    var world : PlayState;
+
     var shader : FlxSprite;
 
     var group : FlxSpriteGroup;
@@ -29,12 +31,14 @@ class PauseSubstate extends FlxSubState
     var tween : FlxTween;
 
     var enabled : Bool;
-    
+
     var callback : Void -> Void;
 
-    public function new(?Callback : Void -> Void)
+    public function new(World : PlayState, ?Callback : Void -> Void)
     {
         super();
+
+        world = World;
 
         shader = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
         shader.alpha = 0;
@@ -147,7 +151,7 @@ class PauseSubstate extends FlxSubState
         {
             callback();
         }
-        
+
         close();
     }
 
@@ -175,7 +179,7 @@ class PauseSubstate extends FlxSubState
             FlxTween.tween(group, { y : FlxG.height + 16 }, 0.75, {ease: FlxEase.elasticOut});
             FlxG.camera.fade(0xFF000000, 1, function() {
                 clean();
-                GameController.OnPuzzleGiveup();
+                GameController.OnPuzzleGiveup(world.mode, world.flowController.getStoredData());
             });
         }
     }

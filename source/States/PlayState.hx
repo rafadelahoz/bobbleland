@@ -65,7 +65,7 @@ class PlayState extends FlxState
 	public var notifyAiming : Bool;
 
 	public var scoreDisplay : ScoreDisplay;
-	
+
 	public var flowController : PlayFlowController;
 
 	public function new(Mode : Int, PuzzleName : String)
@@ -110,7 +110,7 @@ class PlayState extends FlxState
 
 		cursor = new PlayerCursor(FlxG.width / 2 - 10, 240 - 40, this);
 		add(cursor);
-		
+
 		cursorBubbles = new FlxTypedGroup<Bubble>();
 		add(cursorBubbles);
 
@@ -141,7 +141,7 @@ class PlayState extends FlxState
 		generator.initalizeGrid();
 
 		// trace("Grid initialized");
-		
+
 		flowController = new PlayFlowController(this);
 
 		generateBubble();
@@ -164,7 +164,7 @@ class PlayState extends FlxState
 		if (GamePad.justPressed(GamePad.Pause))
 		{
 			onPauseStart();
-			openSubState(new PauseSubstate(onPauseEnd));
+			openSubState(new PauseSubstate(this, onPauseEnd));
 		}
 
 		switch (state)
@@ -191,7 +191,7 @@ class PlayState extends FlxState
 		dropTimer.active = false;
 		waitTimer.active = false;
 		aimingTimer.active = false;
-		
+
 		flowController.pause();
 	}
 
@@ -200,7 +200,7 @@ class PlayState extends FlxState
 		dropTimer.active = true;
 		waitTimer.active = true;
 		aimingTimer.active = true;
-		
+
 		flowController.resume();
 	}
 
@@ -218,7 +218,7 @@ class PlayState extends FlxState
 			case PlayState.StateAiming:
 				// Compute a flow controller play step
 				flowController.onPlayStep();
-			
+
 				aimingTimer.start(AimingTime, onForcedShot);
 
 			case PlayState.StateLosing:
@@ -288,7 +288,7 @@ class PlayState extends FlxState
 
 		if (bubbles.countLiving() <= 0 && fallingBubbles.countLiving() <= 0)
 		{
-			GameController.GameOver(mode, scoreDisplay.score);
+			GameController.GameOver(mode, scoreDisplay.score, flowController.getStoredData());
 		}
 	}
 
@@ -355,11 +355,11 @@ class PlayState extends FlxState
 			dropTimer.start(dropDelay, onDropTimer);
 		}
 	}
-	
+
 	function generateRow()
 	{
 		generator.generateRow();
-		
+
 		flowController.onRowGenerated();
 	}
 
@@ -405,7 +405,7 @@ class PlayState extends FlxState
 			// There is a flying bubble
 			bubble.triggerRot();
 		}
-		
+
 		switchState(StateLosing);
 
 		grid.forEach(function (bubble : Bubble) {
@@ -450,7 +450,7 @@ class PlayState extends FlxState
 				bub.triggerFall();
 				bubbles.remove(bub);
 				fallingBubbles.add(bub);
-				
+
 				flowController.onBubbleDestroyed();
 			}
 
@@ -462,7 +462,7 @@ class PlayState extends FlxState
 				bub.triggerFall();
 				bubbles.remove(bub);
 				fallingBubbles.add(bub);
-				
+
 				flowController.onBubbleDestroyed();
 			}
 
@@ -492,7 +492,7 @@ class PlayState extends FlxState
 		else if (mode == ModeArcade && grid.getCount() == 0)
 		{
 			flowController.onScreenCleared();
-			
+
 			scoreDisplay.add(Constants.ScClearField);
 			var congratsSign : ArcadeClear = new ArcadeClear(FlxG.width/2, 0);
 			add(congratsSign);
@@ -576,16 +576,16 @@ class PlayState extends FlxState
 		#if work
 		#else
 		baseDecoration = new FlxSprite(FlxG.width / 2 - 64, 181);
-		baseDecoration.loadGraphic("assets/images/base-decoration.png", 
-									true, 128, 60);		
+		baseDecoration.loadGraphic("assets/images/base-decoration.png",
+									true, 128, 60);
 		baseDecoration.animation.add("move", [0, 1], 10, true);
 		baseDecoration.animation.play("move");
 		baseDecoration.animation.paused = true;
 		add(baseDecoration);
 
 		var characterId : String = puzzleData.character;
-		character = new PlayerCharacter(baseDecoration.x + 16, 
-										baseDecoration.y + 24, 
+		character = new PlayerCharacter(baseDecoration.x + 16,
+										baseDecoration.y + 24,
 										this, characterId);
 		add(character);
 

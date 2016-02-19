@@ -39,7 +39,9 @@ class ArcadePreState extends FlxState
 
         #if !work
         var bg : String = "assets/backgrounds/" +
-                        (FlxRandom.chanceRoll(50) ? "bg0.png" : "bg1.png");
+                        (FlxRandom.chanceRoll(50) ? "bg0.png" :
+                            (FlxRandom.chanceRoll(50) ? "bg1.png" :
+                                (FlxRandom.chanceRoll(50) ? "bg2.png" : "bg3.png")));
         background = new FlxBackdrop(bg, 0.35, 0.35);
         background.velocity.set(10, 10);
         add(background);
@@ -160,7 +162,7 @@ class ArcadePreState extends FlxState
         generateCharacterButtons(centerScreen);
 
         centerScreen.add(buildScrollButton(0, 144, true));
-        centerScreen.add(buildScrollButton(FlxG.width - 12, 144, false));
+        // centerScreen.add(buildScrollButton(FlxG.width - 12, 144, false));
 
         btnStart = new Button(40, 264, onStartButtonPressed);
         btnStart.loadSpritesheet("assets/ui/btn-start.png", 96, 40);
@@ -178,19 +180,21 @@ class ArcadePreState extends FlxState
         var background : FlxSprite = new FlxSprite(0, 0, "assets/ui/arcade-history.png");
         screen.add(background);
 
+        var data : Dynamic = ArcadeGameStatus.getConfigData();
+
         screen.add(PixelText.New(16, 88, "HIGH SCORE", white, 128));
-        screen.add(PixelText.New(24, 100, "999999999", white, 128));
+        screen.add(PixelText.New(24, 100, "" + data.highScore, white, 128));
         screen.add(PixelText.New(16, 116, "LONGEST GAME", white, 128));
-        screen.add(PixelText.New(24, 128, "50:59'", white, 128));
+        screen.add(PixelText.New(24, 128, "" + data.longestGame, white, 128));
         screen.add(PixelText.New(16, 144, "Max BUBBLES", white, 128));
-        screen.add(PixelText.New(24, 156, "1999", white, 128));
+        screen.add(PixelText.New(24, 156, "" + data.maxBubbles, white, 128));
 
         screen.add(PixelText.New(16, 200, "BUBBLES ", white, 128));
-        screen.add(PixelText.New(80, 200, "99999999", white, 128));
+        screen.add(PixelText.New(80, 200, "" + data.totalBubbles, white, 128));
         screen.add(PixelText.New(16, 212, "TIME ", white, 128));
-        screen.add(PixelText.New(88, 212, "1294:59'", white, 128));
+        screen.add(PixelText.New(88, 212, "" + data.totalTime, white, 128));
         screen.add(PixelText.New(16, 224, "CLEAN SCS", white, 128));
-        screen.add(PixelText.New(120, 224, "999'", white, 128));
+        screen.add(PixelText.New(120, 224, "" + data.totalCleans, white, 128));
 
         var btnClearData : Button = new Button(40, 272);
         btnClearData.loadSpritesheet("assets/ui/btn-cleardata.png", 96, 24);

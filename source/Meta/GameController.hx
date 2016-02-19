@@ -81,9 +81,9 @@ class GameController
 		ToMenu();
 	}
 
-	public static function OnPuzzleGiveup()
+	public static function OnPuzzleGiveup(mode : Int, data : Dynamic)
 	{
-		GameOver(-1, 0);
+		GameOver(mode, 0, data);
 	}
 
 	public static function BeginScene(scene : String)
@@ -91,14 +91,19 @@ class GameController
 		FlxG.switchState(new SceneState(scene));
 	}
 
-	public static function GameOver(mode : Int, score : Int)
+	public static function GameOver(mode : Int, score : Int, data : Dynamic)
 	{
-		// TODO: Handle mode or...?
-		FlxG.switchState(new GameOverState(score));
+		if (mode == PlayState.ModeArcade)
+		{
+			ArcadeGameStatus.storePlayData(data);
+		}
+
+		FlxG.switchState(new GameOverState(score, data));
 	}
 
 	public static function ClearSaveData()
 	{
+		ArcadeGameStatus.clearConfigData();
 		AdventureGameStatus.clearData();
 	}
 }
