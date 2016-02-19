@@ -119,10 +119,10 @@ class PlayState extends FlxState
 
 		availableColors = puzzleData.usedColors;
 
-		if (puzzleData.dropDelay > 0)
+		/*if (puzzleData.dropDelay > 0)
 			dropDelay = puzzleData.dropDelay;
-		else
-			dropDelay = 30;
+		else*/
+			dropDelay = 1;
 		dropTimer = new FlxTimer(dropDelay, onDropTimer);
 		waitTimer = new FlxTimer();
 		aimingTimer = new FlxTimer();
@@ -164,7 +164,7 @@ class PlayState extends FlxState
 		if (GamePad.justPressed(GamePad.Pause))
 		{
 			onPauseStart();
-			openSubState(new PauseSubstate());
+			openSubState(new PauseSubstate(onPauseEnd));
 		}
 
 		switch (state)

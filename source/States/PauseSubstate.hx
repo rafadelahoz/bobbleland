@@ -29,8 +29,10 @@ class PauseSubstate extends FlxSubState
     var tween : FlxTween;
 
     var enabled : Bool;
+    
+    var callback : Void -> Void;
 
-    public function new()
+    public function new(?Callback : Void -> Void)
     {
         super();
 
@@ -60,6 +62,7 @@ class PauseSubstate extends FlxSubState
         group.add(btnExit);
 
         enabled = false;
+        callback = Callback;
     }
 
     public function clean()
@@ -139,6 +142,12 @@ class PauseSubstate extends FlxSubState
     function onGroupLeave(_t:FlxTween) : Void
     {
         clean();
+
+        if (callback != null)
+        {
+            callback();
+        }
+        
         close();
     }
 
