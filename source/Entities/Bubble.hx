@@ -134,6 +134,7 @@ class Bubble extends FlxSprite
 				else
 				{
 					animation.add("idle", [5]);
+					color = bubbleColor.getColor();
 				}
 
 				animation.play("idle");
