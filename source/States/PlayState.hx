@@ -341,7 +341,7 @@ class PlayState extends FlxState
 		{
 			// Do nothing and stop already
 		}
-		else if (state == StateRemoving)
+		else if (state == StateRemoving || state == StateWaiting)
 		{
 			// If there are bubbles being removed, wait a second!
 			dropTimer.start(0.5, onDropTimer);
