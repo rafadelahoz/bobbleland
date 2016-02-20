@@ -1,7 +1,5 @@
 package;
 
-import flixel.util.FlxRandom;
-
 import puzzle.PuzzleData;
 
 class BubbleGenerator
@@ -119,7 +117,7 @@ class BubbleGenerator
 	function getRandomColor() : BubbleColor
 	{
         var list : Array<BubbleColor> = world.availableColors.filter(onlyPositiveIndexes);
-		return list[FlxRandom.intRanged(0, list.length - 1)];
+		return list[FlxG.random.int(0, list.length - 1)];
 	}
 
     function onlyPositiveIndexes(color : BubbleColor) : Bool

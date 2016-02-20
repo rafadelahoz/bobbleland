@@ -8,7 +8,7 @@ import flixel.text.FlxBitmapTextField;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxPoint;
-import flixel.util.FlxRandom;
+
 import flixel.util.FlxSpriteUtil;
 
 import flixel.addons.ui.FlxButtonPlus;
@@ -86,7 +86,7 @@ class PauseSubstate extends FlxSubState
         tween = FlxTween.tween(group, {y : FlxG.height / 2 - dialogHeight / 2}, 0.75, { complete: onGroupPositioned, ease : FlxEase.elasticOut });
     }
 
-    override public function update()
+    override public function update(elapsed:Float)
     {
         GamePad.handlePadState();
 
@@ -114,7 +114,7 @@ class PauseSubstate extends FlxSubState
             }
         }
 
-        super.update();
+        super.update(elapsed);
     }
 
     function onGroupPositioned(_t:FlxTween) : Void

@@ -1,8 +1,8 @@
 package;
 
+import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.util.FlxRandom;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
@@ -41,7 +41,7 @@ class PlayerCharacter extends FlxSprite
     {
         if (characterId == null)
             characterId = getRandomCharacterId();
-        
+
         switch (characterId)
         {
             case "pug":
@@ -59,16 +59,16 @@ class PlayerCharacter extends FlxSprite
         }
 
     }
-    
+
     function getRandomCharacterId() : String
     {
-        if (FlxRandom.chanceRoll(50))
+        if (FlxG.random.bool(50))
             return "pug";
         else
             return "cat";
     }
 
-    override public function update()
+    override public function update(elapsed:Float)
     {
         if (world.cursor.enabled)
         {
@@ -129,7 +129,7 @@ class PlayerCharacter extends FlxSprite
         belt.update();
         hurry.update();
 
-        super.update();
+        super.update(elapsed);
     }
 
     override public function draw()

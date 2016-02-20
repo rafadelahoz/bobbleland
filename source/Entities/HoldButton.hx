@@ -59,9 +59,9 @@ class HoldButton extends Button
         }
     }
 
-    override public function update()
+    override public function update(elapsed:Float)
     {
-        super.update();
+        super.update(elapsed);
         
         beingTapped = false;
         

@@ -38,9 +38,9 @@ class MenuState extends FlxState
 		super.destroy();
 	}
 
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 	}
 
 	public function onArcadeButtonPressed() : Void

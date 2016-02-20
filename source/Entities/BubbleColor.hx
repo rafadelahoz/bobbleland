@@ -1,6 +1,7 @@
 package;
 
-import flixel.util.FlxColorUtil;
+import flixel.FlxG;
+import flixel.util.FlxColor;
 
 class BubbleColor
 {
@@ -20,7 +21,7 @@ class BubbleColor
 
     public function new(?Color : Int = -1, ?IsTarget : Bool = false)
     {
-        colorIndex = Color; 
+        colorIndex = Color;
         color = getColorList()[colorIndex];
 
         isTarget = IsTarget;
@@ -30,19 +31,19 @@ class BubbleColor
     {
         return color;
     }
-    
+
     function getColorList() : Array<Int>
     {
         // var colors = [0xFFFF5151, 0xFF5151FF, 0xFF51FF51, 0xFF414471, 0xFF250516];
-        
+
         var colors : Array<Int> = [];
-        
+
         for (index in 0...6)
             colors.push(0xFFFFFFFF);
 
         for (index in 0...15)
-            colors.push(FlxColorUtil.getRandomColor(0x66, 0xFF));
-            
+            colors.push(FlxColor.fromRGB(FlxG.random.int(0x66, 0xFF), FlxG.random.int(0x66, 0xFF), FlxG.random.int(0x66, 0xFF)));
+
         return colors;
     }
 }

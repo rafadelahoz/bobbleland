@@ -45,7 +45,7 @@ class PlayerCursor extends FlxSprite
 		label = new FlxText(x + width, y + aimOrigin.y + 2, "");
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		moving = false;
 
@@ -78,7 +78,7 @@ class PlayerCursor extends FlxSprite
 		if (world.baseDecoration != null)
 			world.baseDecoration.animation.paused = !moving;
 
-		super.update();
+		super.update(elapsed);
 	}
 
 	public function onShoot()

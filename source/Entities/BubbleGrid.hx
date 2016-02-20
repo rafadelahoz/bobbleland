@@ -53,11 +53,11 @@ class BubbleGrid extends FlxObject
 		// renderCanvas();
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		// renderCanvas();
 
-		super.update();
+		super.update(elapsed);
 	}
 
 	override public function draw()

@@ -88,7 +88,7 @@ class CharacterManager
             
             if (callback != null)
             {
-                new FlxTimer(Character.MoveDuration * 1.5, function(_t:FlxTimer) {
+                new FlxTimer().start(Character.MoveDuration * 1.5, function(_t:FlxTimer) {
                     callback();
                 });
             }

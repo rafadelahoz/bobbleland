@@ -106,7 +106,7 @@ class Character extends FlxSprite
         }});
     }
     
-    override public function update()
+    override public function update(elapsed:Float)
     {
         // Face towards the center!
         if (x < FlxG.width/2)
@@ -114,6 +114,6 @@ class Character extends FlxSprite
         else
             flipX = true;
             
-        super.update();
+        super.update(elapsed);
     }
 }

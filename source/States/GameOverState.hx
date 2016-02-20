@@ -66,14 +66,14 @@ class GameOverState extends FlxState
 		add(btnGiveup);
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		if (FlxG.keys.justPressed.ENTER)
 		{
 			GameController.ToMenu();
 		}
 
-		super.update();
+		super.update(elapsed);
 	}
 
 	function onGiveupButtonPressed() : Void

@@ -5,7 +5,6 @@ import flixel.FlxState;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
-import flixel.util.FlxRandom;
 import flixel.group.FlxSpriteGroup;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -39,9 +38,9 @@ class ArcadePreState extends FlxState
 
         #if !work
         var bg : String = "assets/backgrounds/" +
-                        (FlxRandom.chanceRoll(50) ? "bg0.png" :
-                            (FlxRandom.chanceRoll(50) ? "bg1.png" :
-                                (FlxRandom.chanceRoll(50) ? "bg2.png" : "bg3.png")));
+                        (FlxG.random.bool(50) ? "bg0.png" :
+                            (FlxG.random.bool(50) ? "bg1.png" :
+                                (FlxG.random.bool(50) ? "bg2.png" : "bg3.png")));
         background = new FlxBackdrop(bg, 0.35, 0.35);
         background.velocity.set(10, 10);
         add(background);
@@ -87,9 +86,9 @@ class ArcadePreState extends FlxState
         super.destroy();
     }
 
-    override public function update()
+    override public function update(elapsed:Float)
     {
-        super.update();
+        super.update(elapsed);
     }
 
     function onBackButtonPressed()

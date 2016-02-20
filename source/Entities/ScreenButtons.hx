@@ -44,7 +44,7 @@ class ScreenButtons extends FlxSpriteGroup
 		pauseButton.offset.set(-(halfWidth-20), 0);
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		for (button in [leftButton, rightButton, shootButton, pauseButton])
 		{
@@ -79,6 +79,6 @@ class ScreenButtons extends FlxSpriteGroup
 			}
 		}
 
-		super.update();
+		super.update(elapsed);
 	}
 }

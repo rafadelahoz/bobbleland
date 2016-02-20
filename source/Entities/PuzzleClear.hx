@@ -41,7 +41,7 @@ class PuzzleClear extends FlxSprite
             angleTween.cancel();
         }});
 
-        new FlxTimer(0.5, function(_t:FlxTimer) {
+        new FlxTimer().start(0.5, function(_t:FlxTimer) {
             FlxTween.tween(this, {y : FlxG.height+height/2}, 0.7, { ease : FlxEase.elasticOut, startDelay: 0.5, complete: function(_t:FlxTween) {
                 if (OnComplete != null)
                     OnComplete();
@@ -60,8 +60,8 @@ class PuzzleClear extends FlxSprite
         }});
     }
 
-    override public function update()
+    override public function update(elapsed:Float)
     {
-        super.update();
+        super.update(elapsed);
     }
 }

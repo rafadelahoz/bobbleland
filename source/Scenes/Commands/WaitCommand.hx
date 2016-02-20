@@ -7,7 +7,7 @@ class WaitCommand extends Command
 {
     public var duration : Float;
     var timer : FlxTimer;
-	
+
 	public function new(Duration : Float)
 	{
 		super();
@@ -19,7 +19,7 @@ class WaitCommand extends Command
 	{
 		super.init(Scene);
 
-		timer = new FlxTimer(duration, onTimerComplete);
+		timer = new FlxTimer().start(duration, onTimerComplete);
 	}
 
 	public function onTimerComplete(timer : FlxTimer) : Void
@@ -41,7 +41,7 @@ class WaitCommand extends Command
 
 		var duration : Float = 1.0;
 		duration = Std.parseFloat(durationString);
-			
+
 		var command : Command = new WaitCommand(duration);
 		return command;
 	}

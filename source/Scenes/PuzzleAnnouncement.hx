@@ -57,8 +57,8 @@ class PuzzleAnnouncement extends FlxSprite
         }});
     }
 
-    override public function update()
+    override public function update(elapsed:Float)
     {
-        super.update();
+        super.update(elapsed);
     }
 }

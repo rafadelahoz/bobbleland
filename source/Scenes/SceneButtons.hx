@@ -22,7 +22,7 @@ class SceneButtons extends FlxSpriteGroup
 		add(advanceButton = new FlxSprite(0, 0).makeGraphic(_width, _height, 0xFFFFFFFF));
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		for (button in [advanceButton])
 		{
@@ -42,6 +42,6 @@ class SceneButtons extends FlxSpriteGroup
 			}
 		}
 
-		super.update();
+		super.update(elapsed);
 	}
 }

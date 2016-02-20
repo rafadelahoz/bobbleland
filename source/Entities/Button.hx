@@ -23,7 +23,7 @@ class Button extends FlxSprite
         animation.play("idle");
     }
 
-    override public function update()
+    override public function update(elapsed:Float)
     {
         animation.play("idle");
 
@@ -65,7 +65,7 @@ class Button extends FlxSprite
         }
         #end
 
-        super.update();
+        super.update(elapsed);
     }
 
     function mouseOver()

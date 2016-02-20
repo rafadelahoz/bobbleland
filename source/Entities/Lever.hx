@@ -20,7 +20,7 @@ class Lever extends FlxSprite
 
     }
 
-    override public function update()
+    override public function update(elapsed:Float)
     {
         if (world.cursor.enabled)
         {
@@ -32,6 +32,6 @@ class Lever extends FlxSprite
                 animation.play("center");
         }
 
-        super.update();
+        super.update(elapsed);
     }
 }

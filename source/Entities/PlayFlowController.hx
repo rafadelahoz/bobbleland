@@ -62,7 +62,7 @@ class PlayFlowController
         FlxG.watch.add(this, "rowCount");
         FlxG.watch.add(this, "screenCleanCount");
 
-        timer = new FlxTimer(1, onPlayTimeTimer, 0);
+        timer = new FlxTimer().start(1, onPlayTimeTimer, 0);
     }
 
     public function pause()

@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.text.FlxBitmapTextField;
 import flixel.text.pxText.PxTextAlign;
 import flixel.system.FlxSound;
-import flixel.util.FlxRandom;
+
 
 import openfl.display.BitmapData;
 
@@ -462,7 +462,7 @@ class TypeWriter extends FlxBitmapTextField
 		}
 	}
 
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// When the message has finished, wait for the user to
 		// press a key before closing or continuing with the text
@@ -643,7 +643,7 @@ class TypeWriter extends FlxBitmapTextField
 			}
 		}
 
-		super.update();
+		super.update(elapsed);
 	}
 
 	static inline function validWrapChar(char : String) : Bool

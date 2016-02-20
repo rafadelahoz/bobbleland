@@ -7,7 +7,6 @@ import flixel.util.FlxSort;
 import flixel.text.FlxText;
 import flixel.util.FlxPoint;
 import flixel.util.FlxTimer;
-import flixel.util.FlxRandom;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.group.FlxTypedGroup;
@@ -123,7 +122,7 @@ class PlayState extends FlxState
 			dropDelay = puzzleData.dropDelay;
 		else
 			dropDelay = 30;
-		dropTimer = new FlxTimer(dropDelay, onDropTimer);
+		dropTimer = new FlxTimer().start(dropDelay, onDropTimer);
 		waitTimer = new FlxTimer();
 		aimingTimer = new FlxTimer();
 
@@ -157,7 +156,7 @@ class PlayState extends FlxState
 		handleDebugInit();
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		GamePad.handlePadState();
 
@@ -183,7 +182,7 @@ class PlayState extends FlxState
 
 		handleDebugRoutines();
 
-		super.update();
+		super.update(elapsed);
 	}
 
 	function onPauseStart()
@@ -246,7 +245,7 @@ class PlayState extends FlxState
 				var clearMessage : PuzzleClear = new PuzzleClear(FlxG.width/2, 0);
 				add(clearMessage);
 				clearMessage.init(function() {
-					new FlxTimer(1.5, function(_t:FlxTimer){
+					new FlxTimer().start(1.5, function(_t:FlxTimer){
 						FlxG.camera.fade(0xFF000000, 1.5, onGameplayEnd);
 					});
 				});
@@ -507,11 +506,11 @@ class PlayState extends FlxState
 				// Generate a row while exiting
 				generateRow();
 				// Generate a row after a while
-				new FlxTimer(0.7, function(_t:FlxTimer) {
+				new FlxTimer().start(0.7, function(_t:FlxTimer) {
 					generateRow();
 				});
 				// Generate another row after a while more
-				new FlxTimer(1.4, function(_t:FlxTimer) {
+				new FlxTimer().start(1.4, function(_t:FlxTimer) {
 					generateRow();
 					// And resume playing
 					scoreDisplay.active = true;
@@ -562,7 +561,7 @@ class PlayState extends FlxState
 
 		#if !work
 		if (puzzleData == null || puzzleData.background == null)
-			bg = "assets/backgrounds/" + (FlxRandom.chanceRoll(50) ? "bg0.png" : "bg1.png");
+			bg = "assets/backgrounds/" + (FlxG.random.bool(50) ? "bg0.png" : "bg1.png");
 		else
 			bg = BackgroundDatabase.GetBackground(puzzleData.background);
 		#end

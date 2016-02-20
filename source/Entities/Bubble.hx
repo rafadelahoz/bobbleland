@@ -5,7 +5,6 @@ import flixel.FlxSprite;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxTimer;
-import flixel.util.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 import flixel.group.FlxTypedGroup;
 import flixel.group.FlxTypedGroupIterator;
@@ -141,7 +140,7 @@ class Bubble extends FlxSprite
 		}
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		switch (state)
 		{
@@ -232,7 +231,7 @@ class Bubble extends FlxSprite
 		}
 
 		if (alive)
-			super.update();
+			super.update(elapsed);
 	}
 
 	public function shoot(direction : Float)
@@ -353,7 +352,7 @@ class Bubble extends FlxSprite
 
 			FlxTween.tween(this.scale, {x : 0.5, y : 0.5}, crunchTime,
 							{ complete : function(_t:FlxTween) {
-								new FlxTimer(waitTime, function(__t:FlxTimer) {
+								new FlxTimer().start(waitTime, function(__t:FlxTimer) {
 									FlxTween.tween(this.scale, {x : 3, y : 3}, popTime);
 									FlxTween.tween(this, {alpha : 0}, popTime, { complete : function(___t:FlxTween) {
 										onDeath();
@@ -377,10 +376,9 @@ class Bubble extends FlxSprite
 
 			FlxTween.tween(this.scale, {x : 0.9, y : 0.9}, jumpWaitTime*0.5);
 
-			new FlxTimer(jumpWaitTime, function (_t:FlxTimer) {
+			new FlxTimer().start(jumpWaitTime, function (_t:FlxTimer) {
 				velocity.y = -100;
 				scale.set(1, 1);
-				// velocity.x = FlxRandom.intRanged(-20, 20);
 				falling = true;
 			});
 		}
@@ -393,12 +391,12 @@ class Bubble extends FlxSprite
 		var rotTime : Float = (grid.rows - cellPosition.y)*0.25 + (cellPosition.y)*0.15;
 
 		// Rot quickly
-		new FlxTimer(rotTime * 0.25, function (_t:FlxTimer) {
+		new FlxTimer().start(rotTime * 0.25, function (_t:FlxTimer) {
 			color = 0xFF606060;
 		});
 
 		// Fall less quickly
-		new FlxTimer(rotTime, function (_t:FlxTimer) {
+		new FlxTimer().start(rotTime, function (_t:FlxTimer) {
 			triggerFall();
 		});
 	}

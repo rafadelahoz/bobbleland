@@ -44,7 +44,7 @@ class ScoreDisplay extends FlxObject
 		return targetScore;
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		if (mode == PlayState.ModeArcade)
 		{
@@ -66,7 +66,7 @@ class ScoreDisplay extends FlxObject
 
 		scoreLabel.update();
 
-		super.update();
+		super.update(elapsed);
 	}
 
 	override public function draw()

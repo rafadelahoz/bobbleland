@@ -31,7 +31,7 @@ class SliderButton extends Button
         right = rightLimit;
     }
 
-    override public function update()
+    override public function update(elapsed:Float)
     {
         switch (state)
         {
@@ -83,7 +83,7 @@ class SliderButton extends Button
 
         }
 
-        super.update();
+        super.update(elapsed);
 
         // Override parent animation control
         if (state == StateIdle)

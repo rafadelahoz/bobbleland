@@ -25,7 +25,7 @@ class Ceiling extends FlxSprite
         makeGraphic(Std.int(grid.width),Std.int(grid.height), 0x00FFFFFF);
     }
 
-    override public function update()
+    override public function update(elapsed:Float)
     {
         // Update the graphic only when necessary
         if (grid.getTop() != ceilY)
@@ -36,7 +36,7 @@ class Ceiling extends FlxSprite
             stamp(bottomBar, 0, Std.int(ceilY-y-bottomBar.height));
         }
 
-        super.update();
+        super.update(elapsed);
     }
 
     override public function draw()

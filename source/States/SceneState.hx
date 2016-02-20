@@ -61,7 +61,7 @@ class SceneState extends FlxState
         }
     }
 
-    override public function update()
+    override public function update(elapsed:Float)
     {
         GamePad.handlePadState();
 
@@ -70,7 +70,7 @@ class SceneState extends FlxState
             currentCommand.update();
         }
 
-        super.update();
+        super.update(elapsed);
     }
 
     override public function draw()
