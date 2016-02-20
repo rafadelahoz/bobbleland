@@ -2,14 +2,14 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.text.FlxBitmapTextField;
+import flixel.text.FlxBitmapText;
 
 class ScoreDisplay extends FlxObject
 {
 	public var mode : Int;
 
 	public var score : Int;
-	public var scoreLabel : FlxBitmapTextField;
+	public var scoreLabel : FlxBitmapText;
 
 	var scoreDelta : Int = 5;
 	var targetScore : Int;
@@ -64,7 +64,7 @@ class ScoreDisplay extends FlxObject
 			// do nothing!
 		}
 
-		scoreLabel.update();
+		scoreLabel.update(elapsed);
 
 		super.update(elapsed);
 	}

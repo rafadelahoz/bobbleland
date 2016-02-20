@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxG;
 import puzzle.PuzzleData;
 
 class BubbleGenerator
@@ -110,7 +111,7 @@ class BubbleGenerator
 			return getRandomColor();
 		}
 
-		return FlxRandom.getObject(usedColors.filter(onlyPositiveIndexes));
+		return FlxG.random.getObject(usedColors.filter(onlyPositiveIndexes));
 	}
 
     /* Returns a random color index for a bubble */

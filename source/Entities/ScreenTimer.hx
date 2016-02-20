@@ -49,9 +49,9 @@ class ScreenTimer extends FlxSprite
 
     override public function update(elapsed:Float)
     {
-        clock.update();
-        firstFigure.update();
-        lastFigure.update();
+        clock.update(elapsed);
+        firstFigure.update(elapsed);
+        lastFigure.update(elapsed);
 
         super.update(elapsed);
     }

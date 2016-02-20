@@ -1,5 +1,6 @@
 package text;
 
+import flixel.math.FlxPoint;
 import flixel.text.FlxBitmapText;
 import flixel.graphics.frames.FlxBitmapFont;
 
@@ -28,7 +29,7 @@ class PixelText
 			var monospaceLetters = "!\"#$%&'()*+,-./0123456789:;<=>?@"+
 									"ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_ab"+
 									"cdefghijklmnopqrstuvwxyz{|}~\\";
-			font = FlxBitmapFont.fromMonospace("assets/fonts/famicom.png", monospaceLetters, charSize);
+			font = FlxBitmapFont.fromMonospace("assets/fonts/famicom.png", monospaceLetters, FlxPoint.get(8, 8));
 
 			initialized = true;
 		}
@@ -40,7 +41,7 @@ class PixelText
 
 		var text : FlxBitmapText = new FlxBitmapText(font);
 		text.x = X;
-		text.y = Y - 4;
+		text.y = Y;
 		text.text = Text;
 		text.color = Color;
 		text.useTextColor = false;
@@ -48,10 +49,9 @@ class PixelText
 		if (Width > 0)
 		{
 			text.wordWrap = true;
-			text.fixedWidth = true;
-			text.width = Width;
+			/*text.autoSize = false;
+			text.width = Width;*/
 			text.multiLine = true;
-			// text.lineSpacing = -154;
 		}
 
 		return text;

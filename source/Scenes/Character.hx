@@ -34,6 +34,7 @@ class Character extends FlxSprite
         data = SceneCharacterDatabase.get(id);
         if (data != null)
         {
+            trace(data);
             loadGraphic(spritePath + data.sprite + ".png", data.width, data.height);
             for (exprId in data.expressions.keys())
             {

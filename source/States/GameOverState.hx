@@ -2,16 +2,16 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.text.FlxBitmapTextField;
+import flixel.text.FlxBitmapText;
 import flixel.addons.ui.FlxButtonPlus;
 
 import text.PixelText;
 
 class GameOverState extends FlxState
 {
-	public var titleLabel : FlxBitmapTextField;
-	public var labelLabel : FlxBitmapTextField;
-	public var scoreLabel : FlxBitmapTextField;
+	public var titleLabel : FlxBitmapText;
+	public var labelLabel : FlxBitmapText;
+	public var scoreLabel : FlxBitmapText;
 
 	public var btnRetry : FlxButtonPlus;
 	public var btnGiveup : FlxButtonPlus;
@@ -39,7 +39,7 @@ class GameOverState extends FlxState
 
 		titleLabel = PixelText.New(FlxG.width / 2 - 36, FlxG.height / 5, "GAME OVER!");
 		labelLabel = PixelText.New(16, titleLabel.y + 8 + 32, "Score:");
-		scoreLabel = PixelText.New(FlxG.width / 2, titleLabel.y + 8 + 32, padWith("" + score, 8, "0"));
+		scoreLabel = PixelText.New(FlxG.width / 2, titleLabel.y + 8 + 32, padWith("" + score, 8, " "));
 
 		// optionsLabel = PixelText.New(FlxG.width / 2 - 24, 3*FlxG.height / 4, "GIVE UP");
 
@@ -59,7 +59,7 @@ class GameOverState extends FlxState
 		add(PixelText.New(FlxG.width / 2, scoreLabel.y + 8 + 32, padWith("" + playTime, 8)));
 		add(PixelText.New(16, scoreLabel.y + 16 + 32, "Bubbles:"));
 		add(PixelText.New(FlxG.width / 2, scoreLabel.y + 16 + 32, padWith("" + bubbleCount, 8)));
-		add(PixelText.New(16, scoreLabel.y + 24 + 32, "Clean screens:"));
+		add(PixelText.New(16, scoreLabel.y + 24 + 32, "Cleans:"));
 		add(PixelText.New(FlxG.width / 2, scoreLabel.y + 24 + 32, padWith("" + cleanScreens, 8)));
 
 		add(btnRetry);
@@ -87,7 +87,7 @@ class GameOverState extends FlxState
 	}
 
 	/* Pads the provided string with the given character */
-	public static function padWith(string : String, length : Int, ?char : String = "0") : String
+	public static function padWith(string : String, length : Int, ?char : String = " ") : String
 	{
 		while (string.length < length)
 		{

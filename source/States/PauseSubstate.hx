@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.group.FlxSpriteGroup;
-import flixel.text.FlxBitmapTextField;
+import flixel.text.FlxBitmapText;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.math.FlxPoint;
@@ -138,8 +138,8 @@ class PauseSubstate extends FlxSubState
     {
         var baseX : Float = FlxG.width/2 - dialogWidth/2;
         var baseY : Float = FlxG.height/2 - dialogHeight/2;
-        var xx : Float = FlxRandom.floatRanged(baseX-8, baseX+8);
-        var yy : Float = FlxRandom.floatRanged(baseY-10, baseY+10);
+        var xx : Float = FlxG.random.float(baseX-8, baseX+8);
+        var yy : Float = FlxG.random.float(baseY-10, baseY+10);
         return new FlxPoint(xx, yy);
     }
 

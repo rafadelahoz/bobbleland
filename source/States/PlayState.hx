@@ -126,7 +126,7 @@ class PlayState extends FlxState
 		waitTimer = new FlxTimer();
 		aimingTimer = new FlxTimer();
 
-		scoreDisplay = new ScoreDisplay(2, 2, mode);
+		scoreDisplay = new ScoreDisplay(2, 1, mode);
 		add(scoreDisplay);
 
 		if (puzzleData.mode == puzzle.PuzzleData.ModeHold)

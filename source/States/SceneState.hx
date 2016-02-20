@@ -67,7 +67,7 @@ class SceneState extends FlxState
 
         if (currentCommand != null)
         {
-            currentCommand.update();
+            currentCommand.update(elapsed);
         }
 
         super.update(elapsed);

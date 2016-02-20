@@ -126,8 +126,8 @@ class PlayerCharacter extends FlxSprite
             hurry.visible = false;
         }
 
-        belt.update();
-        hurry.update();
+        belt.update(elapsed);
+        hurry.update(elapsed);
 
         super.update(elapsed);
     }
