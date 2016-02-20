@@ -39,7 +39,7 @@ class PuzzleAnnouncement extends FlxSprite
 
         setupRotation(0.75);
 
-        FlxTween.tween(this, {y : 240/2-height/2}, 0.8, { ease : FlxEase.elasticOut, complete: function(_t:FlxTween) {
+        FlxTween.tween(this, {y : 240/2-height/2}, 0.8, { ease : FlxEase.elasticOut, onComplete: function(_t:FlxTween) {
             angleTween.cancel();
             if (completionHandler != null)
                 completionHandler();
@@ -51,7 +51,7 @@ class PuzzleAnnouncement extends FlxSprite
         if (angleTween != null)
             angleTween.cancel();
 
-        angleTween = FlxTween.angle(this, -720, 7, time, {ease : FlxEase.cubeInOut, complete : function(_t:FlxTween) {
+        angleTween = FlxTween.angle(this, -720, 7, time, {ease : FlxEase.cubeInOut, onComplete : function(_t:FlxTween) {
             angleTween.cancel();
             //setupRotation(time * 2);
         }});

@@ -26,7 +26,7 @@ class BgCommand extends Command
 		}
 		else 
 		{
-			FlxTween.tween(scene.background, {alpha : 0}, duration, { complete : onFadeOutComplete });	
+			FlxTween.tween(scene.background, {alpha : 0}, duration, {onComplete: onFadeOutComplete });	
 		}
 		
 	}
@@ -41,7 +41,7 @@ class BgCommand extends Command
 		} 
 		else 
 		{
-			FlxTween.tween(scene.background, {alpha : 1}, duration, { complete : onFadeInComplete });
+			FlxTween.tween(scene.background, {alpha : 1}, duration, {onComplete: onFadeInComplete });
 		}
 	}
 	

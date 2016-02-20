@@ -7,7 +7,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxBitmapTextField;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 import flixel.util.FlxSpriteUtil;
 
@@ -83,7 +83,7 @@ class PauseSubstate extends FlxSubState
 
     override public function create()
     {
-        tween = FlxTween.tween(group, {y : FlxG.height / 2 - dialogHeight / 2}, 0.75, { complete: onGroupPositioned, ease : FlxEase.elasticOut });
+        tween = FlxTween.tween(group, {y : FlxG.height / 2 - dialogHeight / 2}, 0.75, {onComplete: onGroupPositioned, ease : FlxEase.elasticOut });
     }
 
     override public function update(elapsed:Float)
@@ -129,7 +129,7 @@ class PauseSubstate extends FlxSubState
         if (tween != null)
             tween.cancel();
 
-        tween = FlxTween.tween(group, {x : newPos.x, y : newPos.y}, 2, { ease: FlxEase.circInOut, complete: function(_t:FlxTween) {
+        tween = FlxTween.tween(group, {x : newPos.x, y : newPos.y}, 2, { ease: FlxEase.circInOut,onComplete: function(_t:FlxTween) {
             tweenToNewPosition();
         }});
     }
@@ -164,7 +164,7 @@ class PauseSubstate extends FlxSubState
                 tween.cancel();
 
             FlxTween.tween(shader, {alpha : 0.0}, 0.2, {ease : FlxEase.cubeIn});
-            FlxTween.tween(group, { y : -dialogHeight }, 0.6, { ease: FlxEase.circOut, complete: onGroupLeave });
+            FlxTween.tween(group, { y : -dialogHeight }, 0.6, { ease: FlxEase.circOut,onComplete: onGroupLeave });
         }
     }
 

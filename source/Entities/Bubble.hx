@@ -3,7 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
 import flixel.util.FlxSpriteUtil;
 import flixel.group.FlxTypedGroup;
@@ -351,10 +351,10 @@ class Bubble extends FlxSprite
 				grid.setData(cellPosition.x, cellPosition.y, null);
 
 			FlxTween.tween(this.scale, {x : 0.5, y : 0.5}, crunchTime,
-							{ complete : function(_t:FlxTween) {
+							{onComplete: function(_t:FlxTween) {
 								new FlxTimer().start(waitTime, function(__t:FlxTimer) {
 									FlxTween.tween(this.scale, {x : 3, y : 3}, popTime);
-									FlxTween.tween(this, {alpha : 0}, popTime, { complete : function(___t:FlxTween) {
+									FlxTween.tween(this, {alpha : 0}, popTime, {onComplete: function(___t:FlxTween) {
 										onDeath();
 									}});
 								});

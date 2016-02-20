@@ -33,7 +33,7 @@ class PuzzleCommand extends Command
 		var timer : FlxTimer = new FlxTimer().start(0.6, function(_t:FlxTimer) {
 			FlxG.camera.fade(0xFF000000, 1);
 			FlxTween.tween(announcement.scale, {x : 10, y: 10}, 1, {
-					complete : function(_t:FlxTween) {
+				onComplete: function(_t:FlxTween) {
 						onComplete();
 					}
 				});

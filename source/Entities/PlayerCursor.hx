@@ -5,7 +5,7 @@ import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.util.FlxMath;
 import flixel.util.FlxAngle;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 
 class PlayerCursor extends FlxSprite

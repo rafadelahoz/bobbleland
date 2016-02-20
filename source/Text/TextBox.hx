@@ -117,7 +117,7 @@ class TextBox extends FlxGroup
 			show();
 
 			_background.scale.y = 0;
-			FlxTween.tween(_background.scale, {y: 1}, 0.08, { complete: function(_t:FlxTween) {
+			FlxTween.tween(_background.scale, {y: 1}, 0.08, {onComplete: function(_t:FlxTween) {
 				// Set up a new TypeWriter for each text
 				_typetext = new TypeWriter(originX + borderX,
 										   originY + borderY,
@@ -148,7 +148,7 @@ class TextBox extends FlxGroup
 		_skip.visible = false;
 		_typetext.visible = false;
 
-		FlxTween.tween(_background.scale, {y: 0}, 0.08, { complete: function(_t:FlxTween) {
+		FlxTween.tween(_background.scale, {y: 0}, 0.08, {onComplete: function(_t:FlxTween) {
 			hide();
 			_isTalking = false;
 

@@ -5,7 +5,7 @@ import flixel.FlxState;
 import flixel.FlxSprite;
 import flixel.util.FlxSort;
 import flixel.text.FlxText;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;

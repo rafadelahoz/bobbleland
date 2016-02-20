@@ -5,7 +5,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.util.FlxMath;
 import flixel.util.FlxRect;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 
 class BubbleGrid extends FlxObject
