@@ -9,7 +9,7 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxGroup;
 
 import database.BackgroundDatabase;
 

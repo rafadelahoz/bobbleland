@@ -3,8 +3,8 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.util.FlxMath;
-import flixel.util.FlxRect;
+import flixel.math.FlxMath;
+import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 

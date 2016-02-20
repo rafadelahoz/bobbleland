@@ -3,7 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
-import flixel.util.FlxMath;
+import flixel.math.FlxMath;
 import flixel.util.FlxAngle;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;

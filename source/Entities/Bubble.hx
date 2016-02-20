@@ -2,12 +2,11 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.util.FlxMath;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
 import flixel.util.FlxSpriteUtil;
-import flixel.group.FlxTypedGroup;
-import flixel.group.FlxTypedGroupIterator;
+import flixel.group.FlxGroup;
 import flixel.tweens.FlxTween;
 
 class Bubble extends FlxSprite
