@@ -83,7 +83,7 @@ class GameController
 
 	public static function OnPuzzleGiveup(mode : Int, data : Dynamic)
 	{
-		GameOver(mode, 0, data);
+		GameOver(mode, data);
 	}
 
 	public static function BeginScene(scene : String)
@@ -91,14 +91,14 @@ class GameController
 		FlxG.switchState(new SceneState(scene));
 	}
 
-	public static function GameOver(mode : Int, score : Int, data : Dynamic)
+	public static function GameOver(mode : Int, data : Dynamic)
 	{
 		if (mode == PlayState.ModeArcade)
 		{
 			ArcadeGameStatus.storePlayData(data);
 		}
 
-		FlxG.switchState(new GameOverState(score, data));
+		FlxG.switchState(new GameOverState(data));
 	}
 
 	public static function ClearAdventureSaveData()

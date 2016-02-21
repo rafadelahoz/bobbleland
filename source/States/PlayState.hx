@@ -287,7 +287,7 @@ class PlayState extends FlxState
 
 		if (bubbles.countLiving() <= 0 && fallingBubbles.countLiving() <= 0)
 		{
-			GameController.GameOver(mode, scoreDisplay.score, flowController.getStoredData());
+			GameController.GameOver(mode, flowController.getStoredData());
 		}
 	}
 

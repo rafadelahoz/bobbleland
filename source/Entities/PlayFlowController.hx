@@ -16,6 +16,7 @@ class PlayFlowController
     var playTime : Float;
     var timer : FlxTimer;
 
+    var score : Int;
     var bubbleCount : Int;
     var screenCleanCount : Int;
     var rowCount : Int;
@@ -49,6 +50,7 @@ class PlayFlowController
         }
 
         playTime = 0;
+        score = 0;
         bubbleCount = 0;
         screenCleanCount = 0;
         rowCount = 0;
@@ -166,6 +168,6 @@ class PlayFlowController
 
     public function getStoredData() : Dynamic
     {
-        return {time : playTime, bubbles : bubbleCount, cleans: screenCleanCount};
+        return {score : world.scoreDisplay.score, time : playTime, bubbles : bubbleCount, cleans: screenCleanCount};
     }
 }

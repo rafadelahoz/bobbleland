@@ -60,6 +60,9 @@ class ArcadeGameStatus
 
     public static function storePlayData(playData : Dynamic)
     {
+        if (playData.score > arcadeData.highScore)
+            arcadeData.highScore = playData.score;
+
         if (playData.bubbles > arcadeData.maxBubbles)
             arcadeData.maxBubbles = playData.bubbles;
 

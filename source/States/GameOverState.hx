@@ -23,12 +23,11 @@ class GameOverState extends FlxState
 	var playTime : Int;
 	var cleanScreens : Int;
 
-	public function new(Score : Int, Data : Dynamic)
+	public function new(Data : Dynamic)
 	{
 		super();
 
-		score = Score;
-
+		score = Data.score;
 		bubbleCount = Data.bubbles;
 		playTime = Data.time;
 		cleanScreens = Data.cleans;
