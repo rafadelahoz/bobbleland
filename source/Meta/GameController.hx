@@ -98,7 +98,7 @@ class GameController
 			ArcadeGameStatus.storePlayData(data);
 		}
 
-		FlxG.switchState(new GameOverState(data));
+		FlxG.switchState(new GameOverState(mode, data));
 	}
 
 	public static function ClearAdventureSaveData()

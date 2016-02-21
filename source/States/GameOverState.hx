@@ -23,9 +23,13 @@ class GameOverState extends FlxState
 	var playTime : Int;
 	var cleanScreens : Int;
 
-	public function new(Data : Dynamic)
+	var mode : Int;
+
+	public function new(Mode : Int, Data : Dynamic)
 	{
 		super();
+
+		mode = Mode;
 
 		score = Data.score;
 		bubbleCount = Data.bubbles;
@@ -37,11 +41,18 @@ class GameOverState extends FlxState
 	{
 		super.create();
 
-		titleLabel = PixelText.New(FlxG.width / 2 - 36, FlxG.height / 5, "GAME OVER!");
-		labelLabel = PixelText.New(16, titleLabel.y + 8 + 32, "Score:");
-		scoreLabel = PixelText.New(FlxG.width / 2, titleLabel.y + 8 + 32, TextUtils.padWith("" + score, 8, " "));
+		var baseY : Float = FlxG.height / 5;
 
-		// optionsLabel = PixelText.New(FlxG.width / 2 - 24, 3*FlxG.height / 4, "GIVE UP");
+		titleLabel = PixelText.New(FlxG.width / 2 - 36, baseY, "GAME OVER!");
+		add(titleLabel);
+
+		if (mode == PlayState.ModeArcade)
+		{
+			labelLabel = PixelText.New(16, baseY + 40, "Score:");
+			scoreLabel = PixelText.New(FlxG.width / 2, baseY + 40, TextUtils.padWith("" + score, 8, " "));
+			add(labelLabel);
+			add(scoreLabel);
+		}
 
 		btnRetry = new FlxButtonPlus(FlxG.width / 2 - 24, 3*FlxG.height / 4, onRetryButtonPressed, "Retry", 48, 16);
 		btnRetry.updateActiveButtonColors([0xFF101010, 0xFF101010]);
@@ -51,20 +62,19 @@ class GameOverState extends FlxState
 		btnGiveup.updateActiveButtonColors([0xFF101010, 0xFF101010]);
 		btnGiveup.updateInactiveButtonColors([0xFF000000, 0xFF000000]);
 
-		add(titleLabel);
-		add(labelLabel);
-		add(scoreLabel);
 
-		add(PixelText.New(16, scoreLabel.y + 8 + 32, "Play Time:"));
-		add(PixelText.New(FlxG.width / 2, scoreLabel.y + 8 + 32,
+		baseY += 40;
+
+		add(PixelText.New(16, baseY + 40, "Play Time:"));
+		add(PixelText.New(FlxG.width / 2, baseY + 40,
 						TextUtils.padWith(TextUtils.formatTime(playTime), 9)));
 
-		add(PixelText.New(16, scoreLabel.y + 16 + 32, "Bubbles:"));
-		add(PixelText.New(FlxG.width / 2, scoreLabel.y + 16 + 32,
+		add(PixelText.New(16, baseY + 48, "Bubbles:"));
+		add(PixelText.New(FlxG.width / 2, baseY + 48,
 						TextUtils.padWith("" + bubbleCount, 8)));
 
-		add(PixelText.New(16, scoreLabel.y + 24 + 32, "Cleans:"));
-		add(PixelText.New(FlxG.width / 2, scoreLabel.y + 24 + 32,
+		add(PixelText.New(16, baseY + 56, "Cleans:"));
+		add(PixelText.New(FlxG.width / 2, baseY + 56,
 						TextUtils.padWith("" + cleanScreens, 8)));
 
 		add(btnRetry);
@@ -88,6 +98,9 @@ class GameOverState extends FlxState
 
 	function onRetryButtonPressed() : Void
 	{
-		GameController.StartArcadeGame();
+		if (mode == PlayState.ModeArcade)
+			GameController.StartArcadeGame();
+		else if (mode == PlayState.ModePuzzle)
+			GameController.StartAdventureGame();
 	}
 }
