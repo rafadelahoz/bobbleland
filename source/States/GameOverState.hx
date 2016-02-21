@@ -57,11 +57,16 @@ class GameOverState extends FlxState
 		add(scoreLabel);
 
 		add(PixelText.New(16, scoreLabel.y + 8 + 32, "Play Time:"));
-		add(PixelText.New(FlxG.width / 2, scoreLabel.y + 8 + 32, TextUtils.padWith("" + playTime, 8)));
+		add(PixelText.New(FlxG.width / 2, scoreLabel.y + 8 + 32,
+						TextUtils.padWith(TextUtils.formatTime(playTime), 9)));
+
 		add(PixelText.New(16, scoreLabel.y + 16 + 32, "Bubbles:"));
-		add(PixelText.New(FlxG.width / 2, scoreLabel.y + 16 + 32, TextUtils.padWith("" + bubbleCount, 8)));
+		add(PixelText.New(FlxG.width / 2, scoreLabel.y + 16 + 32,
+						TextUtils.padWith("" + bubbleCount, 8)));
+
 		add(PixelText.New(16, scoreLabel.y + 24 + 32, "Cleans:"));
-		add(PixelText.New(FlxG.width / 2, scoreLabel.y + 24 + 32, TextUtils.padWith("" + cleanScreens, 8)));
+		add(PixelText.New(FlxG.width / 2, scoreLabel.y + 24 + 32,
+						TextUtils.padWith("" + cleanScreens, 8)));
 
 		add(btnRetry);
 		add(btnGiveup);
