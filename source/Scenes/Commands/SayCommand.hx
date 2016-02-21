@@ -19,10 +19,10 @@ class SayCommand extends Command
 	{
 		super.init(scene);
 
-		/*text.TextBox.Init(scene, 0, FlxG.height-80, FlxG.width, 80);
-		text.TextBox.Message(actor, message, onMessageCompletion);*/
-		trace((actor == null ? "" : actor) + " says " + message);
-		onMessageCompletion();
+		text.TextBox.Init(scene, 0, FlxG.height-80, FlxG.width, 80);
+		text.TextBox.Message(actor, message, onMessageCompletion);
+		/*trace((actor == null ? "" : actor) + " says " + message);
+		onMessageCompletion();*/
 	}
 
 	function onMessageCompletion()
