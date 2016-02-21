@@ -38,7 +38,6 @@ class Character extends FlxSprite
             for (exprId in data.expressions.keys())
             {
                 var expression : CharacterExpression = data.expressions.get(exprId);
-                trace(expression);
                 animation.add(expression.id, expression.frames, expression.fps, expression.loop);
             }
 
@@ -74,7 +73,6 @@ class Character extends FlxSprite
         if (animation.getByName(expression) != null)
         {
             animation.play(expression);
-            trace(expression);
         }
 
         // TODO: Change graphic to appropriate one
@@ -102,6 +100,7 @@ class Character extends FlxSprite
                 targetX = FlxG.width  + width * 2;
         }
 
+        FlxTween.tween(this, {alpha: 0}, ExitTime*0.5);
         FlxTween.tween(this, {x:targetX, y:targetY}, ExitTime, {onComplete: function(t:FlxTween){
             if (callback != null)
                 callback();

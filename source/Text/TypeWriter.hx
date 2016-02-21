@@ -482,12 +482,12 @@ class TypeWriter extends FlxBitmapText
 						sound.stop();
 					}
 
-					FlxG.random.getObject(sounds).play(true);
+					// FlxG.random.getObject(sounds).play(true);
 				}
 				else if (useDefaultSound)
 				{
 					#if !bitfive
-					_sound.play(true);
+					// _sound.play(true);
 					#end
 				}
 			}

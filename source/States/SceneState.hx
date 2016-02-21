@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.group.FlxGroup;
 
 import database.BackgroundDatabase;
 
@@ -17,6 +18,7 @@ class SceneState extends FlxState
     public var currentCommand : Command;
 
     public var characterManager : CharacterManager;
+    public var characters : FlxGroup;
 
     public var background : FlxSprite;
     public var border : FlxSprite;
@@ -39,13 +41,16 @@ class SceneState extends FlxState
 
         GamePad.init();
         BackgroundDatabase.Init();
-        
+
         characterManager = new CharacterManager(this);
 
         background = new FlxSprite(0, 0);
         background.makeGraphic(Std.int(FlxG.width), Std.int(FlxG.height), 0xFF000000);
         add(background);
-        
+
+        characters = new FlxGroup();
+        add(characters);
+
         border = new FlxSprite(0, 240).makeGraphic(Std.int(FlxG.width), 80, 0xFF000000);
         add(border);
 
@@ -104,6 +109,6 @@ class SceneState extends FlxState
         if (currentCommand != null)
         {
             currentCommand.init(this);
-        }    
+        }
     }
 }
