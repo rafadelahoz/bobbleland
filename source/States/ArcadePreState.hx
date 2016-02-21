@@ -5,7 +5,10 @@ import flixel.FlxState;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
+import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
+import flixel.text.FlxBitmapText;
+import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.addons.display.FlxBackdrop;
@@ -195,7 +198,7 @@ class ArcadePreState extends FlxState
         screen.add(PixelText.New(16, 224, "CLEAN SCS", white, 128));
         screen.add(PixelText.New(120, 224, "" + data.totalCleans, white, 128));
 
-        var btnClearData : Button = new Button(40, 272);
+        var btnClearData : HoldButton = new HoldButton(40, 272, null, onClearDataReleased);
         btnClearData.loadSpritesheet("assets/ui/btn-cleardata.png", 96, 24);
         screen.add(btnClearData);
 
@@ -243,6 +246,12 @@ class ArcadePreState extends FlxState
         ArcadeGameStatus.setCharacter("cat");
         // Deactivate other buttons
         btnDog.setPressed(false);
+    }
+
+    function onClearDataReleased()
+    {
+        ArcadeGameStatus.clearHistoryData();
+        FlxG.camera.flash(0xFFFF5151);
     }
 
     function snapToDifficultyGrid()

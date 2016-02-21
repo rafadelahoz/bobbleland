@@ -101,9 +101,8 @@ class GameController
 		FlxG.switchState(new GameOverState(score, data));
 	}
 
-	public static function ClearSaveData()
+	public static function ClearAdventureSaveData()
 	{
-		ArcadeGameStatus.clearConfigData();
 		AdventureGameStatus.clearData();
 	}
 }

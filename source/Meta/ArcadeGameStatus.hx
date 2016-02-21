@@ -75,7 +75,7 @@ class ArcadeGameStatus
         var save : FlxSave = new FlxSave();
         save.bind(savefile);
 
-        return save.data.arcadeConfig;
+        return save.data.arcadeData;
     }
 
     public static function saveArcadeConfigData()
@@ -83,19 +83,33 @@ class ArcadeGameStatus
         var save : FlxSave = new FlxSave();
         save.bind(savefile);
 
-        save.data.arcadeConfig = arcadeData;
+        save.data.arcadeData = arcadeData;
 
         save.close();
     }
 
     public static function clearConfigData()
     {
-        trace("Clearing data...");
+        trace("Clearing config data...");
 
-        var save : FlxSave = new FlxSave();
-        save.bind(savefile);
-        save.data.arcadeConfig = null;
-        save.close();
+        arcadeData.difficulty = 3;
+        arcadeData.character = null;
+
+        saveArcadeConfigData();
+    }
+
+    public static function clearHistoryData()
+    {
+        trace("Clearing history data...");
+
+        arcadeData.highScore = 0;
+        arcadeData.longestGame = 0;
+        arcadeData.maxBubbles = 0;
+        arcadeData.totalTime = 0;
+        arcadeData.totalBubbles = 0;
+        arcadeData.totalCleans = 0;
+
+        saveArcadeConfigData();
     }
 
     public static function setInitialRows(rows : Int)

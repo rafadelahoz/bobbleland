@@ -39,7 +39,7 @@ class OptionsState extends FlxState
 
 	public function onClearDataPressed() : Void
 	{
-		GameController.ClearSaveData();
+		GameController.ClearAdventureSaveData();
 	}
 
 	public function onBackButtonPressed() : Void
