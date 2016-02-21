@@ -31,6 +31,7 @@ class ArcadeGameStatus
         {
             trace("No arcadeData, loading");
             arcadeData = loadArcadeConfigData();
+
             if (arcadeData == null)
             {
                 trace("Nothing to load, init");
@@ -40,10 +41,10 @@ class ArcadeGameStatus
                     totalBubbles: 0, totalTime: 0, totalCleans: 0
                 };
 
-                trace(arcadeData);
-
                 saveArcadeConfigData();
             }
+
+            trace(arcadeData);
         }
     }
 
