@@ -34,11 +34,11 @@ class Character extends FlxSprite
         data = SceneCharacterDatabase.get(id);
         if (data != null)
         {
-            trace(data);
-            loadGraphic(spritePath + data.sprite + ".png", data.width, data.height);
+            loadGraphic(spritePath + data.sprite + ".png", true, data.width, data.height);
             for (exprId in data.expressions.keys())
             {
                 var expression : CharacterExpression = data.expressions.get(exprId);
+                trace(expression);
                 animation.add(expression.id, expression.frames, expression.fps, expression.loop);
             }
 
@@ -74,6 +74,7 @@ class Character extends FlxSprite
         if (animation.getByName(expression) != null)
         {
             animation.play(expression);
+            trace(expression);
         }
 
         // TODO: Change graphic to appropriate one
