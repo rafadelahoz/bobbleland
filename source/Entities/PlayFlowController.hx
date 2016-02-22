@@ -164,6 +164,9 @@ class PlayFlowController
     public function onScreenCleared()
     {
         screenCleanCount++;
+        
+        // When the screen is cleared, increase difficulty
+        increaseDifficulty();
     }
 
     public function getStoredData() : Dynamic

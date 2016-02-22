@@ -257,8 +257,6 @@ class PlayState extends FlxState
 
 	function onAimingState()
 	{
-		scoreDisplay.active = true;
-
 		if (!notifyAiming && aimingTimer.timeLeft < AimingTime / 2)
 		{
 			notifyAiming = true;
@@ -274,7 +272,6 @@ class PlayState extends FlxState
 
 	function onWaitingState()
 	{
-		scoreDisplay.active = false;
 	}
 
 	function onRemovingState()
@@ -283,8 +280,6 @@ class PlayState extends FlxState
 
 	function onLosingState()
 	{
-		scoreDisplay.active = true;
-
 		if (bubbles.countLiving() <= 0 && fallingBubbles.countLiving() <= 0)
 		{
 			GameController.GameOver(mode, flowController.getStoredData());
@@ -503,6 +498,8 @@ class PlayState extends FlxState
 					congratsSign.destroy();
 				});
 
+				dropTimer.cancel();
+
 				// Generate a row while exiting
 				generateRow();
 				// Generate a row after a while
@@ -513,14 +510,14 @@ class PlayState extends FlxState
 				new FlxTimer().start(1.4, function(_t:FlxTimer) {
 					generateRow();
 					// And resume playing
-					scoreDisplay.active = true;
 					switchState(StateAiming);
+					
+					dropTimer.start(dropDelay, onDropTimer);
 				});
 			});
 		}
 		else
 		{
-			scoreDisplay.active = true;
 			switchState(StateAiming);
 		}
 	}
@@ -561,7 +558,10 @@ class PlayState extends FlxState
 
 		#if !work
 		if (puzzleData == null || puzzleData.background == null)
-			bg = "assets/backgrounds/" + (FlxG.random.bool(50) ? "bg0.png" : "bg1.png");
+			bg = "assets/backgrounds/" +
+				(FlxG.random.bool(50) ? "bg0.png" :
+					(FlxG.random.bool(50) ? "bg1.png" :
+						(FlxG.random.bool(50) ? "bg2.png" : "bg3.png")));
 		else
 			bg = BackgroundDatabase.GetBackground(puzzleData.background);
 		#end

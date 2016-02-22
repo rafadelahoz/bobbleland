@@ -36,7 +36,7 @@ class ArcadeGameStatus
             {
                 trace("Nothing to load, init");
                 arcadeData = {
-                    difficulty: 3, character: null,
+                    difficulty: 2, character: null,
                     highScore: 0, maxBubbles: 0, longestGame: 0,
                     totalBubbles: 0, totalTime: 0, totalCleans: 0
                 };

@@ -3,9 +3,12 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.text.FlxBitmapText;
+import flixel.util.FlxTimer;
 
 class ScoreDisplay extends FlxObject
 {
+	public static var addDelay : Float = 1;
+	
 	public var mode : Int;
 
 	public var score : Int;
@@ -13,6 +16,8 @@ class ScoreDisplay extends FlxObject
 
 	var scoreDelta : Int = 5;
 	var targetScore : Int;
+	
+	var timer : FlxTimer;
 
 	public function new(X : Float, Y : Float, Mode : Int, ?Score : Int = 0)
 	{
@@ -33,15 +38,25 @@ class ScoreDisplay extends FlxObject
 		{
 			scoreLabel.text = padWith("" + score, 8);
 		}
+		
+		timer = null;
 	}
 
-	public function add(value : Int) : Int
+	public function add(value : Int)
 	{
-		targetScore += value;
-
-		scoreDelta = Std.int((targetScore - score) / 60.0);
-
-		return targetScore;
+		if (timer == null)
+		{
+			timer = new FlxTimer().start(addDelay, function(t:FlxTimer) {
+				targetScore += value;
+				scoreDelta = Std.int((targetScore - score) / 60.0);
+				timer = null;
+			});
+		}
+		else 
+		{
+			targetScore += value;
+			scoreDelta = Std.int((targetScore - score) / 60.0);
+		}
 	}
 
 	override public function update(elapsed:Float)
