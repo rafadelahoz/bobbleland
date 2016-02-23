@@ -93,14 +93,17 @@ class GameOverState extends FlxState
 
 	function onGiveupButtonPressed() : Void
 	{
-		GameController.ToMenu();
+		if (mode == PlayState.ModeArcade)
+			GameController.StartArcadeGame();
+		else if (mode == PlayState.ModePuzzle)
+			GameController.ToMenu();
 	}
 
 	function onRetryButtonPressed() : Void
 	{
 		if (mode == PlayState.ModeArcade)
-			GameController.StartArcadeGame();
+			GameController.BeginArcade();
 		else if (mode == PlayState.ModePuzzle)
-			GameController.StartAdventureGame();
+			GameController.BeginPuzzle();
 	}
 }
