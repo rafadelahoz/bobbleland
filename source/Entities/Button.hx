@@ -72,14 +72,30 @@ class Button extends FlxSprite
     {
         var mouseX : Float = FlxG.mouse.x;
         var mouseY : Float = FlxG.mouse.y;
-        
+
         if (scrollFactor.x == 0)
             mouseX = FlxG.mouse.screenX;
-            
+
         if (scrollFactor.y == 0)
             mouseY = FlxG.mouse.screenY;
-                
+
         return mouseX >= x && mouseX < (x + width) &&
                mouseY >= y && mouseY < (y + height);
+    }
+
+    public function click()
+    {
+        #if android
+        Hardware.vibrate(20);
+        #end
+        FlxG.sound.play("assets/sounds/btn_click.wav");
+    }
+
+    public function clock()
+    {
+        #if android
+        Hardware.vibrate(10);
+        #end
+        FlxG.sound.play("assets/sounds/btn_clock.wav");
     }
 }

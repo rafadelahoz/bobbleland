@@ -17,7 +17,8 @@ class MenuState extends FlxState
 
 		GameController.Init();
 
-		var w : Int = Std.int(FlxG.width - 64);
+		GameController.StartArcadeGame();
+		/*var w : Int = Std.int(FlxG.width - 64);
 		var h : Int = 32;
 
 		btnArcade = new FlxButtonPlus(32, 32, onArcadeButtonPressed, "Arcade", w, h);
@@ -30,7 +31,7 @@ class MenuState extends FlxState
 
 		add(btnArcade);
 		add(btnPuzzle);
-		add(btnOptions);
+		add(btnOptions);*/
 	}
 
 	override public function destroy():Void

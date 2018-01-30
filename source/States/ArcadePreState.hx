@@ -16,6 +16,10 @@ import flixel.addons.display.FlxBackdrop;
 import text.PixelText;
 import text.TextUtils;
 
+#if android
+import Hardware;
+#end
+
 class ArcadePreState extends FlxState
 {
     /** Play settings screen **/
@@ -261,6 +265,7 @@ class ArcadePreState extends FlxState
 
     function onCharReleased()
     {
+        btnDog.clock();
         ArcadeGameStatus.setCharacter(null);
     }
 

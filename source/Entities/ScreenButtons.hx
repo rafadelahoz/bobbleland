@@ -4,6 +4,10 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 
+#if android
+import Hardware;
+#end
+
 class ScreenButtons extends FlxSpriteGroup
 {
 	var state : PlayState;
@@ -58,6 +62,12 @@ class ScreenButtons extends FlxSpriteGroup
 			{
 				if (touch.overlaps(leftButton))
 				{
+					#if android
+					if (!GamePad.checkButton(GamePad.Left)) {
+						Hardware.vibrate(20);
+					}
+					#end
+
 					GamePad.setPressed(GamePad.Left);
 					leftButton.animation.play("pressed");
 				}
