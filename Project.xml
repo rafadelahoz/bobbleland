@@ -2,7 +2,7 @@
 <project>
 	<!------------------------------APPLICATION SETTINGS---------------------------->
 
-	<app title="bobble" file="bobble" main="Main" version="0.0.1" company="The Badladns" />
+	<app title="SOAP ALLEY" file="soap-alley" main="Main" version="0.1.0" company="The Badladns" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 	<!--or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"!-->
@@ -18,7 +18,7 @@
 
 	<!--These window settings apply to all targets-->
 	<window width="360" height="640" fps="60" background="#212121" hardware="true" vsync="true" />
-	<window if="work" width="180" height="320" fps="60" background="#212121" hardware="true" vsync="true" />
+	<!--<window if="work" width="180" height="320" fps="60" background="#212121" hardware="true" vsync="true" />-->
 
 	<!--Web-specific-->
 	<window if="web" orientation="portrait" />
@@ -35,8 +35,6 @@
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	<classpath name="source/Text" />
-	<classpath name="source/Scenes" />
-	<classpath name="source/Scenes/Commands" />
 	<classpath name="source/Meta" />
 	<classpath name="source/States" />
 	<classpath name="source/Entities" />

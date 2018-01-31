@@ -54,7 +54,8 @@ class ArcadePreState extends FlxState
         var bg : String = "assets/backgrounds/" +
                         (FlxG.random.bool(50) ? "bg0.png" :
                             (FlxG.random.bool(50) ? "bg1.png" :
-                                (FlxG.random.bool(50) ? "bg2.png" : "bg3.png")));
+								(FlxG.random.bool(50) ? "bg4.png" :
+                                	(FlxG.random.bool(50) ? "bg2.png" : "bg3.png"))));
         background = new FlxBackdrop(bg, 0.35, 0.35);
         background.velocity.set(10, 10);
         add(background);

@@ -15,11 +15,6 @@ class GameController
 		FlxG.switchState(new MenuState());
 	}
 
-	public static function ToOptions()
-	{
-		FlxG.switchState(new OptionsState());
-	}
-
 	public static function StartArcadeGame()
 	{
 		ArcadeGameStatus.init();
@@ -29,50 +24,6 @@ class GameController
 	public static function BeginArcade()
 	{
 		FlxG.switchState(new PlayState(PlayState.ModeArcade, null));
-	}
-
-	public static function StartAdventureGame()
-	{
-		// FlxG.switchState(new PlayState(PlayState.ModePuzzle, "puzzle-0.xml"));
-		if (AdventureGameStatus.savegameExists())
-		{
-			trace("Save game found!");
-			AdventureGameStatus.loadSavegame();
-		}
-		else
-		{
-			trace("Starting new game");
-			AdventureGameStatus.startNewGame();
-		}
-
-		AdventureGameStatus.next();
-		NextScene();
-	}
-
-	public static function OnSceneCompleted(nextPuzzle : String, nextScene : String)
-	{
-		AdventureGameStatus.setNext(nextPuzzle, nextScene);
-		AdventureGameStatus.next();
-
-		BeginPuzzle();
-	}
-
-	public static function BeginPuzzle()
-	{
-		FlxG.switchState(
-			new PlayState(PlayState.ModePuzzle, AdventureGameStatus.getCurrentPuzzle())
-		);
-	}
-
-	public static function OnPuzzleCompleted()
-	{
-		AdventureGameStatus.save();
-		NextScene();
-	}
-
-	static function NextScene()
-	{
-		BeginScene(AdventureGameStatus.getCurrentScene());
 	}
 
 	public static function OnGameplayEnd()
@@ -86,11 +37,6 @@ class GameController
 		GameOver(mode, data);
 	}
 
-	public static function BeginScene(scene : String)
-	{
-		FlxG.switchState(new SceneState(scene));
-	}
-
 	public static function GameOver(mode : Int, data : Dynamic)
 	{
 		if (mode == PlayState.ModeArcade)
@@ -99,10 +45,5 @@ class GameController
 		}
 
 		FlxG.switchState(new GameOverState(mode, data));
-	}
-
-	public static function ClearAdventureSaveData()
-	{
-		AdventureGameStatus.clearData();
 	}
 }

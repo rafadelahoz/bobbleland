@@ -10,6 +10,7 @@ import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup;
+import flixel.addons.display.FlxBackdrop;
 
 import database.BackgroundDatabase;
 
@@ -295,8 +296,6 @@ class PlayState extends FlxState
 	{
 		if (mode == ModeArcade)
 			GameController.OnGameplayEnd();
-		else if (mode == ModePuzzle)
-			GameController.OnPuzzleCompleted();
 	}
 
 	/* Private methods */
@@ -511,7 +510,7 @@ class PlayState extends FlxState
 					generateRow();
 					// And resume playing
 					switchState(StateAiming);
-					
+
 					dropTimer.start(dropDelay, onDropTimer);
 				});
 			});
@@ -559,14 +558,15 @@ class PlayState extends FlxState
 		#if !work
 		if (puzzleData == null || puzzleData.background == null)
 			bg = "assets/backgrounds/" +
-				(FlxG.random.bool(50) ? "bg0.png" :
-					(FlxG.random.bool(50) ? "bg1.png" :
-						(FlxG.random.bool(50) ? "bg2.png" : "bg3.png")));
+					(FlxG.random.bool(50) ? "bg0.png" :
+						(FlxG.random.bool(50) ? "bg1.png" :
+							(FlxG.random.bool(50) ? "bg4.png" :
+								(FlxG.random.bool(50) ? "bg2.png" : "bg3.png"))));
 		else
 			bg = BackgroundDatabase.GetBackground(puzzleData.background);
 		#end
 
-		background = new FlxSprite(0, 0, bg);
+		background = new FlxBackdrop(bg);
 		add(background);
 	}
 
