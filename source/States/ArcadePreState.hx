@@ -50,7 +50,7 @@ class ArcadePreState extends FlxState
 
         centerScreen = new FlxSpriteGroup(0, 0);
 
-        #if !work
+        // #if !work
         var bg : String = "assets/backgrounds/" +
                         (FlxG.random.bool(50) ? "bg0.png" :
                             (FlxG.random.bool(50) ? "bg1.png" :
@@ -58,7 +58,7 @@ class ArcadePreState extends FlxState
         background = new FlxBackdrop(bg, 0.35, 0.35);
         background.velocity.set(10, 10);
         add(background);
-        #end
+        // #end
 
         historyScreen = buildHistoryScreen();
         add(historyScreen);

@@ -3,7 +3,11 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.text.FlxBitmapText;
 import flixel.addons.ui.FlxButtonPlus;
+
+import text.PixelText;
+import text.TextUtils;
 
 class MenuState extends FlxState
 {
@@ -11,27 +15,26 @@ class MenuState extends FlxState
 	public var btnPuzzle : FlxButtonPlus;
 	public var btnOptions : FlxButtonPlus;
 
+	public var titleLabel : FlxBitmapText;
+
 	override public function create():Void
 	{
 		super.create();
 
 		GameController.Init();
 
-		GameController.StartArcadeGame();
-		/*var w : Int = Std.int(FlxG.width - 64);
-		var h : Int = 32;
+		titleLabel = PixelText.New(FlxG.width / 2 - 40, 64, "SOAP ALLEY");
+		titleLabel.scale.x = 1.75;
+		titleLabel.scale.y = 3;
+		add(titleLabel);
 
-		btnArcade = new FlxButtonPlus(32, 32, onArcadeButtonPressed, "Arcade", w, h);
-		btnPuzzle = new FlxButtonPlus(32, 80, onPuzzleButtonPressed, "Adventure", w, h);
-		btnOptions = new FlxButtonPlus(32, FlxG.height / 2, onOptionsButtonPressed, "Options", w, h);
+		var touchLabel = PixelText.New(FlxG.width / 2 - 56, Std.int(FlxG.height - FlxG.height/4), "Touch to start");
+		add(touchLabel);
 
-		decorateButton(btnArcade);
-		decorateButton(btnPuzzle);
-		decorateButton(btnOptions);
-
-		add(btnArcade);
-		add(btnPuzzle);
-		add(btnOptions);*/
+		var creditsLabel = PixelText.New(FlxG.width / 2 - 48, Std.int(FlxG.height - FlxG.height/5), "2015 - 2018\nThe BADLADNS");
+		creditsLabel.scale.x = 1;
+		creditsLabel.scale.y = 1;
+		add(creditsLabel);
 	}
 
 	override public function destroy():Void
@@ -42,6 +45,38 @@ class MenuState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+
+		#if desktop
+        if (FlxG.mouse.pressed)
+        {
+            // animation.play("pressed");
+        }
+        else if (FlxG.mouse.justReleased)
+        {
+            // animation.play("idle");
+            onArcadeButtonPressed();
+        }
+        #end
+
+        #if mobile
+        for (touch in FlxG.touches.list)
+		{
+            /*if (touch.overlaps(this))
+            {*/
+    			if (touch.pressed)
+    			{
+    				// animation.play("pressed");
+                    break;
+                }
+                else if (touch.justReleased)
+                {
+                    // animation.play("idle");
+                    onArcadeButtonPressed();
+                    break ;
+                }
+            /*}*/
+        }
+        #end
 	}
 
 	public function onArcadeButtonPressed() : Void
