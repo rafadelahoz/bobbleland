@@ -53,13 +53,11 @@ class ArcadePreState extends FlxState
 
         centerScreen = new FlxSpriteGroup(0, 0);
 
-        // #if !work
         background = database.BackgroundDatabase.BuildRandomBackground();
         background.scrollFactor.set(0.35, 0.35);
         background.velocity.set(10, 10);
         add(background);
-        // #end
-
+        
         historyScreen = buildHistoryScreen();
         add(historyScreen);
 

@@ -44,7 +44,7 @@ class BackgroundDatabase
     public static function BuildRandomBackground() : FlxBackdrop
     {
         var bgs : Array<String> = [];
-        for (i in 0...5)
+        for (i in 0...6)
         {
             bgs.push("bg" + i + ".png");
         }

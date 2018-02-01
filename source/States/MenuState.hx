@@ -71,7 +71,7 @@ class MenuState extends FlxState
 	public function onLogoPositioned(_t:FlxTween):Void
 	{
 		FlxTween.tween(touchLabel, {alpha : 1}, 1, {ease : FlxEase.cubeInOut});
-		FlxTween.tween(background, {alpha : 1}, 1.5, {ease : FlxEase.cubeInOut});
+		FlxTween.tween(background, {alpha : 0.8}, 1.5, {ease : FlxEase.cubeInOut});
 	}
 
 	override public function destroy():Void
