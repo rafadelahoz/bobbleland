@@ -43,6 +43,9 @@ class ArcadePreState extends FlxState
     var btnBack : Button;
 
     var target : FlxObject;
+    var isCameraMoving : Bool;
+
+    var swipeManager : SwipeManager;
 
     override public function create()
     {
@@ -51,12 +54,8 @@ class ArcadePreState extends FlxState
         centerScreen = new FlxSpriteGroup(0, 0);
 
         // #if !work
-        var bg : String = "assets/backgrounds/" +
-                        (FlxG.random.bool(50) ? "bg0.png" :
-                            (FlxG.random.bool(50) ? "bg1.png" :
-								(FlxG.random.bool(50) ? "bg4.png" :
-                                	(FlxG.random.bool(50) ? "bg2.png" : "bg3.png"))));
-        background = new FlxBackdrop(bg, 0.35, 0.35);
+        background = database.BackgroundDatabase.BuildRandomBackground();
+        background.scrollFactor.set(0.35, 0.35);
         background.velocity.set(10, 10);
         add(background);
         // #end
@@ -74,8 +73,13 @@ class ArcadePreState extends FlxState
 
         target = new FlxObject(FlxG.width/2, FlxG.height/2);
         add(target);
+        isCameraMoving = false;
 
         FlxG.camera.follow(target);
+
+        swipeManager = new SwipeManager();
+        swipeManager.leftCallback = moveToRightScreen;
+        swipeManager.rightCallback = moveToLeftScreen;
 
         initData();
     }
@@ -103,6 +107,8 @@ class ArcadePreState extends FlxState
 
     override public function update(elapsed:Float)
     {
+        swipeManager.update(elapsed);
+
         super.update(elapsed);
     }
 
@@ -245,12 +251,41 @@ class ArcadePreState extends FlxState
     function buildScrollButton(x : Float, y : Float, left : Bool) : Button
     {
         var button : Button = new Button(x, y, function() {
-            FlxTween.tween(target, {x : target.x + (left ? -1 : 1)*FlxG.width}, 0.5, { ease : FlxEase.cubeInOut });
+            if (!isCameraMoving)
+            {
+                if (left) moveToLeftScreen();
+                else moveToRightScreen();
+            }
         });
         button.loadSpritesheet("assets/ui/btn-side.png", 12, 32);
         button.flipX = left;
 
         return button;
+    }
+
+    function moveToLeftScreen()
+    {
+        // Don't allow moving left of left
+        if (target.x > 0)
+        {
+            isCameraMoving = true;
+            FlxTween.tween(target, {x : target.x + -1*FlxG.width}, 0.5, { ease : FlxEase.cubeInOut, onComplete: onFinishedMoving });
+        }
+    }
+
+    function moveToRightScreen()
+    {
+        // Don't allow moving right of right
+        if (target.x < FlxG.width)
+        {
+            isCameraMoving = true;
+            FlxTween.tween(target, {x : target.x + FlxG.width}, 0.5, { ease : FlxEase.cubeInOut, onComplete: onFinishedMoving });
+        }
+    }
+
+    function onFinishedMoving(_t:FlxTween)
+    {
+        isCameraMoving = false;
     }
 
     function generateCharacterButtons(group : FlxSpriteGroup)

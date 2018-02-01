@@ -1,5 +1,8 @@
 package database;
 
+import flixel.FlxG;
+import flixel.addons.display.FlxBackdrop;
+
 class BackgroundDatabase
 {
     static var assetsPath : String = "assets/backgrounds/";
@@ -36,5 +39,18 @@ class BackgroundDatabase
         {
             return assetsPath + database.get(backgroundId);
         }
+    }
+
+    public static function BuildRandomBackground() : FlxBackdrop
+    {
+        var bgs : Array<String> = [];
+        for (i in 0...5)
+        {
+            bgs.push("bg" + i + ".png");
+        }
+
+        var bg : String = "assets/backgrounds/" + FlxG.random.getObject(bgs);
+
+        return new FlxBackdrop(bg);
     }
 }

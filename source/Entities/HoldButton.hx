@@ -49,6 +49,7 @@ class HoldButton extends Button
     {
         if (pressed && state == StateIdle)
         {
+            state = HoldButton.StatePressed;
             animation.play("pressed");
             if (invokeCallback && pressedCallback != null)
                 pressedCallback();

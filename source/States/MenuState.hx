@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxBitmapText;
@@ -12,6 +13,8 @@ import flixel.addons.display.FlxBackdrop;
 import text.PixelText;
 import text.TextUtils;
 
+import database.BackgroundDatabase;
+
 class MenuState extends FlxState
 {
 	public var tween : FlxTween;
@@ -21,18 +24,16 @@ class MenuState extends FlxState
 	var creditsLabel : FlxBitmapText;
 	var background : FlxBackdrop;
 
+	var startTouchZone : FlxObject;
+
 	override public function create():Void
 	{
 		super.create();
 
 		GameController.Init();
 
-		var bg : String = "assets/backgrounds/" +
-                        (FlxG.random.bool(50) ? "bg0.png" :
-                            (FlxG.random.bool(50) ? "bg1.png" :
-								(FlxG.random.bool(50) ? "bg4.png" :
-                                	(FlxG.random.bool(50) ? "bg2.png" : "bg3.png"))));
-        background = new FlxBackdrop(bg, 0.35, 0.35);
+        background = BackgroundDatabase.BuildRandomBackground();
+		background.scrollFactor.set(0.35, 0.35);
         background.velocity.set(0, 10);
 		background.alpha = 0;
         add(background);
@@ -53,7 +54,10 @@ class MenuState extends FlxState
 		touchLabel.alpha = 0;
 		add(touchLabel);
 
-		yearsLabel = PixelText.New(FlxG.width / 2 - 40, Std.int(FlxG.height - FlxG.height/6) + 4, "2015-2018");
+		startTouchZone = new FlxObject(0, touchLabel.y - 32, FlxG.width, 72);
+		add(startTouchZone);
+
+		yearsLabel = PixelText.New(FlxG.width / 2 - 44, Std.int(FlxG.height - FlxG.height/6) + 4, "2015-2018");
 		yearsLabel.alpha = 0;
 		add(yearsLabel);
 		creditsLabel = PixelText.New(FlxG.width / 2 - 48, yearsLabel.y + 12, "The Badladns");
@@ -94,8 +98,8 @@ class MenuState extends FlxState
         #if mobile
         for (touch in FlxG.touches.list)
 		{
-            /*if (touch.overlaps(this))
-            {*/
+            if (touch.overlaps(startTouchZone))
+            {
     			if (touch.pressed)
     			{
     				// animation.play("pressed");
@@ -107,7 +111,7 @@ class MenuState extends FlxState
                     onArcadeButtonPressed();
                     break ;
                 }
-            /*}*/
+            }
         }
         #end
 	}

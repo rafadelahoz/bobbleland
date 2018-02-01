@@ -553,20 +553,7 @@ class PlayState extends FlxState
 
 	function prepareBackground()
 	{
-		var bg : String = null;
-
-		#if !work
-		if (puzzleData == null || puzzleData.background == null)
-			bg = "assets/backgrounds/" +
-					(FlxG.random.bool(50) ? "bg0.png" :
-						(FlxG.random.bool(50) ? "bg1.png" :
-							(FlxG.random.bool(50) ? "bg4.png" :
-								(FlxG.random.bool(50) ? "bg2.png" : "bg3.png"))));
-		else
-			bg = BackgroundDatabase.GetBackground(puzzleData.background);
-		#end
-
-		background = new FlxBackdrop(bg);
+		background = BackgroundDatabase.BuildRandomBackground();
 		add(background);
 	}
 

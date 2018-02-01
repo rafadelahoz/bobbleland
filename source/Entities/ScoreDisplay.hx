@@ -8,7 +8,7 @@ import flixel.util.FlxTimer;
 class ScoreDisplay extends FlxObject
 {
 	public static var addDelay : Float = 1;
-	
+
 	public var mode : Int;
 
 	public var score : Int;
@@ -16,19 +16,19 @@ class ScoreDisplay extends FlxObject
 
 	var scoreDelta : Int = 5;
 	var targetScore : Int;
-	
+
 	var timer : FlxTimer;
 
 	public function new(X : Float, Y : Float, Mode : Int, ?Score : Int = 0)
 	{
 		super(X, Y);
-
+		
 		mode = Mode;
 
 		score = Score;
 		targetScore = Score;
 
-		scoreLabel = text.PixelText.New(X, Y, "", 0xFFFFFFFF, FlxG.width);		
+		scoreLabel = text.PixelText.New(X, Y, "", 0xFFFFFFFF, FlxG.width);
 
 		if (mode == PlayState.ModePuzzle)
 		{
@@ -38,7 +38,7 @@ class ScoreDisplay extends FlxObject
 		{
 			scoreLabel.text = padWith("" + score, 8);
 		}
-		
+
 		timer = null;
 	}
 
@@ -52,7 +52,7 @@ class ScoreDisplay extends FlxObject
 				timer = null;
 			});
 		}
-		else 
+		else
 		{
 			targetScore += value;
 			scoreDelta = Std.int((targetScore - score) / 60.0);
