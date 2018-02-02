@@ -45,7 +45,7 @@ class MenuState extends FlxState
         add(background);
 
 		var backgroundShader : FlxSprite = new FlxSprite(0, 0);
-		backgroundShader.makeGraphic(FlxG.width, FlxG.height, 0xFFFFFFFF);
+		backgroundShader.makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
 		backgroundShader.alpha = 0.22;
 		add(backgroundShader);
 
