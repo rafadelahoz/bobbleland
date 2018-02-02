@@ -5,11 +5,12 @@ import flixel.FlxState;
 import flixel.FlxSprite;
 import flixel.text.FlxBitmapText;
 import flixel.addons.display.FlxBackdrop;
+import flixel.addons.transition.FlxTransitionableState;
 
 import text.PixelText;
 import text.TextUtils;
 
-class GameOverState extends FlxState
+class GameOverState extends FlxTransitionableState
 {
 	public var labelLabel : FlxBitmapText;
 	public var scoreLabel : FlxBitmapText;

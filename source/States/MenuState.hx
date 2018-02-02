@@ -9,13 +9,14 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.math.FlxPoint;
 import flixel.addons.display.FlxBackdrop;
+import flixel.addons.transition.FlxTransitionableState;
 
 import text.PixelText;
 import text.TextUtils;
 
 import database.BackgroundDatabase;
 
-class MenuState extends FlxState
+class MenuState extends FlxTransitionableState
 {
 	public var tween : FlxTween;
 

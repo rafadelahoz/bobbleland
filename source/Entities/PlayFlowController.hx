@@ -129,7 +129,7 @@ class PlayFlowController
 
         // TODO: Remove this
         // Notify the user!
-        FlxG.camera.flash(0xFFFFFFFF, 0.5);
+        // FlxG.camera.flash(0xFFFFFFFF, 0.5);
     }
 
     function lowerDropDelay()
@@ -164,7 +164,7 @@ class PlayFlowController
     public function onScreenCleared()
     {
         screenCleanCount++;
-        
+
         // When the screen is cleared, increase difficulty
         increaseDifficulty();
     }

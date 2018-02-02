@@ -12,6 +12,7 @@ import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.addons.display.FlxBackdrop;
+import flixel.addons.transition.FlxTransitionableState;
 
 import text.PixelText;
 import text.TextUtils;
@@ -20,7 +21,7 @@ import text.TextUtils;
 import Hardware;
 #end
 
-class ArcadePreState extends FlxState
+class ArcadePreState extends FlxTransitionableState
 {
     /** Play settings screen **/
     var centerScreen : FlxSpriteGroup;
@@ -57,7 +58,7 @@ class ArcadePreState extends FlxState
         background.scrollFactor.set(0.35, 0.35);
         background.velocity.set(10, 10);
         add(background);
-        
+
         historyScreen = buildHistoryScreen();
         add(historyScreen);
 

@@ -11,10 +11,11 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup;
 import flixel.addons.display.FlxBackdrop;
+import flixel.addons.transition.FlxTransitionableState;
 
 import database.BackgroundDatabase;
 
-class PlayState extends FlxState
+class PlayState extends FlxTransitionableState
 {
 	public static var ModeArcade 	: Int = 0;
 	public static var ModePuzzle 	: Int = 1;
@@ -138,14 +139,13 @@ class PlayState extends FlxState
 		}
 
 		generator = new BubbleGenerator(this);
-		generator.initalizeGrid();
+
 
 		// trace("Grid initialized");
 
 		flowController = new PlayFlowController(this);
 
-		generateBubble();
-		switchState(StateAiming);
+
 
 		// trace("First bubbles");
 
@@ -155,6 +155,14 @@ class PlayState extends FlxState
 		// trace("Buttons initialized");
 
 		handleDebugInit();
+	}
+
+	override public function finishTransIn()
+	{
+		generator.initalizeGrid();
+		generateBubble();
+		switchState(StateAiming);
+		super.finishTransIn();
 	}
 
 	override public function update(elapsed:Float)
