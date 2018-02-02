@@ -101,7 +101,7 @@ class MenuState extends FlxTransitionableState
 	        if (FlxG.mouse.pressed)
 	        {
 				// animation.play("pressed");
-				if (touchLabel.color != 00xFFFFEC27)
+				if (touchLabel.color != 0xFFFFEC27)
 				{
 					touchLabel.color = 0xFFFFEC27;
 					touchLabel.x += 4;

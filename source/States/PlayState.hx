@@ -20,6 +20,7 @@ class PlayState extends FlxTransitionableState
 	public static var ModeArcade 	: Int = 0;
 	public static var ModePuzzle 	: Int = 1;
 
+	public static var StateStarting : Int = -1;
 	public static var StateAiming 	: Int = 0;
 	public static var StateWaiting 	: Int = 1;
 	public static var StateRemoving : Int = 2;
@@ -112,6 +113,9 @@ class PlayState extends FlxTransitionableState
 		cursor = new PlayerCursor(FlxG.width / 2 - 10, 240 - 40, this);
 		add(cursor);
 
+		notifyAiming = false;
+		state = StateStarting;
+
 		cursorBubbles = new FlxTypedGroup<Bubble>();
 		add(cursorBubbles);
 
@@ -120,11 +124,7 @@ class PlayState extends FlxTransitionableState
 
 		availableColors = puzzleData.usedColors;
 
-		if (puzzleData.dropDelay > 0)
-			dropDelay = puzzleData.dropDelay;
-		else
-			dropDelay = 30;
-		dropTimer = new FlxTimer().start(dropDelay, onDropTimer);
+		dropTimer = new FlxTimer();
 		waitTimer = new FlxTimer();
 		aimingTimer = new FlxTimer();
 
@@ -135,30 +135,26 @@ class PlayState extends FlxTransitionableState
 		{
 			timeDisplay = new ScreenTimer(112, 0, puzzleData.seconds, onTimeOver);
 			add(timeDisplay);
-			// trace("Added timer");
 		}
 
 		generator = new BubbleGenerator(this);
 
-
-		// trace("Grid initialized");
-
 		flowController = new PlayFlowController(this);
-
-
-
-		// trace("First bubbles");
 
 		screenButtons = new ScreenButtons(0, 0, this, 240);
 		add(screenButtons);
-
-		// trace("Buttons initialized");
 
 		handleDebugInit();
 	}
 
 	override public function finishTransIn()
 	{
+		if (puzzleData.dropDelay > 0)
+			dropDelay = puzzleData.dropDelay;
+		else
+			dropDelay = 30;
+		dropTimer.start(dropDelay, onDropTimer);
+
 		generator.initalizeGrid();
 		generateBubble();
 		switchState(StateAiming);
