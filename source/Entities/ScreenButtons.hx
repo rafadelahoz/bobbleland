@@ -44,59 +44,69 @@ class ScreenButtons extends FlxSpriteGroup
 			button.animation.play("idle");
 		}
 
-		pauseButton.setSize(halfWidth, halfHeight);
+		pauseButton.setSize(_width, FlxG.height/2);
 		pauseButton.offset.set(-(halfWidth-20), 0);
 	}
 
 	override public function update(elapsed:Float)
 	{
-		// Check whether any of the touches affects the buttons
-		for (touch in FlxG.touches.list)
+		if (state.state != PlayState.StateLosing)
 		{
-			if (touch.pressed)
+			// Check whether any of the touches affects the buttons
+			for (touch in FlxG.touches.list)
 			{
-				if (touch.overlaps(leftButton))
+				if (touch.pressed)
 				{
-					GamePad.setPressed(GamePad.Left);
-				}
-				else if (touch.overlaps(rightButton))
-				{
-					GamePad.setPressed(GamePad.Right);
-				}
-				else if (touch.overlaps(shootButton))
-				{
-					#if android
-					// TODO: Vibration disabled, really not working
-					/*if (!GamePad.checkButton(GamePad.Shoot)) {
-						Hardware.vibrate(100);
-					}*/
-					#end
+					if (touch.overlaps(leftButton))
+					{
+						GamePad.setPressed(GamePad.Left);
+					}
+					else if (touch.overlaps(rightButton))
+					{
+						GamePad.setPressed(GamePad.Right);
+					}
+					else if (touch.overlaps(shootButton))
+					{
+						#if android
+						// TODO: Vibration disabled, really not working
+						/*if (!GamePad.checkButton(GamePad.Shoot)) {
+							Hardware.vibrate(100);
+						}*/
+						#end
 
-					GamePad.setPressed(GamePad.Shoot);
-				}
-				else if (touch.overlaps(pauseButton))
-				{
-					GamePad.setPressed(GamePad.Pause);
+						GamePad.setPressed(GamePad.Shoot);
+					}
+					else if (touch.overlaps(pauseButton))
+					{
+						GamePad.setPressed(GamePad.Pause);
+					}
 				}
 			}
-		}
 
-		// Handle button graphics
-		// Reset them all to idle
-		for (button in [leftButton, rightButton, shootButton, pauseButton])
-		{
-			button.animation.play("idle");
-		}
+			// Handle button graphics
+			// Reset them all to idle
+			for (button in [leftButton, rightButton, shootButton, pauseButton])
+			{
+				button.animation.play("idle");
+			}
 
-		// Press the pressed ones
-		if (GamePad.checkButton(GamePad.Left))
-			leftButton.animation.play("pressed");
-		if (GamePad.checkButton(GamePad.Right))
-			rightButton.animation.play("pressed");
-		if (GamePad.checkButton(GamePad.Shoot))
-			shootButton.animation.play("pressed");
-		if (GamePad.checkButton(GamePad.Pause))
-			pauseButton.animation.play("pressed");
+			// Press the pressed ones
+			if (GamePad.checkButton(GamePad.Left))
+				leftButton.animation.play("pressed");
+			if (GamePad.checkButton(GamePad.Right))
+				rightButton.animation.play("pressed");
+			if (GamePad.checkButton(GamePad.Shoot))
+				shootButton.animation.play("pressed");
+			if (GamePad.checkButton(GamePad.Pause))
+				pauseButton.animation.play("pressed");
+		} else {
+			// Handle button graphics
+			// Reset them all to idle
+			for (button in [leftButton, rightButton, shootButton, pauseButton])
+			{
+				button.animation.play("idle");
+			}
+		}
 
 		super.update(elapsed);
 	}

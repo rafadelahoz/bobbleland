@@ -161,10 +161,13 @@ class PlayState extends FlxState
 	{
 		GamePad.handlePadState();
 
-		if (GamePad.justPressed(GamePad.Pause))
+		if (state != PlayState.StateLosing)
 		{
-			onPauseStart();
-			openSubState(new PauseSubstate(this, onPauseEnd));
+			if (GamePad.justReleased(GamePad.Pause))
+			{
+				onPauseStart();
+				openSubState(new PauseSubstate(this, onPauseEnd));
+			}
 		}
 
 		switch (state)

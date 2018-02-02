@@ -90,7 +90,8 @@ class PauseSubstate extends FlxSubState
     {
         GamePad.handlePadState();
 
-        for (touch in FlxG.touches.list)
+        // Disabling click outside of the box to close
+        /*for (touch in FlxG.touches.list)
 		{
 			if (touch.pressed)
 			{
@@ -100,7 +101,7 @@ class PauseSubstate extends FlxSubState
                     break;
                 }
             }
-        }
+        }*/
 
         if (enabled)
         {
