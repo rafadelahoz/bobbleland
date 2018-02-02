@@ -50,11 +50,6 @@ class ScreenButtons extends FlxSpriteGroup
 
 	override public function update(elapsed:Float)
 	{
-		for (button in [leftButton, rightButton, shootButton, pauseButton])
-		{
-			button.animation.play("idle");
-		}
-
 		// Check whether any of the touches affects the buttons
 		for (touch in FlxG.touches.list)
 		{
@@ -62,32 +57,46 @@ class ScreenButtons extends FlxSpriteGroup
 			{
 				if (touch.overlaps(leftButton))
 				{
-					#if android
-					if (!GamePad.checkButton(GamePad.Left)) {
-						Hardware.vibrate(20);
-					}
-					#end
-
 					GamePad.setPressed(GamePad.Left);
-					leftButton.animation.play("pressed");
 				}
 				else if (touch.overlaps(rightButton))
 				{
 					GamePad.setPressed(GamePad.Right);
-					rightButton.animation.play("pressed");
 				}
 				else if (touch.overlaps(shootButton))
 				{
+					#if android
+					// TODO: Vibration disabled, really not working
+					/*if (!GamePad.checkButton(GamePad.Shoot)) {
+						Hardware.vibrate(100);
+					}*/
+					#end
+
 					GamePad.setPressed(GamePad.Shoot);
-					shootButton.animation.play("pressed");
 				}
 				else if (touch.overlaps(pauseButton))
 				{
 					GamePad.setPressed(GamePad.Pause);
-					pauseButton.animation.play("pressed");
 				}
 			}
 		}
+
+		// Handle button graphics
+		// Reset them all to idle
+		for (button in [leftButton, rightButton, shootButton, pauseButton])
+		{
+			button.animation.play("idle");
+		}
+
+		// Press the pressed ones
+		if (GamePad.checkButton(GamePad.Left))
+			leftButton.animation.play("pressed");
+		if (GamePad.checkButton(GamePad.Right))
+			rightButton.animation.play("pressed");
+		if (GamePad.checkButton(GamePad.Shoot))
+			shootButton.animation.play("pressed");
+		if (GamePad.checkButton(GamePad.Pause))
+			pauseButton.animation.play("pressed");
 
 		super.update(elapsed);
 	}

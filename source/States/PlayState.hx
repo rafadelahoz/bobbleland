@@ -559,8 +559,6 @@ class PlayState extends FlxState
 
 	function prepareBaseDecoration()
 	{
-		#if work
-		#else
 		baseDecoration = new FlxSprite(FlxG.width / 2 - 64, 181);
 		baseDecoration.loadGraphic("assets/images/base-decoration.png",
 									true, 128, 60);
@@ -574,8 +572,6 @@ class PlayState extends FlxState
 										baseDecoration.y + 24,
 										this, characterId);
 		add(character);
-
-		#end
 	}
 
 	/* Debug things */
