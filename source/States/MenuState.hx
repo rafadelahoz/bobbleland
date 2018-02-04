@@ -82,6 +82,20 @@ class MenuState extends FlxTransitionableState
 
 		FlxTween.tween(touchLabel, {alpha : 1}, 1, {ease : FlxEase.cubeInOut});
 		FlxTween.tween(background, {alpha : 1}, 1.5, {ease : FlxEase.cubeInOut});
+
+		startTouchBuzz(null);
+	}
+
+	function startTouchBuzz(_t:FlxTween)
+	{
+		var touchLabelBaseY = touchLabel.y;
+		FlxTween.tween(touchLabel, {y : touchLabelBaseY-4}, 0.2, {ease: FlxEase.circOut, startDelay: 2, onComplete: continueTouchBuzz});
+	}
+
+	function continueTouchBuzz(_t:FlxTween)
+	{
+		var touchLabelBaseY = touchLabel.y;
+		FlxTween.tween(touchLabel, {y : touchLabelBaseY+4}, 0.5, {ease: FlxEase.elasticOut, onComplete: startTouchBuzz});
 	}
 
 	override public function destroy():Void
