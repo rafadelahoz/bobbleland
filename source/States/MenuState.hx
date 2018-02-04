@@ -33,6 +33,9 @@ class MenuState extends FlxTransitionableState
 	{
 		super.create();
 
+		// Missing a preloader
+		BgmEngine.init();
+
 		GameController.Init();
 
 		interactable = false;
@@ -75,9 +78,9 @@ class MenuState extends FlxTransitionableState
 
 	public function onLogoPositioned(_t:FlxTween):Void
 	{
-		BgmEngine.play(BgmEngine.BGM.Title);
-
 		interactable = true;
+
+		BgmEngine.play(BgmEngine.BGM.Title);
 
 		startTouchZone = new FlxObject(0, 120, FlxG.width, 160);
 		add(startTouchZone);
@@ -176,7 +179,6 @@ class MenuState extends FlxTransitionableState
 
 	public function onArcadeButtonPressed() : Void
 	{
-		BgmEngine.stop(Title);
 		GameController.StartArcadeGame();
 	}
 }

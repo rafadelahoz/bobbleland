@@ -1,26 +1,40 @@
 package;
 
-import flash.media.Sound;
-
 import flixel.FlxG;
+import flixel.system.FlxSound;
+import flixel.tweens.FlxTween;
 
 class BgmEngine
 {
+    static var FadeTime : Float = 0.5;
+
     static var Enabled : Bool = true;
 
-    static var tunes : Map<BGM, Sound>;
+    static var initialized : Bool = false;
+
+    static var tunes : Map<BGM, FlxSound>;
     static var playing : Map<BGM, Bool>;
+    public static var current : BGM;
 
     public static function init()
     {
-        tunes = new Map<BGM, Sound>();
-        tunes.set(BGM.Title, (Enabled ? FlxG.sound.cache("assets/music/title.ogg") : null));
+        if (initialized)
+            return;
+
+        initialized = true;
+
+        tunes = new Map<BGM, FlxSound>();
+        tunes.set(BGM.Title, (Enabled ? FlxG.sound.load("assets/music/title.ogg") : null));
+        tunes.set(BGM.Menu, (Enabled ? FlxG.sound.load("assets/music/menu.ogg") : null));
 
         playing = new Map<BGM, Bool>();
         for (tune in tunes.keys())
         {
+            tunes.get(tune).persist = true;
             playing.set(tune, false);
         }
+
+        current = None;
     }
 
     public static function play(bgm : BGM, ?volume : Float = 0.75, ?restart : Bool = false)
@@ -33,19 +47,37 @@ class BgmEngine
             }
             else if (restart || !playing.get(bgm))
             {
-                if (Enabled) FlxG.sound.playMusic(tunes.get(bgm), volume);
+                trace(current + " to " +  bgm);
+                if (current != bgm)
+                {
+                    stop(current);
+                }
+
+                if (Enabled)
+                {
+                    tunes.get(bgm).fadeIn(FadeTime, 0, volume);
+                }
+
                 playing.set(bgm, true);
+                current = bgm;
+                trace("Current: " + current);
             }
         }
     }
 
+    public static function stopCurrent()
+    {
+        stop(current);
+    }
+
     public static function stop(bgm : BGM)
     {
-        trace("Stopping " +  bgm);
+        trace("Stopping " + bgm);
         if (playing.get(bgm))
         {
-            if (Enabled) FlxG.sound.playMusic(tunes.get(bgm), 0.0);
+            if (Enabled) tunes.get(bgm).fadeOut(FadeTime, 0, function(_t:FlxTween) {tunes.get(bgm).stop();});
             playing.set(bgm, false);
+            current = None;
         }
     }
 }
@@ -53,5 +85,6 @@ class BgmEngine
 enum BGM {
     None;
     Title;
+    Menu;
     Other;
 }

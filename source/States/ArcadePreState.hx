@@ -81,6 +81,8 @@ class ArcadePreState extends FlxTransitionableState
         swipeManager.rightCallback = moveToLeftScreen;
 
         initData();
+
+        BgmEngine.play(BgmEngine.BGM.Menu);
     }
 
     function initData()
@@ -117,6 +119,8 @@ class ArcadePreState extends FlxTransitionableState
 
         ArcadeGameStatus.saveArcadeConfigData();
         GameController.ToMenu();
+
+        // BgmEngine.stop(BgmEngine.current);
     }
 
     function onStartButtonPressed()
