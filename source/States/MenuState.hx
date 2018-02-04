@@ -64,17 +64,13 @@ class MenuState extends FlxTransitionableState
 		touchLabel.alpha = 0;
 		add(touchLabel);
 
-		yearsLabel = PixelText.New(FlxG.width / 2 - 44, Std.int(FlxG.height - FlxG.height/6) + 4, "2015-2018");
-		yearsLabel.alpha = 0;
-		add(yearsLabel);
-		creditsLabel = PixelText.New(FlxG.width / 2 - 48, yearsLabel.y + 12, "The Badladns");
-		creditsLabel.alpha = 0;
-		add(creditsLabel);
+		var credits : FlxSprite = new FlxSprite(FlxG.width / 2 - 42, Std.int(FlxG.height - FlxG.height/6) + 4, "assets/ui/title-credits.png");
+		credits.alpha = 0;
+		add(credits);
 
 		var startDelay : Float = 0.35;
 		tween = FlxTween.tween(logo, {y : 64}, 0.75, {startDelay: startDelay, onComplete: onLogoPositioned, ease : FlxEase.elasticOut });
-		FlxTween.tween(yearsLabel, {alpha : 1}, 0.75, {startDelay:startDelay, ease : FlxEase.cubeInOut});
-		FlxTween.tween(creditsLabel, {alpha : 1}, 0.75, {startDelay: startDelay, ease : FlxEase.cubeInOut});
+		FlxTween.tween(credits, {alpha : 1}, 0.75, {startDelay:startDelay, ease : FlxEase.cubeInOut});
 	}
 
 	public function onLogoPositioned(_t:FlxTween):Void
@@ -100,23 +96,11 @@ class MenuState extends FlxTransitionableState
 			#if desktop
 	        if (FlxG.mouse.pressed)
 	        {
-				// animation.play("pressed");
-				if (touchLabel.color != 0xFFFFEC27)
-				{
-					touchLabel.color = 0xFFFFEC27;
-					touchLabel.x += 4;
-					touchLabel.y += 4;
-				}
+				onTouchLabelPressed();
 	        }
 	        else if (FlxG.mouse.justReleased)
 	        {
-	            // animation.play("idle");
-				if (touchLabel.color != 0xFFFFFFFF)
-				{
-					touchLabel.color = 0xFFFFFFFF;
-					touchLabel.x -= 4;
-					touchLabel.y -= 4;
-				}
+	            onTouchLabelReleased();
 				onArcadeButtonPressed();
 	        }
 	        #end
@@ -128,23 +112,11 @@ class MenuState extends FlxTransitionableState
 	            {
 	    			if (touch.pressed)
 	    			{
-	    				// animation.play("pressed");
-						if (touchLabel.color != 0xFFFFEC27)
-						{
-							touchLabel.color = 0xFFFFEC27;
-							touchLabel.x += 4;
-							touchLabel.y += 4;
-						}
+	    				onTouchLabelPressed();
 	                }
 	                else if (touch.justReleased)
 	                {
-	                    // animation.play("idle");
-						if (touchLabel.color != 0xFFFFFFFF)
-						{
-							touchLabel.color = 0xFFFFFFFF;
-							touchLabel.x -= 4;
-							touchLabel.y -= 4;
-						}
+	                    onTouchLabelReleased();
 	                    onArcadeButtonPressed();
 	                    break ;
 	                }
@@ -153,13 +125,7 @@ class MenuState extends FlxTransitionableState
 				{
 					if (touch.justReleased)
 	                {
-	                    // animation.play("idle");
-						if (touchLabel.color != 0xFFFFFFFF)
-						{
-							touchLabel.color = 0xFFFFFFFF;
-							touchLabel.x -= 4;
-							touchLabel.y -= 4;
-						}
+						onTouchLabelReleased();
 	                    break ;
 	                }
 				}
@@ -168,6 +134,28 @@ class MenuState extends FlxTransitionableState
 		}
 
 		super.update(elapsed);
+	}
+
+	function onTouchLabelPressed()
+	{
+		// animation.play("pressed");
+		if (touchLabel.color != 0xFFFFEC27)
+		{
+			touchLabel.color = 0xFFFFEC27;
+			touchLabel.x += 2;
+			touchLabel.y += 2;
+		}
+	}
+
+	function onTouchLabelReleased()
+	{
+		// animation.play("idle");
+		if (touchLabel.color != 0xFFFFFFFF)
+		{
+			touchLabel.color = 0xFFFFFFFF;
+			touchLabel.x -= 2;
+			touchLabel.y -= 2;
+		}
 	}
 
 	public function onArcadeButtonPressed() : Void
