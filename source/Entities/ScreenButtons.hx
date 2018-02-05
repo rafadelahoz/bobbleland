@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 
@@ -52,36 +53,8 @@ class ScreenButtons extends FlxSpriteGroup
 	{
 		if (state.state != PlayState.StateLosing)
 		{
-			// Check whether any of the touches affects the buttons
-			for (touch in FlxG.touches.list)
-			{
-				if (touch.pressed)
-				{
-					if (touch.overlaps(leftButton))
-					{
-						GamePad.setPressed(GamePad.Left);
-					}
-					else if (touch.overlaps(rightButton))
-					{
-						GamePad.setPressed(GamePad.Right);
-					}
-					else if (touch.overlaps(shootButton))
-					{
-						#if android
-						// TODO: Vibration disabled, really not working
-						/*if (!GamePad.checkButton(GamePad.Shoot)) {
-							Hardware.vibrate(100);
-						}*/
-						#end
-
-						GamePad.setPressed(GamePad.Shoot);
-					}
-					else if (touch.overlaps(pauseButton))
-					{
-						GamePad.setPressed(GamePad.Pause);
-					}
-				}
-			}
+			handleTouchInput();
+			handleMouseInput();
 
 			// Handle button graphics
 			// Reset them all to idle
@@ -110,4 +83,80 @@ class ScreenButtons extends FlxSpriteGroup
 
 		super.update(elapsed);
 	}
+
+	function handleTouchInput()
+	{
+		#if mobile
+		// Check whether any of the touches affects the buttons
+		for (touch in FlxG.touches.list)
+		{
+			if (touch.pressed)
+			{
+				if (touch.overlaps(leftButton))
+				{
+					GamePad.setPressed(GamePad.Left);
+				}
+				else if (touch.overlaps(rightButton))
+				{
+					GamePad.setPressed(GamePad.Right);
+				}
+				else if (touch.overlaps(shootButton))
+				{
+					#if android
+					// TODO: Vibration disabled, really not working
+					/*if (!GamePad.checkButton(GamePad.Shoot)) {
+						Hardware.vibrate(100);
+					}*/
+					#end
+
+					GamePad.setPressed(GamePad.Shoot);
+				}
+				else if (touch.overlaps(pauseButton))
+				{
+					GamePad.setPressed(GamePad.Pause);
+				}
+			}
+		}
+		#end
+	}
+
+	function handleMouseInput()
+	{
+		#if desktop
+		if (FlxG.mouse.pressed)
+		{
+			if (mouseOver(leftButton))
+			{
+				GamePad.setPressed(GamePad.Left);
+			}
+			else if (mouseOver(rightButton))
+			{
+				GamePad.setPressed(GamePad.Right);
+			}
+			else if (mouseOver(shootButton))
+			{
+				GamePad.setPressed(GamePad.Shoot);
+			}
+			else if (mouseOver(pauseButton))
+			{
+				GamePad.setPressed(GamePad.Pause);
+			}
+        }
+        #end
+	}
+
+	function mouseOver(element : FlxObject)
+    {
+        var mouseX : Float = FlxG.mouse.x;
+        var mouseY : Float = FlxG.mouse.y;
+
+        if (scrollFactor.x == 0)
+            mouseX = FlxG.mouse.screenX;
+
+        if (scrollFactor.y == 0)
+            mouseY = FlxG.mouse.screenY;
+
+        return mouseX >= element.x && mouseX < (element.x + element.width) &&
+               mouseY >= element.y && mouseY < (element.y + element.height);
+    }
 }
