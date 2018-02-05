@@ -8,7 +8,7 @@ class BgmEngine
 {
     static var FadeTime : Float = 0.5;
 
-    static var Enabled : Bool = true;
+    static var Enabled : Bool = false;
 
     static var initialized : Bool = false;
 
@@ -24,8 +24,8 @@ class BgmEngine
         initialized = true;
 
         tunes = new Map<BGM, FlxSound>();
-        tunes.set(BGM.Title, (Enabled ? FlxG.sound.load("assets/music/title.ogg") : null));
-        tunes.set(BGM.Menu, (Enabled ? FlxG.sound.load("assets/music/menu.ogg") : null));
+        tunes.set(BGM.Title, FlxG.sound.load("assets/music/title.ogg"));
+        tunes.set(BGM.Menu, FlxG.sound.load("assets/music/menu.ogg"));
 
         playing = new Map<BGM, Bool>();
         for (tune in tunes.keys())
