@@ -131,6 +131,11 @@ class ArcadeGameStatus
         arcadeGameData.usedColors = generateColorSet(number);
     }
 
+    public static function setGuideEnabled(enabled : Bool)
+    {
+        arcadeGameData.guideEnabled = enabled;
+    }
+
     public static function getCharacter() : String
     {
         return arcadeGameData.character;

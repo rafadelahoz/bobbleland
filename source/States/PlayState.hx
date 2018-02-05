@@ -110,7 +110,7 @@ class PlayState extends FlxTransitionableState
 		bottomBar = new FlxSprite(bottomBarPosition.x, bottomBarPosition.y - 1).loadGraphic("assets/images/red-bar.png");
 		add(bottomBar);
 
-		cursor = new PlayerCursor(FlxG.width / 2 - 10, 240 - 40, this);
+		cursor = new PlayerCursor(FlxG.width / 2 - 10, 240 - 40, this, puzzleData.guideEnabled);
 		add(cursor);
 
 		notifyAiming = false;
@@ -328,6 +328,7 @@ class PlayState extends FlxTransitionableState
 		bubble.y = cursor.y + cursor.aimOrigin.y - (bubble.height / 2);
 
 		bubble.shoot(aimAngle);
+		cursor.shots += 1;
 
 		switchState(StateWaiting);
 

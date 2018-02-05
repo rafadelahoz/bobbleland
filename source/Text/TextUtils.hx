@@ -15,10 +15,11 @@ class TextUtils
 
     public static function formatTime(seconds : Int) : String
     {
-        var str : String = "";
+		var str : String = "";
         var minutes = Std.int(seconds / 60);
         var hours = Std.int(minutes / 60);
-        seconds = seconds % 60;
+		minutes = minutes % 60;
+		seconds = seconds % 60;
 
         if (hours > 0)
             str += hours + ":";

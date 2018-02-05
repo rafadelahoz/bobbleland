@@ -148,22 +148,27 @@ class ArcadePreState extends FlxTransitionableState
         switch (difficulty)
         {
             case 0:
+                ArcadeGameStatus.setGuideEnabled(true);
                 ArcadeGameStatus.setDropDelay(30);
                 ArcadeGameStatus.setInitialRows(5);
                 ArcadeGameStatus.setUsedColors(4);
             case 1:
+                ArcadeGameStatus.setGuideEnabled(true);
                 ArcadeGameStatus.setDropDelay(25);
                 ArcadeGameStatus.setInitialRows(5);
                 ArcadeGameStatus.setUsedColors(4);
             case 2:
+                ArcadeGameStatus.setGuideEnabled(true);
                 ArcadeGameStatus.setDropDelay(20);
                 ArcadeGameStatus.setInitialRows(5);
                 ArcadeGameStatus.setUsedColors(5);
             case 3:
+                ArcadeGameStatus.setGuideEnabled(true);
                 ArcadeGameStatus.setDropDelay(20);
                 ArcadeGameStatus.setInitialRows(6);
                 ArcadeGameStatus.setUsedColors(6);
             case 4:
+                ArcadeGameStatus.setGuideEnabled(false);
                 ArcadeGameStatus.setDropDelay(15);
                 ArcadeGameStatus.setInitialRows(6);
                 ArcadeGameStatus.setUsedColors(6);

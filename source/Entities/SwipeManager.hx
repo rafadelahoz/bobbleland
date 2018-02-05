@@ -29,8 +29,7 @@ class SwipeManager
             // swipe.angle (Float)
             // swipe.duration (Float)
 
-            trace("Swipe (" + swipe.ID + ") l: " + swipe.distance + ", a: " + swipe.angle + ", d: " + swipe.duration);
-
+            // trace("Swipe (" + swipe.ID + ") l: " + swipe.distance + ", a: " + swipe.angle + ", d: " + swipe.duration);
 
             // Handle only meaningful swipes
             if (swipe.distance > 30)

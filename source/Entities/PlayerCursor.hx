@@ -22,11 +22,13 @@ class PlayerCursor extends FlxSprite
 
 	public var label : FlxText;
 
+	public var shots : Int;
+	var guideEnabled : Bool;
 	var canvas : FlxSprite;
 	var deltaOffset : Float;
 	var tiny : FlxSprite;
 
-	public function new(X : Float, Y : Float, World : PlayState)
+	public function new(X : Float, Y : Float, World : PlayState, GuideEnabled : Bool)
 	{
 		super(X, Y);
 
@@ -48,11 +50,14 @@ class PlayerCursor extends FlxSprite
 
 		label = new FlxText(x + width, y + aimOrigin.y + 2, "");
 
+		guideEnabled = GuideEnabled;
 		canvas = new FlxSprite(0, 0);
 		canvas.makeGraphic(FlxG.width, FlxG.height, 0x00FFFFFF);
 		deltaOffset = 0;
 		tiny = new FlxSprite(0, 0, "assets/images/tiny-bubble.png");
 		tiny.centerOffsets(true);
+
+		shots = 0;
 	}
 
 	override public function update(elapsed:Float)
@@ -87,9 +92,20 @@ class PlayerCursor extends FlxSprite
 		if (world.baseDecoration != null)
 			world.baseDecoration.animation.paused = !moving;
 
-		tiny.update(elapsed);
+		if (guideEnabled)
+		{
+			if (shots > 5)
+			{
+				guideEnabled = false;
+			}
+			else
+			{
+				tiny.update(elapsed);
+				canvas.update(elapsed);
+			}
+		}
+
 		redraw();
-		canvas.update(elapsed);
 
 		super.update(elapsed);
 	}
@@ -110,8 +126,9 @@ class PlayerCursor extends FlxSprite
 	{
 		FlxSpriteUtil.fill(canvas, 0x00000000);
 
-		if (world.state == PlayState.StateLosing)
+		if (!guideEnabled || world.state == PlayState.StateLosing)
 			return;
+
 
 		var left : Float = world.grid.getLeft();
 		var right : Float = world.grid.getRight();
@@ -120,6 +137,16 @@ class PlayerCursor extends FlxSprite
 		var length : Float = 2000;
 		var delta : Float = 15;
 		var alpha : Float = aimAngle;
+
+		switch (shots)
+		{
+			case 2:
+				tiny.color = 0xFFFFF1E8;
+			case 3:
+				tiny.color = 0xFFC2C3C7;
+			case 4:
+				tiny.alpha = 0.5;
+		}
 
 		deltaOffset += 0.1;
 		if (deltaOffset > delta)
@@ -144,7 +171,7 @@ class PlayerCursor extends FlxSprite
 
 			if (targetY < world.grid.getTop())
 				break;
-				
+
 			if (tiny.overlapsAt(targetX-3, targetY-3, world.bubbles))
 				break;
 

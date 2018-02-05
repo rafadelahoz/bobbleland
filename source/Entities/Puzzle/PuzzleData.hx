@@ -15,6 +15,7 @@ class PuzzleData
 
     public var target : String;
 
+    public var guideEnabled : Bool;
     public var dropDelay : Int;
     public var seconds : Int;
     public var initialRows : Int;
@@ -29,6 +30,7 @@ class PuzzleData
         bubbleSet   = null;
         character   = null;
 
+        guideEnabled = false;
         dropDelay   = -1;
         seconds     = -1;
         initialRows = 0;
