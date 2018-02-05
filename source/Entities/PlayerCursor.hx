@@ -22,6 +22,10 @@ class PlayerCursor extends FlxSprite
 
 	public var label : FlxText;
 
+	var canvas : FlxSprite;
+	var deltaOffset : Float;
+	var tiny : FlxSprite;
+
 	public function new(X : Float, Y : Float, World : PlayState)
 	{
 		super(X, Y);
@@ -43,6 +47,12 @@ class PlayerCursor extends FlxSprite
 		updateSpriteAngle();
 
 		label = new FlxText(x + width, y + aimOrigin.y + 2, "");
+
+		canvas = new FlxSprite(0, 0);
+		canvas.makeGraphic(FlxG.width, FlxG.height, 0x00FFFFFF);
+		deltaOffset = 0;
+		tiny = new FlxSprite(0, 0, "assets/images/tiny-bubble.png");
+		tiny.centerOffsets(true);
 	}
 
 	override public function update(elapsed:Float)
@@ -64,7 +74,6 @@ class PlayerCursor extends FlxSprite
 			{
 				moving = true;
 				updateSpriteAngle();
-				// redraw();
 			}
 
 			if (world.notifyAiming)
@@ -78,6 +87,10 @@ class PlayerCursor extends FlxSprite
 		if (world.baseDecoration != null)
 			world.baseDecoration.animation.paused = !moving;
 
+		tiny.update(elapsed);
+		redraw();
+		canvas.update(elapsed);
+
 		super.update(elapsed);
 	}
 
@@ -88,22 +101,105 @@ class PlayerCursor extends FlxSprite
 
 	override public function draw()
 	{
+		canvas.draw();
 		super.draw();
 		// label.draw();
 	}
 
 	public function redraw() : Void
 	{
-		var cos : Float = Math.cos(aimAngle * (Math.PI/180));
-		var sin : Float = Math.sin(aimAngle * (Math.PI/180));
+		FlxSpriteUtil.fill(canvas, 0x00000000);
 
-		var targetX : Float = cos * Length + aimOrigin.x;
-		var targetY : Float = -sin * Length + aimOrigin.y;
+		if (world.state == PlayState.StateLosing)
+			return;
 
-		label.text = "" + aimAngle;
-		FlxSpriteUtil.fill(this, 0x00000000);
-		FlxSpriteUtil.drawCircle(this, aimOrigin.x, aimOrigin.y, Length * 0.3, 0xFFFFFFFF);
-		FlxSpriteUtil.drawLine(this, aimOrigin.x, aimOrigin.y, targetX, targetY, { color : 0xFFFFFFFF, thickness: 3 });
+		var left : Float = world.grid.getLeft();
+		var right : Float = world.grid.getRight();
+		var halfSize : Float = world.grid.cellSize * 0.25;
+
+		var length : Float = 2000;
+		var delta : Float = 15;
+		var alpha : Float = aimAngle;
+
+		deltaOffset += 0.1;
+		if (deltaOffset > delta)
+			deltaOffset = 0;
+
+		var origin : FlxPoint = FlxPoint.get(x + aimOrigin.x, y + aimOrigin.y);
+
+		var cos : Float = Math.cos(alpha * (Math.PI/180));
+		var sin : Float = Math.sin(alpha * (Math.PI/180));
+
+		var targetX : Float = cos * length + origin.x;
+		var targetY : Float = -sin * length + origin.y;
+
+		label.text = "" + alpha;
+
+		var current : Float = deltaOffset;
+		while (current < length)
+		{
+			current += delta;
+			targetX = Math.floor(cos * current + origin.x);
+			targetY = Math.floor(-sin * current + origin.y);
+
+			if (tiny.overlapsAt(targetX-3, targetY-3, world.bubbles))
+				break;
+
+			if (cos < 0 && targetX - halfSize < left)
+			{
+				var deltaUsed = delta;
+				// Find amplitude that gives touching boundary
+				while (targetX - halfSize < left) {
+					current -= 1;
+					deltaUsed -= 1;
+					targetX = Math.floor(cos * current + origin.x);
+					targetY = Math.floor(-sin * current + origin.y);
+					trace(targetX - halfSize +  " < " + left);
+				}
+				length -= current;
+				current = 0;
+				// Use the contact point as new source
+				origin.set(targetX, targetY);
+				// Reflect the angle
+				alpha = 180 - alpha;
+				cos = Math.cos(alpha * (Math.PI/180));
+				sin = Math.sin(alpha * (Math.PI/180));
+
+				current += (delta - deltaUsed);
+				targetX = Math.floor(cos * current + origin.x);
+				targetY = Math.floor(-sin * current + origin.y);
+				// continue;
+			}
+			else if (cos > 0 && targetX + halfSize > right)
+			{
+				var deltaUsed = delta;
+				// Find amplitude that gives touching boundary
+				while (targetX + halfSize > right) {
+					current -= 1;
+					deltaUsed -= 1;
+					targetX = Math.floor(cos * current + origin.x);
+					targetY = Math.floor(-sin * current + origin.y);
+					trace(targetX + halfSize +  " > " + right);
+				}
+				length -= current;
+				current = 0;
+				// Use the contact point as new source
+				origin.set(targetX, targetY);
+				// Reflect the angle
+				alpha = 180 - alpha;
+				cos = Math.cos(alpha * (Math.PI/180));
+				sin = Math.sin(alpha * (Math.PI/180));
+
+				current += (delta - deltaUsed);
+				targetX = Math.floor(cos * current + origin.x);
+				targetY = Math.floor(-sin * current + origin.y);
+				// continue;
+			}
+
+			// canvas.stamp(tiny, Std.int(targetX), Std.int(targetY));
+			canvas.stamp(tiny, Std.int(targetX-3), Std.int(targetY-3));
+			// FlxSpriteUtil.drawCircle(canvas, targetX, targetY, 2, 0xFFFFFFFF);
+		}
 	}
 
 	public function disable()
