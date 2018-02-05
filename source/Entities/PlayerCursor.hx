@@ -142,6 +142,9 @@ class PlayerCursor extends FlxSprite
 			targetX = Math.floor(cos * current + origin.x);
 			targetY = Math.floor(-sin * current + origin.y);
 
+			if (targetY < world.grid.getTop())
+				break;
+				
 			if (tiny.overlapsAt(targetX-3, targetY-3, world.bubbles))
 				break;
 
@@ -154,7 +157,6 @@ class PlayerCursor extends FlxSprite
 					deltaUsed -= 1;
 					targetX = Math.floor(cos * current + origin.x);
 					targetY = Math.floor(-sin * current + origin.y);
-					trace(targetX - halfSize +  " < " + left);
 				}
 				length -= current;
 				current = 0;
@@ -179,7 +181,6 @@ class PlayerCursor extends FlxSprite
 					deltaUsed -= 1;
 					targetX = Math.floor(cos * current + origin.x);
 					targetY = Math.floor(-sin * current + origin.y);
-					trace(targetX + halfSize +  " > " + right);
 				}
 				length -= current;
 				current = 0;
