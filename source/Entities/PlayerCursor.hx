@@ -134,6 +134,8 @@ class PlayerCursor extends FlxSprite
 		var right : Float = world.grid.getRight();
 		var halfSize : Float = world.grid.cellSize * 0.25;
 
+		var tinyOffset : Float = 5;
+
 		var length : Float = 2000;
 		var delta : Float = 15;
 		var alpha : Float = aimAngle;
@@ -172,7 +174,7 @@ class PlayerCursor extends FlxSprite
 			if (targetY < world.grid.getTop())
 				break;
 
-			if (tiny.overlapsAt(targetX-3, targetY-3, world.bubbles))
+			if (tiny.overlapsAt(targetX-tinyOffset, targetY-tinyOffset, world.bubbles))
 				break;
 
 			if (cos < 0 && targetX - halfSize < left)
@@ -225,7 +227,7 @@ class PlayerCursor extends FlxSprite
 			}
 
 			// canvas.stamp(tiny, Std.int(targetX), Std.int(targetY));
-			canvas.stamp(tiny, Std.int(targetX-3), Std.int(targetY-3));
+			canvas.stamp(tiny, Std.int(targetX-tinyOffset), Std.int(targetY-tinyOffset));
 			// FlxSpriteUtil.drawCircle(canvas, targetX, targetY, 2, 0xFFFFFFFF);
 		}
 	}

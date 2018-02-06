@@ -30,6 +30,8 @@ class PlayState extends FlxTransitionableState
 	public static var WaitTime 		: Float = 1;
 	public static var AimingTime 	: Float = 10;
 
+	public var DEBUG_dropDisabled : Bool;
+
 	public var mode : Int;
 	public var puzzleName : String;
 	public var puzzleData : puzzle.PuzzleData;
@@ -350,7 +352,8 @@ class PlayState extends FlxTransitionableState
 		else
 		{
 			// Generate new bubble row, move all others down or something
-			generateRow();
+			if (!DEBUG_dropDisabled)
+				generateRow();
 
 			// Set drop timer again
 			dropTimer.start(dropDelay, onDropTimer);
@@ -592,6 +595,8 @@ class PlayState extends FlxTransitionableState
 		mouseCell = new FlxPoint();
 		label = new FlxText(4, FlxG.height - 16);
 		add(label);
+
+		DEBUG_dropDisabled = false;
 	}
 
 	function handleDebugRoutines()
@@ -599,7 +604,13 @@ class PlayState extends FlxTransitionableState
 		var mouse : FlxPoint = FlxG.mouse.getWorldPosition();
 		var cell = grid.getCellAt(mouse.x, mouse.y);
 
-		/*if (FlxG.keys.justPressed.ONE || FlxG.keys.justPressed.TWO)
+		if (FlxG.keys.justPressed.TAB)
+		{
+			DEBUG_dropDisabled = !DEBUG_dropDisabled;
+			trace("Drop " + (DEBUG_dropDisabled ? "disabled" : "enabled"));
+		}
+
+		if (FlxG.keys.justPressed.ONE || FlxG.keys.justPressed.TWO)
 		{
 			if (grid.getData(cell.x, cell.y) != null)
 			{
@@ -609,9 +620,9 @@ class PlayState extends FlxTransitionableState
 			}
 			else
 			{
-				Bubble.CreateAt(cell.x, cell.y, (FlxG.keys.justPressed.ONE ? 0 : 1), this);
+				Bubble.CreateAt(cell.x, cell.y, (FlxG.keys.justPressed.ONE ? availableColors[0] : availableColors[1]), this);
 			}
-		}*/
+		}
 
 		/*if (FlxG.mouse.justPressed && grid.bounds.containsFlxPoint(mouse))
 		{
