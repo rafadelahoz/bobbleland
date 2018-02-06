@@ -115,16 +115,18 @@ class ArcadePreState extends FlxTransitionableState
 
     function onBackButtonPressed()
     {
+        BgmEngine.stopCurrent();
+
         updateArcadeConfig();
 
         ArcadeGameStatus.saveArcadeConfigData();
         GameController.ToMenu();
-
-        // BgmEngine.stop(BgmEngine.current);
     }
 
     function onStartButtonPressed()
     {
+        BgmEngine.stopCurrent();
+
         updateArcadeConfig();
 
         ArcadeGameStatus.saveArcadeConfigData();

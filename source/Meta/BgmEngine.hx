@@ -8,7 +8,7 @@ class BgmEngine
 {
     static var FadeTime : Float = 0.5;
 
-    static var Enabled : Bool = false;
+    static var Enabled : Bool = true;
 
     static var initialized : Bool = false;
 
@@ -31,6 +31,7 @@ class BgmEngine
         for (tune in tunes.keys())
         {
             tunes.get(tune).persist = true;
+            tunes.get(tune).looped = true;
             playing.set(tune, false);
         }
 
@@ -72,10 +73,13 @@ class BgmEngine
 
     public static function stop(bgm : BGM)
     {
-        trace("Stopping " + bgm);
         if (playing.get(bgm))
         {
-            if (Enabled) tunes.get(bgm).fadeOut(FadeTime, 0, function(_t:FlxTween) {tunes.get(bgm).stop();});
+            trace("Stopping " + bgm);
+            if (Enabled)
+            {
+                tunes.get(bgm).fadeOut(FadeTime*2, -10, function(_t:FlxTween) {trace("stop!"); tunes.get(bgm).stop();});
+            }
             playing.set(bgm, false);
             current = None;
         }
