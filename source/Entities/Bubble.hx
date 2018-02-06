@@ -243,6 +243,12 @@ class Bubble extends FlxSprite
 		var velocityX : Float = cos * Speed;
 		var velocityY : Float = -sin * Speed;
 
+		if (FlxG.keys.pressed.SHIFT)
+		{
+			velocityX *= 0.1;
+			velocityY *= 0.1;
+		}
+
 		velocity.set(velocityX, velocityY);
 	}
 

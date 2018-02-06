@@ -610,6 +610,12 @@ class PlayState extends FlxTransitionableState
 			trace("Drop " + (DEBUG_dropDisabled ? "disabled" : "enabled"));
 		}
 
+		if (FlxG.keys.justPressed.G)
+		{
+			cursor.guideEnabled = !cursor.guideEnabled;
+			cursor.shots = -100000;
+		}
+
 		if (FlxG.keys.justPressed.ONE || FlxG.keys.justPressed.TWO)
 		{
 			if (grid.getData(cell.x, cell.y) != null)
@@ -624,10 +630,10 @@ class PlayState extends FlxTransitionableState
 			}
 		}
 
-		/*if (FlxG.mouse.justPressed && grid.bounds.containsFlxPoint(mouse))
+		if (FlxG.mouse.justPressed && grid.bounds.containsPoint(mouse))
 		{
 			// Create an anchor
-			var anchor : Bubble = Bubble.CreateAt(cell.x, cell.y, -1, this);
+			// var anchor : Bubble = Bubble.CreateAt(cell.x, cell.y, generator.getNextBubbleColor(), this);
 			var adjacentCells : Array<FlxPoint> = grid.getAdjacentPositions(cell);
 			for (pos in adjacentCells)
 			{
@@ -639,10 +645,10 @@ class PlayState extends FlxTransitionableState
 						old.triggerPop();
 					}
 
-					Bubble.CreateAt(pos.x, pos.y, getRandomColor(), this);
+					Bubble.CreateAt(pos.x, pos.y, generator.getNextBubbleColor(), this);
 				}
 			}
-		}*/
+		}
 
 		if (FlxG.keys.justPressed.DOWN)
 		{

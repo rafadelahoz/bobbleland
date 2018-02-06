@@ -23,7 +23,7 @@ class PlayerCursor extends FlxSprite
 	public var label : FlxText;
 
 	public var shots : Int;
-	var guideEnabled : Bool;
+	public var guideEnabled : Bool;
 	var canvas : FlxSprite;
 	var deltaOffset : Float;
 	var tiny : FlxSprite;
@@ -128,7 +128,6 @@ class PlayerCursor extends FlxSprite
 
 		if (!guideEnabled || world.state == PlayState.StateLosing)
 			return;
-
 
 		var left : Float = world.grid.getLeft();
 		var right : Float = world.grid.getRight();
