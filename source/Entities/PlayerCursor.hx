@@ -48,7 +48,7 @@ class PlayerCursor extends FlxSprite
 
 		updateSpriteAngle();
 
-		label = new FlxText(x + width, y + aimOrigin.y + 2, "");
+		label = new FlxText(x + width, y - 16, "");
 
 		guideEnabled = GuideEnabled;
 		canvas = new FlxSprite(0, 0);
@@ -79,6 +79,7 @@ class PlayerCursor extends FlxSprite
 			{
 				moving = true;
 				updateSpriteAngle();
+				label.text = "" + aimAngle;
 			}
 
 			if (world.notifyAiming)
@@ -161,7 +162,7 @@ class PlayerCursor extends FlxSprite
 		var targetX : Float = cos * length + origin.x;
 		var targetY : Float = -sin * length + origin.y;
 
-		label.text = "" + alpha;
+		// label.text = "" + alpha;
 
 		var current : Float = deltaOffset;
 		while (current < length)

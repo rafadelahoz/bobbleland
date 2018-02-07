@@ -113,6 +113,12 @@ class ArcadePreState extends FlxTransitionableState
         super.update(elapsed);
     }
 
+    public function onDeactivate()
+    {
+        updateArcadeConfig();
+        ArcadeGameStatus.saveArcadeConfigData();
+    }
+
     function onBackButtonPressed()
     {
         BgmEngine.stopCurrent();

@@ -6,6 +6,7 @@ import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.Lib;
 
+import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxState;
 
@@ -21,6 +22,8 @@ class Main extends Sprite
 	var framerate:Int = 60; // How many frames per second the game should run at.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
+
+	var game : FlxGame;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
@@ -48,6 +51,15 @@ class Main extends Sprite
 	private function onDeactivate(?E:Event):Void
 	{
 		// Save here!
+		trace("BYEBYE SOAP from " + GameController.currentState);
+		switch (GameController.currentState)
+		{
+			case GameController.GameState.Menu:
+				cast(FlxG.state, ArcadePreState).onDeactivate();
+			case GameController.GameState.Play:
+				cast(FlxG.state, PlayState).onDeactivate();
+			default:
+		}
 	}
 
 	private function init(?E:Event):Void
@@ -78,7 +90,7 @@ class Main extends Sprite
 
 		setupTransitions();
 
-		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
+		addChild(game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
 	}
 
 	private function setupTransitions()

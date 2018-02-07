@@ -19,15 +19,20 @@ class BubbleGenerator
         grid = world.grid;
     }
 
-    public function initalizeGrid()
+    public function initalizeGrid(?SaveData : BubbleGrid.BubbleGridData = null)
     {
         currentRow = 0;
 
         if (world.mode == PlayState.ModeArcade)
         {
-            for (row in 0...puzzle.initialRows)
+            if (SaveData == null)
             {
-                generateRow();
+                for (row in 0...puzzle.initialRows)
+                {
+                    generateRow();
+                }
+            } else {
+                generateSaveData(SaveData);
             }
         }
         else if (world.mode == PlayState.ModePuzzle)
@@ -44,6 +49,22 @@ class BubbleGenerator
     {
         var color : BubbleColor = getNextGridColor();
         return color;
+    }
+
+    public function generateSaveData(data : BubbleGrid.BubbleGridData)
+    {
+        var lines : Array<String> = data.serializedGrid.split("\n");
+        for (line in lines)
+        {
+            // line in form [1][2][x][x][3]
+            var bubLine : Array<BubbleColor> = [];
+            var members : Array<String> = line.split("[");
+            for (member in members) {
+                bubLine.push(new BubbleColor(Std.parseInt(member.charAt(0))));
+            }
+
+            grid.generateBubbleRow(bubLine);
+        }
     }
 
     public function generateRow()

@@ -31,7 +31,7 @@ class PlayFlowController
     // Factor to apply to current world dropDelay for substraction
     var DropDelayFactor : Float = 0.2;
 
-    public function new(World : PlayState)
+    public function new(World : PlayState, ?SaveData : PlayFlowSaveData = null)
     {
         world = World;
         puzzle = world.puzzleData;
@@ -49,15 +49,30 @@ class PlayFlowController
             updateDifficulty = false;
         }
 
-        playTime = 0;
-        score = 0;
-        bubbleCount = 0;
-        screenCleanCount = 0;
-        rowCount = 0;
+        if (SaveData != null)
+        {
+            playTime = SaveData.playTime;
+            score = SaveData.score;
+            bubbleCount = SaveData.bubbleCount;
+            screenCleanCount = SaveData.screenCleanCount;
+            rowCount = SaveData.rowCount;
 
-        lastBubbleCount = 0;
-        lastIncreaseTime = 0;
-        timesIncreased = 0;
+            lastBubbleCount = SaveData.lastBubbleCount;
+            lastIncreaseTime = SaveData.lastIncreaseTime;
+            timesIncreased = SaveData.timesIncreased;
+        }
+        else
+        {
+            playTime = 0;
+            score = 0;
+            bubbleCount = 0;
+            screenCleanCount = 0;
+            rowCount = 0;
+
+            lastBubbleCount = 0;
+            lastIncreaseTime = 0;
+            timesIncreased = 0;
+        }
 
         FlxG.watch.add(this, "playTime");
         FlxG.watch.add(this, "bubbleCount");
@@ -173,4 +188,35 @@ class PlayFlowController
     {
         return {score : world.scoreDisplay.score, time : playTime, bubbles : bubbleCount, cleans: screenCleanCount};
     }
+
+    public function getSaveData() : PlayFlowSaveData
+    {
+        var data : PlayFlowSaveData = {
+            playTime: playTime,
+            score: score,
+            bubbleCount: bubbleCount,
+            screenCleanCount: screenCleanCount,
+            rowCount: rowCount,
+            lastBubbleCount: lastBubbleCount,
+            lastIncreaseTime: lastIncreaseTime,
+            timesIncreased: timesIncreased
+        };
+
+        return data;
+    }
+}
+
+typedef PlayFlowSaveData = {
+    /** Metrics **/
+    var playTime : Float;
+
+    var score : Int;
+    var bubbleCount : Int;
+    var screenCleanCount : Int;
+    var rowCount : Int;
+
+    /** Internal operation variables **/
+    var lastBubbleCount : Int;
+    var lastIncreaseTime : Float;
+    var timesIncreased : Int;
 }

@@ -501,6 +501,39 @@ class BubbleGrid extends FlxObject
 		return count;
 	}
 
+	public function getSaveData() : BubbleGridData
+	{
+		return {
+			serializedGrid: serializeData()
+		};
+	}
+
+	public function serializeData() : String
+	{
+		var data : String = "\n";
+		for (row in 0...rows)
+		{
+			for (col in 0...columns)
+			{
+				var cell : Bubble = getData(col, row);
+				if (cell == null)
+				{
+					data += "[x]";
+				}
+				else
+				{
+					data += "[" + cell.bubbleColor.colorIndex + "]";
+				}
+			}
+
+			data += "\n";
+		}
+
+		return data;
+	}
+
+	/* Debug features */
+
 	public function printList(bubbles : Array<Bubble>) : String
 	{
 		var list : String = "";
@@ -515,28 +548,10 @@ class BubbleGrid extends FlxObject
 
 	public function dumpData()
 	{
-		var dump : String = "\n";
-		for (row in 0...rows)
-		{
-			for (col in 0...columns)
-			{
-				var cell : Bubble = getData(col, row);
-				if (cell == null)
-				{
-					dump += "[ ]";
-				}
-				else
-				{
-					dump += "[" + cell.bubbleColor.colorIndex + "]";
-				}
-			}
-
-			dump += "\n";
-		}
-
+		var dump : String = serializeData();
 		trace(dump);
 	}
-	
+
 	public function renderCanvas()
 	{
 		return;
@@ -591,3 +606,7 @@ class BubbleGrid extends FlxObject
 		}
 	}
 }
+
+typedef BubbleGridData = {
+	var serializedGrid : String;
+};

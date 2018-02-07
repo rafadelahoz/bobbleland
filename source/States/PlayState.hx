@@ -585,6 +585,11 @@ class PlayState extends FlxTransitionableState
 		add(character);
 	}
 
+	public function onDeactivate()
+    {
+        /* TODO: Save status! */
+    }
+
 	/* Debug things */
 
 	var mouseCell : FlxPoint;
