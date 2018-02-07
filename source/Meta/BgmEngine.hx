@@ -8,7 +8,7 @@ class BgmEngine
 {
     static var FadeTime : Float = 0.5;
 
-    static var Enabled : Bool = true;
+    public static var Enabled : Bool = true;
 
     static var initialized : Bool = false;
 
@@ -20,6 +20,8 @@ class BgmEngine
     {
         if (initialized)
             return;
+
+        trace("BGM ENGINE INIT");
 
         initialized = true;
 
@@ -36,6 +38,22 @@ class BgmEngine
         }
 
         current = None;
+    }
+
+    public static function enable()
+    {
+        Enabled = true;
+    }
+
+    public static function disable()
+    {
+        for (tune in tunes.keys())
+        {
+            if (tunes.get(tune).playing)
+                stop(tune);
+        }
+
+        Enabled = false;
     }
 
     public static function play(bgm : BGM, ?volume : Float = 0.75, ?restart : Bool = false)

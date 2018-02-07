@@ -6,12 +6,15 @@ import flixel.FlxSprite;
 class Button extends FlxSprite
 {
     var callback : Void -> Void;
+    var hasGraphic : Bool;
 
     public function new(X : Float, Y : Float, ?Callback : Void -> Void = null)
     {
         super(X, Y);
 
         callback = Callback;
+
+        hasGraphic = false;
     }
 
     public function loadSpritesheet(Sprite : String, Width : Float, Height : Float)
@@ -21,22 +24,29 @@ class Button extends FlxSprite
         animation.add("idle", [0]);
         animation.add("pressed", [1]);
         animation.play("idle");
+
+        hasGraphic = true;
     }
 
     override public function update(elapsed:Float)
     {
-        animation.play("idle");
+        if (hasGraphic)
+            animation.play("idle");
+        else
+            visible = false;
 
         #if desktop
         if (mouseOver())
         {
             if (FlxG.mouse.pressed)
             {
-                animation.play("pressed");
+                if (hasGraphic)
+                    animation.play("pressed");
             }
             else if (FlxG.mouse.justReleased)
             {
-                animation.play("idle");
+                if (hasGraphic)
+                    animation.play("idle");
                 if (callback != null)
                     callback();
             }
@@ -50,12 +60,14 @@ class Button extends FlxSprite
             {
     			if (touch.pressed)
     			{
-    				animation.play("pressed");
+                    if (hasGraphic)
+    				    animation.play("pressed");
                     break;
                 }
                 else if (touch.justReleased)
                 {
-                    animation.play("idle");
+                    if (hasGraphic)
+                        animation.play("idle");
                     if (callback != null)
                         callback();
 

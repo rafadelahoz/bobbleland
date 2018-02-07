@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxBitmapText;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
@@ -26,6 +27,9 @@ class MenuState extends FlxTransitionableState
 	var background : FlxBackdrop;
 
 	var startTouchZone : FlxObject;
+
+	var optionsTab : Button;
+	var optionsPanel : FlxSpriteGroup;
 
 	var interactable : Bool;
 
@@ -55,6 +59,11 @@ class MenuState extends FlxTransitionableState
 
 		var borderTop : FlxSprite = new FlxSprite(0, -8, "assets/ui/border-top.png");
 		add(borderTop);
+
+		optionsTab = new Button(72, 0, onOptionsTabReleased);
+		optionsTab.loadSpritesheet("assets/ui/options-tab.png", 40, 24);
+		optionsTab.alpha = 0;
+		add(optionsTab);
 
 		var borderBottom : FlxSprite = new FlxSprite(0, FlxG.height - 24, "assets/ui/border-top.png");
 		borderBottom.scale.y = -1;
@@ -86,11 +95,12 @@ class MenuState extends FlxTransitionableState
 
 		BgmEngine.play(BgmEngine.BGM.Title);
 
-		startTouchZone = new FlxObject(0, 120, FlxG.width, 160);
+		startTouchZone = new FlxObject(0, 160, FlxG.width, 120);
 		add(startTouchZone);
 
 		FlxTween.tween(touchLabel, {alpha : 1}, 1, {ease : FlxEase.cubeInOut});
 		FlxTween.tween(background, {alpha : 1}, 1.5, {ease : FlxEase.cubeInOut});
+		FlxTween.tween(optionsTab, {alpha: 1}, 1, {ease : FlxEase.cubeInOut});
 
 		startTouchBuzz(null);
 	}
@@ -117,15 +127,18 @@ class MenuState extends FlxTransitionableState
 		if (interactable)
 		{
 			#if desktop
-	        if (FlxG.mouse.pressed)
-	        {
-				onTouchLabelPressed();
-	        }
-	        else if (FlxG.mouse.justReleased)
-	        {
-	            onTouchLabelReleased();
-				onArcadeButtonPressed();
-	        }
+			if (startTouchZone.getHitbox().containsPoint(FlxG.mouse.getPosition()))
+			{
+		        if (FlxG.mouse.pressed)
+		        {
+					onTouchLabelPressed();
+		        }
+		        else if (FlxG.mouse.justReleased)
+		        {
+		            onTouchLabelReleased();
+					onArcadeButtonPressed();
+		        }
+			}
 	        #end
 
 	        #if mobile
@@ -184,5 +197,89 @@ class MenuState extends FlxTransitionableState
 	public function onArcadeButtonPressed() : Void
 	{
 		GameController.StartArcadeGame();
+	}
+
+	function onOptionsTabReleased()
+	{
+		optionsTab.active = false;
+		optionsTab.visible = false;
+
+		buildOptionsPanel();
+		optionsPanel.active = true;
+		optionsPanel.visible = true;
+		optionsPanel.x = 32;
+		optionsPanel.y = -optionsPanel.height;
+
+		if (BgmEngine.Enabled)
+		{
+			bgmButton.setPressed(true, false);
+		}
+		else
+		{
+			bgmButton.setPressed(false, false);
+		}
+
+		FlxTween.tween(optionsPanel, {y: 0}, 0.5, {ease: FlxEase.elasticOut});
+	}
+
+	var bgmButton : HoldButton;
+
+	function buildOptionsPanel()
+	{
+		if (optionsPanel == null)
+		{
+			optionsPanel = new FlxSpriteGroup();
+
+			var panel : FlxSprite = new FlxSprite(0, 0, "assets/ui/options-panel.png");
+			optionsPanel.add(panel);
+
+			bgmButton = new HoldButton(22, 12, onBgmButtonPressed, onBgmButtonReleased);
+			bgmButton.loadSpritesheet("assets/ui/btn-music.png", 32, 32);
+			optionsPanel.add(bgmButton);
+
+			var sfxButton : Button = new HoldButton(66, 12, onSfxButtonPressed, onSfxButtonReleased);
+			sfxButton.loadSpritesheet("assets/ui/btn-sfx.png", 32, 32);
+			optionsPanel.add(sfxButton);
+
+			var closeButton : Button = new Button(44, 56, function() {
+				FlxTween.tween(optionsPanel, {y: -optionsPanel.height + 24}, 0.26, {ease: FlxEase.circOut, onComplete: onOptionsPanelHidden});
+			});
+			closeButton.setSize(32, 16);
+			optionsPanel.add(closeButton);
+
+			add(optionsPanel);
+		}
+	}
+
+	function onOptionsPanelHidden(t:FlxTween)
+	{
+		optionsPanel.active = false;
+		optionsPanel.visible = false;
+
+		optionsTab.active = true;
+		optionsTab.visible = true;
+	}
+
+	function onBgmButtonPressed()
+	{
+		trace("Music on");
+		BgmEngine.enable();
+		BgmEngine.play(BgmEngine.BGM.Title);
+	}
+
+	function onBgmButtonReleased()
+	{
+		trace("Music off");
+		BgmEngine.disable();
+	}
+
+	function onSfxButtonPressed()
+	{
+		// BgmEngine.Enabled = true;
+	}
+
+	function onSfxButtonReleased()
+	{
+		// BgmEngine.Enabled = false;
 	}
 }
