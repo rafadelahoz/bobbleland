@@ -11,6 +11,7 @@ class ScoreDisplay extends FlxObject
 
 	public var mode : Int;
 
+	public var realScore : Int;
 	public var score : Int;
 	public var scoreLabel : FlxBitmapText;
 
@@ -22,10 +23,11 @@ class ScoreDisplay extends FlxObject
 	public function new(X : Float, Y : Float, Mode : Int, ?Score : Int = 0)
 	{
 		super(X, Y);
-		
+
 		mode = Mode;
 
 		score = Score;
+		realScore = score;
 		targetScore = Score;
 
 		scoreLabel = text.PixelText.New(X, Y, "", 0xFFFFFFFF, FlxG.width);
@@ -57,6 +59,8 @@ class ScoreDisplay extends FlxObject
 			targetScore += value;
 			scoreDelta = Std.int((targetScore - score) / 60.0);
 		}
+
+		realScore += value;
 	}
 
 	override public function update(elapsed:Float)

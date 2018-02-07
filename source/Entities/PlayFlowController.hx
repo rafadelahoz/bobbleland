@@ -186,14 +186,14 @@ class PlayFlowController
 
     public function getStoredData() : Dynamic
     {
-        return {score : world.scoreDisplay.score, time : playTime, bubbles : bubbleCount, cleans: screenCleanCount};
+        return {score : world.scoreDisplay.realScore, time : playTime, bubbles : bubbleCount, cleans: screenCleanCount};
     }
 
     public function getSaveData() : PlayFlowSaveData
     {
         var data : PlayFlowSaveData = {
             playTime: playTime,
-            score: score,
+            score: world.scoreDisplay.realScore,
             bubbleCount: bubbleCount,
             screenCleanCount: screenCleanCount,
             rowCount: rowCount,
