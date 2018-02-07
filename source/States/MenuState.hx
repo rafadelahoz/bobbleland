@@ -63,7 +63,11 @@ class MenuState extends FlxTransitionableState
 		var logo : FlxSprite = new FlxSprite(0, -164, "assets/ui/title.png");
 		add(logo);
 
-		touchLabel = PixelText.New(FlxG.width / 2 - 56, Std.int(FlxG.height - FlxG.height/4), "Touch to start");
+		var startText : String = "Touch to start";
+		if (SaveStateManager.savestateExists())
+			startText = "Touch to continue";
+		// touchLabel = PixelText.New(FlxG.width / 2 - 56, Std.int(FlxG.height - FlxG.height/4), "Touch to start");
+		touchLabel = PixelText.New(FlxG.width / 2 - (startText.length/2)*8, Std.int(FlxG.height - FlxG.height/4), startText);
 		touchLabel.alpha = 0;
 		add(touchLabel);
 

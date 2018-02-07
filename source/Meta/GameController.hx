@@ -23,17 +23,32 @@ class GameController
 
 	public static function StartArcadeGame()
 	{
-		currentState = Menu;
+		if (SaveStateManager.savestateExists())
+		{
+			trace("Savestate data exists!");
+			ArcadeGameStatus.init();
+			BeginArcade(true);
+		}
+		else
+		{
+			currentState = Menu;
 
-		ArcadeGameStatus.init();
-		FlxG.switchState(new ArcadePreState());
+			ArcadeGameStatus.init();
+			FlxG.switchState(new ArcadePreState());
+		}
 	}
 
-	public static function BeginArcade()
+	public static function BeginArcade(?Continue : Bool = false)
 	{
 		currentState = Play;
+		var data : Dynamic = null;
+		if (Continue)
+		{
+			data = SaveStateManager.loadAndErase();
+			trace(data);
+	 	}
 
-		FlxG.switchState(new PlayState(PlayState.ModeArcade, null));
+		FlxG.switchState(new PlayState(PlayState.ModeArcade, data));
 	}
 
 	public static function OnGameplayEnd()

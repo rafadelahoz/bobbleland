@@ -72,11 +72,14 @@ class PlayState extends FlxTransitionableState
 
 	public var flowController : PlayFlowController;
 
-	public function new(Mode : Int, PuzzleName : String)
+	public var saveData : Dynamic;
+
+	public function new(Mode : Int, ?SaveData : Dynamic = null, ?PuzzleName : String=null)
 	{
 		super();
 
 		mode = Mode;
+		saveData = SaveData;
 		puzzleName = PuzzleName;
 
 		parsePuzzle(puzzleName);
@@ -130,7 +133,7 @@ class PlayState extends FlxTransitionableState
 		waitTimer = new FlxTimer();
 		aimingTimer = new FlxTimer();
 
-		scoreDisplay = new ScoreDisplay(2, 1, mode);
+		scoreDisplay = new ScoreDisplay(2, 1, mode, (saveData != null ? saveData.flow.score : 0));
 		add(scoreDisplay);
 
 		if (puzzleData.mode == puzzle.PuzzleData.ModeHold)
@@ -141,7 +144,7 @@ class PlayState extends FlxTransitionableState
 
 		generator = new BubbleGenerator(this);
 
-		flowController = new PlayFlowController(this);
+		flowController = new PlayFlowController(this, (saveData != null ? saveData.flow : null));
 
 		screenButtons = new ScreenButtons(0, 0, this, 240);
 		add(screenButtons);
@@ -157,7 +160,7 @@ class PlayState extends FlxTransitionableState
 			dropDelay = 30;
 		dropTimer.start(dropDelay, onDropTimer);
 
-		generator.initalizeGrid();
+		generator.initalizeGrid((saveData != null ? saveData.grid : null));
 		generateBubble();
 		switchState(StateAiming);
 		super.finishTransIn();
@@ -588,6 +591,7 @@ class PlayState extends FlxTransitionableState
 	public function onDeactivate()
     {
         /* TODO: Save status! */
+		SaveStateManager.savePlayStateData(this);
     }
 
 	/* Debug things */

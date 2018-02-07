@@ -27,11 +27,15 @@ class BubbleGenerator
         {
             if (SaveData == null)
             {
+                trace("Starting random grid");
                 for (row in 0...puzzle.initialRows)
                 {
                     generateRow();
                 }
-            } else {
+            }
+            else
+            {
+                trace("Loading saved grid");
                 generateSaveData(SaveData);
             }
         }
@@ -54,13 +58,24 @@ class BubbleGenerator
     public function generateSaveData(data : BubbleGrid.BubbleGridData)
     {
         var lines : Array<String> = data.serializedGrid.split("\n");
+        lines.reverse();
         for (line in lines)
         {
+            if (line.length == 0)
+                continue;
             // line in form [1][2][x][x][3]
             var bubLine : Array<BubbleColor> = [];
             var members : Array<String> = line.split("[");
+            trace("processing: " + line + " as " + members);
             for (member in members) {
-                bubLine.push(new BubbleColor(Std.parseInt(member.charAt(0))));
+                // The first member will be empty, avoid it
+                if (member.length == 0)
+                    continue;
+
+                if (member.charAt(0) != "x")
+                    bubLine.push(new BubbleColor(Std.parseInt(member.charAt(0))));
+                else
+                    bubLine.push(null);
             }
 
             grid.generateBubbleRow(bubLine);
