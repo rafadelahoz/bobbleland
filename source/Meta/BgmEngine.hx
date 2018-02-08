@@ -53,6 +53,7 @@ class BgmEngine
                 stop(tune);
         }
 
+        current = None;
         Enabled = false;
     }
 
@@ -64,7 +65,7 @@ class BgmEngine
             {
                 stop(bgm);
             }
-            else if (restart || !playing.get(bgm))
+            else
             {
                 trace(current + " to " +  bgm);
                 if (current != bgm)
@@ -72,14 +73,17 @@ class BgmEngine
                     stop(current);
                 }
 
-                if (Enabled)
+                if (Enabled && (restart || !playing.get(bgm)))
                 {
+                    trace(tunes.get(bgm).fadeTween);
+                    if (tunes.get(bgm).fadeTween != null)
+                        tunes.get(bgm).fadeTween.cancel();
                     tunes.get(bgm).fadeIn(FadeTime, 0, volume);
-                }
 
-                playing.set(bgm, true);
-                current = bgm;
-                trace("Current: " + current);
+                    playing.set(bgm, true);
+                    current = bgm;
+                    trace("Current: " + current);
+                }
             }
         }
     }
@@ -96,7 +100,9 @@ class BgmEngine
             trace("Stopping " + bgm);
             if (Enabled)
             {
+                trace(tunes.get(bgm).fadeTween);
                 tunes.get(bgm).fadeOut(FadeTime*2, -10, function(_t:FlxTween) {trace("stop!"); tunes.get(bgm).stop();});
+                trace(tunes.get(bgm).fadeTween);
             }
             playing.set(bgm, false);
             current = None;
