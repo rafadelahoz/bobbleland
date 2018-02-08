@@ -21,7 +21,7 @@ class HoldButton extends Button
 
     public function new(X : Float, Y : Float, ?PressedCallback : Void -> Void = null, ?ReleasedCallback : Void -> Void = null)
     {
-        super(X, Y, onReleased);
+        super(X, Y, onHoldButtonReleased);
 
         pressedCallback = PressedCallback;
         releasedCallback = ReleasedCallback;
@@ -30,7 +30,7 @@ class HoldButton extends Button
         beingTapped = false;
     }
 
-    function onReleased()
+    function onHoldButtonReleased()
     {
         switch (state)
         {
@@ -66,14 +66,7 @@ class HoldButton extends Button
 
     override public function update(elapsed:Float)
     {
-        var wasPressed : Bool = animation.name == "pressed";
-
         super.update(elapsed);
-
-        if (!wasPressed && animation.name == "pressed")
-        {
-            click();
-        }
 
         beingTapped = false;
 

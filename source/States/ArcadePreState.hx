@@ -317,7 +317,7 @@ class ArcadePreState extends FlxTransitionableState
 
     function onCharReleased()
     {
-        btnDog.clock();
+        // btnDog.clock();
         ArcadeGameStatus.setCharacter(null);
     }
 

@@ -30,6 +30,8 @@ class MenuState extends FlxTransitionableState
 
 	var optionsTab : Button;
 	var optionsPanel : FlxSpriteGroup;
+	var bgmButton : HoldButton;
+	var sfxButton : HoldButton;
 
 	var interactable : Bool;
 
@@ -39,6 +41,7 @@ class MenuState extends FlxTransitionableState
 
 		// Missing a preloader
 		BgmEngine.init();
+		SfxEngine.init();
 
 		GameController.Init();
 
@@ -210,19 +213,11 @@ class MenuState extends FlxTransitionableState
 		optionsPanel.x = 32;
 		optionsPanel.y = -optionsPanel.height;
 
-		if (BgmEngine.Enabled)
-		{
-			bgmButton.setPressed(true, false);
-		}
-		else
-		{
-			bgmButton.setPressed(false, false);
-		}
+		bgmButton.setPressed(BgmEngine.Enabled, false);
+		sfxButton.setPressed(SfxEngine.Enabled, false);
 
 		FlxTween.tween(optionsPanel, {y: 0}, 0.5, {ease: FlxEase.elasticOut});
 	}
-
-	var bgmButton : HoldButton;
 
 	function buildOptionsPanel()
 	{
@@ -237,7 +232,7 @@ class MenuState extends FlxTransitionableState
 			bgmButton.loadSpritesheet("assets/ui/btn-music.png", 32, 32);
 			optionsPanel.add(bgmButton);
 
-			var sfxButton : Button = new HoldButton(66, 12, onSfxButtonPressed, onSfxButtonReleased);
+			sfxButton = new HoldButton(66, 12, onSfxButtonPressed, onSfxButtonReleased);
 			sfxButton.loadSpritesheet("assets/ui/btn-sfx.png", 32, 32);
 			optionsPanel.add(sfxButton);
 
@@ -275,11 +270,13 @@ class MenuState extends FlxTransitionableState
 
 	function onSfxButtonPressed()
 	{
-		// BgmEngine.Enabled = true;
+		trace("SFX on");
+		SfxEngine.enable();
 	}
 
 	function onSfxButtonReleased()
 	{
-		// BgmEngine.Enabled = false;
+		trace("SFX off");
+		SfxEngine.disable();
 	}
 }

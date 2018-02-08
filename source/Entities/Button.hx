@@ -8,6 +8,8 @@ class Button extends FlxSprite
     var callback : Void -> Void;
     var hasGraphic : Bool;
 
+    var pressed : Bool;
+
     public function new(X : Float, Y : Float, ?Callback : Void -> Void = null)
     {
         super(X, Y);
@@ -30,6 +32,8 @@ class Button extends FlxSprite
 
     override public function update(elapsed:Float)
     {
+        var wasPressed : Bool = pressed;
+
         if (hasGraphic)
             animation.play("idle");
         else
@@ -40,15 +44,11 @@ class Button extends FlxSprite
         {
             if (FlxG.mouse.pressed)
             {
-                if (hasGraphic)
-                    animation.play("pressed");
+                pressed = true;
             }
             else if (FlxG.mouse.justReleased)
             {
-                if (hasGraphic)
-                    animation.play("idle");
-                if (callback != null)
-                    callback();
+                pressed = false;
             }
         }
         #end
@@ -60,25 +60,59 @@ class Button extends FlxSprite
             {
     			if (touch.pressed)
     			{
-                    if (hasGraphic)
-    				    animation.play("pressed");
+                    pressed = true;
                     break;
                 }
                 else if (touch.justReleased)
                 {
-                    if (hasGraphic)
-                        animation.play("idle");
-                    if (callback != null)
-                        callback();
-
+                    pressed = false;
                     break ;
                 }
             }
         }
         #end
 
+        if (!wasPressed && pressed)
+            onPressed();
+        else if (pressed)
+            whilePressed();
+
+        if (wasPressed && !pressed)
+            onReleased();
+        else if (!pressed)
+            whileReleased();
+
         super.update(elapsed);
     }
+
+    function onPressed() : Void
+    {
+        click();
+        if (hasGraphic)
+            animation.play("pressed");
+    }
+
+    function whilePressed() : Void
+    {
+        if (hasGraphic)
+            animation.play("pressed");
+    }
+
+    function onReleased() : Void
+    {
+        clock();
+        if (hasGraphic)
+            animation.play("idle");
+        if (callback != null)
+            callback();
+    }
+
+    function whileReleased() : Void
+    {
+        if (hasGraphic)
+            animation.play("released");
+    }
+
 
     function mouseOver()
     {
@@ -100,7 +134,7 @@ class Button extends FlxSprite
         #if android
         Hardware.vibrate(20);
         #end
-        FlxG.sound.play("assets/sounds/btn_click.wav");
+        SfxEngine.play(SfxEngine.SFX.Click);
     }
 
     public function clock()
@@ -108,6 +142,6 @@ class Button extends FlxSprite
         #if android
         Hardware.vibrate(10);
         #end
-        FlxG.sound.play("assets/sounds/btn_clock.wav");
+        SfxEngine.play(SfxEngine.SFX.Clock);
     }
 }
