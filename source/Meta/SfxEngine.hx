@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.util.FlxSave;
 import flixel.system.FlxSound;
 import flixel.tweens.FlxTween;
 
@@ -17,7 +18,9 @@ class SfxEngine
         if (initialized)
             return;
 
-        trace("BGM ENGINE INIT");
+        trace("SFX ENGINE INIT");
+
+        load();
 
         initialized = true;
 
@@ -34,6 +37,7 @@ class SfxEngine
     public static function enable()
     {
         Enabled = true;
+        save();
     }
 
     public static function disable()
@@ -41,6 +45,7 @@ class SfxEngine
         stopAll();
 
         Enabled = false;
+        save();
     }
 
     public static function play(sf : SFX, ?volume : Float = 1)
@@ -66,6 +71,32 @@ class SfxEngine
         {
             sfx.get(sf).stop();
         }
+    }
+
+    static var savefile : String = "settings";
+    public static function save()
+    {
+        var save : FlxSave = new FlxSave();
+        save.bind(savefile);
+
+        save.data.sfx = Enabled;
+        save.close();
+    }
+
+    static function load()
+    {
+        var save : FlxSave = new FlxSave();
+        save.bind(savefile);
+
+        if (save.data.sfx != null)
+        {
+            Enabled = save.data.sfx;
+            trace("Loaded SFX " + (Enabled ? "ON" : "OFF"));
+        }
+        else
+            Enabled = true;
+
+        save.close();
     }
 }
 

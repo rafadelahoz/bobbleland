@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.util.FlxSave;
 import flixel.system.FlxSound;
 import flixel.tweens.FlxTween;
 
@@ -8,7 +9,7 @@ class BgmEngine
 {
     static var FadeTime : Float = 0.5;
 
-    public static var Enabled : Bool = true;
+    public static var Enabled : Bool = false;
 
     static var initialized : Bool = false;
 
@@ -22,6 +23,8 @@ class BgmEngine
             return;
 
         trace("BGM ENGINE INIT");
+
+        load();
 
         initialized = true;
 
@@ -43,6 +46,7 @@ class BgmEngine
     public static function enable()
     {
         Enabled = true;
+        save();
     }
 
     public static function disable()
@@ -55,6 +59,7 @@ class BgmEngine
 
         current = None;
         Enabled = false;
+        save();
     }
 
     public static function play(bgm : BGM, ?volume : Float = 0.75, ?restart : Bool = false)
@@ -107,6 +112,32 @@ class BgmEngine
             playing.set(bgm, false);
             current = None;
         }
+    }
+
+    static var savefile : String = "settings";
+    public static function save()
+    {
+        var save : FlxSave = new FlxSave();
+        save.bind(savefile);
+
+        save.data.bgm = Enabled;
+        save.close();
+    }
+
+    static function load()
+    {
+        var save : FlxSave = new FlxSave();
+        save.bind(savefile);
+
+        if (save.data.bgm != null)
+        {
+            Enabled = save.data.bgm;
+            trace("Loaded BGM " + (Enabled ? "ON" : "OFF"));
+        }
+        else
+            Enabled = true;
+
+        save.close();
     }
 }
 

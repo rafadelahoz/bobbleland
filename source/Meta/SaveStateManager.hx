@@ -10,7 +10,6 @@ class SaveStateManager
     {
         var save : FlxSave = new FlxSave();
         save.bind(savefile);
-        trace(save.data);
         var exists : Bool = (save.data.active == 1);
         save.close();
 
