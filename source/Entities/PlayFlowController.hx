@@ -142,6 +142,7 @@ class PlayFlowController
 
         timesIncreased++;
 
+        disableGuide();
         // TODO: Remove this
         // Notify the user!
         // FlxG.camera.flash(0xFFFFFFFF, 0.5);
@@ -187,6 +188,13 @@ class PlayFlowController
     public function getStoredData() : Dynamic
     {
         return {score : world.scoreDisplay.realScore, time : playTime, bubbles : bubbleCount, cleans: screenCleanCount};
+    }
+
+    public function disableGuide()
+    {
+        trace("Disabling guide, was " + (world.cursor.guideEnabled ? "enabled":"disabled"));
+        if (world.cursor.guideEnabled)
+            world.cursor.disableGuideAfterShots(10);
     }
 
     public function getSaveData() : PlayFlowSaveData

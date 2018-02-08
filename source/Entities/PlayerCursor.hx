@@ -95,15 +95,8 @@ class PlayerCursor extends FlxSprite
 
 		if (guideEnabled)
 		{
-			if (shots > 5)
-			{
-				guideEnabled = false;
-			}
-			else
-			{
-				tiny.update(elapsed);
-				canvas.update(elapsed);
-			}
+			tiny.update(elapsed);
+			canvas.update(elapsed);
 		}
 
 		redraw();
@@ -111,9 +104,26 @@ class PlayerCursor extends FlxSprite
 		super.update(elapsed);
 	}
 
+	public function disableGuideAfterShots(number : Int)
+	{
+		if (shots > 0)
+			shots = number;
+		else
+			guideEnabled = false;
+	}
+
 	public function onShoot()
 	{
 		// ??
+		if (shots > 0)
+		{
+			shots--;
+			if (shots <= 0)
+			{
+				shots = 0;
+				guideEnabled = false;
+			}
+		}
 	}
 
 	override public function draw()

@@ -343,7 +343,6 @@ class PlayState extends FlxTransitionableState
 		bubble.y = cursor.y + cursor.aimOrigin.y - (bubble.height / 2);
 
 		bubble.shoot(aimAngle);
-		cursor.shots += 1;
 
 		switchState(StateWaiting);
 
@@ -647,7 +646,7 @@ class PlayState extends FlxTransitionableState
 		if (FlxG.keys.justPressed.G)
 		{
 			cursor.guideEnabled = !cursor.guideEnabled;
-			cursor.shots = -100000;
+			cursor.shots = -1;
 		}
 
 		if (FlxG.keys.justPressed.ONE || FlxG.keys.justPressed.TWO)
