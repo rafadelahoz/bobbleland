@@ -22,8 +22,6 @@ class BgmEngine
         if (initialized)
             return;
 
-        trace("BGM ENGINE INIT");
-
         load();
 
         initialized = true;
@@ -64,6 +62,12 @@ class BgmEngine
 
     public static function play(bgm : BGM, ?volume : Float = 0.75, ?restart : Bool = false)
     {
+        // Better to stop than to play what we don't want
+        if (current != bgm)
+        {
+            stop(current);
+        }
+
         if (tunes.exists(bgm))
         {
             if (volume <= 0)
@@ -72,22 +76,14 @@ class BgmEngine
             }
             else
             {
-                trace(current + " to " +  bgm);
-                if (current != bgm)
-                {
-                    stop(current);
-                }
-
                 if (Enabled && (restart || !playing.get(bgm)))
                 {
-                    trace(tunes.get(bgm).fadeTween);
                     if (tunes.get(bgm).fadeTween != null)
                         tunes.get(bgm).fadeTween.cancel();
                     tunes.get(bgm).fadeIn(FadeTime, 0, volume);
 
                     playing.set(bgm, true);
                     current = bgm;
-                    trace("Current: " + current);
                 }
             }
         }
@@ -102,16 +98,18 @@ class BgmEngine
     {
         if (playing.get(bgm))
         {
-            trace("Stopping " + bgm);
             if (Enabled)
             {
-                trace(tunes.get(bgm).fadeTween);
-                tunes.get(bgm).fadeOut(FadeTime*2, -10, function(_t:FlxTween) {trace("stop!"); tunes.get(bgm).stop();});
-                trace(tunes.get(bgm).fadeTween);
+                tunes.get(bgm).fadeOut(FadeTime*2, -10, function(_t:FlxTween) {tunes.get(bgm).stop();});
             }
             playing.set(bgm, false);
             current = None;
         }
+    }
+
+    public static function getBgm(bgmName : String) : BGM
+    {
+        return BGM.createByName(bgmName);
     }
 
     static var savefile : String = "settings";
@@ -132,7 +130,6 @@ class BgmEngine
         if (save.data.bgm != null)
         {
             Enabled = save.data.bgm;
-            trace("Loaded BGM " + (Enabled ? "ON" : "OFF"));
         }
         else
             Enabled = true;

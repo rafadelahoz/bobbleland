@@ -149,7 +149,17 @@ class PlayState extends FlxTransitionableState
 		screenButtons = new ScreenButtons(0, 0, this, 240);
 		add(screenButtons);
 
+		handleBgm();
+
 		handleDebugInit();
+	}
+
+	function handleBgm()
+	{
+		if (puzzleData.bgm != null)
+			BgmEngine.play(BgmEngine.getBgm(puzzleData.bgm));
+		else
+			BgmEngine.stopCurrent();
 	}
 
 	override public function finishTransIn()
@@ -591,7 +601,22 @@ class PlayState extends FlxTransitionableState
 	public function onDeactivate()
     {
         /* TODO: Save status! */
-		SaveStateManager.savePlayStateData(this);
+		switch (state)
+		{
+			case PlayState.StateStarting,
+				 PlayState.StateAiming,
+				 PlayState.StateWaiting,
+				 PlayState.StateRemoving:
+				// Store play state
+				SaveStateManager.savePlayStateData(this);
+			case PlayState.StateLosing, PlayState.StateWinning:
+				// Add the session data to totals
+				if (mode == PlayState.ModeArcade)
+				{
+					ArcadeGameStatus.storePlayData(flowController.getStoredData());
+				}
+		}
+
     }
 
 	/* Debug things */

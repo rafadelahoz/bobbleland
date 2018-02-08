@@ -257,26 +257,22 @@ class MenuState extends FlxTransitionableState
 
 	function onBgmButtonPressed()
 	{
-		trace("Music on");
 		BgmEngine.enable();
 		BgmEngine.play(BgmEngine.BGM.Title);
 	}
 
 	function onBgmButtonReleased()
 	{
-		trace("Music off");
 		BgmEngine.disable();
 	}
 
 	function onSfxButtonPressed()
 	{
-		trace("SFX on");
 		SfxEngine.enable();
 	}
 
 	function onSfxButtonReleased()
 	{
-		trace("SFX off");
 		SfxEngine.disable();
 	}
 }

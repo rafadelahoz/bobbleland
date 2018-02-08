@@ -12,6 +12,7 @@ class PuzzleData
     public var background : String;
     public var bubbleSet : String;
     public var character : String;
+    public var bgm : String;
 
     public var target : String;
 
@@ -29,6 +30,7 @@ class PuzzleData
         background  = null;
         bubbleSet   = null;
         character   = null;
+        bgm = null;
 
         guideEnabled = false;
         dropDelay   = -1;

@@ -29,12 +29,10 @@ class ArcadeGameStatus
 
         if (arcadeData == null)
         {
-            trace("No arcadeData, loading");
             arcadeData = loadArcadeConfigData();
 
             if (arcadeData == null)
             {
-                trace("Nothing to load, init");
                 arcadeData = {
                     difficulty: 2, character: null,
                     highScore: 0, maxBubbles: 0, longestGame: 0,
@@ -43,8 +41,6 @@ class ArcadeGameStatus
 
                 saveArcadeConfigData();
             }
-
-            trace(arcadeData);
         }
     }
 
@@ -94,8 +90,6 @@ class ArcadeGameStatus
 
     public static function clearConfigData()
     {
-        trace("Clearing config data...");
-
         arcadeData.difficulty = 3;
         arcadeData.character = null;
 
@@ -104,8 +98,6 @@ class ArcadeGameStatus
 
     public static function clearHistoryData()
     {
-        trace("Clearing history data...");
-
         arcadeData.highScore = 0;
         arcadeData.longestGame = 0;
         arcadeData.maxBubbles = 0;
