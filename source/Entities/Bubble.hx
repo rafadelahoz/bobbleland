@@ -26,7 +26,7 @@ class Bubble extends FlxSprite
 	public var Size : Float;
 	public var HalfSize : Float;
 
-	public var UseMoveToContact : Bool = false;
+	public var UseMoveToContact : Bool = true;
 
 	public var popPoints : Int;
 	public var fallPoints : Int;
@@ -279,26 +279,43 @@ class Bubble extends FlxSprite
 			// Rest!
 			state = StateIdling;
 
+			// Fetch your current place
+			var currentPosition : FlxPoint = getCurrentCell();
+
 			// Discriminate between ceiling and bubble hit
 			if (useNewPosition)
 			{
-				// Fetch your idling place
-				var currentPosition : FlxPoint = getCurrentCell();
 				cellPosition.set(currentPosition.x, currentPosition.y);
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 			}
 			else
 			{
 				// Consider the last valid position visited
+				cellPosition.set(currentPosition.x, currentPosition.y);
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 			}
 
 			// If it's already occupied, go to the last one free you got
 			if (!grid.isPositionValid(cellPosition) || grid.getData(cellPosition.x, cellPosition.y) != null)
 			{
-				trace(cellPosition + " is already occupied, returning to " + lastPosition);
+				// Store the target in case the fallback position is not valid
+				var targetPosition : FlxPoint = FlxPoint.get(currentPosition.x, currentPosition.y);
+
+				/*trace(cellPosition + " is already occupied, returning to " + lastPosition);
 				cellPosition.set(lastPosition.x, lastPosition.y);
-				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
+				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));*/
+
+				var neighbours : Array<FlxPoint> = grid.getValidAdjacentPositions(targetPosition);
+				if (neighbours.indexOf(cellPosition) < 0)
+				{
+					// Non adjacent position reached
+					trace("Invalid fallback from " + targetPosition + " to " + cellPosition);
+					// Find the closest cell
+					cellPosition = findClosestCell(cellPosition, neighbours);
+					cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
+				}
+
+				targetPosition.put();
 			}
 
 			var mayHaveLost : Bool = false;
@@ -318,6 +335,25 @@ class Bubble extends FlxSprite
 				world.handleBubbleStop(mayHaveLost);
 			}
 		}
+	}
+
+	function findClosestCell(target : FlxPoint, cells : Array<FlxPoint>) : FlxPoint
+	{
+		var closest : FlxPoint = null;
+		var distance : Float = Math.POSITIVE_INFINITY;
+		var center : FlxPoint = grid.getCenterOfCellAt(target.x, target.y);
+		var ccenter : FlxPoint = null;
+		for (cell in cells)
+		{
+			ccenter = grid.getCenterOfCellAt(cell.x, cell.y);
+			if (center.distanceTo(ccenter) < distance)
+			{
+				closest = cell;
+				distance = center.distanceTo(ccenter);
+			}
+		}
+
+		return closest;
 	}
 
 	public function onBubblesPopped()

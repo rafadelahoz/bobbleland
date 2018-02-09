@@ -43,6 +43,7 @@ class PlayerCursor extends FlxSprite
 		AngleDelta = 1;
 
 		aimAngle = 90;
+		// aimAngle = 140; // For isolated positions debugging
 		aimOrigin = FlxPoint.get(width / 2, height / 2);
 		moving = false;
 
@@ -106,7 +107,7 @@ class PlayerCursor extends FlxSprite
 
 	public function disableGuideAfterShots(number : Int)
 	{
-		if (shots > 0)
+		if (number > 0)
 			shots = number;
 		else
 			guideEnabled = false;
@@ -130,7 +131,7 @@ class PlayerCursor extends FlxSprite
 	{
 		canvas.draw();
 		super.draw();
-		// label.draw();
+		label.draw();
 	}
 
 	public function redraw() : Void

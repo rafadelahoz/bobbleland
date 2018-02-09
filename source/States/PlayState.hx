@@ -280,9 +280,12 @@ class PlayState extends FlxTransitionableState
 
 	function onAimingState()
 	{
-		if (!notifyAiming && aimingTimer.timeLeft < AimingTime / 2)
+		if (!DEBUG_dropDisabled)
 		{
-			notifyAiming = true;
+			if (!notifyAiming && aimingTimer.timeLeft < AimingTime / 2)
+			{
+				notifyAiming = true;
+			}
 		}
 
 		if (GamePad.justPressed(GamePad.Shoot))
@@ -325,6 +328,9 @@ class PlayState extends FlxTransitionableState
 	// Handler for the forced shot timer
 	function onForcedShot(_t:FlxTimer)
 	{
+		if (DEBUG_dropDisabled)
+			return;
+
 		if (state == StateAiming)
 		{
 			shoot();

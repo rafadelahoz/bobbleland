@@ -427,6 +427,20 @@ class BubbleGrid extends FlxObject
 
 	}
 
+	public function getValidAdjacentPositions(pos : FlxPoint) : Array<FlxPoint>
+	{
+		var cells : Array<FlxPoint> = getAdjacentPositions(pos);
+		for (cell in cells)
+		{
+			if (!isValid(Std.int(cell.x), Std.int(cell.y)) || getData(cell.x, cell.y) != null)
+			{
+				cells.remove(cell);
+			}
+		}
+
+		return cells;
+	}
+
 	function clearAdjacentPositions(positions : Array<FlxPoint>)
 	{
 		for (point in positions)
