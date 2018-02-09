@@ -139,7 +139,7 @@ class ScreenButtons extends FlxSpriteGroup
 			}
 			else if (mouseOver(pauseButton))
 			{
-				GamePad.setPressed(GamePad.Pause);
+				// GamePad.setPressed(GamePad.Pause);
 			}
         }
         #end

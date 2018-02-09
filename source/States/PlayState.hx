@@ -93,6 +93,8 @@ class PlayState extends FlxTransitionableState
 
 		prepareBackground();
 
+		availableColors = puzzleData.usedColors;
+
 		shadow = new FlxSprite(FlxG.width / 2 - 64, 16).makeGraphic(128, 240-48, 0xFF000000);
 		shadow.alpha = 0.68;
 		add(shadow);
@@ -126,8 +128,6 @@ class PlayState extends FlxTransitionableState
 
 		fallingBubbles = new FlxTypedGroup<Bubble>();
 		add(fallingBubbles);
-
-		availableColors = puzzleData.usedColors;
 
 		dropTimer = new FlxTimer();
 		waitTimer = new FlxTimer();
@@ -636,6 +636,27 @@ class PlayState extends FlxTransitionableState
 		add(label);
 
 		DEBUG_dropDisabled = false;
+
+		var btnDebugLine : HoldButton = new HoldButton(156, 220,
+			function() {
+				// DEBUG_dropDisabled = true;
+				cursor.guideEnabled = true;
+			}, function () {
+				// DEBUG_dropDisabled = false;
+				cursor.guideEnabled = false;
+			});
+		btnDebugLine.loadSpritesheet("assets/ui/btn-debug.png", 24, 21);
+		add(btnDebugLine);
+
+		var btnDebugGrid : HoldButton = new HoldButton(0, 220,
+			function() {
+				grid.DEBUG_diplayGrid = true;
+			}, function () {
+				grid.DEBUG_diplayGrid = false;
+				trace("grid: " + grid.DEBUG_diplayGrid);
+			});
+		btnDebugGrid.loadSpritesheet("assets/ui/btn-debug.png", 24, 21);
+		add(btnDebugGrid);
 	}
 
 	function handleDebugRoutines()

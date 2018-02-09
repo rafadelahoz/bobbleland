@@ -27,6 +27,7 @@ class PlayerCursor extends FlxSprite
 	var canvas : FlxSprite;
 	var deltaOffset : Float;
 	var tiny : FlxSprite;
+	var tester : Bubble;
 
 	public function new(X : Float, Y : Float, World : PlayState, GuideEnabled : Bool)
 	{
@@ -44,6 +45,7 @@ class PlayerCursor extends FlxSprite
 
 		aimAngle = 90;
 		// aimAngle = 140; // For isolated positions debugging
+		aimAngle = 112; // For isolated positions debugging
 		aimOrigin = FlxPoint.get(width / 2, height / 2);
 		moving = false;
 
@@ -57,6 +59,8 @@ class PlayerCursor extends FlxSprite
 		deltaOffset = 0;
 		tiny = new FlxSprite(0, 0, "assets/images/tiny-bubble.png");
 		tiny.centerOffsets(true);
+
+		tester = new Bubble(0, 0, world, world.availableColors[0]);
 
 		shots = 0;
 	}
@@ -185,7 +189,7 @@ class PlayerCursor extends FlxSprite
 			if (targetY < world.grid.getTop())
 				break;
 
-			if (tiny.overlapsAt(targetX-tinyOffset, targetY-tinyOffset, world.bubbles))
+			if (tester.checkCollisionWithBubblesAt(targetX-tester.width/2, targetY-tester.height/2))
 				break;
 
 			if (cos < 0 && targetX - halfSize < left)

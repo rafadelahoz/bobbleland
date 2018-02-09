@@ -24,8 +24,8 @@ class TextUtils
         if (hours > 0)
             str += hours + ":";
         if (minutes > 0 || hours > 0)
-            str += minutes + ":";
-        str += seconds + "'";
+            str += padWith("" + minutes, 2, "0") + ":";
+        str += padWith("" + seconds, 2, "0") + "\"";
 
         return str;
     }
