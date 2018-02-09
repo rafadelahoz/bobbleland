@@ -173,6 +173,7 @@ class PlayState extends FlxTransitionableState
 		generator.initalizeGrid((saveData != null ? saveData.grid : null));
 		generateBubble();
 		switchState(StateAiming);
+
 		super.finishTransIn();
 	}
 
@@ -280,6 +281,9 @@ class PlayState extends FlxTransitionableState
 
 	function onAimingState()
 	{
+		if (DEBUG_dropDisabled)
+			notifyAiming = false;
+
 		if (!notifyAiming && aimingTimer.timeLeft < AimingTime / 2)
 		{
 			notifyAiming = true;
@@ -325,6 +329,9 @@ class PlayState extends FlxTransitionableState
 	// Handler for the forced shot timer
 	function onForcedShot(_t:FlxTimer)
 	{
+		if (DEBUG_dropDisabled)
+			return;
+
 		if (state == StateAiming)
 		{
 			shoot();
@@ -701,6 +708,11 @@ class PlayState extends FlxTransitionableState
 		if (FlxG.keys.justPressed.D)
 		{
 			grid.dumpData();
+		}
+
+		if (FlxG.keys.justPressed.O)
+		{
+			Screenshot.take();
 		}
 
 		mouseCell.set(cell.x, cell.y);

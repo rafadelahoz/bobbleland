@@ -106,7 +106,7 @@ class PlayerCursor extends FlxSprite
 
 	public function disableGuideAfterShots(number : Int)
 	{
-		if (shots > 0)
+		if (number > 0)
 			shots = number;
 		else
 			guideEnabled = false;
@@ -152,11 +152,11 @@ class PlayerCursor extends FlxSprite
 
 		switch (shots)
 		{
-			case 2:
+			case 4:
 				tiny.color = 0xFFFFF1E8;
 			case 3:
 				tiny.color = 0xFFC2C3C7;
-			case 4:
+			case 2:
 				tiny.alpha = 0.5;
 		}
 

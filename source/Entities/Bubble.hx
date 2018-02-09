@@ -296,9 +296,21 @@ class Bubble extends FlxSprite
 			// If it's already occupied, go to the last one free you got
 			if (!grid.isPositionValid(cellPosition) || grid.getData(cellPosition.x, cellPosition.y) != null)
 			{
+				var targetPosition : FlxPoint = FlxPoint.get(cellPosition.x, cellPosition.y);
 				trace(cellPosition + " is already occupied, returning to " + lastPosition);
 				cellPosition.set(lastPosition.x, lastPosition.y);
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
+
+				// Check if the cell we returned to is connected to the target, if not, tweak!
+				if (grid.getAdjacentPositions(targetPosition).indexOf(cellPosition) < 0)
+				{
+					grid.setData(cellPosition.x, cellPosition.y, this);
+					grid.renderCanvas();
+
+					Screenshot.take();
+
+					throw "NOT ADYACENT BUBBLE REACHED!";
+				}
 			}
 
 			var mayHaveLost : Bool = false;

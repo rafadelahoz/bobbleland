@@ -554,7 +554,7 @@ class BubbleGrid extends FlxObject
 
 	public function renderCanvas()
 	{
-		return;
+		// return;
 
 		if (canvas == null)
 			canvas = new FlxSprite(bounds.x, bounds.y).makeGraphic(Std.int(bounds.width), Std.int(bounds.height), 0xFF250516);

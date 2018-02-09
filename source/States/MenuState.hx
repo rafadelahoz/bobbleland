@@ -127,6 +127,9 @@ class MenuState extends FlxTransitionableState
 
 	override public function update(elapsed:Float):Void
 	{
+		if (FlxG.keys.justPressed.O)
+			Screenshot.take();
+
 		if (interactable)
 		{
 			#if desktop
@@ -183,6 +186,8 @@ class MenuState extends FlxTransitionableState
 			touchLabel.color = 0xFFFFEC27;
 			touchLabel.x += 2;
 			touchLabel.y += 2;
+			// Testing screenshots on mobile
+			// Screenshot.take();
 		}
 	}
 

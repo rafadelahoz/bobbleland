@@ -93,6 +93,8 @@
 
 	<!--------------------------------CUSTOM---------------------------------------->
 
+	<config:android permission="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	<icon path="assets/images/icon16.png" size="16" />
 	<icon path="assets/images/icon32.png" size="32" />
