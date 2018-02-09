@@ -634,6 +634,11 @@ class PlayState extends FlxTransitionableState
 
 	function handleDebugRoutines()
 	{
+		// Avoid debug on android
+		#if mobile
+			return;
+		#end
+
 		var mouse : FlxPoint = FlxG.mouse.getWorldPosition();
 		var cell = grid.getCellAt(mouse.x, mouse.y);
 
