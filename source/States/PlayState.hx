@@ -156,6 +156,7 @@ class PlayState extends FlxTransitionableState
 
 	function handleBgm()
 	{
+		trace(puzzleData.bgm);
 		if (puzzleData.bgm != null)
 			BgmEngine.play(BgmEngine.getBgm(puzzleData.bgm));
 		else
@@ -440,6 +441,8 @@ class PlayState extends FlxTransitionableState
 	// Handler for bubble stopped event (triggered from Bubble)
 	public function handleBubbleStop(?mayHaveLost : Bool = false)
 	{
+		SfxEngine.play(SfxEngine.SFX.BubbleStop);
+
 		// Store bubble
 		bubbles.add(bubble);
 
@@ -465,6 +468,8 @@ class PlayState extends FlxTransitionableState
 		// Else if we have achieved the group
 		else
 		{
+			SfxEngine.play(SfxEngine.SFX.NiceSmall);
+
 			// Start making things fall
 			for (bub in condemned)
 			{
@@ -486,6 +491,11 @@ class PlayState extends FlxTransitionableState
 				fallingBubbles.add(bub);
 
 				flowController.onBubbleDestroyed();
+			}
+
+			if (condemned.length + disconnected.length > 5)
+			{
+				SfxEngine.play(SfxEngine.SFX.NiceBig);
 			}
 
 			grid.forEach(function (bubble : Bubble) {
@@ -633,7 +643,7 @@ class PlayState extends FlxTransitionableState
 	{
 		mouseCell = new FlxPoint();
 		label = new FlxText(4, FlxG.height - 16);
-		add(label);
+		// add(label);
 
 		DEBUG_dropDisabled = false;
 

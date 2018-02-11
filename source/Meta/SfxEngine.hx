@@ -5,8 +5,20 @@ import flixel.util.FlxSave;
 import flixel.system.FlxSound;
 import flixel.tweens.FlxTween;
 
+enum SFX {
+    None;
+    Click;
+    Clock;
+    BubbleBounce;
+    BubbleStop;
+    NiceSmall;
+    NiceBig;
+}
+
 class SfxEngine
 {
+    static var path : String = "assets/sounds/";
+
     public static var Enabled : Bool = true;
 
     static var initialized : Bool = false;
@@ -25,13 +37,22 @@ class SfxEngine
         initialized = true;
 
         sfx = new Map<SFX, FlxSound>();
-        sfx.set(SFX.Click, FlxG.sound.load("assets/sounds/btn_click.wav"));
-        sfx.set(SFX.Clock, FlxG.sound.load("assets/sounds/btn_clock.wav"));
+        sfx.set(SFX.Click,          loadSfx("btn_click.wav"));
+        sfx.set(SFX.Clock,          loadSfx("btn_clock.wav"));
+        sfx.set(SFX.BubbleBounce,   loadSfx("bubble-bounce.wav"));
+        sfx.set(SFX.BubbleStop,     loadSfx("bubble-stop.wav"));
+        sfx.set(SFX.NiceSmall,      loadSfx("nice-small.wav"));
+        sfx.set(SFX.NiceBig,        loadSfx("nice-big.wav"));
 
         for (sf in sfx.keys())
         {
             sfx.get(sf).persist = true;
         }
+    }
+
+    static function loadSfx(name : String) : FlxSound
+    {
+        return FlxG.sound.load(path + name);
     }
 
     public static function enable()
@@ -98,10 +119,4 @@ class SfxEngine
 
         save.close();
     }
-}
-
-enum SFX {
-    None;
-    Click;
-    Clock;
 }

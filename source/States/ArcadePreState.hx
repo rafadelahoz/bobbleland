@@ -145,8 +145,9 @@ class ArcadePreState extends FlxTransitionableState
         var data = ArcadeGameStatus.getConfigData();
         data.difficulty = getSnapSlot(sldDifficulty.x, 24, 32);
         data.character = ArcadeGameStatus.getCharacter();
+        data.bgm = "GameC";
         ArcadeGameStatus.setConfigData(data);
-        trace(ArcadeGameStatus.getConfigData());
+        trace("arcade data: " + ArcadeGameStatus.getConfigData());
     }
 
     function prepareDifficultySetting()
@@ -233,11 +234,11 @@ class ArcadePreState extends FlxTransitionableState
         screen.add(totalBubblesDisplay);
 
         screen.add(PixelText.New(16, 212, "TIME ", white, 128));
-        totalTimeDisplay = PixelText.New(80, 212, "", white, 128);
+        totalTimeDisplay = PixelText.New(72, 212, "", white, 128);
         screen.add(totalTimeDisplay);
 
         screen.add(PixelText.New(16, 224, "CLEAN SCS", white, 128));
-        totalCleansDisplay = PixelText.New(120, 224, "", white, 128);
+        totalCleansDisplay = PixelText.New(112, 224, "", white, 128);
         screen.add(totalCleansDisplay);
 
         var btnClearData : HoldButton = new HoldButton(40, 272, null, onClearDataReleased);
@@ -255,13 +256,21 @@ class ArcadePreState extends FlxTransitionableState
     {
         var data : Dynamic = ArcadeGameStatus.getConfigData();
 
-        highScoreDisplay.text = "" + data.highScore;
+        highScoreDisplay.text = "" + clamp(data.highScore, 99999999);
         longestGameDisplay.text = TextUtils.formatTime(data.longestGame);
-        maxBubblesDisplay.text = "" + data.maxBubbles;
+        maxBubblesDisplay.text = "" + clamp(data.maxBubbles, 99999999);
 
-        totalBubblesDisplay.text = TextUtils.padWith("" + data.totalBubbles, 8);
+        totalBubblesDisplay.text = TextUtils.padWith("" + clamp(data.totalBubbles, 99999999), 8);
         totalTimeDisplay.text = TextUtils.padWith(TextUtils.formatTime(data.totalTime), 9);
-        totalCleansDisplay.text = TextUtils.padWith("" + data.totalCleans, 3);
+        totalCleansDisplay.text = TextUtils.padWith("" + clamp(data.totalCleans, 9999), 4);
+    }
+
+    function clamp(value : Int, max : Int) : Int
+    {
+        if (value < max)
+            return value;
+        else
+            return max;
     }
 
     function buildScrollButton(x : Float, y : Float, left : Bool) : Button

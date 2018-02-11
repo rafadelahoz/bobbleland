@@ -44,8 +44,6 @@ class PlayerCursor extends FlxSprite
 		AngleDelta = 1;
 
 		aimAngle = 90;
-		// aimAngle = 140; // For isolated positions debugging
-		aimAngle = 112; // For isolated positions debugging
 		aimOrigin = FlxPoint.get(width / 2, height / 2);
 		moving = false;
 

@@ -27,8 +27,11 @@ class BgmEngine
         initialized = true;
 
         tunes = new Map<BGM, FlxSound>();
-        tunes.set(BGM.Title, null/*FlxG.sound.load("assets/music/title.ogg")*/);
-        tunes.set(BGM.Menu, null/*FlxG.sound.load("assets/music/menu.ogg")*/);
+        tunes.set(BGM.Title, FlxG.sound.load("assets/music/title.ogg"));
+        tunes.set(BGM.Menu, FlxG.sound.load("assets/music/menu.ogg"));
+        tunes.set(BGM.GameA, FlxG.sound.load("assets/music/gameA.ogg"));
+        tunes.set(BGM.GameC, FlxG.sound.load("assets/music/gameC.ogg"));
+        tunes.set(BGM.Danger, FlxG.sound.load("assets/music/danger.ogg"));
 
         playing = new Map<BGM, Bool>();
         for (tune in tunes.keys())
@@ -145,5 +148,8 @@ enum BGM {
     None;
     Title;
     Menu;
+    GameA;
+    GameC;
+    Danger;
     Other;
 }

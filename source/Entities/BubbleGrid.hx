@@ -431,17 +431,19 @@ class BubbleGrid extends FlxObject
 	{
 		var cells : Array<FlxPoint> = getAdjacentPositions(pos);
 		trace("Adjacents of " + pos + " are " + cells);
+		var validCells : Array<FlxPoint> = [];
 		for (cell in cells)
 		{
-			if (!isValid(Std.int(cell.x), Std.int(cell.y)) || getData(cell.x, cell.y) != null)
+			trace(" + Adjacent " + cell + " is valid? " + isValid(Std.int(cell.x), Std.int(cell.y)));
+			if (isValid(Std.int(cell.x), Std.int(cell.y)) && getData(cell.x, cell.y) == null)
 			{
-				cells.remove(cell);
+				validCells.push(cell);
 			}
 		}
 
-		trace("Valid adjacents of " + pos + " are " + cells);
-		
-		return cells;
+		trace("Valid adjacents of " + pos + " are " + validCells);
+
+		return validCells;
 	}
 
 	function clearAdjacentPositions(positions : Array<FlxPoint>)

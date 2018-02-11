@@ -21,9 +21,9 @@ class GameController
 		FlxG.switchState(new MenuState());
 	}
 
-	public static function StartArcadeGame()
+	public static function StartArcadeGame(?DontLoad : Bool = false)
 	{
-		if (SaveStateManager.savestateExists())
+		if (!DontLoad && SaveStateManager.savestateExists())
 		{
 			trace("Savestate data exists!");
 			ArcadeGameStatus.init();
