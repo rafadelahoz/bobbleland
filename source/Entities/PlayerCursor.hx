@@ -133,7 +133,8 @@ class PlayerCursor extends FlxSprite
 	{
 		canvas.draw();
 		super.draw();
-		label.draw();
+		if (world.grid.DEBUG_diplayGrid)
+			label.draw();
 	}
 
 	public function redraw() : Void
