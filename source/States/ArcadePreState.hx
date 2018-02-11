@@ -110,6 +110,11 @@ class ArcadePreState extends FlxTransitionableState
     {
         swipeManager.update(elapsed);
 
+        if (FlxG.keys.pressed.ONE)
+            ArcadeGameStatus.setBgm("GameA");
+        else if (FlxG.keys.pressed.TWO)
+            ArcadeGameStatus.setBgm("GameC");
+
         super.update(elapsed);
     }
 
@@ -145,7 +150,7 @@ class ArcadePreState extends FlxTransitionableState
         var data = ArcadeGameStatus.getConfigData();
         data.difficulty = getSnapSlot(sldDifficulty.x, 24, 32);
         data.character = ArcadeGameStatus.getCharacter();
-        data.bgm = "GameC";
+        // data.bgm = "GameC";
         ArcadeGameStatus.setConfigData(data);
         trace("arcade data: " + ArcadeGameStatus.getConfigData());
     }

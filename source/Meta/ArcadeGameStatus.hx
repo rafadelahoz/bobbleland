@@ -151,6 +151,16 @@ class ArcadeGameStatus
         arcadeGameData.character = id;
     }
 
+    public static function getBgm() : String
+    {
+        return arcadeGameData.bgm;
+    }
+
+    public static function setBgm(id : String)
+    {
+        arcadeGameData.bgm = id;
+    }
+
     static function generateColorSet(number : Int) : Array<BubbleColor>
     {
         var usedColors : Array<BubbleColor> = [];
