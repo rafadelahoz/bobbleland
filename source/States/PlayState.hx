@@ -157,6 +157,8 @@ class PlayState extends FlxTransitionableState
 	function handleBgm()
 	{
 		trace(puzzleData.bgm);
+		// TODO: Disable BGM for now
+		return;
 		if (puzzleData.bgm != null)
 			BgmEngine.play(BgmEngine.getBgm(puzzleData.bgm));
 		else
