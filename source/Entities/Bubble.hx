@@ -194,7 +194,7 @@ class Bubble extends FlxSprite
 						world.grid.lastCell = lastPosition;
 					}
 
-					trace(lastPosition + " -> " + cellPosition);
+					// trace(lastPosition + " -> " + cellPosition);
 
 					onHitBubbles();
 				}
@@ -329,10 +329,12 @@ class Bubble extends FlxSprite
 				var invalid : Bool = !grid.isPositionValid(targetPosition);
 				var occupied : Bool = grid.getData(targetPosition.x, targetPosition.y) != null;
 
+				#if !mobile
 				trace(cellPosition + " is" +
 						(occupied ? " already occupied by " + grid.getData(targetPosition.x, targetPosition.y) : "") +
 						(invalid ? " invalid" : "") +
 						", returning to " + lastPosition);
+				#end
 				cellPosition.set(lastPosition.x, lastPosition.y);
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 
@@ -340,13 +342,17 @@ class Bubble extends FlxSprite
 				trace(neighbours + " contains " + cellPosition + "? " + containsPoint(neighbours, cellPosition));
 				if (!containsPoint(neighbours, cellPosition))
 				{
-					// Non adjacent position reached
-					trace("Invalid fallback from " + targetPosition + " to " + cellPosition);
-					// Find the closest cell
-					trace("Trying to find closest to " + cellPosition + " between " + neighbours);
+					#if !mobile
+						// Non adjacent position reached
+						trace("Invalid fallback from " + targetPosition + " to " + cellPosition);
+						// Find the closest cell
+						trace("Trying to find closest to " + cellPosition + " between " + neighbours);
+					#end
 					cellPosition = findClosestCell(cellPosition, neighbours);
 					cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
-					trace("Found: " + cellPosition);
+					#if !mobile
+						trace("Found: " + cellPosition);
+					#end
 				}
 
 				targetPosition.put();
