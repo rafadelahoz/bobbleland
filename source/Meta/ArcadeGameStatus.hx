@@ -9,6 +9,10 @@ class ArcadeGameStatus
     static var arcadeData : ArcadeData;
     static var arcadeGameData : puzzle.PuzzleData;
 
+    static var MAX_TIME : Int = 3599999;
+    static var MAX_COUNT : Int = 99999999;
+    static var MAX_SCS : Int = 9999;
+
     public static function init()
     {
         if (arcadeGameData == null)
@@ -20,6 +24,7 @@ class ArcadeGameStatus
             arcadeGameData.background = null;
             arcadeGameData.bubbleSet = null;
             arcadeGameData.character = null;
+            arcadeGameData.bgm = "GameA";
 
             arcadeGameData.initialRows = 4;
             arcadeGameData.dropDelay = 20;
@@ -34,7 +39,7 @@ class ArcadeGameStatus
             if (arcadeData == null)
             {
                 arcadeData = {
-                    difficulty: 2, character: null,
+                    difficulty: 2, character: null, bgm: "GameA",
                     highScore: 0, maxBubbles: 0, longestGame: 0,
                     totalBubbles: 0, totalTime: 0, totalCleans: 0
                 };
@@ -57,17 +62,25 @@ class ArcadeGameStatus
     public static function storePlayData(playData : Dynamic)
     {
         if (playData.score > arcadeData.highScore)
-            arcadeData.highScore = playData.score;
+            arcadeData.highScore = clamp(playData.score, MAX_COUNT);
 
         if (playData.bubbles > arcadeData.maxBubbles)
-            arcadeData.maxBubbles = playData.bubbles;
+            arcadeData.maxBubbles = clamp(playData.bubbles, MAX_COUNT);
 
         if (playData.time > arcadeData.longestGame)
-            arcadeData.longestGame = playData.time;
+            arcadeData.longestGame = clamp(playData.time, MAX_TIME);
 
-        arcadeData.totalBubbles += playData.bubbles;
-        arcadeData.totalTime += playData.time;
-        arcadeData.totalCleans += playData.cleans;
+        arcadeData.totalBubbles += clamp(playData.bubbles, MAX_COUNT);
+        arcadeData.totalTime += clamp(playData.time, MAX_TIME);
+        arcadeData.totalCleans += clamp(playData.cleans, MAX_SCS);
+    }
+
+    static function clamp(value : Int, max : Int) : Int
+    {
+        if (value < max)
+            return value;
+        else
+            return max;
     }
 
     static function loadArcadeConfigData() : ArcadeData
@@ -138,6 +151,16 @@ class ArcadeGameStatus
         arcadeGameData.character = id;
     }
 
+    public static function getBgm() : String
+    {
+        return arcadeGameData.bgm;
+    }
+
+    public static function setBgm(id : String)
+    {
+        arcadeGameData.bgm = id;
+    }
+
     static function generateColorSet(number : Int) : Array<BubbleColor>
     {
         var usedColors : Array<BubbleColor> = [];
@@ -158,6 +181,7 @@ class ArcadeGameStatus
 typedef ArcadeData = {
     var difficulty : Int;
     var character : String;
+    var bgm : String;
 
     var highScore : Int;
     var longestGame : Int;

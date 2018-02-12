@@ -13,19 +13,28 @@ class TextUtils
 		return string;
 	}
 
-    public static function formatTime(seconds : Int) : String
+	static var MAX_TIME : Int = 3599999;
+
+    public static function formatTime(seconds : UInt) : String
     {
+		trace("Formatting " + seconds + "secs");
+
+		if (seconds > MAX_TIME)
+			seconds = MAX_TIME;
+
 		var str : String = "";
         var minutes = Std.int(seconds / 60);
+		trace(minutes + "mins = Std.int(" + seconds + "/60)");
         var hours = Std.int(minutes / 60);
+		trace(hours + "hours = Std.int(" + minutes + "/60)");
 		minutes = minutes % 60;
 		seconds = seconds % 60;
 
         if (hours > 0)
             str += hours + ":";
         if (minutes > 0 || hours > 0)
-            str += minutes + ":";
-        str += seconds + "'";
+            str += padWith("" + minutes, 2, "0") + ":";
+        str += padWith("" + seconds, 2, "0") + "\"";
 
         return str;
     }

@@ -93,13 +93,13 @@ class GameOverState extends FlxTransitionableState
 
 	function onGiveupButtonPressed() : Void
 	{
-		if (mode == PlayState.ModeArcade)
-			GameController.StartArcadeGame();
+		// if (mode == PlayState.ModeArcade)
+		GameController.StartArcadeGame(true);
 	}
 
 	function onRetryButtonPressed() : Void
 	{
-		if (mode == PlayState.ModeArcade)
-			GameController.BeginArcade();
+		// if (mode == PlayState.ModeArcade)
+		GameController.BeginArcade();
 	}
 }

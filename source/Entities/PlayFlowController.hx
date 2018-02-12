@@ -51,6 +51,8 @@ class PlayFlowController
 
         if (SaveData != null)
         {
+            trace("Loaded playFlowData");
+            
             playTime = SaveData.playTime;
             score = SaveData.score;
             bubbleCount = SaveData.bubbleCount;
@@ -159,7 +161,7 @@ class PlayFlowController
         var added : Bool = false;
 
         var currentColors = world.availableColors.length;
-        if (currentColors < 8)
+        if (currentColors < 6)
         {
             world.availableColors.push(new BubbleColor(currentColors));
         }

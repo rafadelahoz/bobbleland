@@ -9,6 +9,8 @@ import flixel.util.FlxSpriteUtil;
 import flixel.group.FlxGroup;
 import flixel.tweens.FlxTween;
 
+import SfxEngine.SFX;
+
 class Bubble extends FlxSprite
 {
 	public static var StateAiming : Int = 0;
@@ -26,7 +28,7 @@ class Bubble extends FlxSprite
 	public var Size : Float;
 	public var HalfSize : Float;
 
-	public var UseMoveToContact : Bool = false;
+	public var UseMoveToContact : Bool = true;
 
 	public var popPoints : Int;
 	public var fallPoints : Int;
@@ -46,6 +48,8 @@ class Bubble extends FlxSprite
 	public var cellCenterPosition : FlxPoint;
 
 	public var special : Int;
+
+	var touchedBubble : Bubble;
 
 	public function new(X : Float, Y : Float, World : PlayState, Color : BubbleColor)
 	{
@@ -155,9 +159,12 @@ class Bubble extends FlxSprite
 
 				// Bounce off walls
 				if (x + width/2 - Size * 1 <= grid.getLeft() || x + width/2 + Size * 1 >= grid.getRight())
+				{
 					velocity.x *= -1;
-				// Stick to the ceiling
+					SfxEngine.play(SFX.BubbleBounce);
+				}
 
+				// Stick to the ceiling
 				if (y - HalfSize <= grid.getTop())
 				{
 					onHitCeiling();
@@ -175,6 +182,20 @@ class Bubble extends FlxSprite
 				else if (UseMoveToContact && checkCollisionWithBubblesAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed))
 				{
 					moveToContact(x + velocity.x * FlxG.elapsed,  y + velocity.y * FlxG.elapsed);
+
+					// Remember your way
+					var currentPosition : FlxPoint = getCurrentCell();
+					//if (!compare(currentPosition, cellPosition))
+					{
+						lastPosition.set(cellPosition.x, cellPosition.y);
+						cellPosition.set(currentPosition.x, currentPosition.y);
+
+						world.grid.currentCell = cellPosition;
+						world.grid.lastCell = lastPosition;
+					}
+
+					// trace(lastPosition + " -> " + cellPosition);
+
 					onHitBubbles();
 				}
 				else
@@ -185,6 +206,9 @@ class Bubble extends FlxSprite
 					{
 						lastPosition.set(cellPosition.x, cellPosition.y);
 						cellPosition.set(currentPosition.x, currentPosition.y);
+
+						world.grid.currentCell = cellPosition;
+						world.grid.lastCell = lastPosition;
 					}
 				}
 
@@ -279,38 +303,59 @@ class Bubble extends FlxSprite
 			// Rest!
 			state = StateIdling;
 
+			// Fetch your current place
+			var currentPosition : FlxPoint = getCurrentCell();
+
 			// Discriminate between ceiling and bubble hit
 			if (useNewPosition)
 			{
-				// Fetch your idling place
-				var currentPosition : FlxPoint = getCurrentCell();
 				cellPosition.set(currentPosition.x, currentPosition.y);
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 			}
 			else
 			{
 				// Consider the last valid position visited
+				cellPosition.set(currentPosition.x, currentPosition.y);
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 			}
 
 			// If it's already occupied, go to the last one free you got
-			if (!grid.isPositionValid(cellPosition) || grid.getData(cellPosition.x, cellPosition.y) != null)
+			if (!grid.isPositionValid(currentPosition) || grid.getData(currentPosition.x, currentPosition.y) != null)
 			{
-				var targetPosition : FlxPoint = FlxPoint.get(cellPosition.x, cellPosition.y);
-				trace(cellPosition + " is already occupied, returning to " + lastPosition);
+				// Store the target in case the fallback position is not valid
+				var targetPosition : FlxPoint = touchedBubble.getCurrentCell();
+				// var targetPosition : FlxPoint = FlxPoint.get(currentPosition.x, currentPosition.y);
+
+				var invalid : Bool = !grid.isPositionValid(targetPosition);
+				var occupied : Bool = grid.getData(targetPosition.x, targetPosition.y) != null;
+
+				#if !mobile
+				trace(cellPosition + " is" +
+						(occupied ? " already occupied by " + grid.getData(targetPosition.x, targetPosition.y) : "") +
+						(invalid ? " invalid" : "") +
+						", returning to " + lastPosition);
+				#end
 				cellPosition.set(lastPosition.x, lastPosition.y);
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 
-				// Check if the cell we returned to is connected to the target, if not, tweak!
-				if (grid.getAdjacentPositions(targetPosition).indexOf(cellPosition) < 0)
+				var neighbours : Array<FlxPoint> = grid.getValidAdjacentPositions(targetPosition);
+				trace(neighbours + " contains " + cellPosition + "? " + containsPoint(neighbours, cellPosition));
+				if (!containsPoint(neighbours, cellPosition))
 				{
-					grid.setData(cellPosition.x, cellPosition.y, this);
-					grid.renderCanvas();
-
-					Screenshot.take();
-
-					throw "NOT ADYACENT BUBBLE REACHED!";
+					#if !mobile
+						// Non adjacent position reached
+						trace("Invalid fallback from " + targetPosition + " to " + cellPosition);
+						// Find the closest cell
+						trace("Trying to find closest to " + cellPosition + " between " + neighbours);
+					#end
+					cellPosition = findClosestCell(cellPosition, neighbours);
+					cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
+					#if !mobile
+						trace("Found: " + cellPosition);
+					#end
 				}
+
+				targetPosition.put();
 			}
 
 			var mayHaveLost : Bool = false;
@@ -330,6 +375,36 @@ class Bubble extends FlxSprite
 				world.handleBubbleStop(mayHaveLost);
 			}
 		}
+	}
+
+	function containsPoint(arr : Array<FlxPoint>, point : FlxPoint) : Bool
+	{
+		for (a in arr)
+		{
+			if (a.equals(point))
+				return true;
+		}
+
+		return false;
+	}
+
+	function findClosestCell(target : FlxPoint, cells : Array<FlxPoint>) : FlxPoint
+	{
+		var closest : FlxPoint = null;
+		var distance : Float = Math.POSITIVE_INFINITY;
+		var center : FlxPoint = grid.getCenterOfCellAt(target.x, target.y);
+		var ccenter : FlxPoint = null;
+		for (cell in cells)
+		{
+			ccenter = grid.getCenterOfCellAt(cell.x, cell.y);
+			if (center.distanceTo(ccenter) < distance)
+			{
+				closest = cell;
+				distance = center.distanceTo(ccenter);
+			}
+		}
+
+		return closest;
 	}
 
 	public function onBubblesPopped()
@@ -462,9 +537,9 @@ class Bubble extends FlxSprite
 		var from : FlxPoint = new FlxPoint(x, y);
 		var to : FlxPoint = new FlxPoint(X, Y);
 
-		for (i in 0...11)
+		for (i in 0...101)
 		{
-			var t : Float = 1 - i/10;
+			var t : Float = 1 - i/100;
 			var position : FlxPoint = interpolatePosition(from, to, t);
 			if (!checkCollisionWithBubblesAt(position.x, position.y))
 			{
@@ -495,7 +570,11 @@ class Bubble extends FlxSprite
 		for (bubble in bubbles)
 		{
 			if (bubble.touches(this))
+			{
+				// Store the touched bubble
+				touchedBubble = bubble;
 				return true;
+			}
 		}
 
 		return false;
@@ -506,7 +585,7 @@ class Bubble extends FlxSprite
 		if (state == StatePopping || bubble.state == StatePopping)
 			return false;
 
-		var squish : Float = 0.85;
+		var squish : Float = 0.95;
 
 		var deltaXSquared : Float = (x + width/2) - (bubble.x + width/2);
 		deltaXSquared *= deltaXSquared;

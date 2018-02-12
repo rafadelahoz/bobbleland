@@ -29,12 +29,18 @@ class BgmEngine
         tunes = new Map<BGM, FlxSound>();
         tunes.set(BGM.Title, FlxG.sound.load("assets/music/title.ogg"));
         tunes.set(BGM.Menu, FlxG.sound.load("assets/music/menu.ogg"));
+        tunes.set(BGM.GameA, FlxG.sound.load("assets/music/gameA.ogg"));
+        tunes.set(BGM.GameC, FlxG.sound.load("assets/music/gameC.ogg"));
+        tunes.set(BGM.Danger, FlxG.sound.load("assets/music/danger.ogg"));
 
         playing = new Map<BGM, Bool>();
         for (tune in tunes.keys())
         {
-            tunes.get(tune).persist = true;
-            tunes.get(tune).looped = true;
+            if (tunes.get(tune) != null)
+            {
+                tunes.get(tune).persist = true;
+                tunes.get(tune).looped = true;
+            }
             playing.set(tune, false);
         }
 
@@ -51,7 +57,7 @@ class BgmEngine
     {
         for (tune in tunes.keys())
         {
-            if (tunes.get(tune).playing)
+            if (tunes.get(tune) != null && tunes.get(tune).playing)
                 stop(tune);
         }
 
@@ -68,7 +74,7 @@ class BgmEngine
             stop(current);
         }
 
-        if (tunes.exists(bgm))
+        if (tunes.exists(bgm) && tunes.get(bgm) != null)
         {
             if (volume <= 0)
             {
@@ -98,7 +104,7 @@ class BgmEngine
     {
         if (playing.get(bgm))
         {
-            if (Enabled)
+            if (Enabled && tunes.get(bgm) != null)
             {
                 tunes.get(bgm).fadeOut(FadeTime*2, -10, function(_t:FlxTween) {tunes.get(bgm).stop();});
             }
@@ -142,5 +148,8 @@ enum BGM {
     None;
     Title;
     Menu;
+    GameA;
+    GameC;
+    Danger;
     Other;
 }

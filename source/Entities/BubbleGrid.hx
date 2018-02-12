@@ -50,12 +50,12 @@ class BubbleGrid extends FlxObject
 
 		clearData();
 
-		// renderCanvas();
+		renderCanvas();
 	}
 
 	override public function update(elapsed:Float)
 	{
-		// renderCanvas();
+		renderCanvas();
 
 		super.update(elapsed);
 	}
@@ -133,7 +133,7 @@ class BubbleGrid extends FlxObject
 			data[Std.int(row)][Std.int(col)] = bubble;
 		}
 		else
-			throw("Trying to set invalid grid position (" + col + ", " + row + ")");
+			trace("Trying to set invalid grid position (" + col + ", " + row + ")");
 	}
 
 	public function getData(col : Float, row : Float) : Bubble
@@ -427,6 +427,25 @@ class BubbleGrid extends FlxObject
 
 	}
 
+	public function getValidAdjacentPositions(pos : FlxPoint) : Array<FlxPoint>
+	{
+		var cells : Array<FlxPoint> = getAdjacentPositions(pos);
+		// trace("Adjacents of " + pos + " are " + cells);
+		var validCells : Array<FlxPoint> = [];
+		for (cell in cells)
+		{
+			// trace(" + Adjacent " + cell + " is valid? " + isValid(Std.int(cell.x), Std.int(cell.y)));
+			if (isValid(Std.int(cell.x), Std.int(cell.y)) && getData(cell.x, cell.y) == null)
+			{
+				validCells.push(cell);
+			}
+		}
+
+		// trace("Valid adjacents of " + pos + " are " + validCells);
+
+		return validCells;
+	}
+
 	function clearAdjacentPositions(positions : Array<FlxPoint>)
 	{
 		for (point in positions)
@@ -552,6 +571,10 @@ class BubbleGrid extends FlxObject
 		trace(dump);
 	}
 
+	public var DEBUG_diplayGrid : Bool;
+	public var currentCell : FlxPoint;
+	public var lastCell : FlxPoint;
+
 	public function renderCanvas()
 	{
 		// return;
@@ -560,6 +583,9 @@ class BubbleGrid extends FlxObject
 			canvas = new FlxSprite(bounds.x, bounds.y).makeGraphic(Std.int(bounds.width), Std.int(bounds.height), 0xFF250516);
 		else
 			FlxSpriteUtil.fill(canvas, 0x00000000);
+
+		if (!DEBUG_diplayGrid)
+			return;
 
 		var lineStyle : flixel.util.LineStyle = { color : 0x50FFFFFF, thickness : 1 };
 
@@ -573,9 +599,9 @@ class BubbleGrid extends FlxObject
 		// FlxSpriteUtil.drawRect(canvas, 0, 0, width-1, height-1, 0x000000, lineStyle);
 
 		// TODO: Extract this from here: draw the limit line
-		FlxSpriteUtil.drawRect(canvas, 0, bottomRow*cellSize-1, width-1, 2, 0x000000, { color : 0x90FF5151, thickness: 2 });
+		// FlxSpriteUtil.drawRect(canvas, 0, bottomRow*cellSize-1, width-1, 2, 0x000000, { color : 0x90FF5151, thickness: 2 });
 
-		return;
+		// return;
 
 		var cellOffset : Float;
 		var cellColor : Int = 0x20FFFFFF;
@@ -587,7 +613,15 @@ class BubbleGrid extends FlxObject
 			{
 				var ccolor : Int = cellColor;
 
-				if (highlightedCell.x == col && highlightedCell.y == row)
+				if (currentCell != null && currentCell.x == col && currentCell.y == row)
+				{
+					ccolor = 0xFFF51F51;
+				}
+				else if (lastCell != null && lastCell.x == col && lastCell.y == row)
+				{
+					ccolor = 0x40F51F51;
+				}
+				else if (highlightedCell.x == col && highlightedCell.y == row)
 				{
 					ccolor = 0xFFFF5151;
 				}
