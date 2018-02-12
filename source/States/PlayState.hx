@@ -156,9 +156,6 @@ class PlayState extends FlxTransitionableState
 
 	function handleBgm()
 	{
-		trace(puzzleData.bgm);
-		// TODO: Disable BGM for now
-		return;
 		if (puzzleData.bgm != null)
 			BgmEngine.play(BgmEngine.getBgm(puzzleData.bgm));
 		else
@@ -214,6 +211,8 @@ class PlayState extends FlxTransitionableState
 
 	function onPauseStart()
 	{
+		BgmEngine.pauseCurrent();
+
 		dropTimer.active = false;
 		waitTimer.active = false;
 		aimingTimer.active = false;
@@ -223,6 +222,8 @@ class PlayState extends FlxTransitionableState
 
 	function onPauseEnd()
 	{
+		BgmEngine.resumeCurrent();
+
 		dropTimer.active = true;
 		waitTimer.active = true;
 		aimingTimer.active = true;
@@ -426,6 +427,9 @@ class PlayState extends FlxTransitionableState
 	// Handler for when losing happens :(
 	public function handleLosing()
 	{
+		SfxEngine.play(SfxEngine.SFX.Lost);
+		BgmEngine.stopCurrent();
+
 		if (state == StateWaiting)
 		{
 			// There is a flying bubble

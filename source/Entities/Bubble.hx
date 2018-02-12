@@ -480,15 +480,16 @@ class Bubble extends FlxSprite
 	{
 		state = StateIdling;
 
+		var delay : Float = 1.5;
 		var rotTime : Float = (grid.rows - cellPosition.y)*0.25 + (cellPosition.y)*0.15;
 
 		// Rot quickly
-		new FlxTimer().start(rotTime * 0.25, function (_t:FlxTimer) {
+		new FlxTimer().start(delay + rotTime * 0.25, function (_t:FlxTimer) {
 			color = 0xFF606060;
 		});
 
 		// Fall less quickly
-		new FlxTimer().start(rotTime, function (_t:FlxTimer) {
+		new FlxTimer().start(delay + rotTime, function (_t:FlxTimer) {
 			triggerFall();
 		});
 	}

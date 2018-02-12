@@ -86,6 +86,8 @@ class BgmEngine
                 {
                     if (tunes.get(bgm).fadeTween != null)
                         tunes.get(bgm).fadeTween.cancel();
+                    if (restart)
+                        tunes.get(bgm).play(true);
                     tunes.get(bgm).fadeIn(FadeTime, 0, volume);
 
                     playing.set(bgm, true);
@@ -93,6 +95,17 @@ class BgmEngine
                 }
             }
         }
+    }
+
+    public static function resumeCurrent()
+    {
+        if (Enabled && !tunes.get(current).playing)
+            tunes.get(current).resume();
+    }
+    public static function pauseCurrent()
+    {
+        if (Enabled && tunes.get(current).playing)
+            tunes.get(current).pause();
     }
 
     public static function stopCurrent()

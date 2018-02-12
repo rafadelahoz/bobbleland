@@ -13,6 +13,7 @@ enum SFX {
     BubbleStop;
     NiceSmall;
     NiceBig;
+    Lost;
 }
 
 class SfxEngine
@@ -43,6 +44,7 @@ class SfxEngine
         sfx.set(SFX.BubbleStop,     loadSfx("bubble-stop.wav"));
         sfx.set(SFX.NiceSmall,      loadSfx("nice-small.wav"));
         sfx.set(SFX.NiceBig,        loadSfx("nice-big.wav"));
+        sfx.set(SFX.Lost,           loadSfx("lose.wav"));
 
         for (sf in sfx.keys())
         {

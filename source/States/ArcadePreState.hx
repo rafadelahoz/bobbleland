@@ -26,8 +26,14 @@ class ArcadePreState extends FlxTransitionableState
     /** Play settings screen **/
     var centerScreen : FlxSpriteGroup;
     var sldDifficulty : SliderButton;
+
     var btnDog : HoldButton;
     var btnCat : HoldButton;
+
+    var btnBgmA : HoldButton;
+    var btnBgmB : HoldButton;
+    var btnBgmC : HoldButton;
+
     var btnStart : Button;
 
     /** History screen **/
@@ -89,7 +95,7 @@ class ArcadePreState extends FlxTransitionableState
     {
         var data = ArcadeGameStatus.getConfigData();
         var difficulty = data.difficulty;
-        sldDifficulty.x = getSlotPosition(difficulty, 24, 32);
+        sldDifficulty.x = getSlotPosition(difficulty, 24, 40);
 
         var character = data.character;
         switch (character)
@@ -196,18 +202,19 @@ class ArcadePreState extends FlxTransitionableState
         var centerOverlay : FlxSprite = new FlxSprite(0, 0, "assets/ui/arcade-config.png");
         centerScreen.add(centerOverlay);
 
-        sldDifficulty = new SliderButton(32, 88, snapToDifficultyGrid);
+        sldDifficulty = new SliderButton(40, 64, snapToDifficultyGrid);
         sldDifficulty.loadSpritesheet("assets/ui/slider.png", 16, 32);
-        sldDifficulty.setLimits(24, 136);
+        sldDifficulty.setLimits(28, 140);
         centerScreen.add(sldDifficulty);
 
         generateCharacterButtons(centerScreen);
+        generateBgmButtons(centerScreen);
 
-        centerScreen.add(buildScrollButton(0, 144, true));
+        centerScreen.add(buildScrollButton(0, 136, true));
         // centerScreen.add(buildScrollButton(FlxG.width - 12, 144, false));
 
-        btnStart = new Button(40, 264, onStartButtonPressed);
-        btnStart.loadSpritesheet("assets/ui/btn-start.png", 96, 40);
+        btnStart = new Button(40, 276, onStartButtonPressed);
+        btnStart.loadSpritesheet("assets/ui/btn-start.png", 96, 32);
         centerScreen.add(btnStart);
 
         return centerScreen;
@@ -266,7 +273,7 @@ class ArcadePreState extends FlxTransitionableState
         maxBubblesDisplay.text = "" + clamp(data.maxBubbles, 99999999);
 
         totalBubblesDisplay.text = TextUtils.padWith("" + clamp(data.totalBubbles, 99999999), 8);
-        totalTimeDisplay.text = TextUtils.padWith(TextUtils.formatTime(data.totalTime), 9);
+        totalTimeDisplay.text = TextUtils.padWith(TextUtils.formatTime(data.totalTime), 10);
         totalCleansDisplay.text = TextUtils.padWith("" + clamp(data.totalCleans, 9999), 4);
     }
 
@@ -320,13 +327,28 @@ class ArcadePreState extends FlxTransitionableState
 
     function generateCharacterButtons(group : FlxSpriteGroup)
     {
-        btnDog = new HoldButton(32, 168, onCharDogPressed, onCharReleased);
+        btnDog = new HoldButton(40, 128, onCharDogPressed, onCharReleased);
         btnDog.loadSpritesheet("assets/ui/char-dog.png", 32, 32);
         group.add(btnDog);
 
-        btnCat = new HoldButton(72, 168, onCharCatPressed, onCharReleased);
+        btnCat = new HoldButton(80, 128, onCharCatPressed, onCharReleased);
         btnCat.loadSpritesheet("assets/ui/char-cat.png", 32, 32);
         group.add(btnCat);
+    }
+
+    function generateBgmButtons(group : FlxSpriteGroup)
+    {
+        btnBgmA = new HoldButton(40, 224, onBgmAPressed, onBgmReleased);
+        btnBgmA.loadSpritesheet("assets/ui/btn-bgmA.png", 32, 32);
+        group.add(btnBgmA);
+
+        btnBgmB = new HoldButton(80, 224, onBgmBPressed, onBgmReleased);
+        btnBgmB.loadSpritesheet("assets/ui/btn-bgmB.png", 32, 32);
+        group.add(btnBgmB);
+
+        btnBgmC = new HoldButton(120, 224, onBgmCPressed, onBgmReleased);
+        btnBgmC.loadSpritesheet("assets/ui/btn-bgmC.png", 32, 32);
+        group.add(btnBgmC);
     }
 
     function onCharReleased()
@@ -349,6 +371,43 @@ class ArcadePreState extends FlxTransitionableState
         btnDog.setPressed(false);
     }
 
+    function onBgmReleased()
+    {
+        ArcadeGameStatus.setBgm(null);
+        BgmEngine.play(BgmEngine.BGM.Menu);
+        // Deactivate other buttons
+        btnBgmA.setPressed(false);
+        btnBgmB.setPressed(false);
+        btnBgmC.setPressed(false);
+    }
+
+    function onBgmAPressed()
+    {
+        ArcadeGameStatus.setBgm("GameA");
+        BgmEngine.play(BgmEngine.BGM.GameA, true);
+        // Deactivate other buttons
+        btnBgmB.setPressed(false);
+        btnBgmC.setPressed(false);
+    }
+
+    function onBgmBPressed()
+    {
+        ArcadeGameStatus.setBgm(null);//"GameB");
+        BgmEngine.stopCurrent();//.play(BgmEngine.BGM.GameB);
+        // Deactivate other buttons
+        btnBgmA.setPressed(false);
+        btnBgmC.setPressed(false);
+    }
+
+    function onBgmCPressed()
+    {
+        ArcadeGameStatus.setBgm("GameC");
+        BgmEngine.play(BgmEngine.BGM.GameC, true);
+        // Deactivate other buttons
+        btnBgmA.setPressed(false);
+        btnBgmB.setPressed(false);
+    }
+
     function onClearDataReleased()
     {
         ArcadeGameStatus.clearHistoryData();
@@ -358,7 +417,7 @@ class ArcadePreState extends FlxTransitionableState
 
     function snapToDifficultyGrid()
     {
-        var snapX = snapToSlots(sldDifficulty.x, 24, 32);
+        var snapX = snapToSlots(sldDifficulty.x, 24, 40);
         FlxTween.tween(sldDifficulty, {x : snapX}, 0.1);
     }
 

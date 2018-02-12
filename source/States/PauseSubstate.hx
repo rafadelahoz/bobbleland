@@ -173,6 +173,8 @@ class PauseSubstate extends FlxSubState
     {
         if (enabled)
         {
+            BgmEngine.stopCurrent();
+            
             active = false;
             if (tween != null)
                 tween.cancel();
