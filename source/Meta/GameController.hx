@@ -45,7 +45,7 @@ class GameController
 		if (Continue)
 		{
 			data = SaveStateManager.loadAndErase();
-			trace(data);
+			trace("Save data is " + (SaveStateManager.savestateExists() ? "present" : "not present") + " after loading");
 	 	}
 
 		FlxG.switchState(new PlayState(PlayState.ModeArcade, data));

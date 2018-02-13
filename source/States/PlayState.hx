@@ -33,8 +33,7 @@ class PlayState extends FlxTransitionableState
 	public var DEBUG_dropDisabled : Bool;
 
 	public var mode : Int;
-	public var puzzleName : String;
-	public var puzzleData : puzzle.PuzzleData;
+	public var playSessionData : PlaySessionData;
 
 	public var state : Int;
 
@@ -74,15 +73,22 @@ class PlayState extends FlxTransitionableState
 
 	public var saveData : Dynamic;
 
-	public function new(Mode : Int, ?SaveData : Dynamic = null, ?PuzzleName : String=null)
+	public function new(Mode : Int, ?SaveData : Dynamic = null)
 	{
 		super();
 
 		mode = Mode;
 		saveData = SaveData;
-		puzzleName = PuzzleName;
-
-		parsePuzzle(puzzleName);
+		if (saveData != null && saveData.session != null)
+		{
+			trace("Using saved session data");
+			trace(saveData.session);
+			playSessionData = saveData.session;
+		}
+		else
+		{
+			playSessionData = ArcadeGameStatus.getData();
+		}
 	}
 
 	override public function create()
@@ -90,10 +96,11 @@ class PlayState extends FlxTransitionableState
 		super.create();
 
 		GamePad.init();
+		prepareRandomizedSessionData();
 
 		prepareBackground();
 
-		availableColors = puzzleData.usedColors;
+		availableColors = playSessionData.usedColors;
 
 		shadow = new FlxSprite(FlxG.width / 2 - 64, 16).makeGraphic(128, 240-48, 0xFF000000);
 		shadow.alpha = 0.68;
@@ -117,7 +124,7 @@ class PlayState extends FlxTransitionableState
 		bottomBar = new FlxSprite(bottomBarPosition.x, bottomBarPosition.y - 1).loadGraphic("assets/images/red-bar.png");
 		add(bottomBar);
 
-		cursor = new PlayerCursor(FlxG.width / 2 - 10, 240 - 40, this, puzzleData.guideEnabled);
+		cursor = new PlayerCursor(FlxG.width / 2 - 10, 240 - 40, this, playSessionData.guideEnabled);
 		add(cursor);
 
 		notifyAiming = false;
@@ -136,9 +143,9 @@ class PlayState extends FlxTransitionableState
 		scoreDisplay = new ScoreDisplay(2, 1, mode, (saveData != null ? saveData.flow.score : 0));
 		add(scoreDisplay);
 
-		if (puzzleData.mode == puzzle.PuzzleData.ModeHold)
+		if (playSessionData.mode == PlaySessionData.ModeHold)
 		{
-			timeDisplay = new ScreenTimer(112, 0, puzzleData.seconds, onTimeOver);
+			timeDisplay = new ScreenTimer(112, 0, playSessionData.seconds, onTimeOver);
 			add(timeDisplay);
 		}
 
@@ -154,18 +161,34 @@ class PlayState extends FlxTransitionableState
 		handleDebugInit();
 	}
 
+	function prepareRandomizedSessionData()
+	{
+		if (playSessionData.character == null)
+		{
+			playSessionData.character = getRandomCharacterId();
+		}
+	}
+
+	function getRandomCharacterId() : String
+	{
+	    if (FlxG.random.bool(50))
+	        return "pug";
+	    else
+	        return "cat";
+	}
+
 	function handleBgm()
 	{
-		if (puzzleData.bgm != null)
-			BgmEngine.play(BgmEngine.getBgm(puzzleData.bgm));
+		if (playSessionData.bgm != null)
+			BgmEngine.play(BgmEngine.getBgm(playSessionData.bgm));
 		else
 			BgmEngine.stopCurrent();
 	}
 
 	override public function finishTransIn()
 	{
-		if (puzzleData.dropDelay > 0)
-			dropDelay = puzzleData.dropDelay;
+		if (playSessionData.dropDelay > 0)
+			dropDelay = playSessionData.dropDelay;
 		else
 			dropDelay = 30;
 		dropTimer.start(dropDelay, onDropTimer);
@@ -522,7 +545,7 @@ class PlayState extends FlxTransitionableState
 
 	public function afterRemoving()
 	{
-		if (puzzleData.mode == puzzle.PuzzleData.ModeClear &&
+		if (playSessionData.mode == PlaySessionData.ModeClear &&
 			grid.getCount() == 0)
 		{
 			handlePuzzleCompleted();
@@ -584,19 +607,6 @@ class PlayState extends FlxTransitionableState
 		switchState(StateWinning);
 	}
 
-	public function parsePuzzle(puzzleName : String)
-	{
-		if (mode == ModePuzzle)
-		{
-			var parser : puzzle.PuzzleParser = new puzzle.PuzzleParser(puzzleName);
-			puzzleData = parser.parse();
-		}
-		else
-		{
-			puzzleData = ArcadeGameStatus.getData();
-		}
-	}
-
 	function prepareBackground()
 	{
 		background = BackgroundDatabase.BuildRandomBackground();
@@ -613,7 +623,7 @@ class PlayState extends FlxTransitionableState
 		baseDecoration.animation.paused = true;
 		add(baseDecoration);
 
-		var characterId : String = puzzleData.character;
+		var characterId : String = playSessionData.character;
 		character = new PlayerCharacter(baseDecoration.x + 16,
 										baseDecoration.y + 24,
 										this, characterId);

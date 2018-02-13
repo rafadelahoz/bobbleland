@@ -40,7 +40,7 @@ class PlayerCharacter extends FlxSprite
     function prepareGraphic()
     {
         if (characterId == null)
-            characterId = getRandomCharacterId();
+            trace("No character specified");
 
         switch (characterId)
         {
@@ -58,14 +58,6 @@ class PlayerCharacter extends FlxSprite
                 animation.add("happy", [0, 8, 9, 10, 11, 12, 13, 14, 15], 30);
         }
 
-    }
-
-    function getRandomCharacterId() : String
-    {
-        if (FlxG.random.bool(50))
-            return "pug";
-        else
-            return "cat";
     }
 
     override public function update(elapsed:Float)

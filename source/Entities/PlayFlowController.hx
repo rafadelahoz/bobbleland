@@ -7,7 +7,6 @@ class PlayFlowController
 {
     var world : PlayState;
     var grid : BubbleGrid;
-    var puzzle : puzzle.PuzzleData;
 
     var trackMetrics : Bool;
     var updateDifficulty : Bool;
@@ -34,7 +33,6 @@ class PlayFlowController
     public function new(World : PlayState, ?SaveData : PlayFlowSaveData = null)
     {
         world = World;
-        puzzle = world.puzzleData;
         grid = world.grid;
 
         trackMetrics = true;
@@ -52,7 +50,7 @@ class PlayFlowController
         if (SaveData != null)
         {
             trace("Loaded playFlowData");
-            
+
             playTime = SaveData.playTime;
             score = SaveData.score;
             bubbleCount = SaveData.bubbleCount;

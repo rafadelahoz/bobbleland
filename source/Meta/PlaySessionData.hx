@@ -1,6 +1,6 @@
-package puzzle;
+package;
 
-class PuzzleData
+class PlaySessionData
 {
     public static var ModeEndless  : Int = -1;
     public static var ModeClear    : Int = 0;

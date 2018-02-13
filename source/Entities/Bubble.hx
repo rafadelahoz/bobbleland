@@ -125,7 +125,7 @@ class Bubble extends FlxSprite
 				// offset.set(0, 0);
 			case BubbleColor.SpecialTarget:
 				trace("Target bubble instantiated");
-				var sprite : String = world.puzzleData.target + ".png";
+				var sprite : String = world.playSessionData.target + ".png";
 				loadGraphic("assets/images/" + sprite);
 			default:
 				loadGraphic("assets/images/" + Bubble.GetSprite() + ".png", true, 16, 16);

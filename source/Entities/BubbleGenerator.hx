@@ -1,21 +1,21 @@
 package;
 
 import flixel.FlxG;
-import puzzle.PuzzleData;
+import PlaySessionData;
 
 class BubbleGenerator
 {
     public var world : PlayState;
-    public var puzzle : PuzzleData;
+    public var sessionData : PlaySessionData;
     public var grid : BubbleGrid;
 
-    // For puzzles
+    // For sessionDatas
     public var currentRow : Int;
 
     public function new(World : PlayState)
     {
         world = World;
-        puzzle = world.puzzleData;
+        sessionData = world.playSessionData;
         grid = world.grid;
     }
 
@@ -28,7 +28,7 @@ class BubbleGenerator
             if (SaveData == null)
             {
                 trace("Starting random grid");
-                for (row in 0...puzzle.initialRows)
+                for (row in 0...sessionData.initialRows)
                 {
                     generateRow();
                 }
@@ -41,7 +41,7 @@ class BubbleGenerator
         }
         else if (world.mode == PlayState.ModePuzzle)
         {
-            while (currentRow < puzzle.initialRows)
+            while (currentRow < sessionData.initialRows)
             {
                 generateRow();
             }
@@ -66,7 +66,7 @@ class BubbleGenerator
             // line in form [1][2][x][x][3]
             var bubLine : Array<BubbleColor> = [];
             var members : Array<String> = line.split("[");
-            trace("processing: " + line + " as " + members);
+            // trace("processing: " + line + " as " + members);
             for (member in members) {
                 // The first member will be empty, avoid it
                 if (member.length == 0)
@@ -110,12 +110,12 @@ class BubbleGenerator
 
     function getPuzzleRow(row : Array<BubbleColor>) : Array<BubbleColor>
     {
-        if (puzzle.mode == PuzzleData.ModeClear ||
-            puzzle.mode == PuzzleData.ModeTarget)
+        if (sessionData.mode == PlaySessionData.ModeClear ||
+            sessionData.mode == PlaySessionData.ModeTarget)
         {
-            if (puzzle.rows.length > 0)
+            if (sessionData.rows.length > 0)
             {
-                row = puzzle.rows.pop();
+                row = sessionData.rows.pop();
                 // If the stored row is empty, it means it is a random row
                 if (row.length == 0)
                 {
@@ -129,7 +129,7 @@ class BubbleGenerator
 
             currentRow++;
         }
-        else if (puzzle.mode == PuzzleData.ModeHold)
+        else if (sessionData.mode == PlaySessionData.ModeHold)
         {
             row = getArcadeRow(row);
             currentRow++;

@@ -7,7 +7,7 @@ class ArcadeGameStatus
     static var savefile : String = "savefile";
 
     static var arcadeData : ArcadeData;
-    static var arcadeGameData : puzzle.PuzzleData;
+    static var arcadeGameData : PlaySessionData;
 
     static var MAX_TIME : Int = 3599999;
     static var MAX_COUNT : Int = 99999999;
@@ -17,9 +17,9 @@ class ArcadeGameStatus
     {
         if (arcadeGameData == null)
         {
-            arcadeGameData = new puzzle.PuzzleData();
+            arcadeGameData = new PlaySessionData();
 
-            arcadeGameData.mode = puzzle.PuzzleData.ModeEndless;
+            arcadeGameData.mode = PlaySessionData.ModeEndless;
 
             arcadeGameData.background = null;
             arcadeGameData.bubbleSet = null;
@@ -172,7 +172,7 @@ class ArcadeGameStatus
         return usedColors;
     }
 
-    public static function getData() : puzzle.PuzzleData
+    public static function getData() : PlaySessionData
     {
         return arcadeGameData;
     }

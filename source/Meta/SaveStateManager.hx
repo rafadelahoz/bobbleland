@@ -21,16 +21,26 @@ class SaveStateManager
         var save : FlxSave = new FlxSave();
         save.bind(savefile);
 
-        // Read data
-        var data : Dynamic = {
-            grid: save.data.grid,
-            flow: save.data.flow
-        };
+        var data : Dynamic = null;
+
+        if (save.data.active == 1)
+        {
+            // Read data
+            data = {
+                grid: save.data.grid,
+                flow: save.data.flow,
+                session: save.data.session
+            };
+
+            trace("Loading " + data);
+        }
 
         // Clear data
         save.data.active = 0;
         save.data.grid = null;
         save.data.flow = null;
+        save.data.session = null;
+
         save.close();
 
         return data;
@@ -43,10 +53,14 @@ class SaveStateManager
 
         var gridData : BubbleGrid.BubbleGridData = state.grid.getSaveData();
         var flowData : PlayFlowController.PlayFlowSaveData = state.flowController.getSaveData();
+        var sessionData : PlaySessionData = state.playSessionData;
 
         save.data.active = 1;
         save.data.grid = gridData;
         save.data.flow = flowData;
+        save.data.session = sessionData;
+
+        trace("Saving " + save.data);
 
         save.close();
     }
