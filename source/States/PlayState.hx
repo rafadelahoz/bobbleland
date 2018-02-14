@@ -100,7 +100,13 @@ class PlayState extends FlxTransitionableState
 
 		prepareBackground();
 
-		availableColors = playSessionData.usedColors;
+		// Init available colors to those available in playSessionData
+		// Avoid sharing the same object, though!
+		availableColors = [];
+		for (color in playSessionData.usedColors)
+		{
+			availableColors.push(color);
+		}
 
 		shadow = new FlxSprite(FlxG.width / 2 - 64, 16).makeGraphic(128, 240-48, 0xFF000000);
 		shadow.alpha = 0.68;
@@ -722,7 +728,8 @@ class PlayState extends FlxTransitionableState
 			}
 		}
 
-		if (FlxG.mouse.justPressed && grid.bounds.containsPoint(mouse))
+		/* Generate 6 bubbles around mouse click */
+		/*if (FlxG.mouse.justPressed && grid.bounds.containsPoint(mouse))
 		{
 			// Create an anchor
 			// var anchor : Bubble = Bubble.CreateAt(cell.x, cell.y, generator.getNextBubbleColor(), this);
@@ -740,7 +747,7 @@ class PlayState extends FlxTransitionableState
 					Bubble.CreateAt(pos.x, pos.y, generator.getNextBubbleColor(), this);
 				}
 			}
-		}
+		}*/
 
 		if (FlxG.keys.justPressed.DOWN)
 		{
@@ -759,7 +766,7 @@ class PlayState extends FlxTransitionableState
 
 		if (FlxG.keys.justPressed.O)
 		{
-			Screenshot.take();
+			flowController.increaseDifficulty();
 		}
 
 		mouseCell.set(cell.x, cell.y);

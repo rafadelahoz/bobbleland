@@ -31,8 +31,6 @@ class SaveStateManager
                 flow: save.data.flow,
                 session: save.data.session
             };
-
-            trace("Loading " + data);
         }
 
         // Clear data
@@ -59,9 +57,7 @@ class SaveStateManager
         save.data.grid = gridData;
         save.data.flow = flowData;
         save.data.session = sessionData;
-
-        trace("Saving " + save.data);
-
+        
         save.close();
     }
 }

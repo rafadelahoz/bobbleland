@@ -17,16 +17,12 @@ class TextUtils
 
     public static function formatTime(seconds : UInt) : String
     {
-		trace("Formatting " + seconds + "secs");
-
 		if (seconds > MAX_TIME)
 			seconds = MAX_TIME;
 
 		var str : String = "";
         var minutes = Std.int(seconds / 60);
-		trace(minutes + "mins = Std.int(" + seconds + "/60)");
-        var hours = Std.int(minutes / 60);
-		trace(hours + "hours = Std.int(" + minutes + "/60)");
+		var hours = Std.int(minutes / 60);
 		minutes = minutes % 60;
 		seconds = seconds % 60;
 

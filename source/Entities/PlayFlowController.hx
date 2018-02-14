@@ -63,6 +63,8 @@ class PlayFlowController
         }
         else
         {
+            trace("Reset playFlowData");
+
             playTime = 0;
             score = 0;
             bubbleCount = 0;
@@ -74,10 +76,12 @@ class PlayFlowController
             timesIncreased = 0;
         }
 
-        FlxG.watch.add(this, "playTime");
+        trace("Colors: " + world.availableColors.length);
+
+        /*FlxG.watch.add(this, "playTime");
         FlxG.watch.add(this, "bubbleCount");
         FlxG.watch.add(this, "rowCount");
-        FlxG.watch.add(this, "screenCleanCount");
+        FlxG.watch.add(this, "screenCleanCount");*/
 
         timer = new FlxTimer().start(1, onPlayTimeTimer, 0);
     }
@@ -118,7 +122,7 @@ class PlayFlowController
         }
     }
 
-    function increaseDifficulty()
+    public function increaseDifficulty()
     {
         if (!updateDifficulty)
             return;

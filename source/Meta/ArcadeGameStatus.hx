@@ -7,7 +7,7 @@ class ArcadeGameStatus
     static var savefile : String = "savefile";
 
     static var arcadeData : ArcadeData;
-    static var arcadeGameData : PlaySessionData;
+    static var playSessionData : PlaySessionData;
 
     static var MAX_TIME : Int = 3599999;
     static var MAX_COUNT : Int = 99999999;
@@ -15,21 +15,21 @@ class ArcadeGameStatus
 
     public static function init()
     {
-        if (arcadeGameData == null)
+        if (playSessionData == null)
         {
-            arcadeGameData = new PlaySessionData();
+            playSessionData = new PlaySessionData();
 
-            arcadeGameData.mode = PlaySessionData.ModeEndless;
+            playSessionData.mode = PlaySessionData.ModeEndless;
 
-            arcadeGameData.background = null;
-            arcadeGameData.bubbleSet = null;
-            arcadeGameData.character = null;
-            arcadeGameData.bgm = "GameA";
+            playSessionData.background = null;
+            playSessionData.bubbleSet = null;
+            playSessionData.character = null;
+            playSessionData.bgm = "GameA";
 
-            arcadeGameData.initialRows = 4;
-            arcadeGameData.dropDelay = 20;
-            arcadeGameData.seconds = -1;
-            arcadeGameData.usedColors = generateColorSet(5);
+            playSessionData.initialRows = 4;
+            playSessionData.dropDelay = 20;
+            playSessionData.seconds = -1;
+            playSessionData.usedColors = generateColorSet(5);
         }
 
         if (arcadeData == null)
@@ -123,42 +123,42 @@ class ArcadeGameStatus
 
     public static function setInitialRows(rows : Int)
     {
-        arcadeGameData.initialRows = rows;
+        playSessionData.initialRows = rows;
     }
 
     public static function setDropDelay(seconds : Int)
     {
-        arcadeGameData.dropDelay = seconds;
+        playSessionData.dropDelay = seconds;
     }
 
     public static function setUsedColors(number : Int)
     {
-        arcadeGameData.usedColors = generateColorSet(number);
+        playSessionData.usedColors = generateColorSet(number);
     }
 
     public static function setGuideEnabled(enabled : Bool)
     {
-        arcadeGameData.guideEnabled = enabled;
+        playSessionData.guideEnabled = enabled;
     }
 
     public static function getCharacter() : String
     {
-        return arcadeGameData.character;
+        return playSessionData.character;
     }
 
     public static function setCharacter(id : String)
     {
-        arcadeGameData.character = id;
+        playSessionData.character = id;
     }
 
     public static function getBgm() : String
     {
-        return arcadeGameData.bgm;
+        return playSessionData.bgm;
     }
 
     public static function setBgm(id : String)
     {
-        arcadeGameData.bgm = id;
+        playSessionData.bgm = id;
     }
 
     static function generateColorSet(number : Int) : Array<BubbleColor>
@@ -174,7 +174,7 @@ class ArcadeGameStatus
 
     public static function getData() : PlaySessionData
     {
-        return arcadeGameData;
+        return playSessionData;
     }
 }
 
