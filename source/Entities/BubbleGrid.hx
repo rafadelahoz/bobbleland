@@ -523,6 +523,7 @@ class BubbleGrid extends FlxObject
 	public function getSaveData() : BubbleGridData
 	{
 		return {
+			padded: padded,
 			serializedGrid: serializeData()
 		};
 	}
@@ -642,5 +643,6 @@ class BubbleGrid extends FlxObject
 }
 
 typedef BubbleGridData = {
+	var padded : Int;
 	var serializedGrid : String;
 };

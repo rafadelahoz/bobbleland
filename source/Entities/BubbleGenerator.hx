@@ -57,6 +57,10 @@ class BubbleGenerator
 
     public function generateSaveData(data : BubbleGrid.BubbleGridData)
     {
+        // Restore padded row data
+        grid.padded = data.padded;
+
+        // Restore grid bubbles data
         var lines : Array<String> = data.serializedGrid.split("\n");
         lines.reverse();
         for (line in lines)
