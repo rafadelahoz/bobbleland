@@ -544,7 +544,7 @@ class Bubble extends FlxSprite
 			var position : FlxPoint = interpolatePosition(from, to, t);
 			if (!checkCollisionWithBubblesAt(position.x, position.y))
 			{
-				trace("Found contact position with t=" + t);
+				// trace("Found contact position with t=" + t);
 				x = position.x;
 				y = position.y;
 

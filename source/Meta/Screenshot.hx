@@ -32,6 +32,7 @@ class Screenshot
         try
         {
             sys.FileSystem.createDirectory(path);
+            trace(sys.FileSystem.absolutePath(path));
             var b : flash.display.Bitmap = flixel.addons.plugin.screengrab.FlxScreenGrab.grab();
             var ba : openfl.utils.ByteArray = b.bitmapData.encode(b.bitmapData.rect, new openfl.display.PNGEncoderOptions());
             var fo : sys.io.FileOutput = sys.io.File.write(path + "/" + fname, true);

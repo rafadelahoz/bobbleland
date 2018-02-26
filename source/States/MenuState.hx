@@ -244,6 +244,9 @@ class MenuState extends FlxTransitionableState
 			var closeButton : Button = new Button(44, 56, function() {
 				FlxTween.tween(optionsPanel, {y: -optionsPanel.height + 24}, 0.26, {ease: FlxEase.circOut, onComplete: onOptionsPanelHidden});
 			});
+			closeButton.onPressCallback = function() {
+				optionsPanel.y = 1;
+			};
 			closeButton.setSize(32, 16);
 			optionsPanel.add(closeButton);
 

@@ -5,7 +5,9 @@ import flixel.FlxSprite;
 
 class Button extends FlxSprite
 {
-    var callback : Void -> Void;
+    public var callback : Void -> Void;
+    public var onPressCallback : Void -> Void;
+
     var hasGraphic : Bool;
 
     var pressed : Bool;
@@ -82,6 +84,26 @@ class Button extends FlxSprite
         else if (!pressed)
             whileReleased();
 
+        // Post callback state handling?
+        #if desktop
+        if (pressed && FlxG.mouse.justReleased)
+        {
+            pressed = false;
+        }
+        #end
+
+        #if mobile
+        if (pressed)
+            for (touch in FlxG.touches.list)
+    		{
+                if (touch.justReleased)
+                {
+                    pressed = false;
+                    break;
+                }
+            }
+        #end
+
         super.update(elapsed);
     }
 
@@ -90,6 +112,8 @@ class Button extends FlxSprite
         click();
         if (hasGraphic)
             animation.play("pressed");
+        if (onPressCallback != null)
+            onPressCallback();
     }
 
     function whilePressed() : Void

@@ -4,7 +4,7 @@ import flixel.FlxG;
 
 class SwipeManager
 {
-    public static var Enabled : Bool = true;
+    public static var Enabled : Bool = false;
 
     public var leftCallback : Void -> Void;
     public var rightCallback : Void -> Void;

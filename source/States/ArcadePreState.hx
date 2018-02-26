@@ -32,7 +32,7 @@ class ArcadePreState extends FlxTransitionableState
 
     var btnBgmA : HoldButton;
     var btnBgmB : HoldButton;
-    var btnBgmC : HoldButton;
+    var btnBgmOff : HoldButton;
 
     var btnStart : Button;
 
@@ -44,6 +44,8 @@ class ArcadePreState extends FlxTransitionableState
     var totalBubblesDisplay : FlxBitmapText;
     var totalTimeDisplay : FlxBitmapText;
     var totalCleansDisplay : FlxBitmapText;
+
+    var creditsRafaCard : FlxSprite;
 
     /** Common elements **/
     var background : FlxBackdrop;
@@ -116,10 +118,8 @@ class ArcadePreState extends FlxTransitionableState
     {
         swipeManager.update(elapsed);
 
-        if (FlxG.keys.pressed.ONE)
-            ArcadeGameStatus.setBgm("GameA");
-        else if (FlxG.keys.pressed.TWO)
-            ArcadeGameStatus.setBgm("GameC");
+        if (FlxG.keys.justPressed.O)
+            Screenshot.take();
 
         super.update(elapsed);
     }
@@ -210,7 +210,7 @@ class ArcadePreState extends FlxTransitionableState
         generateCharacterButtons(centerScreen);
         generateBgmButtons(centerScreen);
 
-        centerScreen.add(buildScrollButton(0, 136, true));
+        centerScreen.add(buildScrollButton(0, 144, true));
         // centerScreen.add(buildScrollButton(FlxG.width - 12, 144, false));
 
         btnStart = new Button(40, 276, onStartButtonPressed);
@@ -229,35 +229,43 @@ class ArcadePreState extends FlxTransitionableState
         var background : FlxSprite = new FlxSprite(0, 0, "assets/ui/arcade-history.png");
         screen.add(background);
 
-        screen.add(PixelText.New(16, 92, "HIGH SCORE", white, 128));
-        highScoreDisplay = PixelText.New(24, 104, "", white, 128);
+        // screen.add(PixelText.New(16, 92, "HIGH SCORE", white, 128));
+        highScoreDisplay = PixelText.New(80, 84, "", white, 128);
         screen.add(highScoreDisplay);
 
-        screen.add(PixelText.New(16, 116, "LONGEST GAME", white, 128));
-        longestGameDisplay = PixelText.New(24, 128, "", white, 128);
+        // screen.add(PixelText.New(16, 116, "LONGEST GAME", white, 128));
+        longestGameDisplay = PixelText.New(72, 108, "", white, 128);
         screen.add(longestGameDisplay);
 
-        screen.add(PixelText.New(16, 140, "Max BUBBLES", white, 128));
-        maxBubblesDisplay = PixelText.New(24, 152, "", white, 128);
+        // screen.add(PixelText.New(16, 140, "Max BUBBLES", white, 128));
+        maxBubblesDisplay = PixelText.New(80, 132, "", white, 128);
         screen.add(maxBubblesDisplay);
 
-        screen.add(PixelText.New(16, 200, "BUBBLES ", white, 128));
-        totalBubblesDisplay = PixelText.New(80, 200, "", white, 128);
+        // screen.add(PixelText.New(16, 200, "BUBBLES ", white, 128));
+        totalBubblesDisplay = PixelText.New(72, 184, "", white, 128);
         screen.add(totalBubblesDisplay);
 
-        screen.add(PixelText.New(16, 212, "TIME ", white, 128));
-        totalTimeDisplay = PixelText.New(72, 212, "", white, 128);
+        // screen.add(PixelText.New(16, 212, "TIME ", white, 128));
+        totalTimeDisplay = PixelText.New(72, 208, "", white, 128);
         screen.add(totalTimeDisplay);
 
-        screen.add(PixelText.New(16, 224, "CLEAN SCS", white, 128));
-        totalCleansDisplay = PixelText.New(112, 224, "", white, 128);
+        // screen.add(PixelText.New(16, 224, "CLEAN SCS", white, 128));
+        totalCleansDisplay = PixelText.New(72, 232, "", white, 128);
         screen.add(totalCleansDisplay);
 
-        var btnClearData : HoldButton = new HoldButton(40, 272, null, onClearDataReleased);
+        /*var btnClearData : HoldButton = new HoldButton(40, 272, null, onClearDataReleased);
         btnClearData.loadSpritesheet("assets/ui/btn-cleardata.png", 96, 24);
-        screen.add(btnClearData);
+        screen.add(btnClearData);*/
 
         screen.add(buildScrollButton(FlxG.width - 12, 144, false));
+
+        var creditsRafa : HoldButton = new HoldButton(16, 280, onRafaPressed, onRafaReleased);
+        creditsRafa.loadSpritesheet("assets/ui/credits-man-a.png", 32, 32);
+        screen.add(creditsRafa);
+
+        creditsRafaCard = new FlxSprite(96, 280, "assets/ui/credits-rafa-card.png");
+        creditsRafaCard.alpha = 0;
+        screen.add(creditsRafaCard);
 
         updateHistoryDisplays();
 
@@ -268,13 +276,13 @@ class ArcadePreState extends FlxTransitionableState
     {
         var data : Dynamic = ArcadeGameStatus.getConfigData();
 
-        highScoreDisplay.text = "" + clamp(data.highScore, 99999999);
-        longestGameDisplay.text = TextUtils.formatTime(data.longestGame);
-        maxBubblesDisplay.text = "" + clamp(data.maxBubbles, 99999999);
+        highScoreDisplay.text = TextUtils.padWith("" + clamp(data.highScore, 99999999), 8);
+        longestGameDisplay.text = TextUtils.padWith(TextUtils.formatTime(data.longestGame), 10);
+        maxBubblesDisplay.text = TextUtils.padWith("" + clamp(data.maxBubbles, 99999999), 8);
 
-        totalBubblesDisplay.text = TextUtils.padWith("" + clamp(data.totalBubbles, 99999999), 8);
+        totalBubblesDisplay.text = TextUtils.padWith("" + clamp(data.totalBubbles, 99999999), 9);
         totalTimeDisplay.text = TextUtils.padWith(TextUtils.formatTime(data.totalTime), 10);
-        totalCleansDisplay.text = TextUtils.padWith("" + clamp(data.totalCleans, 9999), 4);
+        totalCleansDisplay.text = TextUtils.padWith("" + clamp(data.totalCleans, 9999), 9);
     }
 
     function clamp(value : Int, max : Int) : Int
@@ -346,9 +354,9 @@ class ArcadePreState extends FlxTransitionableState
         btnBgmB.loadSpritesheet("assets/ui/btn-bgmB.png", 32, 32);
         group.add(btnBgmB);
 
-        btnBgmC = new HoldButton(120, 224, onBgmCPressed, onBgmReleased);
-        btnBgmC.loadSpritesheet("assets/ui/btn-bgmC.png", 32, 32);
-        group.add(btnBgmC);
+        btnBgmOff = new HoldButton(120, 224, onBgmOffPressed, onBgmReleased);
+        btnBgmOff.loadSpritesheet("assets/ui/btn-bgm-off.png", 32, 32);
+        group.add(btnBgmOff);
     }
 
     function onCharReleased()
@@ -378,7 +386,7 @@ class ArcadePreState extends FlxTransitionableState
         // Deactivate other buttons
         btnBgmA.setPressed(false);
         btnBgmB.setPressed(false);
-        btnBgmC.setPressed(false);
+        btnBgmOff.setPressed(false);
     }
 
     function onBgmAPressed()
@@ -387,25 +395,25 @@ class ArcadePreState extends FlxTransitionableState
         BgmEngine.play(BgmEngine.BGM.GameA, true);
         // Deactivate other buttons
         btnBgmB.setPressed(false);
-        btnBgmC.setPressed(false);
+        btnBgmOff.setPressed(false);
     }
 
-    function onBgmBPressed()
+    function onBgmOffPressed()
     {
         ArcadeGameStatus.setBgm(null);//"GameB");
         BgmEngine.stopCurrent();//.play(BgmEngine.BGM.GameB);
         // Deactivate other buttons
         btnBgmA.setPressed(false);
-        btnBgmC.setPressed(false);
+        btnBgmB.setPressed(false);
     }
 
-    function onBgmCPressed()
+    function onBgmBPressed()
     {
         ArcadeGameStatus.setBgm("GameC");
         BgmEngine.play(BgmEngine.BGM.GameC, true);
         // Deactivate other buttons
         btnBgmA.setPressed(false);
-        btnBgmB.setPressed(false);
+        btnBgmOff.setPressed(false);
     }
 
     function onClearDataReleased()
@@ -434,5 +442,15 @@ class ArcadePreState extends FlxTransitionableState
     function getSlotPosition(slot : Int, slotWidth : Int, ?offset : Int = 0) : Int
     {
         return offset + slot*slotWidth;
+    }
+
+    function onRafaPressed()
+    {
+        FlxTween.tween(creditsRafaCard, {alpha: 1}, 0.5, {ease: FlxEase.bounceOut});
+    }
+
+    function onRafaReleased()
+    {
+        FlxTween.tween(creditsRafaCard, {alpha: 0}, 0.5, {ease: FlxEase.bounceIn});
     }
 }
