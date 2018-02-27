@@ -85,11 +85,11 @@ class SliderButton extends Button
 
         if (state == StateBound)
         {
-            SwipeManager.Enabled = false;
+            // SwipeManager.Enabled = false;
         }
         else
         {
-            SwipeManager.Enabled = true;
+            // SwipeManager.Enabled = true;
         }
 
         super.update(elapsed);
