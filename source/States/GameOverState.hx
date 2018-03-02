@@ -79,6 +79,10 @@ class GameOverState extends FlxTransitionableState
 		btnRetry = new Button(92, 256, onRetryButtonPressed);
 		btnRetry.loadSpritesheet("assets/ui/btn-gameover-again.png", 80, 26);
 		add(btnRetry);
+
+		new flixel.util.FlxTimer().start(0.25, function(t:flixel.util.FlxTimer) {
+			// BubbleShare.share("I just SOAP ALLEYed " + score + " points in " + TextUtils.formatTime(playTime) + "\". Yay!", true);
+		});
 	}
 
 	override public function update(elapsed:Float)
