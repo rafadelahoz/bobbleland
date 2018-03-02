@@ -45,7 +45,10 @@ class ArcadePreState extends FlxTransitionableState
     var totalTimeDisplay : FlxBitmapText;
     var totalCleansDisplay : FlxBitmapText;
 
+    var creditsRafa : HoldButton;
+    var creditsCarlos : HoldButton;
     var creditsRafaCard : FlxSprite;
+    var creditsCarlosCard : FlxSprite;
 
     /** Common elements **/
     var background : FlxBackdrop;
@@ -259,13 +262,21 @@ class ArcadePreState extends FlxTransitionableState
 
         screen.add(buildScrollButton(FlxG.width - 12, 144, false));
 
-        var creditsRafa : HoldButton = new HoldButton(16, 280, onRafaPressed, onRafaReleased);
+        creditsRafa = new HoldButton(16, 280, onRafaPressed, onRafaReleased);
         creditsRafa.loadSpritesheet("assets/ui/credits-man-a.png", 32, 32);
         screen.add(creditsRafa);
+
+        creditsCarlos = new HoldButton(56, 280, onCarlosPressed, onCarlosReleased);
+        creditsCarlos.loadSpritesheet("assets/ui/credits-man-b.png", 32, 32);
+        screen.add(creditsCarlos);
 
         creditsRafaCard = new FlxSprite(96, 280, "assets/ui/credits-rafa-card.png");
         creditsRafaCard.alpha = 0;
         screen.add(creditsRafaCard);
+
+        creditsCarlosCard = new FlxSprite(96, 280, "assets/ui/credits-carlos-card.png");
+        creditsCarlosCard.alpha = 0;
+        screen.add(creditsCarlosCard);
 
         updateHistoryDisplays();
 
@@ -446,11 +457,29 @@ class ArcadePreState extends FlxTransitionableState
 
     function onRafaPressed()
     {
-        FlxTween.tween(creditsRafaCard, {alpha: 1}, 0.5, {ease: FlxEase.bounceOut});
+        var delay : Float = 0;
+        if (creditsCarlos.isPressed())
+            delay = 0.5;
+        creditsCarlos.setPressed(false, true);
+        FlxTween.tween(creditsRafaCard, {alpha: 1}, 0.5, {startDelay: delay, ease: FlxEase.bounceOut});
     }
 
     function onRafaReleased()
     {
         FlxTween.tween(creditsRafaCard, {alpha: 0}, 0.5, {ease: FlxEase.bounceIn});
+    }
+
+    function onCarlosPressed()
+    {
+        var delay : Float = 0;
+        if (creditsRafa.isPressed())
+            delay = 0.5;
+        creditsRafa.setPressed(false, true);
+        FlxTween.tween(creditsCarlosCard, {alpha: 1}, 0.5, {startDelay: delay, ease: FlxEase.bounceOut});
+    }
+
+    function onCarlosReleased()
+    {
+        FlxTween.tween(creditsCarlosCard, {alpha: 0}, 0.5, {ease: FlxEase.bounceIn});
     }
 }

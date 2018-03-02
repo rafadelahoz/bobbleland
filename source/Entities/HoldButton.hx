@@ -64,6 +64,11 @@ class HoldButton extends Button
         }
     }
 
+    public function isPressed() : Bool
+    {
+        return state == StatePressed;
+    }
+
     override public function update(elapsed:Float)
     {
         super.update(elapsed);
