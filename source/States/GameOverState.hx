@@ -81,6 +81,9 @@ class GameOverState extends FlxTransitionableState
 		add(btnRetry);
 
 		new flixel.util.FlxTimer().start(0.25, function(t:flixel.util.FlxTimer) {
+			/*var t : Ticket = new Ticket();
+			t.init(null);
+			add(t);*/
 			// BubbleShare.share("I just SOAP ALLEYed " + score + " points in " + TextUtils.formatTime(playTime) + "\". Yay!", true);
 		});
 	}

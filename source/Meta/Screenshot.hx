@@ -6,6 +6,12 @@ class Screenshot
 {
     public static function take(?fname : String = null) : String
     {
+        var b : flash.display.Bitmap = flixel.addons.plugin.screengrab.FlxScreenGrab.grab();
+        return save(b, fname);
+    }
+
+    public static function save(bitmap : flash.display.Bitmap, ?fname : String = null) : String
+    {
         #if mobile
             // return;
         #end
@@ -31,8 +37,7 @@ class Screenshot
         {
             sys.FileSystem.createDirectory(path);
             trace("Saving to " + sys.FileSystem.absolutePath(path));
-            var b : flash.display.Bitmap = flixel.addons.plugin.screengrab.FlxScreenGrab.grab();
-            var ba : openfl.utils.ByteArray = b.bitmapData.encode(b.bitmapData.rect, new openfl.display.PNGEncoderOptions());
+            var ba : openfl.utils.ByteArray = bitmap.bitmapData.encode(bitmap.bitmapData.rect, new openfl.display.PNGEncoderOptions());
             var fo : sys.io.FileOutput = sys.io.File.write(path + "/" + fname, true);
             fo.writeBytes(ba, 0, ba.length);
             fo.close();
