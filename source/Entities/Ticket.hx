@@ -10,6 +10,11 @@ import text.TextUtils;
 
 class Ticket extends FlxSpriteGroup
 {
+    var btnSignature : Button;
+    var btnShare : Button;
+
+    var ticket : FlxSprite;
+
     public function new()
     {
         super(0, 0);
@@ -38,7 +43,7 @@ class Ticket extends FlxSpriteGroup
         text(sprite, getTime(), sprWidth - 48, baseY+8);
         baseY += 24;
 
-        text(sprite, "***GAME**OVER***", 8, baseY);
+        text(sprite, "***GAME  OVER***", 8, baseY);
         baseY += 16;
 
         text(sprite, Palette.DarkGray, "SCORE", 16, baseY);
@@ -65,12 +70,43 @@ class Ticket extends FlxSpriteGroup
         if (data.cleansRecord)
             baseY = record(sprite, baseY);
 
-        var bd : flash.display.Bitmap = new flash.display.Bitmap(sprite.pixels);
-        trace(Screenshot.save(bd));
+        var signature : FlxSprite = new FlxSprite(0, 0, "assets/ui/signature-dog.png");
+        sprite.stamp(signature, sprWidth - 72, sprHeight - 64);
 
+        // Store the generated ticket
+        ticket = sprite;
+
+        // Display it
         var spr : FlxSprite = new FlxSprite(FlxG.width/2 - sprWidth/2, 0);
         spr.pixels = sprite.pixels;
         add(spr);
+
+        // Create buttons
+        btnSignature = new Button(sprWidth-56, sprHeight-64, onSignReceipt);
+        btnSignature.loadSpritesheet("assets/ui/btn-signature.png", 72, 56);
+        add(btnSignature);
+
+        btnShare = new Button(spr.x + 8, sprHeight-48, onShare);
+        btnShare.loadSpritesheet("assets/ui/btn-share.png", 56, 24);
+        btnShare.visible = false;
+        btnShare.active = false;
+        add(btnShare);
+    }
+
+    function onSignReceipt()
+    {
+        btnSignature.visible = false;
+        btnSignature.active = false;
+
+        btnShare.active = true;
+        btnShare.visible = true;
+    }
+
+    function onShare()
+    {
+        var bd : flash.display.Bitmap = new flash.display.Bitmap(ticket.pixels);
+        var path : String = Screenshot.save(bd);
+        BubbleShare.share("Check my SOAP ALLEY ticket!", path);
     }
 
     function record(sprite : FlxSprite, baseY : Int) : Int

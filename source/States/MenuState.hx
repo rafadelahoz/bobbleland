@@ -90,6 +90,19 @@ class MenuState extends FlxTransitionableState
 		var startDelay : Float = 0.35;
 		tween = FlxTween.tween(logo, {y : 64}, 0.75, {startDelay: startDelay, onComplete: onLogoPositioned, ease : FlxEase.elasticOut });
 		FlxTween.tween(credits, {alpha : 1}, 0.75, {startDelay:startDelay, ease : FlxEase.cubeInOut});
+
+		var t : Ticket = new Ticket();
+		t.init({
+			bubbles: 12345,
+			score: 125001,
+			time: 2000,
+			cleans: 20,
+			scoreRecord: true,
+			bubblesRecord: true,
+			timeRecord: true,
+			cleansRecord: true
+		});
+		add(t);
 	}
 
 	public function onLogoPositioned(_t:FlxTween):Void
@@ -204,7 +217,7 @@ class MenuState extends FlxTransitionableState
 
 	public function onArcadeButtonPressed() : Void
 	{
-		GameController.StartArcadeGame();
+		// GameController.StartArcadeGame();
 	}
 
 	function onOptionsTabReleased()

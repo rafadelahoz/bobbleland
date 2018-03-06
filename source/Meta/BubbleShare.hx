@@ -6,7 +6,7 @@ class BubbleShare
 {
     static var initialized : Bool = false;
 
-    public static function share(msg : String, ?includeScreenshot : Bool = true)
+    public static function share(msg : String, ?savedImagePath : String = null, ?includeScreenshot : Bool = true)
     {
         if (!initialized)
 		{
@@ -19,8 +19,10 @@ class BubbleShare
 		// Share.share('Hi, I\'m testing the OpenFL-Sharing extension!', image);
 
 		var imagePath : String = null;
-        if (includeScreenshot)
+        if (savedImagePath == null && includeScreenshot)
             imagePath = Screenshot.take();
+        else if (savedImagePath != null)
+            imagePath = savedImagePath;
 
 		Share.share(msg, null, imagePath);
 
