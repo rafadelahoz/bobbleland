@@ -18,11 +18,7 @@ class GameOverState extends FlxTransitionableState
 	public var btnRetry : Button;
 	public var btnGiveup : Button;
 
-	public var score : Int;
-
-	var bubbleCount : Int;
-	var playTime : Int;
-	var cleanScreens : Int;
+	var data : Dynamic;
 
 	var mode : Int;
 
@@ -31,11 +27,7 @@ class GameOverState extends FlxTransitionableState
 		super();
 
 		mode = Mode;
-
-		score = Data.score;
-		bubbleCount = Data.bubbles;
-		playTime = Data.time;
-		cleanScreens = Data.cleans;
+		data = Data;
 	}
 
 	override public function create()
@@ -50,27 +42,27 @@ class GameOverState extends FlxTransitionableState
 		var backLayer : FlxSprite = new FlxSprite(0, 0, "assets/ui/gameover-bg.png");
 		add(backLayer);
 
-		if (mode == PlayState.ModeArcade)
+	/*	if (mode == PlayState.ModeArcade)
 		{
 			labelLabel = PixelText.New(16, 152, "Score:");
-			scoreLabel = PixelText.New(FlxG.width / 2, 152, TextUtils.padWith("" + score, 8, " "));
+			scoreLabel = PixelText.New(FlxG.width / 2, 152, TextUtils.padWith("" + data.score, 8, " "));
 			add(labelLabel);
 			add(scoreLabel);
-		}
+		}*/
 
 		var baseY : Int = 173;
 
-		add(PixelText.New(16, baseY, "Play Time:"));
+		/*add(PixelText.New(16, baseY, "Play Time:"));
 		add(PixelText.New(FlxG.width / 2, baseY,
-						TextUtils.padWith(TextUtils.formatTime(playTime), 9)));
+						TextUtils.padWith(TextUtils.formatTime(data.playTime), 9)));
 
 		add(PixelText.New(16, baseY + 8, "Bubbles:"));
 		add(PixelText.New(FlxG.width / 2, baseY + 8,
-						TextUtils.padWith("" + bubbleCount, 8)));
+						TextUtils.padWith("" + data.bubbles, 8)));
 
 		add(PixelText.New(16, baseY + 16, "Cleans:"));
 		add(PixelText.New(FlxG.width / 2, baseY + 16,
-						TextUtils.padWith("" + cleanScreens, 8)));
+						TextUtils.padWith("" + data.cleans, 8)));*/
 
 		btnGiveup = new Button(8, 256, onGiveupButtonPressed);
 		btnGiveup.loadSpritesheet("assets/ui/btn-gameover-tomenu.png", 80, 26);
@@ -81,9 +73,9 @@ class GameOverState extends FlxTransitionableState
 		add(btnRetry);
 
 		new flixel.util.FlxTimer().start(0.25, function(t:flixel.util.FlxTimer) {
-			/*var t : Ticket = new Ticket();
-			t.init(null);
-			add(t);*/
+			var t : Ticket = new Ticket();
+			t.init(data);
+			add(t);
 			// BubbleShare.share("I just SOAP ALLEYed " + score + " points in " + TextUtils.formatTime(playTime) + "\". Yay!", true);
 		});
 	}

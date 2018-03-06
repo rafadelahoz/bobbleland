@@ -40,7 +40,7 @@ class ArcadeGameStatus
             {
                 arcadeData = {
                     difficulty: 2, character: null, bgm: "GameA",
-                    highScore: 0, maxBubbles: 0, longestGame: 0,
+                    highScore: 0, maxBubbles: 0, longestGame: 0, maxCleans: 0,
                     totalBubbles: 0, totalTime: 0, totalCleans: 0
                 };
 
@@ -59,20 +59,41 @@ class ArcadeGameStatus
         arcadeData = data;
     }
 
-    public static function storePlayData(playData : Dynamic)
+    public static function storePlayData(playData : Dynamic) : Dynamic
     {
+        playData.scoreRecord = false;
         if (playData.score > arcadeData.highScore)
+        {
             arcadeData.highScore = clamp(playData.score, MAX_COUNT);
+            playData.scoreRecord = true;
+        }
 
+        playData.bubbleRecord = false;
         if (playData.bubbles > arcadeData.maxBubbles)
+        {
             arcadeData.maxBubbles = clamp(playData.bubbles, MAX_COUNT);
+            playData.bubbleRecord = true;
+        }
 
+        playData.timeRecord = false;
         if (playData.time > arcadeData.longestGame)
+        {
             arcadeData.longestGame = clamp(playData.time, MAX_TIME);
+            playData.timeRecord = true;
+        }
+
+        playData.cleansRecord = false;
+        if (playData.cleans > arcadeData.maxCleans)
+        {
+            arcadeData.maxCleans = playData.cleans;
+            playData.cleansrecord = true;
+        }
 
         arcadeData.totalBubbles += clamp(playData.bubbles, MAX_COUNT);
         arcadeData.totalTime += clamp(playData.time, MAX_TIME);
         arcadeData.totalCleans += clamp(playData.cleans, MAX_SCS);
+
+        return playData;
     }
 
     static function clamp(value : Int, max : Int) : Int
@@ -186,6 +207,7 @@ typedef ArcadeData = {
     var highScore : Int;
     var longestGame : Int;
     var maxBubbles : Int;
+    var maxCleans : Int;
 
     var totalBubbles: Int;
     var totalTime : Int;
