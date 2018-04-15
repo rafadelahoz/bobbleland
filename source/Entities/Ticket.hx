@@ -14,6 +14,8 @@ class Ticket extends FlxSpriteGroup
     var btnShare : Button;
 
     var ticket : FlxSprite;
+    var score : Int;
+    var time : String;
 
     public var signatureCallback : Void -> Void;
 
@@ -93,6 +95,9 @@ class Ticket extends FlxSpriteGroup
         btnShare.visible = false;
         btnShare.active = false;
         add(btnShare);
+
+        score = data.score;
+        time = TextUtils.formatTime(data.time);
     }
 
     function onSignReceipt()
@@ -111,7 +116,7 @@ class Ticket extends FlxSpriteGroup
     {
         var bd : flash.display.Bitmap = new flash.display.Bitmap(ticket.pixels);
         var path : String = Screenshot.save(bd);
-        BubbleShare.share("Check my SOAP ALLEY ticket!", path);
+        BubbleShare.share("Check out my latest SOAP ALLEY ticket: " + score + " points in " + time + "!", path);
     }
 
     function record(sprite : FlxSprite, baseY : Int) : Int

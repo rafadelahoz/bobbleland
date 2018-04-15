@@ -14,6 +14,7 @@ enum SFX {
     NiceSmall;
     NiceBig;
     Lost;
+    Print;
 }
 
 class SfxEngine
@@ -45,6 +46,7 @@ class SfxEngine
         sfx.set(SFX.NiceSmall,      loadSfx("nice-small.wav"));
         sfx.set(SFX.NiceBig,        loadSfx("nice-big.wav"));
         sfx.set(SFX.Lost,           loadSfx("lose.wav"));
+        sfx.set(SFX.Print,          loadSfx("print.wav"));
 
         for (sf in sfx.keys())
         {

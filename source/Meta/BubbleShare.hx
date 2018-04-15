@@ -11,8 +11,8 @@ class BubbleShare
         if (!initialized)
 		{
 			Share.init(Share.TWITTER); // for non supported targets, we share on Twitter (you can also use Share.FACEBOOK)
-			Share.defaultURL='http://badladns.com/'; // url to add at the end of each share (optional).
-			Share.defaultSubject='A BADLADNS SHARE'; // in case the user choose to share by email, set the subject.
+			// Share.defaultURL='http://badladns.com/'; // url to add at the end of each share (optional).
+			// Share.defaultSubject='A BADLADNS SHARE'; // in case the user choose to share by email, set the subject.
 		}
 
 		// var image : openfl.display.BitmapData = Screenshot.memtake();

@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
+import flixel.util.FlxTimer;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxBitmapText;
@@ -161,11 +162,19 @@ class GameOverState extends FlxTransitionableState
 		var printTime : Float = (Math.abs(delta) / 8) * FlxG.random.float(0.05, 0.08);
 		if (quickPrinting)
 			printTime *= 0.5;
+
+		new FlxTimer().start(printTime / (Math.abs(delta) / 8), playPrintSfx, Std.int(Math.abs(delta) / 8));
+
 		printTween = FlxTween.tween(ticket, {y : ticket.y + delta}, printTime, {
 			ease : FlxEase.sineOut,
 			startDelay: (quickPrinting ? 0 : FlxG.random.float(0, 0.45)),
 			onComplete: (done ? onPrintFinished : printTicket)
 		});
+	}
+
+	function playPrintSfx(t : FlxTimer)
+	{
+		SfxEngine.play(SfxEngine.SFX.Print);
 	}
 
 	function onPrintFinished(?t : FlxTween = null)
