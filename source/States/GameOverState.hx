@@ -25,7 +25,10 @@ class GameOverState extends FlxTransitionableState
 	var ticketLayer : FlxGroup;
 
 	var machineFG : FlxSprite;
-	var btnCheckout : FlxSprite;
+	var btnCheckout : Button;
+
+	var ticket : Ticket;
+	var printing : Bool;
 
 	var data : Dynamic;
 
@@ -57,12 +60,16 @@ class GameOverState extends FlxTransitionableState
 			buttonLayer = new FlxGroup();
 			add(buttonLayer);
 
-			btnGiveup = new Button(8, 296, onGiveupButtonPressed);
+			btnGiveup = new Button(8, 280, onGiveupButtonPressed);
 			btnGiveup.loadSpritesheet("assets/ui/btn-gameover-tomenu.png", 80, 26);
+			btnGiveup.active = false;
+			btnGiveup.visible = false;
 			buttonLayer.add(btnGiveup);
 
-			btnRetry = new Button(92, 296, onRetryButtonPressed);
+			btnRetry = new Button(92, 280, onRetryButtonPressed);
 			btnRetry.loadSpritesheet("assets/ui/btn-gameover-again.png", 80, 26);
+			btnRetry.active = false;
+			btnRetry.visible = false;
 			buttonLayer.add(btnRetry);
 
 		// Build machine
@@ -76,20 +83,21 @@ class GameOverState extends FlxTransitionableState
 			machineFG = new FlxSprite(0, 264 + 64, "assets/ui/go-machine-fg.png");
 			add(machineFG);
 
-			// TODO: Checkout button
+			// Checkout button
+			btnCheckout = new Button(16, 288 + 64, onCheckoutButtonPressed);
+			btnCheckout.loadSpritesheet("assets/ui/btn-go-checkout.png", 80, 24);
+			add(btnCheckout);
 
 		var appearDuration : Float = 0.5;
 		FlxTween.tween(machineBG, {y : 264}, appearDuration, {ease: FlxEase.circOut});
 		FlxTween.tween(machineFG, {y : 264}, appearDuration, {ease: FlxEase.circOut});
-		// TODO: Tween ticket button also!
-		
-		// Add ticket
-		// TODO: Make it print!
-		/*new flixel.util.FlxTimer().start(0.25, function(t:flixel.util.FlxTimer) {
-			var t : Ticket = new Ticket();
-			t.init(data);
-			ticketLayer.add(t);
-		});*/
+		FlxTween.tween(btnCheckout, {y : 288}, appearDuration, {ease: FlxEase.circOut});
+
+		// Generate results ticket
+		ticket = new Ticket();
+		ticket.init(data);
+		ticket.signatureCallback = onTicketSigned;
+		printing = false;
 	}
 
 	override public function update(elapsed:Float)
@@ -112,5 +120,58 @@ class GameOverState extends FlxTransitionableState
 	{
 		// if (mode == PlayState.ModeArcade)
 		GameController.BeginArcade();
+	}
+
+	function onCheckoutButtonPressed() : Void
+	{
+		// Print ticket
+		if (!printing)
+		{
+			printing = true;
+			ticketLayer.add(ticket);
+			ticket.y = FlxG.height - 32;
+			printTicket();
+		}
+	}
+
+	function printTicket(?t : FlxTween = null)
+	{
+		var targetY : Float = 256 - ticket.height;
+		var delta : Float = 0;
+		var done : Bool = false;
+		if (Math.abs(targetY - ticket.y) < 48)
+		{
+			delta = targetY - ticket.y;
+			done = true;
+		}
+		else
+		{
+			delta = FlxG.random.float(-16, (targetY - ticket.y) * 0.7);
+		}
+
+		var printTime : Float = (Math.abs(delta) / 8) * FlxG.random.float(0.05, 0.08);
+		FlxTween.tween(ticket, {y : ticket.y + delta}, printTime, {
+			ease : FlxEase.sineOut,
+			startDelay: FlxG.random.float(0, 0.45),
+			onComplete: (done ? onPrintFinished : printTicket)
+		});
+	}
+
+	function onPrintFinished(?t : FlxTween = null)
+	{
+		// Hide machine
+		var hideDuration : Float = 0.5;
+		FlxTween.tween(machineBG, {y : 264 + 128}, hideDuration, {ease: FlxEase.circInOut});
+		FlxTween.tween(machineFG, {y : 264 + 128}, hideDuration, {ease: FlxEase.circInOut});
+		FlxTween.tween(btnCheckout, {y : 288 + 128}, hideDuration, {ease: FlxEase.circInOut});
+	}
+
+	function onTicketSigned()
+	{
+		// Enable buttons
+		btnRetry.active = true;
+		btnRetry.visible = true;
+		btnGiveup.active = true;
+		btnGiveup.visible = true;
 	}
 }

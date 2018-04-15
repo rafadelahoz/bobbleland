@@ -15,6 +15,8 @@ class Ticket extends FlxSpriteGroup
 
     var ticket : FlxSprite;
 
+    public var signatureCallback : Void -> Void;
+
     public function new()
     {
         super(0, 0);
@@ -100,6 +102,9 @@ class Ticket extends FlxSpriteGroup
 
         btnShare.active = true;
         btnShare.visible = true;
+
+        if (signatureCallback != null)
+            signatureCallback();
     }
 
     function onShare()
