@@ -29,6 +29,8 @@ class GameOverState extends FlxTransitionableState
 
 	var ticket : Ticket;
 	var printing : Bool;
+	var quickPrinting : Bool;
+	var printTween : FlxTween;
 
 	var data : Dynamic;
 
@@ -98,6 +100,7 @@ class GameOverState extends FlxTransitionableState
 		ticket.init(data);
 		ticket.signatureCallback = onTicketSigned;
 		printing = false;
+		printTween = null;
 	}
 
 	override public function update(elapsed:Float)
@@ -132,6 +135,12 @@ class GameOverState extends FlxTransitionableState
 			ticket.y = FlxG.height - 32;
 			printTicket();
 		}
+		else if (!quickPrinting)
+		{
+			quickPrinting = true;
+			printTween.cancel();
+			printTicket();
+		}
 	}
 
 	function printTicket(?t : FlxTween = null)
@@ -139,7 +148,7 @@ class GameOverState extends FlxTransitionableState
 		var targetY : Float = 256 - ticket.height;
 		var delta : Float = 0;
 		var done : Bool = false;
-		if (Math.abs(targetY - ticket.y) < 48)
+		if (quickPrinting || Math.abs(targetY - ticket.y) < 48)
 		{
 			delta = targetY - ticket.y;
 			done = true;
@@ -150,9 +159,11 @@ class GameOverState extends FlxTransitionableState
 		}
 
 		var printTime : Float = (Math.abs(delta) / 8) * FlxG.random.float(0.05, 0.08);
-		FlxTween.tween(ticket, {y : ticket.y + delta}, printTime, {
+		if (quickPrinting)
+			printTime *= 0.5;
+		printTween = FlxTween.tween(ticket, {y : ticket.y + delta}, printTime, {
 			ease : FlxEase.sineOut,
-			startDelay: FlxG.random.float(0, 0.45),
+			startDelay: (quickPrinting ? 0 : FlxG.random.float(0, 0.45)),
 			onComplete: (done ? onPrintFinished : printTicket)
 		});
 	}
