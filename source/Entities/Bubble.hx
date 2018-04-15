@@ -323,7 +323,11 @@ class Bubble extends FlxSprite
 			if (!grid.isPositionValid(currentPosition) || grid.getData(currentPosition.x, currentPosition.y) != null)
 			{
 				// Store the target in case the fallback position is not valid
-				var targetPosition : FlxPoint = touchedBubble.getCurrentCell();
+				var targetPosition : FlxPoint = null;
+				if (touchedBubble != null)
+					targetPosition = touchedBubble.getCurrentCell();
+				else
+					targetPosition = getCurrentCell();
 				// var targetPosition : FlxPoint = FlxPoint.get(currentPosition.x, currentPosition.y);
 
 				var invalid : Bool = !grid.isPositionValid(targetPosition);
@@ -338,7 +342,7 @@ class Bubble extends FlxSprite
 				cellPosition.set(lastPosition.x, lastPosition.y);
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 
-				var neighbours : Array<FlxPoint> = grid.getValidAdjacentPositions(targetPosition);
+				var neighbours : Array<FlxPoint> = grid.getValidAdjacentPositions(targetPosition, touchedBubble == null);
 				trace(neighbours + " contains " + cellPosition + "? " + containsPoint(neighbours, cellPosition));
 				if (!containsPoint(neighbours, cellPosition))
 				{

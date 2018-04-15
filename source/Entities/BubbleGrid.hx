@@ -427,7 +427,7 @@ class BubbleGrid extends FlxObject
 
 	}
 
-	public function getValidAdjacentPositions(pos : FlxPoint) : Array<FlxPoint>
+	public function getValidAdjacentPositions(pos : FlxPoint, ?OnlyTopRow : Bool = false) : Array<FlxPoint>
 	{
 		var cells : Array<FlxPoint> = getAdjacentPositions(pos);
 		// trace("Adjacents of " + pos + " are " + cells);
@@ -437,7 +437,8 @@ class BubbleGrid extends FlxObject
 			// trace(" + Adjacent " + cell + " is valid? " + isValid(Std.int(cell.x), Std.int(cell.y)));
 			if (isValid(Std.int(cell.x), Std.int(cell.y)) && getData(cell.x, cell.y) == null)
 			{
-				validCells.push(cell);
+				if (!OnlyTopRow || (OnlyTopRow && cell.y == 0))
+					validCells.push(cell);
 			}
 		}
 
