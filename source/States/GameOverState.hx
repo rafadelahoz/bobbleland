@@ -156,18 +156,19 @@ class GameOverState extends FlxTransitionableState
 		}
 		else
 		{
-			delta = FlxG.random.float(-16, (targetY - ticket.y) * 0.7);
+			delta = FlxG.random.float(-16, (targetY - ticket.y) * 0.4);
 		}
 
 		var printTime : Float = (Math.abs(delta) / 8) * FlxG.random.float(0.05, 0.08);
 		if (quickPrinting)
 			printTime *= 0.5;
 
-		new FlxTimer().start(printTime / (Math.abs(delta) / 8), playPrintSfx, Std.int(Math.abs(delta) / 8));
+		var startDelay : Float = (quickPrinting ? 0 : FlxG.random.float(0, 0.45));
+		new FlxTimer().start(startDelay, playPrintSfx);
 
 		printTween = FlxTween.tween(ticket, {y : ticket.y + delta}, printTime, {
 			ease : FlxEase.sineOut,
-			startDelay: (quickPrinting ? 0 : FlxG.random.float(0, 0.45)),
+			startDelay: startDelay,
 			onComplete: (done ? onPrintFinished : printTicket)
 		});
 	}
