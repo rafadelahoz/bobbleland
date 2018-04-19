@@ -104,7 +104,7 @@ class BgmEngine
     }
     public static function pauseCurrent()
     {
-        if (Enabled && tunes.get(current).playing)
+        if (Enabled && tunes.get(current) != null && tunes.get(current).playing)
             tunes.get(current).pause();
     }
 

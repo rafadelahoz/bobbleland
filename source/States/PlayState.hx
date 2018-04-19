@@ -30,6 +30,8 @@ class PlayState extends FlxTransitionableState
 	public static var WaitTime 		: Float = 1;
 	public static var AimingTime 	: Float = 10;
 
+	public static var RowDropNotifyTime : Int = 2;
+
 	public var DEBUG_dropDisabled : Bool;
 
 	public var mode : Int;
@@ -62,6 +64,7 @@ class PlayState extends FlxTransitionableState
 
 	public var dropDelay : Float;
 	public var dropTimer : FlxTimer;
+	public var dropNoticeTimer : FlxTimer;
 	public var waitTimer : FlxTimer;
 	public var aimingTimer : FlxTimer;
 
@@ -143,6 +146,7 @@ class PlayState extends FlxTransitionableState
 		add(fallingBubbles);
 
 		dropTimer = new FlxTimer();
+		dropNoticeTimer = new FlxTimer();
 		waitTimer = new FlxTimer();
 		aimingTimer = new FlxTimer();
 
@@ -197,7 +201,7 @@ class PlayState extends FlxTransitionableState
 			dropDelay = playSessionData.dropDelay;
 		else
 			dropDelay = 30;
-		dropTimer.start(dropDelay, onDropTimer);
+		startDropTimer(dropDelay);
 
 		generator.initalizeGrid((saveData != null ? saveData.grid : null));
 		generateBubble();
@@ -392,6 +396,8 @@ class PlayState extends FlxTransitionableState
 	// Handler for the drop more bubbles timer
 	function onDropTimer(t : FlxTimer) : Void
 	{
+		stopDropNotice();
+
 		if (state == StateLosing)
 		{
 			// Do nothing and stop already
@@ -399,7 +405,7 @@ class PlayState extends FlxTransitionableState
 		else if (state == StateRemoving || state == StateWaiting)
 		{
 			// If there are bubbles being removed, wait a second!
-			dropTimer.start(0.5, onDropTimer);
+			startDropTimer(0.5);
 		}
 		else
 		{
@@ -408,7 +414,7 @@ class PlayState extends FlxTransitionableState
 				generateRow();
 
 			// Set drop timer again
-			dropTimer.start(dropDelay, onDropTimer);
+			startDropTimer(dropDelay);
 		}
 	}
 
@@ -586,7 +592,7 @@ class PlayState extends FlxTransitionableState
 					// And resume playing
 					switchState(StateAiming);
 
-					dropTimer.start(dropDelay, onDropTimer);
+					startDropTimer(dropDelay);
 				});
 			});
 		}
@@ -656,6 +662,34 @@ class PlayState extends FlxTransitionableState
 		}
 
     }
+
+	// Drop timer
+	function startDropTimer(delay : Float)
+	{
+		// Start the drop timer, with the appropriate callback
+		dropTimer.start(delay, onDropTimer);
+		// Start the drop notifier for long waits
+		if (delay > RowDropNotifyTime)
+		{
+			dropNoticeTimer.start(delay - RowDropNotifyTime, beginDropNotice);
+		}
+	}
+
+	function beginDropNotice(t : FlxTimer)
+	{
+		background.color = 0xFFFF5151;
+		t.cancel();
+		// TODO: Find sound
+		// SfxEngine.play(SfxEngine.SFX.Print, 0.5, true);
+		// TODO: Vibrate bubble grid or something
+	}
+
+	function stopDropNotice()
+	{
+		background.color = 0xFFFFFFFF;
+		// TODO: stop sound
+		// SfxEngine.stop(SfxEngine.SFX.Print);
+	}
 
 	/* Debug things */
 

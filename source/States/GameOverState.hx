@@ -175,7 +175,7 @@ class GameOverState extends FlxTransitionableState
 
 	function playPrintSfx(t : FlxTimer)
 	{
-		SfxEngine.play(SfxEngine.SFX.Print);
+		SfxEngine.play(SfxEngine.SFX.Print, 0.5);
 	}
 
 	function onPrintFinished(?t : FlxTween = null)

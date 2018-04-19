@@ -73,10 +73,11 @@ class SfxEngine
         save();
     }
 
-    public static function play(sf : SFX, ?volume : Float = 1)
+    public static function play(sf : SFX, ?volume : Float = 1, ?loop : Bool = false)
     {
         if (Enabled && sfx.exists(sf))
         {
+            sfx.get(sf).looped = loop;
             sfx.get(sf).play();
         }
     }
