@@ -21,11 +21,11 @@ class GameOverState extends FlxTransitionableState
 	public var btnRetry : Button;
 	public var btnGiveup : Button;
 
-	var machineBG : FlxSprite;
+	var machineBG : Entity;
 
 	var ticketLayer : FlxGroup;
 
-	var machineFG : FlxSprite;
+	var machineFG : Entity;
 	var btnCheckout : Button;
 
 	var ticket : Ticket;
@@ -76,14 +76,14 @@ class GameOverState extends FlxTransitionableState
 			buttonLayer.add(btnRetry);
 
 		// Build machine
-			machineBG = new FlxSprite(0, 264 + 64, "assets/ui/go-machine-bg.png");
+			machineBG = new Entity(0, 264 + 64, "assets/ui/go-machine-bg.png");
 			add(machineBG);
 
 			// Ticket will go here
 			ticketLayer = new FlxGroup();
 			add(ticketLayer);
 
-			machineFG = new FlxSprite(0, 264 + 64, "assets/ui/go-machine-fg.png");
+			machineFG = new Entity(0, 264 + 64, "assets/ui/go-machine-fg.png");
 			add(machineFG);
 
 			// Checkout button
@@ -159,6 +159,9 @@ class GameOverState extends FlxTransitionableState
 			delta = FlxG.random.float(-16, (targetY - ticket.y) * 0.4);
 		}
 
+		// Stop vibration
+		stopMachineVibration();
+
 		var printTime : Float = (Math.abs(delta) / 8) * FlxG.random.float(0.05, 0.08);
 		if (quickPrinting)
 			printTime *= 0.5;
@@ -175,16 +178,35 @@ class GameOverState extends FlxTransitionableState
 
 	function playPrintSfx(t : FlxTimer)
 	{
-		SfxEngine.play(SfxEngine.SFX.Print, 0.5);
+		SfxEngine.play(SfxEngine.SFX.Print, 0.25);
+		startMachineVibration();
 	}
 
 	function onPrintFinished(?t : FlxTween = null)
 	{
+		// Stop vibration and sound
+		stopMachineVibration();
+		SfxEngine.stop(SfxEngine.SFX.Print);
+
 		// Hide machine
 		var hideDuration : Float = 0.5;
 		FlxTween.tween(machineBG, {y : 264 + 128}, hideDuration, {ease: FlxEase.circInOut});
 		FlxTween.tween(machineFG, {y : 264 + 128}, hideDuration, {ease: FlxEase.circInOut});
 		FlxTween.tween(btnCheckout, {y : 288 + 128}, hideDuration, {ease: FlxEase.circInOut});
+	}
+
+	function startMachineVibration()
+	{
+		machineBG.vibrate();
+		machineFG.vibrate();
+		btnCheckout.vibrate();
+	}
+
+	function stopMachineVibration()
+	{
+		machineBG.vibrate(false);
+		machineFG.vibrate(false);
+		btnCheckout.vibrate(false);
 	}
 
 	function onTicketSigned()

@@ -46,7 +46,7 @@ class SfxEngine
         sfx.set(SFX.NiceSmall,      loadSfx("nice-small.wav"));
         sfx.set(SFX.NiceBig,        loadSfx("nice-big.wav"));
         sfx.set(SFX.Lost,           loadSfx("lose.wav"));
-        sfx.set(SFX.Print,          loadSfx("vibration.wav"));
+        sfx.set(SFX.Print,          loadSfx("low-vibration.wav"));
 
         for (sf in sfx.keys())
         {
@@ -78,6 +78,7 @@ class SfxEngine
         if (Enabled && sfx.exists(sf))
         {
             sfx.get(sf).looped = loop;
+            sfx.get(sf).volume =  volume;
             sfx.get(sf).play();
         }
     }

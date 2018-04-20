@@ -69,6 +69,7 @@ class PlayState extends FlxTransitionableState
 	public var aimingTimer : FlxTimer;
 
 	public var notifyAiming : Bool;
+	public var notifyDrop : Bool;
 
 	public var scoreDisplay : ScoreDisplay;
 
@@ -137,6 +138,7 @@ class PlayState extends FlxTransitionableState
 		add(cursor);
 
 		notifyAiming = false;
+		notifyDrop = false;
 		state = StateStarting;
 
 		cursorBubbles = new FlxTypedGroup<Bubble>();
@@ -679,16 +681,19 @@ class PlayState extends FlxTransitionableState
 	{
 		background.color = 0xFFFF5151;
 		t.cancel();
-		// TODO: Find sound
-		// SfxEngine.play(SfxEngine.SFX.Print, 0.5, true);
-		// TODO: Vibrate bubble grid or something
+		// Play a low hummm
+		SfxEngine.play(SfxEngine.SFX.Print, 0.25, true);
+		// Vibrate bubble grid or something
+		notifyDrop = true;
 	}
 
 	function stopDropNotice()
 	{
 		background.color = 0xFFFFFFFF;
-		// TODO: stop sound
-		// SfxEngine.stop(SfxEngine.SFX.Print);
+		// Stop vibration sound
+		SfxEngine.stop(SfxEngine.SFX.Print);
+		// Stop vibration
+		notifyDrop = false;
 	}
 
 	/* Debug things */

@@ -257,6 +257,28 @@ class Bubble extends FlxSprite
 			super.update(elapsed);
 	}
 
+	override public function draw()
+	{
+		// Vibration effect
+		if (world.notifyDrop && state == StateIdling)
+		{
+			var tx : Float = x;
+			var ty : Float = y;
+
+			x += FlxG.random.float(-0.75, 0.75);
+			y += FlxG.random.float(-0.75, 0.75);
+
+			super.draw();
+
+			x = tx;
+			y = ty;
+		}
+		else
+		{
+			super.draw();
+		}
+	}
+
 	public function shoot(direction : Float)
 	{
 		state = Bubble.StateFlying;

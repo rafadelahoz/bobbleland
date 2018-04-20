@@ -3,7 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 
-class Button extends FlxSprite
+class Button extends Entity
 {
     public var callback : Void -> Void;
     public var onPressCallback : Void -> Void;
