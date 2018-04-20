@@ -15,6 +15,7 @@ enum SFX {
     NiceBig;
     Lost;
     Print;
+    RowGeneration;
 }
 
 class SfxEngine
@@ -47,6 +48,7 @@ class SfxEngine
         sfx.set(SFX.NiceBig,        loadSfx("nice-big.wav"));
         sfx.set(SFX.Lost,           loadSfx("lose.wav"));
         sfx.set(SFX.Print,          loadSfx("low-vibration.wav"));
+        sfx.set(SFX.RowGeneration,          loadSfx("row.wav"));
 
         for (sf in sfx.keys())
         {

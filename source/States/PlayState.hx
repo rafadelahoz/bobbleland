@@ -422,8 +422,8 @@ class PlayState extends FlxTransitionableState
 
 	function generateRow()
 	{
+		SfxEngine.play(SfxEngine.SFX.RowGeneration);
 		generator.generateRow();
-
 		flowController.onRowGenerated();
 	}
 
