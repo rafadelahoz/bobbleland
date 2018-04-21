@@ -14,6 +14,7 @@ class PlayerCharacter extends FlxSprite
 
     public var belt : FlxSprite;
     public var hurry : FlxSprite;
+    public var hurryTween : FlxTween;
 
     public function new(X : Float, Y : Float, World : PlayState, CharacterId : String)
     {
@@ -34,7 +35,7 @@ class PlayerCharacter extends FlxSprite
         hurry = new FlxSprite(x-8, y-19, "assets/images/hurry.png");
         hurry.visible = false;
         hurry.scale.set(0.9, 0.9);
-        FlxTween.tween(hurry.scale, {x : 1, y : 1}, 0.25, { ease : FlxEase.elasticInOut, loopDelay: 0.15, type : FlxTween.PINGPONG });
+        hurryTween = FlxTween.tween(hurry.scale, {x : 1, y : 1}, 0.25, { ease : FlxEase.elasticInOut, loopDelay: 0.15, type : FlxTween.PINGPONG });
     }
 
     function prepareGraphic()
@@ -102,6 +103,7 @@ class PlayerCharacter extends FlxSprite
             flipX = (facing == FlxObject.LEFT);
 
             hurry.visible = (world.notifyAiming);
+            hurryTween.active = (world.notifyAiming && !world.paused);
         }
         else
         {
@@ -116,6 +118,7 @@ class PlayerCharacter extends FlxSprite
 
             belt.animation.paused = true;
             hurry.visible = false;
+            hurryTween.active = false;
         }
 
         belt.update(elapsed);

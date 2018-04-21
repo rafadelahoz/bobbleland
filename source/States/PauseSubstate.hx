@@ -8,6 +8,7 @@ import flixel.text.FlxBitmapText;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.math.FlxPoint;
+import flixel.util.FlxTimer;
 
 import flixel.util.FlxSpriteUtil;
 
@@ -21,12 +22,9 @@ class PauseSubstate extends FlxSubState
 
     var shader : FlxSprite;
 
-    var group : FlxSpriteGroup;
-    var dialogWidth : Int;
-    var dialogHeight : Int;
-
-    var btnResume : Button;
-    var btnExit : Button;
+    var curtain : Curtain;
+    public var btnResume : Button;
+    public var btnExit : Button;
 
     var tween : FlxTween;
 
@@ -40,30 +38,25 @@ class PauseSubstate extends FlxSubState
 
         world = World;
 
-        shader = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
+        shader = new FlxSprite(0, 240).makeGraphic(FlxG.width, FlxG.height-240, 0xFF000000);
         shader.alpha = 0;
         add(shader);
 
-        FlxTween.tween(shader, {alpha : 0.77}, 0.2, {ease : FlxEase.cubeIn});
+        FlxTween.tween(shader, {alpha : 0.55}, 0.2, {ease : FlxEase.cubeIn});
 
-        dialogWidth = Std.int(FlxG.width*0.7);
-        dialogHeight = Std.int(FlxG.height*0.5);
+        curtain = new Curtain(26, 16, this, onCurtainDrawn);
+        add(curtain);
 
-        group = new FlxSpriteGroup(FlxG.width/2 - dialogWidth/2, -dialogHeight);
-        add(group);
-        var bg : FlxSprite = new FlxSprite(0, 0).loadGraphic("assets/images/pause.png");
-        group.add(bg);
+        // TODO: Randomize a bit the sticker positions
+        btnResume = new Button(83 + FlxG.random.int(-8, 8), 92 + FlxG.random.int(-8, 8), onResumeButtonPressed);
+        btnResume.loadSpritesheet("assets/ui/pause-btn-continue.png", 58, 35);
+        btnResume.visible = false;
+        btnExit = new Button(39 + FlxG.random.int(-8, 8), 144 + FlxG.random.int(-8, 8), onExitButtonPressed);
+        btnExit.loadSpritesheet("assets/ui/pause-btn-giveup.png", 58, 24);
+        btnExit.visible = false;
 
-        var bw : Int = Std.int(dialogWidth * 0.8);
-        var bh : Int = 24;
-
-        btnResume = new Button(13, 72, onResumeButtonPressed);
-        btnResume.loadSpritesheet("assets/images/btnContinue.png", 99, 26);
-        btnExit = new Button(13, 112, onExitButtonPressed);
-        btnExit.loadSpritesheet("assets/images/btnGiveup.png", 99, 26);
-
-        group.add(btnResume);
-        group.add(btnExit);
+        add(btnResume);
+        add(btnExit);
 
         enabled = false;
         callback = Callback;
@@ -76,14 +69,31 @@ class PauseSubstate extends FlxSubState
 
         btnResume.destroy();
         btnExit.destroy();
-        tween.destroy();
-        group.destroy();
+        // tween.destroy();
         shader.destroy();
     }
 
     override public function create()
     {
-        tween = FlxTween.tween(group, {y : FlxG.height / 2 - dialogHeight / 2}, 0.75, {onComplete: onGroupPositioned, ease : FlxEase.elasticOut });
+    }
+
+    function onCurtainDrawn()
+    {
+        // tween = FlxTween.tween(group, {y : FlxG.height / 2 - dialogHeight / 2}, 0.75, {onComplete: onGroupPositioned, ease : FlxEase.elasticOut });
+        btnResume.scale.set(1.5, 1.5);
+        btnResume.alpha = 0;
+        btnResume.visible = true;
+        FlxTween.tween(btnResume.scale, {x: 1, y: 1}, 0.35, {startDelay: 0.1, onComplete: onStickersPasted, ease: FlxEase.expoOut});
+        FlxTween.tween(btnResume, {alpha: 1}, 0.15, {startDelay: 0.1, ease: FlxEase.expoOut});
+
+        btnExit.scale.set(1.5, 1.5);
+        btnExit.visible = true;
+        FlxTween.tween(btnExit.scale, {x: 1, y: 1}, 0.35, {ease: FlxEase.expoOut});
+    }
+
+    function onStickersPasted(t : FlxTween)
+    {
+        enabled = true;
     }
 
     override public function update(elapsed:Float)
@@ -118,33 +128,7 @@ class PauseSubstate extends FlxSubState
         super.update(elapsed);
     }
 
-    function onGroupPositioned(_t:FlxTween) : Void
-    {
-        enabled = true;
-        tweenToNewPosition();
-    }
-
-    function tweenToNewPosition()
-    {
-        var newPos : FlxPoint = getValidPosition();
-        if (tween != null)
-            tween.cancel();
-
-        tween = FlxTween.tween(group, {x : newPos.x, y : newPos.y}, 2, { ease: FlxEase.circInOut,onComplete: function(_t:FlxTween) {
-            tweenToNewPosition();
-        }});
-    }
-
-    function getValidPosition() : FlxPoint
-    {
-        var baseX : Float = FlxG.width/2 - dialogWidth/2;
-        var baseY : Float = FlxG.height/2 - dialogHeight/2;
-        var xx : Float = FlxG.random.float(baseX-8, baseX+8);
-        var yy : Float = FlxG.random.float(baseY-10, baseY+10);
-        return new FlxPoint(xx, yy);
-    }
-
-    function onGroupLeave(_t:FlxTween) : Void
+    function onGroupLeave() : Void
     {
         clean();
 
@@ -164,8 +148,13 @@ class PauseSubstate extends FlxSubState
             if (tween != null)
                 tween.cancel();
 
-            FlxTween.tween(shader, {alpha : 0.0}, 0.2, {ease : FlxEase.cubeIn});
-            FlxTween.tween(group, { y : -dialogHeight }, 0.6, { ease: FlxEase.circOut,onComplete: onGroupLeave });
+            // FlxTween.tween(shader, {alpha : 0.0}, 0.2, {ease : FlxEase.cubeIn});
+            // FlxTween.tween(group, { y : -dialogHeight }, 0.6, { ease: FlxEase.circOut,onComplete: onGroupLeave });
+            /*new FlxTimer().start(0.2, function(t:FlxTimer) {
+                onGroupLeave(null);
+            });*/
+
+            curtain.hide(onGroupLeave);
         }
     }
 
@@ -174,12 +163,12 @@ class PauseSubstate extends FlxSubState
         if (enabled)
         {
             BgmEngine.stopCurrent();
-            
+
             active = false;
             if (tween != null)
                 tween.cancel();
 
-            FlxTween.tween(group, { y : FlxG.height + 16 }, 0.75, {ease: FlxEase.elasticOut});
+            // FlxTween.tween(group, { y : FlxG.height + 16 }, 0.75, {ease: FlxEase.elasticOut});
             FlxG.camera.fade(0xFF000000, 1, function() {
                 clean();
                 GameController.OnPuzzleGiveup(world.mode, world.flowController.getStoredData());

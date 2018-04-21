@@ -38,6 +38,7 @@ class PlayState extends FlxTransitionableState
 	public var playSessionData : PlaySessionData;
 
 	public var state : Int;
+	public var paused : Bool;
 
 	public var availableColors : Array<BubbleColor>;
 	public var bubbles : FlxTypedGroup<Bubble>;
@@ -170,6 +171,8 @@ class PlayState extends FlxTransitionableState
 
 		handleBgm();
 
+		paused = false;
+
 		handleDebugInit();
 	}
 
@@ -246,9 +249,12 @@ class PlayState extends FlxTransitionableState
 
 	function onPauseStart()
 	{
+		paused = true;
+
 		BgmEngine.pauseCurrent();
 
 		dropTimer.active = false;
+		dropNoticeTimer.active = false;
 		waitTimer.active = false;
 		aimingTimer.active = false;
 
@@ -257,9 +263,12 @@ class PlayState extends FlxTransitionableState
 
 	function onPauseEnd()
 	{
+		paused = false;
+		
 		BgmEngine.resumeCurrent();
 
 		dropTimer.active = true;
+		dropNoticeTimer.active = true;
 		waitTimer.active = true;
 		aimingTimer.active = true;
 
@@ -765,6 +774,12 @@ class PlayState extends FlxTransitionableState
 			{
 				Bubble.CreateAt(cell.x, cell.y, (FlxG.keys.justPressed.ONE ? availableColors[0] : availableColors[1]), this);
 			}
+		}
+
+		if (FlxG.keys.justPressed.S)
+		{
+			var filename : String = Screenshot.take();
+			trace(filename);
 		}
 
 		/* Generate 6 bubbles around mouse click */
