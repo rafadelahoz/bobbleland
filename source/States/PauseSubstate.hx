@@ -22,6 +22,9 @@ class PauseSubstate extends FlxSubState
 
     var shader : FlxSprite;
 
+    var borderTop : FlxSprite;
+    var optionsPanel : OptionsPanel;
+
     var curtain : Curtain;
     public var btnResume : Button;
     public var btnExit : Button;
@@ -59,6 +62,15 @@ class PauseSubstate extends FlxSubState
 
         add(btnResume);
         add(btnExit);
+
+        borderTop = new FlxSprite(0, -8, "assets/ui/border-top.png");
+        borderTop.alpha = 0;
+        add(borderTop);
+        FlxTween.tween(borderTop, {alpha: 1}, 0.5, {ease : FlxEase.circInOut});
+
+		optionsPanel = new OptionsPanel();
+		add(optionsPanel);
+        FlxTween.tween(optionsPanel.optionsTab, {alpha: 1}, 1, {ease : FlxEase.cubeInOut});
 
         enabled = false;
         callback = Callback;
@@ -159,8 +171,24 @@ class PauseSubstate extends FlxSubState
                 onGroupLeave(null);
             });*/
 
-            curtain.hide(onGroupLeave);
+            if (optionsPanel.optionsPanel != null)
+            {
+                optionsPanel.hideOptionsPanel(function(t:FlxTween) {
+                    hideCurtain();
+                });
+            }
+            else
+                hideCurtain();
         }
+    }
+
+    function hideCurtain()
+    {
+        curtain.hide(onGroupLeave);
+        FlxTween.tween(borderTop, {alpha: 0}, 0.45, {startDelay : 0, ease: FlxEase.circOut});
+        FlxTween.tween(optionsPanel.optionsTab, {alpha: 0}, 0.45, {startDelay : 0, ease: FlxEase.circOut});
+        FlxTween.tween(curtain, {alpha : 0}, 2, {startDelay : 0.3, ease: FlxEase.circOut});
+        FlxTween.tween(shader, {alpha: 0}, 0.45, {startDelay : 0, ease: FlxEase.circOut});
     }
 
     function onExitButtonPressed() : Void

@@ -35,8 +35,6 @@ class Curtain extends FlxSprite
 
     public function hide(Callback : Void -> Void)
     {
-        trace("HIDE with delay " + slabDelay);
-
         fullImage = new FlxSprite(0, 0).makeGraphic(128, 176, 0x0);
         fullImage.stamp(this);
         fullImage.stamp(world.btnResume, Std.int(world.btnResume.x - x), Std.int(world.btnResume.y - y));
@@ -57,13 +55,11 @@ class Curtain extends FlxSprite
         // If we have finished
         if (!first && curtainSprite.animation.frameIndex == 0)
         {
-            trace("Done!");
             if (callback != null)
                 callback();
         }
         else
         {
-            trace("height", height);
             curtainSprite.drawFrame(true);
             stamp(curtainSprite, 0, curtainSprite.animation.frameIndex * 8);
 
@@ -77,7 +73,6 @@ class Curtain extends FlxSprite
         // If we have finished
         if (height == 0)
         {
-            trace("Done!");
             if (callback != null)
                 callback();
         }
