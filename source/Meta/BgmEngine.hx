@@ -99,7 +99,7 @@ class BgmEngine
 
     public static function resumeCurrent()
     {
-        if (Enabled && !tunes.get(current).playing)
+        if (Enabled && tunes.get(current) != null && !tunes.get(current).playing)
             tunes.get(current).resume();
     }
     public static function pauseCurrent()
