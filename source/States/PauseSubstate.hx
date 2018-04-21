@@ -51,9 +51,11 @@ class PauseSubstate extends FlxSubState
         btnResume = new Button(83 + FlxG.random.int(-8, 8), 92 + FlxG.random.int(-8, 8), onResumeButtonPressed);
         btnResume.loadSpritesheet("assets/ui/pause-btn-continue.png", 58, 35);
         btnResume.visible = false;
+        // btnResume.blend = flash.display.BlendMode.MULTIPLY;
         btnExit = new Button(39 + FlxG.random.int(-8, 8), 144 + FlxG.random.int(-8, 8), onExitButtonPressed);
         btnExit.loadSpritesheet("assets/ui/pause-btn-giveup.png", 58, 24);
         btnExit.visible = false;
+        // btnExit.blend = flash.display.BlendMode.MULTIPLY;
 
         add(btnResume);
         add(btnExit);
@@ -83,11 +85,14 @@ class PauseSubstate extends FlxSubState
         btnResume.scale.set(1.5, 1.5);
         btnResume.alpha = 0;
         btnResume.visible = true;
+        btnResume.angle = FlxG.random.int(-5, 5);
         FlxTween.tween(btnResume.scale, {x: 1, y: 1}, 0.35, {startDelay: 0.1, onComplete: onStickersPasted, ease: FlxEase.expoOut});
-        FlxTween.tween(btnResume, {alpha: 1}, 0.15, {startDelay: 0.1, ease: FlxEase.expoOut});
+        FlxTween.tween(btnResume, {alpha: 0.85}, 0.15, {startDelay: 0.1, ease: FlxEase.expoOut});
 
         btnExit.scale.set(1.5, 1.5);
         btnExit.visible = true;
+        btnExit.alpha = 0.85;
+        btnExit.angle = FlxG.random.int(-5, 5);
         FlxTween.tween(btnExit.scale, {x: 1, y: 1}, 0.35, {ease: FlxEase.expoOut});
     }
 
