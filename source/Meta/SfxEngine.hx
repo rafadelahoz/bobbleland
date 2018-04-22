@@ -17,6 +17,8 @@ enum SFX {
     Print;
     RowGeneration;
     Accept;
+    StickerA;
+    StickerB;
 }
 
 class SfxEngine
@@ -51,6 +53,8 @@ class SfxEngine
         sfx.set(SFX.Print,          loadSfx("low-vibration.wav"));
         sfx.set(SFX.RowGeneration,  loadSfx("row.wav"));
         sfx.set(SFX.Accept,         loadSfx("accept.wav"));
+        sfx.set(SFX.StickerA,        loadSfx("sticker-paste.wav"));
+        sfx.set(SFX.StickerB,        loadSfx("sticker-paste-b.wav"));
 
         for (sf in sfx.keys())
         {

@@ -106,6 +106,14 @@ class PauseSubstate extends FlxSubState
         btnExit.alpha = 0.85;
         btnExit.angle = FlxG.random.int(-5, 5);
         FlxTween.tween(btnExit.scale, {x: 1, y: 1}, 0.35, {ease: FlxEase.expoOut});
+
+        new FlxTimer().start(0.2, function(t:FlxTimer) {
+            SfxEngine.play(SfxEngine.SFX.StickerA);
+        });
+
+        new FlxTimer().start(0.3, function(t:FlxTimer) {
+            SfxEngine.play(SfxEngine.SFX.StickerB);
+        });
     }
 
     function onStickersPasted(t : FlxTween)
@@ -116,19 +124,6 @@ class PauseSubstate extends FlxSubState
     override public function update(elapsed:Float)
     {
         GamePad.handlePadState();
-
-        // Disabling click outside of the box to close
-        /*for (touch in FlxG.touches.list)
-		{
-			if (touch.pressed)
-			{
-				if (!touch.overlaps(group))
-                {
-                    onResumeButtonPressed();
-                    break;
-                }
-            }
-        }*/
 
         if (enabled)
         {
@@ -165,12 +160,6 @@ class PauseSubstate extends FlxSubState
             if (tween != null)
                 tween.cancel();
 
-            // FlxTween.tween(shader, {alpha : 0.0}, 0.2, {ease : FlxEase.cubeIn});
-            // FlxTween.tween(group, { y : -dialogHeight }, 0.6, { ease: FlxEase.circOut,onComplete: onGroupLeave });
-            /*new FlxTimer().start(0.2, function(t:FlxTimer) {
-                onGroupLeave(null);
-            });*/
-
             if (optionsPanel.optionsPanel != null)
             {
                 optionsPanel.hideOptionsPanel(function(t:FlxTween) {
@@ -201,7 +190,6 @@ class PauseSubstate extends FlxSubState
             if (tween != null)
                 tween.cancel();
 
-            // FlxTween.tween(group, { y : FlxG.height + 16 }, 0.75, {ease: FlxEase.elasticOut});
             FlxG.camera.fade(0xFF000000, 1, function() {
                 clean();
                 GameController.OnPuzzleGiveup(world.mode, world.flowController.getStoredData());
