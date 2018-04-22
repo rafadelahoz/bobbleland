@@ -16,6 +16,7 @@ enum SFX {
     Lost;
     Print;
     RowGeneration;
+    Accept;
 }
 
 class SfxEngine
@@ -42,13 +43,14 @@ class SfxEngine
         sfx = new Map<SFX, FlxSound>();
         sfx.set(SFX.Click,          loadSfx("btn_click.wav"));
         sfx.set(SFX.Clock,          loadSfx("btn_clock.wav"));
-        sfx.set(SFX.BubbleBounce,   loadSfx("bubble-bounce.wav"));
-        sfx.set(SFX.BubbleStop,     loadSfx("bubble-stop.wav"));
+        sfx.set(SFX.BubbleBounce,   loadSfx("bubble-stop.wav"));
+        sfx.set(SFX.BubbleStop,     loadSfx("bubble-bounce.wav"));
         sfx.set(SFX.NiceSmall,      loadSfx("nice-small.wav"));
         sfx.set(SFX.NiceBig,        loadSfx("nice-big.wav"));
         sfx.set(SFX.Lost,           loadSfx("lose.wav"));
         sfx.set(SFX.Print,          loadSfx("low-vibration.wav"));
-        sfx.set(SFX.RowGeneration,          loadSfx("row.wav"));
+        sfx.set(SFX.RowGeneration,  loadSfx("row.wav"));
+        sfx.set(SFX.Accept,         loadSfx("accept.wav"));
 
         for (sf in sfx.keys())
         {

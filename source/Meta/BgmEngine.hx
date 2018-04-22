@@ -16,6 +16,7 @@ class BgmEngine
     static var tunes : Map<BGM, FlxSound>;
     static var playing : Map<BGM, Bool>;
     public static var current : BGM;
+    public static var currentVolume : Float;
 
     public static function init()
     {
@@ -45,25 +46,32 @@ class BgmEngine
         }
 
         current = None;
+        currentVolume = 0;
     }
 
     public static function enable()
     {
         Enabled = true;
         save();
+
+        if (current != null && tunes.get(current) != null)
+        {
+            tunes.get(current).fadeIn(FadeTime * 0.5, 0, currentVolume);
+
+            playing.set(current, true);
+            current = current;
+        }
     }
 
     public static function disable()
     {
-        for (tune in tunes.keys())
-        {
-            if (tunes.get(tune) != null && tunes.get(tune).playing)
-                stop(tune);
-        }
-
-        current = None;
         Enabled = false;
         save();
+
+        if (current != null && tunes.get(current) != null)
+        {
+            tunes.get(current).volume = 0;
+        }
     }
 
     public static function play(bgm : BGM, ?volume : Float = 0.75, ?restart : Bool = false)
@@ -82,12 +90,19 @@ class BgmEngine
             }
             else
             {
-                if (Enabled && (restart || !playing.get(bgm)))
+                if (restart || !playing.get(bgm))
                 {
+                    // Store the actual requested volume
+                    currentVolume = volume;
+
                     if (tunes.get(bgm).fadeTween != null)
                         tunes.get(bgm).fadeTween.cancel();
                     if (restart)
                         tunes.get(bgm).play(true);
+
+                    if (!Enabled)
+                        volume = 0;
+
                     tunes.get(bgm).fadeIn(FadeTime, 0, volume);
 
                     playing.set(bgm, true);
@@ -99,12 +114,12 @@ class BgmEngine
 
     public static function resumeCurrent()
     {
-        if (Enabled && tunes.get(current) != null && !tunes.get(current).playing)
+        if (tunes.get(current) != null && !tunes.get(current).playing)
             tunes.get(current).resume();
     }
     public static function pauseCurrent()
     {
-        if (Enabled && tunes.get(current) != null && tunes.get(current).playing)
+        if (tunes.get(current) != null && tunes.get(current).playing)
             tunes.get(current).pause();
     }
 
@@ -117,12 +132,14 @@ class BgmEngine
     {
         if (playing.get(bgm))
         {
-            if (Enabled && tunes.get(bgm) != null)
+            if (tunes.get(bgm) != null)
             {
                 tunes.get(bgm).fadeOut(FadeTime*2, -10, function(_t:FlxTween) {tunes.get(bgm).stop();});
             }
+
             playing.set(bgm, false);
             current = None;
+            currentVolume = 0;
         }
     }
 

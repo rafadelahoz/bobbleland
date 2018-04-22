@@ -90,7 +90,7 @@ class OptionsPanel extends FlxGroup
 	function onBgmButtonPressed()
 	{
 		BgmEngine.enable();
-		BgmEngine.play(BgmEngine.BGM.Title);
+		// BgmEngine.play(BgmEngine.BGM.Title);
 	}
 
 	function onBgmButtonReleased()
@@ -101,6 +101,7 @@ class OptionsPanel extends FlxGroup
 	function onSfxButtonPressed()
 	{
 		SfxEngine.enable();
+        SfxEngine.play(SfxEngine.SFX.Accept);
 	}
 
 	function onSfxButtonReleased()
