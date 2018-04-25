@@ -75,6 +75,7 @@ class PlayState extends FlxTransitionableState
 	public var scoreDisplay : ScoreDisplay;
 
 	public var flowController : PlayFlowController;
+	public var specialBubbleController : SpecialBubbleController;
 
 	public var saveData : Dynamic;
 
@@ -165,6 +166,7 @@ class PlayState extends FlxTransitionableState
 		generator = new BubbleGenerator(this);
 
 		flowController = new PlayFlowController(this, (saveData != null ? saveData.flow : null));
+		specialBubbleController = new SpecialBubbleController(this, (saveData != null ? saveData.special : null));
 
 		screenButtons = new ScreenButtons(0, 0, this, 240);
 		add(screenButtons);
@@ -259,12 +261,13 @@ class PlayState extends FlxTransitionableState
 		aimingTimer.active = false;
 
 		flowController.pause();
+		specialBubbleController.pause();
 	}
 
 	function onPauseEnd()
 	{
 		paused = false;
-		
+
 		BgmEngine.resumeCurrent();
 
 		dropTimer.active = true;
@@ -273,6 +276,7 @@ class PlayState extends FlxTransitionableState
 		aimingTimer.active = true;
 
 		flowController.resume();
+		specialBubbleController.resume();
 	}
 
 	/* State handling */
@@ -289,8 +293,16 @@ class PlayState extends FlxTransitionableState
 			case PlayState.StateAiming:
 				// Compute a flow controller play step
 				flowController.onPlayStep();
+				specialBubbleController.onPlayStep();
 
 				aimingTimer.start(AimingTime, onForcedShot);
+
+				dropTimer.active = true;
+				dropNoticeTimer.active = true;
+
+			case PlayState.StateWaiting:
+				dropTimer.active = false;
+				dropNoticeTimer.active = false;
 
 			case PlayState.StateLosing:
 				// Prepare for losing
@@ -434,6 +446,7 @@ class PlayState extends FlxTransitionableState
 		SfxEngine.play(SfxEngine.SFX.RowGeneration);
 		generator.generateRow();
 		flowController.onRowGenerated();
+		specialBubbleController.onRowGenerated();
 	}
 
 	// Generates a new shootable bubble
@@ -532,6 +545,7 @@ class PlayState extends FlxTransitionableState
 				fallingBubbles.add(bub);
 
 				flowController.onBubbleDestroyed();
+				specialBubbleController.onBubbleDestroyed();
 			}
 
 			// If there was some destruction, check for disconnections
@@ -544,6 +558,7 @@ class PlayState extends FlxTransitionableState
 				fallingBubbles.add(bub);
 
 				flowController.onBubbleDestroyed();
+				specialBubbleController.onBubbleDestroyed();
 			}
 
 			if (condemned.length + disconnected.length > 5)
@@ -577,6 +592,7 @@ class PlayState extends FlxTransitionableState
 		else if (mode == ModeArcade && grid.getCount() == 0)
 		{
 			flowController.onScreenCleared();
+			specialBubbleController.onScreenCleared();
 
 			scoreDisplay.add(Constants.ScClearField);
 			var congratsSign : ArcadeClear = new ArcadeClear(FlxG.width/2, 0);
@@ -611,6 +627,26 @@ class PlayState extends FlxTransitionableState
 		{
 			switchState(StateAiming);
 		}
+	}
+
+	public function onPresentBubbleHit(present : Bubble)
+	{
+		// Generate the next bubble
+		generateBubble();
+
+		var neighbours : Array<Bubble> = grid.getNeighbours(present);
+		for (neigh in neighbours)
+		{
+			neigh.triggerRot(true);
+		}
+
+		var presentCell : FlxPoint = present.cellPosition;
+		trace("Present hit, waiting 2 secs");
+		new FlxTimer().start(2, function(t:FlxTimer) {
+			trace("DONE WAITING, spawining a target");
+			Bubble.CreateAt(presentCell.x, presentCell.y, new BubbleColor(BubbleColor.SpecialTarget), this);
+			switchState(StateAiming);
+		});
 	}
 
 	public function onTargetBubbleHit()

@@ -127,6 +127,10 @@ class Bubble extends FlxSprite
 				trace("Target bubble instantiated");
 				var sprite : String = world.playSessionData.target + ".png";
 				loadGraphic("assets/images/" + sprite);
+			case BubbleColor.SpecialPresent:
+				makeGraphic(Std.int((Size+1)*2.5), Std.int((Size+1)*2.5), 0x00000000);
+				// FlxSpriteUtil.drawRoundRect(this, 1, 1, Size*2, Size*2, 4, 4, 0xFF414471);
+				FlxSpriteUtil.drawCircle(this, width/2, height/2, Size * 1.5, 0xFF00FF0A);
 			default:
 				loadGraphic("assets/images/" + Bubble.GetSprite() + ".png", true, 16, 16);
 				if (bubbleColor.colorIndex < 5)
@@ -169,18 +173,12 @@ class Bubble extends FlxSprite
 				{
 					onHitCeiling();
 				}
-				// Stick to the bubble mass
-				else if (checkCollisionWithTarget())
-				{
-					// What?
-					onHitBubbles();
-				}
-				else if (checkCollisionWithBubbles())
-				{
-					onHitBubbles();
-				}
+				// Check collision vs bubbles
 				else if (UseMoveToContact && checkCollisionWithBubblesAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed))
 				{
+					// Check for presents
+					var present : Bubble = getBubbleMeetingAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed, onlyPresentBubbles);
+
 					moveToContact(x + velocity.x * FlxG.elapsed,  y + velocity.y * FlxG.elapsed);
 
 					// Remember your way
@@ -195,8 +193,15 @@ class Bubble extends FlxSprite
 					}
 
 					// trace(lastPosition + " -> " + cellPosition);
-
-					onHitBubbles();
+					if (present != null)
+					{
+						onHitBubbles(false);
+						present.onPresentHit(this);
+					}
+					else
+					{
+						onHitBubbles();
+					}
 				}
 				else
 				{
@@ -308,19 +313,31 @@ class Bubble extends FlxSprite
 		}
 	}
 
+	public function onPresentHit(other : Bubble)
+	{
+		if (special == BubbleColor.SpecialPresent)
+		{
+			trace("Present bubble hit!");
+			this.triggerPop();
+			other.triggerPop();
+
+			world.onPresentBubbleHit(this);
+		}
+	}
+
 	public function onHitCeiling()
 	{
 		onHitSomething(true);
 	}
 
-	public function onHitBubbles()
+	public function onHitBubbles(?notifyWorld : Bool = true)
 	{
-		onHitSomething(false);
+		onHitSomething(false, notifyWorld);
 	}
 
-	public function onHitSomething(useNewPosition : Bool, debug : Bool = false)
+	public function onHitSomething(useNewPosition : Bool, notifyWorld : Bool = true)
 	{
-		if (debug || state == StateFlying)
+		if (state == StateFlying)
 		{
 			// Rest!
 			state = StateIdling;
@@ -395,7 +412,7 @@ class Bubble extends FlxSprite
 			// Store your data
 			grid.setData(cellPosition.x, cellPosition.y, this);
 
-			if (!debug)
+			if (notifyWorld)
 			{
 				// And notify the world
 				world.handleBubbleStop(mayHaveLost);
@@ -502,12 +519,18 @@ class Bubble extends FlxSprite
 		}
 	}
 
-	public function triggerRot()
+	public function triggerRot(?immediate : Bool = false)
 	{
 		state = StateIdling;
 
 		var delay : Float = 1.5;
 		var rotTime : Float = (grid.rows - cellPosition.y)*0.25 + (cellPosition.y)*0.15;
+
+		if (immediate)
+		{
+			delay = 0.5;
+			rotTime = 0;
+		}
 
 		// Rot quickly
 		new FlxTimer().start(delay + rotTime * 0.25, function (_t:FlxTimer) {
@@ -520,7 +543,7 @@ class Bubble extends FlxSprite
 		});
 	}
 
-	public function checkCollisionWithTarget() : Bool
+	/*public function checkCollisionWithTarget() : Bool
 	{
 		var bubbles : FlxTypedGroup<Bubble> = world.bubbles;
 		var iterator : FlxTypedGroupIterator<Bubble> =
@@ -536,11 +559,44 @@ class Bubble extends FlxSprite
 		}
 
 		return false;
+	}*/
+
+	public function getBubbleMeetingAt(X : Float, Y : Float, ?filter : Bubble -> Bool) : Bubble
+	{
+		var collidedWith : Bubble = null;
+
+		var tx : Float = x;
+		var ty : Float = y;
+
+		x = X;
+		y = Y;
+
+		var bubbles : FlxTypedGroup<Bubble> = world.bubbles;
+		var iterator : FlxTypedGroupIterator<Bubble> =
+										bubbles.iterator(filter);
+		while (iterator.hasNext())
+		{
+			var bubble : Bubble = iterator.next();
+			if (bubble.touches(this))
+			{
+				collidedWith = bubble;
+			}
+		}
+
+		x = tx;
+		y = ty;
+
+		return collidedWith;
 	}
 
 	function onlyTargetBubbles(bubble : Bubble) : Bool
 	{
 		return (bubble != null && bubble.special == BubbleColor.SpecialTarget);
+	}
+
+	function onlyPresentBubbles(bubble : Bubble) : Bool
+	{
+		return (bubble != null && bubble.special == BubbleColor.SpecialPresent);
 	}
 
 	public function checkCollisionWithBubblesAt(X : Float, Y : Float) : Bool
@@ -591,9 +647,10 @@ class Bubble extends FlxSprite
 		return point;
 	}
 
-	public function checkCollisionWithBubbles() : Bool
+	public function checkCollisionWithBubbles(?filter : Bubble -> Bool = null) : Bool
 	{
 		var bubbles : FlxTypedGroup<Bubble> = world.bubbles;
+		bubbles.iterator(filter);
 		for (bubble in bubbles)
 		{
 			if (bubble.touches(this))
@@ -607,7 +664,7 @@ class Bubble extends FlxSprite
 		return false;
 	}
 
-	public function touches(bubble : Bubble) : Bool
+	public function touches(bubble : Bubble, ?track : Bool = false) : Bool
 	{
 		if (state == StatePopping || bubble.state == StatePopping)
 			return false;
@@ -622,6 +679,10 @@ class Bubble extends FlxSprite
 		// Calculate the sum of the radii, then square it
 		var sumRadiiSquared : Float = Size * squish + bubble.Size * squish;
 		sumRadiiSquared *= sumRadiiSquared;
+
+		if (track) {
+			trace("Bubble vs target", deltaXSquared + deltaYSquared, sumRadiiSquared, (deltaXSquared + deltaYSquared <= sumRadiiSquared));
+		}
 
 		return (deltaXSquared + deltaYSquared <= sumRadiiSquared);
 	}

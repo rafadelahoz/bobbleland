@@ -76,7 +76,10 @@ class BubbleGenerator
                 if (member.length == 0)
                     continue;
 
-                if (member.charAt(0) != "x")
+                // For special chars, detect the minus, then parse the number
+                if (member.charAt(0) == "-")
+                    bubLine.push(new BubbleColor(-Std.parseInt(member.charAt(1))));
+                else if (member.charAt(0) != "x")
                     bubLine.push(new BubbleColor(Std.parseInt(member.charAt(0))));
                 else
                     bubLine.push(null);
@@ -102,9 +105,23 @@ class BubbleGenerator
 
     function getArcadeRow(row : Array<BubbleColor>) : Array<BubbleColor>
     {
+        // Special bubble generation
+        var specialBubbleColumn : Int = -1;
+        var specialBubbleProbability = world.specialBubbleController.getGenerationProbability();
+        if (FlxG.random.bool(specialBubbleProbability * 100))
+        {
+            specialBubbleColumn = FlxG.random.int(0, grid.columns);
+        }
+
         for (col in 0...grid.columns)
         {
-            var bubble : BubbleColor = getRandomColor();
+            var bubble : BubbleColor;
+            if (col == specialBubbleColumn)
+            {
+                bubble = new BubbleColor(BubbleColor.SpecialPresent);
+            }
+            else
+                bubble = getRandomColor();
 
             row.push(bubble);
         }

@@ -155,12 +155,21 @@ class BubbleGrid extends FlxObject
 		if (!emptyRow)
 		{
 			// Generate inital row
+			var specialColumns : Array<Int> = [];
 			for (col in 0...columns)
 			{
-				if (row[col] != null)
+				// Generate normal bubbles on the first sweep
+				if (row[col] != null && !row[col].isSpecial)
 					Bubble.CreateAt(col, 0, row[col], world);
+				else if (row[col] != null && row[col].isSpecial)
+					specialColumns.push(col);
 				else
 					setData(col, 0, null);
+			}
+
+			for (col in specialColumns)
+			{
+				Bubble.CreateAt(col, 0, row[col], world);
 			}
 		}
 		else
