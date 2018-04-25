@@ -634,6 +634,9 @@ class PlayState extends FlxTransitionableState
 		// Generate the next bubble
 		generateBubble();
 
+		SfxEngine.play(SfxEngine.SFX.BubbleStop);
+		SfxEngine.play(SfxEngine.SFX.Accept);
+
 		var neighbours : Array<Bubble> = grid.getNeighbours(present);
 		for (neigh in neighbours)
 		{

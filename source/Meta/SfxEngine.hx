@@ -86,7 +86,7 @@ class SfxEngine
         if (Enabled && sfx.exists(sf))
         {
             sfx.get(sf).looped = loop;
-            sfx.get(sf).volume =  volume;
+            sfx.get(sf).volume = volume;
             sfx.get(sf).play();
         }
     }
