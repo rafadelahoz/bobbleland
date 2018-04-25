@@ -11,6 +11,7 @@ enum SFX {
     Clock;
     BubbleBounce;
     BubbleStop;
+    BubbleFall;
     NiceSmall;
     NiceBig;
     Lost;
@@ -30,6 +31,7 @@ class SfxEngine
     static var initialized : Bool = false;
 
     static var sfx : Map<SFX, FlxSound>;
+    static var sfxFiles : Map<SFX, String>;
 
     public static function init()
     {
@@ -47,6 +49,7 @@ class SfxEngine
         sfx.set(SFX.Clock,          loadSfx("btn_clock.wav"));
         sfx.set(SFX.BubbleBounce,   loadSfx("bubble-stop.wav"));
         sfx.set(SFX.BubbleStop,     loadSfx("bubble-bounce.wav"));
+        sfx.set(SFX.BubbleFall,     loadSfx("bubble-fall.wav"));
         sfx.set(SFX.NiceSmall,      loadSfx("nice-small.wav"));
         sfx.set(SFX.NiceBig,        loadSfx("nice-big.wav"));
         sfx.set(SFX.Lost,           loadSfx("lose.wav"));
@@ -55,6 +58,21 @@ class SfxEngine
         sfx.set(SFX.Accept,         loadSfx("accept.wav"));
         sfx.set(SFX.StickerA,        loadSfx("sticker-paste.wav"));
         sfx.set(SFX.StickerB,        loadSfx("sticker-paste-b.wav"));
+
+        sfxFiles = new Map<SFX, String>();
+        sfxFiles.set(SFX.Click,          path + ("btn_click.wav"));
+        sfxFiles.set(SFX.Clock,          path + ("btn_clock.wav"));
+        sfxFiles.set(SFX.BubbleBounce,   path + ("bubble-stop.wav"));
+        sfxFiles.set(SFX.BubbleStop,     path + ("bubble-bounce.wav"));
+        sfxFiles.set(SFX.BubbleFall,     path + ("bubble-fall.wav"));
+        sfxFiles.set(SFX.NiceSmall,      path + ("nice-small.wav"));
+        sfxFiles.set(SFX.NiceBig,        path + ("nice-big.wav"));
+        sfxFiles.set(SFX.Lost,           path + ("lose.wav"));
+        sfxFiles.set(SFX.Print,          path + ("low-vibration.wav"));
+        sfxFiles.set(SFX.RowGeneration,  path + ("row.wav"));
+        sfxFiles.set(SFX.Accept,         path + ("accept.wav"));
+        sfxFiles.set(SFX.StickerA,       path + ("sticker-paste.wav"));
+        sfxFiles.set(SFX.StickerB,       path + ("sticker-paste-b.wav"));
 
         for (sf in sfx.keys())
         {
@@ -85,9 +103,10 @@ class SfxEngine
     {
         if (Enabled && sfx.exists(sf))
         {
-            sfx.get(sf).looped = loop;
-            sfx.get(sf).volume = volume;
-            sfx.get(sf).play();
+            /*sfx.get(sf).looped = loop;
+            sfx.get(sf).volume = volume;*/
+            sfx.set(sf, FlxG.sound.play(sfxFiles.get(sf), volume, loop));
+            // sfx.get(sf).play();
         }
     }
 

@@ -10,6 +10,7 @@ class BubbleColor
     public static var SpecialAnchor : Int = -2;
 
     public static var SpecialPresent : Int = -3;
+    public static var SpecialBlocker : Int = -4;
 
     public var colorIndex : Int;
     public var color : Int;

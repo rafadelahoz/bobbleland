@@ -549,36 +549,48 @@ class PlayState extends FlxTransitionableState
 			}
 
 			// If there was some destruction, check for disconnections
-			var disconnected : Array<Bubble> = grid.locateIsolatedBubbles();
-			for (bub in disconnected)
-			{
-				scoreDisplay.add(bub.getFallPoints());
-				bub.triggerFall();
-				bubbles.remove(bub);
-				fallingBubbles.add(bub);
-
-				flowController.onBubbleDestroyed();
-				specialBubbleController.onBubbleDestroyed();
-			}
+			var disconnected : Array<Bubble> = handleDisconnectedBubbles();
 
 			if (condemned.length + disconnected.length > 5)
 			{
 				SfxEngine.play(SfxEngine.SFX.NiceBig);
 			}
 
-			grid.forEach(function (bubble : Bubble) {
-				bubble.onBubblesPopped();
-			});
-
-			// Things are happing, so wait!
-			switchState(StateRemoving);
-			waitTimer.start(WaitTime, function(_t:FlxTimer) {
-				afterRemoving();
-			});
+			handlePostShoot();
 		}
 
 		// And generate a new one
 		generateBubble();
+	}
+
+	function handleDisconnectedBubbles() : Array<Bubble>
+	{
+		var disconnected : Array<Bubble> = grid.locateIsolatedBubbles();
+		for (bub in disconnected)
+		{
+			scoreDisplay.add(bub.getFallPoints());
+			bub.triggerFall();
+			bubbles.remove(bub);
+			fallingBubbles.add(bub);
+
+			flowController.onBubbleDestroyed();
+			specialBubbleController.onBubbleDestroyed();
+		}
+
+		return disconnected;
+	}
+
+	function handlePostShoot()
+	{
+		grid.forEach(function (bubble : Bubble) {
+			bubble.onBubblesPopped();
+		});
+
+		// Things are happing, so wait!
+		switchState(StateRemoving);
+		waitTimer.start(WaitTime, function(_t:FlxTimer) {
+			afterRemoving();
+		});
 	}
 
 	public function afterRemoving()
@@ -641,7 +653,14 @@ class PlayState extends FlxTransitionableState
 		for (neigh in neighbours)
 		{
 			neigh.triggerRot(true);
+			if (grid.isPositionValid(neigh.getCurrentCell()))
+				grid.setData(neigh.getCurrentCell().x, neigh.getCurrentCell().y, null);
 		}
+
+		new FlxTimer().start(0.7, function(t:FlxTimer) {
+			handleDisconnectedBubbles();
+			handlePostShoot();
+		});
 
 		var presentCell : FlxPoint = present.cellPosition;
 		trace("Present hit, waiting 2 secs");
@@ -803,16 +822,12 @@ class PlayState extends FlxTransitionableState
 
 		if (FlxG.keys.justPressed.ONE || FlxG.keys.justPressed.TWO)
 		{
-			if (grid.getData(cell.x, cell.y) != null)
-			{
-				bubbles.remove(grid.getData(cell.x, cell.y));
-				grid.getData(cell.x, cell.y).destroy();
-				grid.setData(cell.x, cell.y, null);
-			}
-			else
-			{
-				Bubble.CreateAt(cell.x, cell.y, (FlxG.keys.justPressed.ONE ? availableColors[0] : availableColors[1]), this);
-			}
+			spawnDebugBubble(cell, (FlxG.keys.justPressed.ONE ? availableColors[0] : availableColors[1]));
+		}
+
+		if (FlxG.keys.justPressed.THREE)
+		{
+			spawnDebugBubble(cell, new BubbleColor(BubbleColor.SpecialBlocker));
 		}
 
 		if (FlxG.keys.justPressed.S)
@@ -866,5 +881,19 @@ class PlayState extends FlxTransitionableState
 		// label.text = "" + cell + " | " + dropDelay;
 		// label.text = grid.getUsedColors().toString();
 		FlxG.watch.addQuick("Cell", cell);
+	}
+
+	function spawnDebugBubble(cell : FlxPoint, color : BubbleColor)
+	{
+		if (grid.getData(cell.x, cell.y) != null)
+		{
+			bubbles.remove(grid.getData(cell.x, cell.y));
+			grid.getData(cell.x, cell.y).destroy();
+			grid.setData(cell.x, cell.y, null);
+		}
+		else
+		{
+			Bubble.CreateAt(cell.x, cell.y, color, this);
+		}
 	}
 }

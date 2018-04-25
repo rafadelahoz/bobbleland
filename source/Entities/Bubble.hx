@@ -131,6 +131,9 @@ class Bubble extends FlxSprite
 				makeGraphic(Std.int((Size+1)*2.5), Std.int((Size+1)*2.5), 0x00000000);
 				// FlxSpriteUtil.drawRoundRect(this, 1, 1, Size*2, Size*2, 4, 4, 0xFF414471);
 				FlxSpriteUtil.drawCircle(this, width/2, height/2, Size * 1.5, 0xFF00FF0A);
+			case BubbleColor.SpecialBlocker:
+				makeGraphic(Std.int((Size+1)*2), Std.int((Size+1)*2), 0x00000000);
+				FlxSpriteUtil.drawRoundRect(this, 1, 1, width-2, height-2, 10, 10, 0xFFFFFF0A);
 			default:
 				loadGraphic("assets/images/" + Bubble.GetSprite() + ".png", true, 16, 16);
 				if (bubbleColor.colorIndex < 5)
@@ -523,8 +526,8 @@ class Bubble extends FlxSprite
 	{
 		state = StateIdling;
 
-		var delay : Float = 1.5;
-		var rotTime : Float = (grid.rows - cellPosition.y)*0.25 + (cellPosition.y)*0.15;
+		var delay : Float = 1.0;
+		var rotTime : Float = (grid.rows - cellPosition.y)*0.25 + (cellPosition.y)*0.15 + (cellPosition.x)*0.02;
 
 		if (immediate)
 		{
@@ -540,6 +543,7 @@ class Bubble extends FlxSprite
 		// Fall less quickly
 		new FlxTimer().start(delay + rotTime, function (_t:FlxTimer) {
 			triggerFall();
+			SfxEngine.play(SfxEngine.SFX.BubbleFall);
 		});
 	}
 
