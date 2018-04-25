@@ -108,6 +108,9 @@ class Bubble extends FlxSprite
 			case BubbleColor.SpecialAnchor:
 				popPoints = Constants.ScBubblePop * 2;
 				fallPoints = Constants.ScBubbleFall * 2;
+			case BubbleColor.SpecialBlocker:
+				popPoints = 0;
+				fallPoints = Constants.ScBubbleFall * 3;
 			default:
 				popPoints = Constants.ScBubblePop * 2;
 				fallPoints = Constants.ScBubbleFall * 2;
@@ -128,10 +131,11 @@ class Bubble extends FlxSprite
 				var sprite : String = world.playSessionData.target + ".png";
 				loadGraphic("assets/images/" + sprite);
 			case BubbleColor.SpecialPresent:
+				// TODO: Actual graphic
 				makeGraphic(Std.int((Size+1)*2.5), Std.int((Size+1)*2.5), 0x00000000);
-				// FlxSpriteUtil.drawRoundRect(this, 1, 1, Size*2, Size*2, 4, 4, 0xFF414471);
 				FlxSpriteUtil.drawCircle(this, width/2, height/2, Size * 1.5, 0xFF00FF0A);
 			case BubbleColor.SpecialBlocker:
+				// TODO: Actual graphic
 				makeGraphic(Std.int((Size+1)*2), Std.int((Size+1)*2), 0x00000000);
 				FlxSpriteUtil.drawRoundRect(this, 1, 1, width-2, height-2, 10, 10, 0xFFFFFF0A);
 			default:
