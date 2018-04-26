@@ -732,7 +732,17 @@ class Bubble extends FlxSprite
 	{
 		var cellCenter : FlxPoint = World.grid.getCellCenter(Std.int(X), Std.int(Y));
 
-		var bubble : Bubble = new Bubble(cellCenter.x, cellCenter.y - World.grid.cellSize, World, Color);
+		var bubble : Bubble = null;
+		if (Color.colorIndex == BubbleColor.SpecialPresent)
+		{
+			bubble = new PresentBubble(cellCenter.x, cellCenter.y - World.grid.cellSize, World, Color);
+			cast(bubble, PresentBubble).setContent(World.specialBubbleController.getPresentContent());
+		}
+		else
+		{
+			bubble = new Bubble(cellCenter.x, cellCenter.y - World.grid.cellSize, World, Color);
+		}
+
 		bubble.cellPosition.set(X, Y);
 		bubble.cellCenterPosition.set(cellCenter.x, cellCenter.y);
 		bubble.state = StateIdling;

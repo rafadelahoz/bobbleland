@@ -563,7 +563,7 @@ class PlayState extends FlxTransitionableState
 		generateBubble();
 	}
 
-	function handleDisconnectedBubbles() : Array<Bubble>
+	public function handleDisconnectedBubbles() : Array<Bubble>
 	{
 		var disconnected : Array<Bubble> = grid.locateIsolatedBubbles();
 		for (bub in disconnected)
@@ -580,7 +580,7 @@ class PlayState extends FlxTransitionableState
 		return disconnected;
 	}
 
-	function handlePostShoot()
+	public function handlePostShoot()
 	{
 		grid.forEach(function (bubble : Bubble) {
 			bubble.onBubblesPopped();
@@ -646,29 +646,7 @@ class PlayState extends FlxTransitionableState
 		// Generate the next bubble
 		generateBubble();
 
-		SfxEngine.play(SfxEngine.SFX.BubbleStop);
-		SfxEngine.play(SfxEngine.SFX.Accept);
-
-		var neighbours : Array<Bubble> = grid.getNeighbours(present);
-		for (neigh in neighbours)
-		{
-			neigh.triggerRot(true);
-			if (grid.isPositionValid(neigh.getCurrentCell()))
-				grid.setData(neigh.getCurrentCell().x, neigh.getCurrentCell().y, null);
-		}
-
-		new FlxTimer().start(0.7, function(t:FlxTimer) {
-			handleDisconnectedBubbles();
-			handlePostShoot();
-		});
-
-		var presentCell : FlxPoint = present.cellPosition;
-		trace("Present hit, waiting 2 secs");
-		new FlxTimer().start(2, function(t:FlxTimer) {
-			trace("DONE WAITING, spawining a target");
-			Bubble.CreateAt(presentCell.x, presentCell.y, new BubbleColor(BubbleColor.SpecialTarget), this);
-			switchState(StateAiming);
-		});
+		cast(present, PresentBubble).onOpen();
 	}
 
 	public function onTargetBubbleHit()

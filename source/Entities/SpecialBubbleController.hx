@@ -10,6 +10,7 @@ class SpecialBubbleController
 
     /** The thing **/
     var generationProbabilityBase : Float;
+    var contentProbability : Array<Float>;
 
     /** Metrics **/
     var playTime : Float;
@@ -61,6 +62,7 @@ class SpecialBubbleController
             lastIncreaseTime = 0;
 
             generationProbabilityBase = 0;
+            contentProbability = [40, 10, 20, 40, 20, 10];
         }
 
         timer = new FlxTimer().start(1, onPlayTimeTimer, 0);
@@ -95,6 +97,16 @@ class SpecialBubbleController
         trace("Special Bubble probability", probability);
 
         return probability;
+    }
+
+    public function setContentProbability(Content : Int, Probability : Float)
+    {
+        contentProbability[Content] = Probability;
+    }
+
+    public function getPresentContent() : Int
+    {
+        return FlxG.random.weightedPick(contentProbability);
     }
 
     public function pause()
@@ -180,4 +192,16 @@ typedef SpecialBubbleSaveData = {
     var lastBubbleCount : Int;
     var lastIncreaseTime : Float;
     var lastScore : Int;
+}
+
+class PresentContent
+{
+    public static var Points    : Int = 1;
+    public static var Hole      : Int = 2;
+    public static var Bumper    : Int = 3;
+    public static var Guideline : Int = 4;
+    public static var Blocker   : Int = 5;
+    public static var Bubbles   : Int = 6;
+
+    public static var Contents : Array<Int> = [Points, Hole, Bumper, Guideline, Blocker, Bubbles];
 }
