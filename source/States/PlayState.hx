@@ -776,7 +776,7 @@ class PlayState extends FlxTransitionableState
 		add(btnDebugGrid);
 	}
 
-	var contentIndex : Int = 0;
+	var contentIndex : Int = 1;
 	function handleDebugRoutines()
 	{
 		// Avoid debug on android
@@ -812,7 +812,7 @@ class PlayState extends FlxTransitionableState
 		if (FlxG.keys.justPressed.FOUR)
 		{
 			var Color : BubbleColor = new BubbleColor(BubbleColor.SpecialPresent);
-			contentIndex += 1;
+			// contentIndex += 1;
 			if (contentIndex >= SpecialBubbleController.PresentContent.Contents.length)
 			{
 				contentIndex = 0;

@@ -142,19 +142,18 @@ class PresentBubble extends Bubble
     function onOpenPoints()
     {
         SfxEngine.play(SfxEngine.SFX.BubbleStop);
-		SfxEngine.play(SfxEngine.SFX.Accept);
-        
+
         new FlxTimer().start(0.7, function(t:FlxTimer) {
             world.handleDisconnectedBubbles();
             world.handlePostShoot();
             world.switchState(PlayState.StateAiming);
         });
 
+        world.add(new TextNotice(x + width/2, y + height/2, "+3000 POINTS!"));
+
         var presentCell : FlxPoint = cellPosition;
         trace("Awarding points in 0.3 secs");
         new FlxTimer().start(0.3, function(t:FlxTimer) {
-            // TODO: Spawn indicator or something
-            trace("+ 300 POiNTS!");
             world.scoreDisplay.add(3000);
 
             SfxEngine.play(SfxEngine.SFX.Chime);
