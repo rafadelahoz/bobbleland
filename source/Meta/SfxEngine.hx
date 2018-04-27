@@ -20,6 +20,7 @@ enum SFX {
     Accept;
     StickerA;
     StickerB;
+    Chime;
 }
 
 class SfxEngine
@@ -56,8 +57,9 @@ class SfxEngine
         sfx.set(SFX.Print,          loadSfx("low-vibration.wav"));
         sfx.set(SFX.RowGeneration,  loadSfx("row.wav"));
         sfx.set(SFX.Accept,         loadSfx("accept.wav"));
-        sfx.set(SFX.StickerA,        loadSfx("sticker-paste.wav"));
-        sfx.set(SFX.StickerB,        loadSfx("sticker-paste-b.wav"));
+        sfx.set(SFX.StickerA,       loadSfx("sticker-paste.wav"));
+        sfx.set(SFX.StickerB,       loadSfx("sticker-paste-b.wav"));
+        sfx.set(SFX.Chime,          loadSfx("temp-chime.wav"));
 
         sfxFiles = new Map<SFX, String>();
         sfxFiles.set(SFX.Click,          path + ("btn_click.wav"));
@@ -73,6 +75,7 @@ class SfxEngine
         sfxFiles.set(SFX.Accept,         path + ("accept.wav"));
         sfxFiles.set(SFX.StickerA,       path + ("sticker-paste.wav"));
         sfxFiles.set(SFX.StickerB,       path + ("sticker-paste-b.wav"));
+        sfxFiles.set(SFX.Chime,          path + ("temp-chime.wav"));
 
         for (sf in sfx.keys())
         {

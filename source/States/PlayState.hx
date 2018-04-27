@@ -776,6 +776,7 @@ class PlayState extends FlxTransitionableState
 		add(btnDebugGrid);
 	}
 
+	var contentIndex : Int = 0;
 	function handleDebugRoutines()
 	{
 		// Avoid debug on android
@@ -806,6 +807,38 @@ class PlayState extends FlxTransitionableState
 		if (FlxG.keys.justPressed.THREE)
 		{
 			spawnDebugBubble(cell, new BubbleColor(BubbleColor.SpecialBlocker));
+		}
+
+		if (FlxG.keys.justPressed.FOUR)
+		{
+			var Color : BubbleColor = new BubbleColor(BubbleColor.SpecialPresent);
+			contentIndex += 1;
+			if (contentIndex >= SpecialBubbleController.PresentContent.Contents.length)
+			{
+				contentIndex = 0;
+			}
+
+			if (grid.getData(cell.x, cell.y) != null)
+			{
+				bubbles.remove(grid.getData(cell.x, cell.y));
+				grid.getData(cell.x, cell.y).destroy();
+				grid.setData(cell.x, cell.y, null);
+			}
+			else
+			{
+				var cellCenter : FlxPoint = grid.getCellCenter(Std.int(cell.x), Std.int(cell.y));
+
+				var bubble : Bubble = null;
+				bubble = new PresentBubble(cellCenter.x, cellCenter.y - grid.cellSize, this, Color);
+				cast(bubble, PresentBubble).setContent(contentIndex);
+
+				bubble.cellPosition.set(cell.x, cell.y);
+				bubble.cellCenterPosition.set(cellCenter.x, cellCenter.y);
+				bubble.state = Bubble.StateIdling;
+
+				grid.setData(cell.x, cell.y, bubble);
+				bubbles.add(bubble);
+			}
 		}
 
 		if (FlxG.keys.justPressed.S)
