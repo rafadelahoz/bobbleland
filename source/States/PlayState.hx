@@ -642,7 +642,7 @@ class PlayState extends FlxTransitionableState
 	}
 
 	public function onPresentBubbleHit(present : Bubble)
-	{
+	{	
 		// Generate the next bubble
 		generateBubble();
 

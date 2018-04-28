@@ -11,7 +11,7 @@ import flixel.tweens.FlxTween;
 
 import SfxEngine.SFX;
 
-class Bubble extends FlxSprite
+class Bubble extends Entity
 {
 	public static var StateAiming : Int = 0;
 	public static var StateFlying : Int = 1;
@@ -202,7 +202,7 @@ class Bubble extends FlxSprite
 					// trace(lastPosition + " -> " + cellPosition);
 					if (present != null)
 					{
-						onHitBubbles(false);
+						// onHitBubbles(false);
 						present.onPresentHit(this);
 					}
 					else
@@ -265,30 +265,17 @@ class Bubble extends FlxSprite
 					alpha = 1;
 		}
 
-		if (alive)
-			super.update(elapsed);
-	}
-
-	override public function draw()
-	{
-		// Vibration effect
 		if (world.notifyDrop && state == StateIdling)
 		{
-			var tx : Float = x;
-			var ty : Float = y;
-
-			x += FlxG.random.float(-0.75, 0.75);
-			y += FlxG.random.float(-0.75, 0.75);
-
-			super.draw();
-
-			x = tx;
-			y = ty;
+			vibrate(true, 0.75);
 		}
 		else
 		{
-			super.draw();
+			vibrate(false);
 		}
+
+		if (alive)
+			super.update(elapsed);
 	}
 
 	public function shoot(direction : Float)
@@ -324,9 +311,8 @@ class Bubble extends FlxSprite
 	{
 		if (special == BubbleColor.SpecialPresent)
 		{
-			trace("Present bubble hit!");
-			this.triggerPop();
-			other.triggerPop();
+			world.bubbles.add(other);
+			other.fall(200);
 
 			world.onPresentBubbleHit(this);
 		}
@@ -481,7 +467,7 @@ class Bubble extends FlxSprite
 		this.destroy();
 	}
 
-	public function triggerPop()
+	public function triggerPop(?immediate : Bool = false)
 	{
 		if (state != Bubble.StatePopping)
 		{
@@ -492,7 +478,7 @@ class Bubble extends FlxSprite
 			if (grid.isPositionValid(cellPosition))
 				grid.setData(cellPosition.x, cellPosition.y, null);
 
-			FlxTween.tween(this.scale, {x : 0.5, y : 0.5}, crunchTime,
+			FlxTween.tween(this.scale, {x : 0.5, y : 0.5}, immediate ? 0.01 : crunchTime,
 							{onComplete: function(_t:FlxTween) {
 								new FlxTimer().start(waitTime, function(__t:FlxTimer) {
 									FlxTween.tween(this.scale, {x : 3, y : 3}, popTime);
@@ -505,7 +491,7 @@ class Bubble extends FlxSprite
 		}
 	}
 
-	public function triggerFall()
+	public function triggerFall(?immediate : Bool = false)
 	{
 		if (state != Bubble.StatePopping)
 		{
@@ -516,14 +502,21 @@ class Bubble extends FlxSprite
 			if (grid.isPositionValid(cellPosition))
 				grid.setData(cellPosition.x, cellPosition.y, null);
 
-			FlxTween.tween(this.scale, {x : 0.9, y : 0.9}, jumpWaitTime*0.5);
+			FlxTween.tween(this.scale, {x : 0.9, y : 0.9}, immediate ? 0 : jumpWaitTime*0.5);
 
 			new FlxTimer().start(jumpWaitTime, function (_t:FlxTimer) {
-				velocity.y = -100;
-				scale.set(1, 1);
-				falling = true;
+				// Do a small jump before falling
+				fall(-100);
 			});
 		}
+	}
+
+	public function fall(?vspeed : Int = -100)
+	{
+		state = Bubble.StatePopping;
+		velocity.y = vspeed;
+		scale.set(1, 1);
+		falling = true;
 	}
 
 	public function triggerRot(?immediate : Bool = false)

@@ -5,6 +5,8 @@ import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
 import flixel.util.FlxSpriteUtil;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 
 class PresentBubble extends Bubble
 {
@@ -88,6 +90,9 @@ class PresentBubble extends Bubble
         {
             shineTimer.cancel();
         }
+
+        if (opened)
+            vibrate(true);
     }
 
     public function onOpen()
@@ -97,25 +102,50 @@ class PresentBubble extends Bubble
 
         opened = true;
 
+        world.grid.setData(cellPosition.x, cellPosition.y, null);
+
         shineTimer.cancel();
 
-        switch (content)
+        SfxEngine.play(SfxEngine.SFX.BubbleStop);
+
+        FlxTween.tween(this.scale, {x : 2, y: 2}, 0.4, {ease: FlxEase.cubeOut});
+        vibrate(true);
+        SfxEngine.play(SfxEngine.SFX.Rumble, 0.8, true);
+        new FlxTimer().start(1, handleOpen);
+    }
+
+    function handleOpen(t : FlxTimer)
+    {
+        SfxEngine.stop(SfxEngine.SFX.Rumble);
+        SfxEngine.play(SfxEngine.SFX.PresentOpen);
+
+        visible = false;
+
+        for (i in 0...FlxG.random.int(32, 48))
         {
-            case SpecialBubbleController.PresentContent.Points:
-                onOpenPoints();
-            /*case SpecialBubbleController.PresentContent.Blocker:
-                return Palette.Brown;
-            case SpecialBubbleController.PresentContent.Guideline:
-                return Palette.Indigo;
-            case SpecialBubbleController.PresentContent.Bumper:
-                return Palette.Blue;
-            case SpecialBubbleController.PresentContent.Hole:
-                return Palette.Red;
-            case SpecialBubbleController.PresentContent.Bubbles:
-                return Palette.Green;*/
-            default:
-                onOpenDefault();
+            world.add(new ParticleOpen(this));
         }
+
+        // t.start(0.3, function(t:FlxTimer) {
+            // TODO: Open explosion effect
+            switch (content)
+            {
+                case SpecialBubbleController.PresentContent.Points:
+                    onOpenPoints();
+                /*case SpecialBubbleController.PresentContent.Blocker:
+                    return Palette.Brown;
+                case SpecialBubbleController.PresentContent.Guideline:
+                    return Palette.Indigo;
+                case SpecialBubbleController.PresentContent.Bumper:
+                    return Palette.Blue;
+                case SpecialBubbleController.PresentContent.Hole:
+                    return Palette.Red;
+                case SpecialBubbleController.PresentContent.Bubbles:
+                    return Palette.Green;*/
+                default:
+                    onOpenDefault();
+            }
+        // });
     }
 
     // TODO: To be removed
@@ -132,22 +162,12 @@ class PresentBubble extends Bubble
                 grid.setData(neigh.getCurrentCell().x, neigh.getCurrentCell().y, null);
         }
 
-        new FlxTimer().start(0.7, function(t:FlxTimer) {
-            world.handleDisconnectedBubbles();
-            world.handlePostShoot();
-            world.switchState(PlayState.StateAiming);
-        });
+        new FlxTimer().start(0.7, afterOpening);
     }
 
     function onOpenPoints()
     {
-        SfxEngine.play(SfxEngine.SFX.BubbleStop);
-
-        new FlxTimer().start(0.7, function(t:FlxTimer) {
-            world.handleDisconnectedBubbles();
-            world.handlePostShoot();
-            world.switchState(PlayState.StateAiming);
-        });
+        new FlxTimer().start(0.7, afterOpening);
 
         world.add(new TextNotice(x + width/2, y + height/2, "+3000 POINTS!"));
 
@@ -155,9 +175,16 @@ class PresentBubble extends Bubble
         trace("Awarding points in 0.3 secs");
         new FlxTimer().start(0.3, function(t:FlxTimer) {
             world.scoreDisplay.add(3000);
-
             SfxEngine.play(SfxEngine.SFX.Chime);
         });
+    }
+
+    function afterOpening(t : FlxTimer)
+    {
+        world.handleDisconnectedBubbles();
+        world.handlePostShoot();
+        world.switchState(PlayState.StateAiming);
+        onDeath();
     }
 }
 
@@ -202,5 +229,37 @@ class PresentSpark extends FlxSprite
         y = owner.y + delta.y;
 
         super.draw();
+    }
+}
+
+class ParticleOpen extends FlxSprite
+{
+    public function new(Parent : FlxSprite)
+    {
+        super(Parent.x + Parent.width / 2, Parent.y + Parent.height / 2);
+
+        var targetX : Float = FlxG.random.float(Parent.x - 14, Parent.x+Parent.width+10);
+        var targetY : Float = FlxG.random.float(Parent.y - 14, Parent.y+Parent.height+10);
+
+        loadGraphic("assets/images/fx-part-bubble.png", true, 8, 8);
+        animation.add("anim", [FlxG.random.int(0, 1)], 0, true);
+        animation.play("anim");
+
+        FlxTween.tween(this, {x : targetX, y : targetY}, FlxG.random.float(0.1, 0.2), {ease: FlxEase.expoOut});
+
+        scale.x = FlxG.random.float(1, 3);
+        scale.y = scale.x;
+
+        color = FlxG.random.getObject([Palette.Black/*, Palette.DarkBlue, Palette.DarkPurple, Palette.Brown*/]);
+
+        FlxTween.tween(this.scale, {x: 0, y: 0}, FlxG.random.float(0.2, 0.5), {ease: FlxEase.bounceInOut});
+        FlxTween.tween(this, {alpha: 0}, FlxG.random.float(0.2, 0.5), {ease: FlxEase.bounceInOut, onComplete: handleDestroy});
+    }
+
+    function handleDestroy(t:FlxTween)
+    {
+        t.destroy();
+
+        destroy();
     }
 }
