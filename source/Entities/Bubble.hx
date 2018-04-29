@@ -8,6 +8,7 @@ import flixel.util.FlxTimer;
 import flixel.util.FlxSpriteUtil;
 import flixel.group.FlxGroup;
 import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 
 import SfxEngine.SFX;
 
@@ -186,7 +187,7 @@ class Bubble extends Entity
 					// Check for presents
 					var present : Bubble = getBubbleMeetingAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed, onlyPresentBubbles);
 
-					moveToContact(x + velocity.x * FlxG.elapsed,  y + velocity.y * FlxG.elapsed);
+					var flyingVelocity = moveToContact(x + velocity.x * FlxG.elapsed,  y + velocity.y * FlxG.elapsed);
 
 					// Remember your way
 					var currentPosition : FlxPoint = getCurrentCell();
@@ -203,7 +204,7 @@ class Bubble extends Entity
 					if (present != null)
 					{
 						// onHitBubbles(false);
-						present.onPresentHit(this);
+						present.onPresentHit(this, flyingVelocity);
 					}
 					else
 					{
@@ -267,7 +268,7 @@ class Bubble extends Entity
 
 		if (world.notifyDrop && state == StateIdling)
 		{
-			vibrate(true, 0.75);
+			vibrate(true, 0.5);
 		}
 		else
 		{
@@ -307,15 +308,22 @@ class Bubble extends Entity
 		}
 	}
 
-	public function onPresentHit(other : Bubble)
+	public function onPresentHit(other : Bubble, flyingVelocity : FlxPoint)
 	{
 		if (special == BubbleColor.SpecialPresent)
 		{
 			world.bubbles.add(other);
-			other.fall(200);
+			trace(other.velocity);
+			other.velocity.x = flyingVelocity.x * -0.25;
+			other.fall(flyingVelocity.y * 0.1);
+			FlxTween.tween(other, {alpha : 0}, 0.75, {ease : FlxEase.expoIn});
+			FlxSpriteUtil.flicker(other);
 
 			world.onPresentBubbleHit(this);
 		}
+
+		if (flyingVelocity != null)
+			flyingVelocity.put();
 	}
 
 	public function onHitCeiling()
@@ -462,6 +470,7 @@ class Bubble extends Entity
 		velocity.set();
 
 		world.bubbles.remove(this);
+		world.presents.remove(this);
 
 		this.kill();
 		this.destroy();
@@ -511,7 +520,7 @@ class Bubble extends Entity
 		}
 	}
 
-	public function fall(?vspeed : Int = -100)
+	public function fall(?vspeed : Float = -100)
 	{
 		state = Bubble.StatePopping;
 		velocity.y = vspeed;
@@ -572,7 +581,8 @@ class Bubble extends Entity
 		x = X;
 		y = Y;
 
-		var bubbles : FlxTypedGroup<Bubble> = world.bubbles;
+		// TODO: This only works for finding presents
+		var bubbles : FlxTypedGroup<Bubble> = world.presents;// world.bubbles;
 		var iterator : FlxTypedGroupIterator<Bubble> =
 										bubbles.iterator(filter);
 		while (iterator.hasNext())
@@ -616,7 +626,7 @@ class Bubble extends Entity
 		return collision;
 	}
 
-	function moveToContact(X : Float, Y : Float)
+	function moveToContact(X : Float, Y : Float) : FlxPoint
 	{
 		var from : FlxPoint = new FlxPoint(x, y);
 		var to : FlxPoint = new FlxPoint(X, Y);
@@ -631,11 +641,16 @@ class Bubble extends Entity
 				x = position.x;
 				y = position.y;
 
+				var flyingVelocity : FlxPoint = FlxPoint.get(velocity.x, velocity.y);
+
 				velocity.x = 0;
 				velocity.y = 0;
-				return;
+
+				return flyingVelocity;
 			}
 		}
+
+		return null;
 	}
 
 	function interpolatePosition(from : FlxPoint, to : FlxPoint, t : Float) : FlxPoint
@@ -648,11 +663,21 @@ class Bubble extends Entity
 		return point;
 	}
 
-	public function checkCollisionWithBubbles(?filter : Bubble -> Bool = null) : Bool
+	public function checkCollisionWithBubbles() : Bool
 	{
 		var bubbles : FlxTypedGroup<Bubble> = world.bubbles;
-		bubbles.iterator(filter);
 		for (bubble in bubbles)
+		{
+			if (bubble.touches(this))
+			{
+				// Store the touched bubble
+				touchedBubble = bubble;
+				return true;
+			}
+		}
+
+		// Check presents
+		for (bubble in world.presents)
 		{
 			if (bubble.touches(this))
 			{
@@ -742,7 +767,10 @@ class Bubble extends Entity
 		bubble.state = StateIdling;
 
 		World.grid.setData(X, Y, bubble);
-		World.bubbles.add(bubble);
+		if (Color.colorIndex == BubbleColor.SpecialPresent)
+			World.presents.add(bubble);
+		else
+			World.bubbles.add(bubble);
 
 		return bubble;
 	}

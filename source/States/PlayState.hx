@@ -42,6 +42,7 @@ class PlayState extends FlxTransitionableState
 
 	public var availableColors : Array<BubbleColor>;
 	public var bubbles : FlxTypedGroup<Bubble>;
+	public var presents : FlxTypedGroup<Bubble>;
 	public var fallingBubbles : FlxTypedGroup<Bubble>;
 
 	public var generator : BubbleGenerator;
@@ -131,6 +132,9 @@ class PlayState extends FlxTransitionableState
 
 		bubbles = new FlxTypedGroup<Bubble>();
 		add(bubbles);
+
+		presents = new FlxTypedGroup<Bubble>();
+		add(presents);
 
 		var bottomBarPosition : FlxPoint = grid.getBottomBarPosition();
 		bottomBar = new FlxSprite(bottomBarPosition.x, bottomBarPosition.y - 1).loadGraphic("assets/images/red-bar.png");
@@ -372,7 +376,7 @@ class PlayState extends FlxTransitionableState
 
 	function onLosingState()
 	{
-		if (bubbles.countLiving() <= 0 && fallingBubbles.countLiving() <= 0)
+		if (bubbles.countLiving() <= 0 && fallingBubbles.countLiving() <= 0 && presents.countLiving() <= 0)
 		{
 			GameController.GameOver(mode, flowController.getStoredData());
 		}
@@ -503,8 +507,10 @@ class PlayState extends FlxTransitionableState
 		switchState(StateLosing);
 
 		grid.forEach(function (bubble : Bubble) {
+			trace("Grid for each, bubble", bubble);
 			bubble.triggerRot();
 			bubbles.remove(bubble);
+			presents.remove(bubble);
 			fallingBubbles.add(bubble);
 		});
 	}
@@ -547,6 +553,7 @@ class PlayState extends FlxTransitionableState
 				scoreDisplay.add(bub.getPopPoints());
 				bub.triggerFall();
 				bubbles.remove(bub);
+				presents.remove(bub);
 				fallingBubbles.add(bub);
 
 				flowController.onBubbleDestroyed();
@@ -576,6 +583,7 @@ class PlayState extends FlxTransitionableState
 			scoreDisplay.add(bub.getFallPoints());
 			bub.triggerFall();
 			bubbles.remove(bub);
+			presents.remove(bub);
 			fallingBubbles.add(bub);
 
 			flowController.onBubbleDestroyed();
@@ -732,7 +740,7 @@ class PlayState extends FlxTransitionableState
 		background.color = 0xFFFF5151;
 		t.cancel();
 		// Play a low hummm
-		SfxEngine.play(SfxEngine.SFX.Print, 0.25, true);
+		SfxEngine.play(SfxEngine.SFX.Print, 0.18, true);
 		// Vibrate bubble grid or something
 		notifyDrop = true;
 	}
@@ -824,6 +832,7 @@ class PlayState extends FlxTransitionableState
 			if (grid.getData(cell.x, cell.y) != null)
 			{
 				bubbles.remove(grid.getData(cell.x, cell.y));
+				presents.remove(grid.getData(cell.x, cell.y));
 				grid.getData(cell.x, cell.y).destroy();
 				grid.setData(cell.x, cell.y, null);
 			}
@@ -840,7 +849,7 @@ class PlayState extends FlxTransitionableState
 				bubble.state = Bubble.StateIdling;
 
 				grid.setData(cell.x, cell.y, bubble);
-				bubbles.add(bubble);
+				presents.add(bubble);
 			}
 		}
 

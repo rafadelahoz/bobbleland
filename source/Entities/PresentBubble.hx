@@ -48,6 +48,7 @@ class PresentBubble extends Bubble
     override public function handleGraphic()
     {
         loadGraphic("assets/images/bubble_present_c.png");
+        offset.set(1, 1);
     }
 
     function shine(t : FlxTimer)
@@ -119,6 +120,8 @@ class PresentBubble extends Bubble
     {
         SfxEngine.stop(SfxEngine.SFX.Rumble);
         SfxEngine.play(SfxEngine.SFX.PresentOpen);
+
+        world.handleDisconnectedBubbles();
 
         visible = false;
 
@@ -198,7 +201,6 @@ class PresentBubble extends Bubble
 
     function afterOpening(t : FlxTimer)
     {
-        world.handleDisconnectedBubbles();
         world.handlePostShoot();
         world.switchState(PlayState.StateAiming);
         onDeath();
