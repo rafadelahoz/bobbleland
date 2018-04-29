@@ -173,10 +173,28 @@ class PresentBubble extends Bubble
     {
         new FlxTimer().start(0.7, afterOpening);
 
-        world.add(new TextNotice(x + width/2, y + height/2, "+3000 POINTS!"));
+        // Decide ammount of points
+        var points : Int =
+            FlxG.random.getObject([1, 50, 100, 1000, 3000, 5000, 7500, 10000, 150000],
+                                  [1, 20, 30,   100,   80,   40,    1,  0.01, 0.0001]);
+
+        // Compose a message
+        var message : String = "+" + points + " POINTS";
+        // +1 POINT?
+        if (points == 1)
+            message = message.substr(0, message.length-1) + "?";
+        // +10000 POINTS!!!
+        else if (points > 9999)
+            message += "!!!";
+        // +5000 POINTS!!!
+        else if (points >= 1000)
+            message += "!";
+        // Default: +50 POINTS
+
+        world.add(new TextNotice(x + width/2, y + height/2, message));
 
         new FlxTimer().start(0.3, function(t:FlxTimer) {
-            world.scoreDisplay.add(3000);
+            world.scoreDisplay.add(points);
             SfxEngine.play(SfxEngine.SFX.Chime);
         });
     }
