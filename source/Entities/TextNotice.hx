@@ -37,6 +37,14 @@ class TextNotice extends FlxSprite
 
         FlxTween.tween(this, {y: y-8}, 0.3, {ease: FlxEase.cubeOut, startDelay: 0});
         FlxTween.tween(this, {alpha: 1}, 0.3, {ease: FlxEase.circOut, startDelay: 0, onComplete: onAppeared});
+
+        doColor(null);
+    }
+
+    function doColor(t : FlxTween)
+    {
+        var colors : Array<Int> = [Palette.White, Palette.Pink, Palette.Peach, Palette.Yellow, Palette.Red, Palette.Green, Palette.Blue];
+        FlxTween.color(pxtext, 0.2, color, FlxG.random.getObject(colors), {ease : FlxEase.circInOut, onComplete: doColor});
     }
 
     override public function destroy()
