@@ -136,8 +136,8 @@ class PresentBubble extends Bubble
             {
                 case SpecialBubbleController.PresentContent.Points:
                     onOpenPoints();
-                /*case SpecialBubbleController.PresentContent.Blocker:
-                    return Palette.Brown;*/
+                case SpecialBubbleController.PresentContent.Blocker:
+                    onOpenBlocker();
                 case SpecialBubbleController.PresentContent.Guideline:
                     onOpenGuideline();
                 /*case SpecialBubbleController.PresentContent.Bumper:
@@ -158,6 +158,7 @@ class PresentBubble extends Bubble
         SfxEngine.play(SfxEngine.SFX.BubbleStop);
 		SfxEngine.play(SfxEngine.SFX.Accept);
 
+        // Destroy neighbours
         var neighbours : Array<Bubble> = grid.getNeighbours(this);
         for (neigh in neighbours)
         {
@@ -168,6 +169,17 @@ class PresentBubble extends Bubble
 
         new FlxTimer().start(0.7, afterOpening);
     }
+
+    function onOpenBlocker()
+    {
+        new FlxTimer().start(0.7, afterOpening);
+
+        SfxEngine.play(SfxEngine.SFX.BubbleStop);
+		SfxEngine.play(SfxEngine.SFX.Blocker);
+
+        Bubble.CreateAt(cellPosition.x, cellPosition.y, new BubbleColor(BubbleColor.SpecialBlocker), world);
+    }
+
 
     function onOpenPoints()
     {

@@ -255,7 +255,35 @@ class PlayState extends FlxTransitionableState
 
 		handleDebugRoutines();
 
+		bubbles.sort(sortBubbles);
+
 		super.update(elapsed);
+	}
+
+	function sortBubbles(Order : Int, one : Bubble, two : Bubble) : Int
+	{
+		if (one == null)
+			return -1;
+		else if (two == null)
+			return 1;
+		else
+		{
+			if (one.special != BubbleColor.SpecialNone && two.special != BubbleColor.SpecialNone)
+				return 0;
+			else if (one.special != BubbleColor.SpecialNone)
+				return 1;
+			else if (two.special != BubbleColor.SpecialNone)
+				return -1;
+			else
+				return 0;
+		}
+
+		return 0;
+	}
+
+	override public function draw()
+	{
+		super.draw();
 	}
 
 	function onPauseStart()
@@ -787,7 +815,7 @@ class PlayState extends FlxTransitionableState
 		add(btnDebugGrid);
 	}
 
-	var contentIndex : Int = 3;
+	var contentIndex : Int = 4;
 	function handleDebugRoutines()
 	{
 		// Avoid debug on android

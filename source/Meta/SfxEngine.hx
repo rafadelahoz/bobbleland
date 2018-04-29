@@ -19,6 +19,7 @@ enum SFX {
     RowGeneration;
     Rumble;
     PresentOpen;
+    Blocker;
     Accept;
     StickerA;
     StickerB;
@@ -60,6 +61,7 @@ class SfxEngine
         sfx.set(SFX.RowGeneration,  loadSfx("row.wav"));
         sfx.set(SFX.Rumble,         loadSfx("low-vibration.wav"));
         sfx.set(SFX.PresentOpen,    loadSfx("temp-present-open.wav"));
+        sfx.set(SFX.PresentOpen,    loadSfx("blocker.wav"));
         sfx.set(SFX.Accept,         loadSfx("accept.wav"));
         sfx.set(SFX.StickerA,       loadSfx("sticker-paste.wav"));
         sfx.set(SFX.StickerB,       loadSfx("sticker-paste-b.wav"));
@@ -78,6 +80,7 @@ class SfxEngine
         sfxFiles.set(SFX.RowGeneration,  path + ("row.wav"));
         sfxFiles.set(SFX.Rumble,         path + ("low-vibration.wav"));
         sfxFiles.set(SFX.PresentOpen,    path + ("temp-present-open.wav"));
+        sfxFiles.set(SFX.Blocker,        path + ("blocker.wav"));
         sfxFiles.set(SFX.Accept,         path + ("accept.wav"));
         sfxFiles.set(SFX.StickerA,       path + ("sticker-paste.wav"));
         sfxFiles.set(SFX.StickerB,       path + ("sticker-paste-b.wav"));

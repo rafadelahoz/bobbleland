@@ -136,9 +136,9 @@ class Bubble extends Entity
 				makeGraphic(Std.int((Size+1)*2.5), Std.int((Size+1)*2.5), 0x00000000);
 				FlxSpriteUtil.drawCircle(this, width/2, height/2, Size * 1.5, 0xFF00FF0A);
 			case BubbleColor.SpecialBlocker:
-				// TODO: Actual graphic
-				makeGraphic(Std.int((Size+1)*2), Std.int((Size+1)*2), 0x00000000);
-				FlxSpriteUtil.drawRoundRect(this, 1, 1, width-2, height-2, 10, 10, 0xFFFFFF0A);
+				loadGraphic("assets/images/blocker-sprite.png", true, 18, 18);
+				animation.add("idle", [FlxG.random.int(0,3)], 1, true);
+				animation.play("idle");
 			default:
 				loadGraphic("assets/images/" + Bubble.GetSprite() + ".png", true, 16, 16);
 				if (bubbleColor.colorIndex < 5)

@@ -62,7 +62,7 @@ class SpecialBubbleController
             lastIncreaseTime = 0;
 
             generationProbabilityBase = 0;
-            contentProbability = [50, 0, 0, 50, 0, 0];// [40, 10, 20, 40, 20, 10];
+            contentProbability = [50, 0, 0, 50, 30, 0];// [40, 10, 20, 40, 20, 10];
         }
 
         timer = new FlxTimer().start(1, onPlayTimeTimer, 0);
