@@ -62,7 +62,7 @@ class SpecialBubbleController
             lastIncreaseTime = 0;
 
             generationProbabilityBase = 0;
-            contentProbability = [40, 10, 20, 40, 20, 10];
+            contentProbability = [50, 0, 0, 50, 0, 0];// [40, 10, 20, 40, 20, 10];
         }
 
         timer = new FlxTimer().start(1, onPlayTimeTimer, 0);
@@ -196,12 +196,12 @@ typedef SpecialBubbleSaveData = {
 
 class PresentContent
 {
-    public static var Points    : Int = 1;
-    public static var Hole      : Int = 2;
-    public static var Bumper    : Int = 3;
-    public static var Guideline : Int = 4;
-    public static var Blocker   : Int = 5;
-    public static var Bubbles   : Int = 6;
+    public static var Points    : Int = 0;
+    public static var Hole      : Int = 1;
+    public static var Bumper    : Int = 2;
+    public static var Guideline : Int = 3;
+    public static var Blocker   : Int = 4;
+    public static var Bubbles   : Int = 5;
 
     public static var Contents : Array<Int> = [Points, Hole, Bumper, Guideline, Blocker, Bubbles];
 }

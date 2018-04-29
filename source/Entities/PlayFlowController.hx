@@ -30,6 +30,9 @@ class PlayFlowController
     // Factor to apply to current world dropDelay for substraction
     var DropDelayFactor : Float = 0.2;
 
+    public static var InitialGuideEnabledShots : Int = 5;
+    public static var PresentGuideEnabledShots : Int = 20;
+
     public function new(World : PlayState, ?SaveData : PlayFlowSaveData = null)
     {
         world = World;
@@ -147,9 +150,6 @@ class PlayFlowController
         timesIncreased++;
 
         disableGuide();
-        // TODO: Remove this
-        // Notify the user!
-        // FlxG.camera.flash(0xFFFFFFFF, 0.5);
     }
 
     function lowerDropDelay()
@@ -194,9 +194,13 @@ class PlayFlowController
         return {score : world.scoreDisplay.realScore, time : playTime, bubbles : bubbleCount, cleans: screenCleanCount};
     }
 
+    public function enableGuide()
+    {
+        world.cursor.enableGuide(PresentGuideEnabledShots);
+    }
+
     public function disableGuide()
     {
-        trace("Disabling guide, was " + (world.cursor.guideEnabled ? "enabled":"disabled"));
         if (world.cursor.guideEnabled)
             world.cursor.disableGuideAfterShots(10);
     }

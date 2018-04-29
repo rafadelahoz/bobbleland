@@ -70,7 +70,7 @@ class PresentBubble extends Bubble
             case SpecialBubbleController.PresentContent.Blocker:
                 return Palette.Brown;
             case SpecialBubbleController.PresentContent.Guideline:
-                return Palette.Indigo;
+                return Palette.Yellow;
             case SpecialBubbleController.PresentContent.Bumper:
                 return Palette.Blue;
             case SpecialBubbleController.PresentContent.Hole:
@@ -103,6 +103,7 @@ class PresentBubble extends Bubble
         opened = true;
 
         world.grid.setData(cellPosition.x, cellPosition.y, null);
+        solid = false;
 
         shineTimer.cancel();
 
@@ -133,10 +134,10 @@ class PresentBubble extends Bubble
                 case SpecialBubbleController.PresentContent.Points:
                     onOpenPoints();
                 /*case SpecialBubbleController.PresentContent.Blocker:
-                    return Palette.Brown;
+                    return Palette.Brown;*/
                 case SpecialBubbleController.PresentContent.Guideline:
-                    return Palette.Indigo;
-                case SpecialBubbleController.PresentContent.Bumper:
+                    onOpenGuideline();
+                /*case SpecialBubbleController.PresentContent.Bumper:
                     return Palette.Blue;
                 case SpecialBubbleController.PresentContent.Hole:
                     return Palette.Red;
@@ -171,10 +172,20 @@ class PresentBubble extends Bubble
 
         world.add(new TextNotice(x + width/2, y + height/2, "+3000 POINTS!"));
 
-        var presentCell : FlxPoint = cellPosition;
-        trace("Awarding points in 0.3 secs");
         new FlxTimer().start(0.3, function(t:FlxTimer) {
             world.scoreDisplay.add(3000);
+            SfxEngine.play(SfxEngine.SFX.Chime);
+        });
+    }
+
+    function onOpenGuideline()
+    {
+        new FlxTimer().start(0.7, afterOpening);
+
+        world.add(new TextNotice(x + width/2, y + height/2, "GUIDE ENABLED!"));
+
+        new FlxTimer().start(0.3, function(t:FlxTimer) {
+            world.flowController.enableGuide();
             SfxEngine.play(SfxEngine.SFX.Chime);
         });
     }

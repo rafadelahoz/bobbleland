@@ -136,8 +136,11 @@ class PlayState extends FlxTransitionableState
 		bottomBar = new FlxSprite(bottomBarPosition.x, bottomBarPosition.y - 1).loadGraphic("assets/images/red-bar.png");
 		add(bottomBar);
 
-		cursor = new PlayerCursor(FlxG.width / 2 - 10, 240 - 40, this, playSessionData.guideEnabled);
+		cursor = new PlayerCursor(FlxG.width / 2 - 10, 240 - 40, this);
 		add(cursor);
+
+		if (playSessionData.guideEnabled)
+			cursor.enableGuide();
 
 		notifyAiming = false;
 		notifyDrop = false;
@@ -176,6 +179,8 @@ class PlayState extends FlxTransitionableState
 		paused = false;
 
 		handleDebugInit();
+
+		// flowController.disableGuide();
 	}
 
 	function prepareRandomizedSessionData()
@@ -642,7 +647,7 @@ class PlayState extends FlxTransitionableState
 	}
 
 	public function onPresentBubbleHit(present : Bubble)
-	{	
+	{
 		// Generate the next bubble
 		generateBubble();
 
@@ -776,7 +781,7 @@ class PlayState extends FlxTransitionableState
 		add(btnDebugGrid);
 	}
 
-	var contentIndex : Int = 1;
+	var contentIndex : Int = 3;
 	function handleDebugRoutines()
 	{
 		// Avoid debug on android

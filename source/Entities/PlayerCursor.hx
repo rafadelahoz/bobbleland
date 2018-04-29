@@ -29,7 +29,7 @@ class PlayerCursor extends FlxSprite
 	var tiny : FlxSprite;
 	var tester : Bubble;
 
-	public function new(X : Float, Y : Float, World : PlayState, GuideEnabled : Bool)
+	public function new(X : Float, Y : Float, World : PlayState)
 	{
 		super(X, Y);
 
@@ -51,7 +51,8 @@ class PlayerCursor extends FlxSprite
 
 		label = new FlxText(x + width, y - 16, "");
 
-		guideEnabled = GuideEnabled;
+		guideEnabled = false;
+
 		canvas = new FlxSprite(0, 0);
 		canvas.makeGraphic(FlxG.width, FlxG.height, 0x00FFFFFF);
 		deltaOffset = 0;
@@ -105,6 +106,23 @@ class PlayerCursor extends FlxSprite
 		redraw();
 
 		super.update(elapsed);
+	}
+
+	function resetGuideAspect()
+	{
+		tiny.color = 0xFFFFFFFF;
+		tiny.alpha = 1;
+	}
+
+	public function enableGuide(?activeShots : Int = -1)
+	{
+		guideEnabled = true;
+		if (activeShots < 0)
+			activeShots = PlayFlowController.InitialGuideEnabledShots;
+
+		resetGuideAspect();
+
+		disableGuideAfterShots(activeShots);
 	}
 
 	public function disableGuideAfterShots(number : Int)
