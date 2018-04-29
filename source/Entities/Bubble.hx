@@ -730,6 +730,7 @@ class Bubble extends Entity
 		{
 			bubble = new PresentBubble(cellCenter.x, cellCenter.y - World.grid.cellSize, World, Color);
 			cast(bubble, PresentBubble).setContent(World.specialBubbleController.getPresentContent());
+			World.specialBubbleController.onSpecialBubbleGenerated(); // TODO: Provide content?
 		}
 		else
 		{

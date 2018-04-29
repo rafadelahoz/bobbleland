@@ -47,7 +47,7 @@ class PresentBubble extends Bubble
 
     override public function handleGraphic()
     {
-        loadGraphic("assets/images/bubble_present.png");
+        loadGraphic("assets/images/bubble_present_c.png");
     }
 
     function shine(t : FlxTimer)
@@ -180,14 +180,20 @@ class PresentBubble extends Bubble
 
     function onOpenGuideline()
     {
-        new FlxTimer().start(0.7, afterOpening);
+        // Avoid awarding the guide if the guide is already enabled
+        if (world.cursor.guideEnabled)
+            onOpenPoints();
+        else
+        {
+            new FlxTimer().start(0.7, afterOpening);
 
-        world.add(new TextNotice(x + width/2, y + height/2, "GUIDE ENABLED!"));
+            world.add(new TextNotice(x + width/2, y + height/2, "GUIDE ENABLED!"));
 
-        new FlxTimer().start(0.3, function(t:FlxTimer) {
-            world.flowController.enableGuide();
-            SfxEngine.play(SfxEngine.SFX.Chime);
-        });
+            new FlxTimer().start(0.3, function(t:FlxTimer) {
+                world.flowController.enableGuide();
+                SfxEngine.play(SfxEngine.SFX.Chime);
+            });
+        }
     }
 
     function afterOpening(t : FlxTimer)

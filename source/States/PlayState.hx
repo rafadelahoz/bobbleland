@@ -761,11 +761,9 @@ class PlayState extends FlxTransitionableState
 
 		var btnDebugLine : HoldButton = new HoldButton(156, 220,
 			function() {
-				// DEBUG_dropDisabled = true;
-				cursor.guideEnabled = true;
+				cursor.enableGuide(10000);
 			}, function () {
-				// DEBUG_dropDisabled = false;
-				cursor.guideEnabled = false;
+				cursor.disableGuideAfterShots(-1);
 			});
 		btnDebugLine.loadSpritesheet("assets/ui/btn-debug.png", 24, 21);
 		add(btnDebugLine);

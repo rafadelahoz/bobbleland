@@ -13,6 +13,7 @@ class TextNotice extends FlxSprite
 
     var pxtext : FlxBitmapText;
     var background : FlxSprite;
+    var colorTween : FlxTween;
 
     public function new(X : Float, Y : Float, Text : String, ?Color : Int = -1)
     {
@@ -43,14 +44,18 @@ class TextNotice extends FlxSprite
 
     function doColor(t : FlxTween)
     {
+        if (t != null)
+            t.destroy();
         var colors : Array<Int> = [Palette.White, Palette.Pink, Palette.Peach, Palette.Yellow, Palette.Red, Palette.Green, Palette.Blue];
-        FlxTween.color(pxtext, 0.2, color, FlxG.random.getObject(colors), {ease : FlxEase.circInOut, onComplete: doColor});
+        colorTween = FlxTween.color(pxtext, 0.3, color, FlxG.random.getObject(colors), {ease : FlxEase.circInOut, onComplete: doColor});
     }
 
     override public function destroy()
     {
         textDelta.put();
         pxtext.destroy();
+        colorTween.cancel();
+        colorTween.destroy();
         super.destroy();
     }
 
