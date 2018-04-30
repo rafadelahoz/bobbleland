@@ -138,7 +138,26 @@ class Bubble extends Entity
 			case BubbleColor.SpecialBlocker:
 				loadGraphic("assets/images/blocker-sprite.png", true, 18, 18);
 				animation.add("idle", [FlxG.random.int(0,3)], 1, true);
+				animation.add("turn", [0, 1, 2, 3], FlxG.random.int(5, 10), false);
 				animation.play("idle");
+				// Add the special rotate animation
+				function doTurn(t:FlxTimer){
+					if (alive && visible && active)
+					{
+						// Sometimes, reverse the animation
+						if (FlxG.random.bool(50))
+							animation.getByName("turn").frames.reverse();
+						// Select a new velocity for the animation
+						animation.getByName("turn").frameRate = FlxG.random.int(5, 10);
+						// Play it!
+						animation.play("turn");
+						// And wait some time beofre doing it again
+						t.start(FlxG.random.float(1, 30), doTurn);
+					}
+				}
+
+				new FlxTimer().start(FlxG.random.float(1, 30), doTurn);
+
 			default:
 				loadGraphic("assets/images/" + Bubble.GetSprite() + ".png", true, 16, 16);
 				if (bubbleColor.colorIndex < 5)
