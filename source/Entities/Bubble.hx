@@ -137,7 +137,7 @@ class Bubble extends Entity
 				FlxSpriteUtil.drawCircle(this, width/2, height/2, Size * 1.5, 0xFF00FF0A);
 			case BubbleColor.SpecialBlocker:
 				loadGraphic("assets/images/blocker-sprite.png", true, 18, 18);
-				animation.add("idle", [FlxG.random.int(0,3)], 1, true);
+				animation.add("idle", [FlxG.random.getObject([0, 1, 3])], 1, true);
 				animation.add("turn", [0, 1, 2, 3], FlxG.random.int(5, 10), false);
 				animation.play("idle");
 				// Add the special rotate animation

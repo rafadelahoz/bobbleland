@@ -815,7 +815,7 @@ class PlayState extends FlxTransitionableState
 		add(btnDebugGrid);
 	}
 
-	var contentIndex : Int = 4;
+	var contentIndex : Int = 0;
 	function handleDebugRoutines()
 	{
 		// Avoid debug on android

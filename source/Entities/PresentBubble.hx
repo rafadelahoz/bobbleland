@@ -119,7 +119,6 @@ class PresentBubble extends Bubble
     function handleOpen(t : FlxTimer)
     {
         SfxEngine.stop(SfxEngine.SFX.Rumble);
-        SfxEngine.play(SfxEngine.SFX.PresentOpen);
 
         world.handleDisconnectedBubbles();
 
@@ -155,8 +154,9 @@ class PresentBubble extends Bubble
     // TODO: To be removed
     function onOpenDefault()
     {
-        SfxEngine.play(SfxEngine.SFX.BubbleStop);
-		SfxEngine.play(SfxEngine.SFX.Accept);
+        SfxEngine.play(SfxEngine.SFX.PresentOpen);
+        // SfxEngine.play(SfxEngine.SFX.BubbleStop);
+		// SfxEngine.play(SfxEngine.SFX.Accept);
 
         // Destroy neighbours
         var neighbours : Array<Bubble> = grid.getNeighbours(this);
@@ -184,6 +184,8 @@ class PresentBubble extends Bubble
     function onOpenPoints()
     {
         new FlxTimer().start(0.7, afterOpening);
+
+        SfxEngine.play(SfxEngine.SFX.PresentOpen);
 
         // Decide ammount of points
         var points : Int =
@@ -218,6 +220,8 @@ class PresentBubble extends Bubble
             onOpenPoints();
         else
         {
+            SfxEngine.play(SfxEngine.SFX.PresentOpen);
+
             new FlxTimer().start(0.7, afterOpening);
 
             world.add(new TextNotice(x + width/2, y + height/2, "GUIDE ENABLED!"));
@@ -301,8 +305,8 @@ class ParticleOpen extends FlxSprite
 
         color = FlxG.random.getObject([Palette.Black/*, Palette.DarkBlue, Palette.DarkPurple, Palette.Brown*/]);
 
-        FlxTween.tween(this.scale, {x: 0, y: 0}, FlxG.random.float(0.2, 0.5), {ease: FlxEase.bounceInOut});
-        FlxTween.tween(this, {alpha: 0}, FlxG.random.float(0.2, 0.5), {ease: FlxEase.bounceInOut, onComplete: handleDestroy});
+        FlxTween.tween(this.scale, {x: 0, y: 0}, FlxG.random.float(0.2, 0.5), {startDelay: 0.2, ease: FlxEase.bounceInOut});
+        FlxTween.tween(this, {alpha: 0}, FlxG.random.float(0.2, 0.5), {startDelay: 0.2, ease: FlxEase.bounceInOut, onComplete: handleDestroy});
     }
 
     function handleDestroy(t:FlxTween)

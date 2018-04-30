@@ -61,7 +61,7 @@ class SfxEngine
         sfx.set(SFX.RowGeneration,  loadSfx("row.wav"));
         sfx.set(SFX.Rumble,         loadSfx("low-vibration.wav"));
         sfx.set(SFX.PresentOpen,    loadSfx("temp-present-open.wav"));
-        sfx.set(SFX.PresentOpen,    loadSfx("blocker.wav"));
+        sfx.set(SFX.Blocker,        loadSfx("blocker.wav"));
         sfx.set(SFX.Accept,         loadSfx("accept.wav"));
         sfx.set(SFX.StickerA,       loadSfx("sticker-paste.wav"));
         sfx.set(SFX.StickerB,       loadSfx("sticker-paste-b.wav"));
