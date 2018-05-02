@@ -45,7 +45,12 @@ class SpecialBubbleController
             lastBubbleCount = SaveData.lastBubbleCount;
             lastIncreaseTime = SaveData.lastIncreaseTime;
 
-            // TODO:generationProbabilityBase
+            contentProbability = SaveData.contentProbability;
+
+            // TODO:load generationProbabilityBase (when it's used)
+            generationProbabilityBase = 0;
+
+            trace("SpecialBubbleGenerator data", SaveData);
         }
         else
         {
@@ -62,7 +67,24 @@ class SpecialBubbleController
             lastIncreaseTime = 0;
 
             generationProbabilityBase = 0;
-            contentProbability = [50, 0, 0, 50, 30, 0];// [40, 10, 20, 40, 20, 10];
+            switch (World.playSessionData.initialDifficulty)
+            {
+                case 0:
+                    contentProbability = [30, 70, 30, 0];
+                case 1:
+                    contentProbability = [50, 50, 20, 0];
+                case 2:
+                    contentProbability = [50, 50, 20, 10];
+                case 3:
+                    contentProbability = [50, 50, 30, 30];
+                case 4:
+                    contentProbability = [50, 50, 30, 30];
+                default:
+                    trace("NO INITIAL DIFFICULTY PROVIDED");
+                    contentProbability = [50, 50, 30, 10];
+            }
+
+            trace("SpecialBubbleGenerator data reset");
         }
 
         timer = new FlxTimer().start(1, onPlayTimeTimer, 0);
@@ -155,11 +177,6 @@ class SpecialBubbleController
         lastIncreaseTime = playTime;
     }
 
-    public function getStoredData() : Dynamic
-    {
-        return {score : world.scoreDisplay.realScore, time : playTime, bubbles : bubbleCount, cleans: screenCleanCount};
-    }
-
     public function getSaveData() : SpecialBubbleSaveData
     {
         var data : SpecialBubbleSaveData = {
@@ -172,7 +189,9 @@ class SpecialBubbleController
 
             lastBubbleCount: lastBubbleCount,
             lastIncreaseTime: lastIncreaseTime,
-            lastScore: lastScore
+            lastScore: lastScore,
+
+            contentProbability: contentProbability
         };
 
         return data;
@@ -192,16 +211,16 @@ typedef SpecialBubbleSaveData = {
     var lastBubbleCount : Int;
     var lastIncreaseTime : Float;
     var lastScore : Int;
+
+    var contentProbability : Array<Float>;
 }
 
 class PresentContent
 {
     public static var Points    : Int = 0;
-    public static var Hole      : Int = 1;
-    public static var Bumper    : Int = 2;
-    public static var Guideline : Int = 3;
-    public static var Blocker   : Int = 4;
-    public static var Bubbles   : Int = 5;
+    public static var Guideline : Int = 1;
+    public static var Blocker   : Int = 2;
+    public static var Bubbles   : Int = 3;
 
-    public static var Contents : Array<Int> = [Points, Hole, Bumper, Guideline, Blocker, Bubbles];
+    public static var Contents : Array<Int> = [Points, Guideline, Blocker, Bubbles];
 }

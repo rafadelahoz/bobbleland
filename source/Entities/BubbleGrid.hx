@@ -436,6 +436,20 @@ class BubbleGrid extends FlxObject
 
 	}
 
+	public function getLowerAdjacentPositions(pos : FlxPoint) : Array<FlxPoint>
+	{
+		var x : Int = Std.int(pos.x);
+		var y : Int = Std.int(pos.y);
+
+		if (isPadded(y))
+			return [/*FlxPoint.get(x-1, y  ), FlxPoint.get(x+1, y  ),*/
+					FlxPoint.get(x  , y+1), FlxPoint.get(x+1, y+1)];
+		else
+			return [/*FlxPoint.get(x-1, y  ), FlxPoint.get(x+1, y  ),*/
+					FlxPoint.get(x-1, y+1), FlxPoint.get(x  , y+1)];
+
+	}
+
 	public function getValidAdjacentPositions(pos : FlxPoint, ?OnlyTopRow : Bool = false) : Array<FlxPoint>
 	{
 		var cells : Array<FlxPoint> = getAdjacentPositions(pos);

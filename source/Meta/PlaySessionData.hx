@@ -16,6 +16,7 @@ class PlaySessionData
 
     public var target : String;
 
+    public var initialDifficulty : Int;
     public var guideEnabled : Bool;
     public var dropDelay : Int;
     public var seconds : Int;
@@ -32,6 +33,7 @@ class PlaySessionData
         character   = null;
         bgm = null;
 
+        initialDifficulty = -1;
         guideEnabled = false;
         dropDelay   = -1;
         seconds     = -1;

@@ -552,7 +552,7 @@ class Bubble extends Entity
 		state = StateIdling;
 
 		var delay : Float = 1.0;
-		var rotTime : Float = (grid.rows - cellPosition.y)*0.25 + (cellPosition.y)*0.15 + (cellPosition.x)*0.02;
+		var rotTime : Float = (grid.rows - cellPosition.y)*0.35 + (cellPosition.y)*0.10 + (cellPosition.x)*0.04;
 
 		if (immediate)
 		{

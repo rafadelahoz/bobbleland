@@ -72,12 +72,12 @@ class PresentBubble extends Bubble
                 return Palette.Brown;
             case SpecialBubbleController.PresentContent.Guideline:
                 return Palette.Yellow;
-            case SpecialBubbleController.PresentContent.Bumper:
+            /*case SpecialBubbleController.PresentContent.Bumper:
                 return Palette.Blue;
             case SpecialBubbleController.PresentContent.Hole:
-                return Palette.Red;
+                return Palette.Red;*/
             case SpecialBubbleController.PresentContent.Bubbles:
-                return Palette.Green;
+                return Palette.Red;
             default:
                 return Palette.White;
         }
@@ -142,11 +142,11 @@ class PresentBubble extends Bubble
                 /*case SpecialBubbleController.PresentContent.Bumper:
                     return Palette.Blue;
                 case SpecialBubbleController.PresentContent.Hole:
-                    return Palette.Red;
+                    return Palette.Red;*/
                 case SpecialBubbleController.PresentContent.Bubbles:
-                    return Palette.Green;*/
+                    onOpenBubbles();
                 default:
-                    onOpenDefault();
+
             }
         // });
     }
@@ -179,7 +179,6 @@ class PresentBubble extends Bubble
 
         Bubble.CreateAt(cellPosition.x, cellPosition.y, new BubbleColor(BubbleColor.SpecialBlocker), world);
     }
-
 
     function onOpenPoints()
     {
@@ -230,6 +229,86 @@ class PresentBubble extends Bubble
                 world.flowController.enableGuide();
                 SfxEngine.play(SfxEngine.SFX.Chime);
             });
+        }
+    }
+
+    function onOpenBubbles()
+    {
+        SfxEngine.play(SfxEngine.SFX.BubbleStop);
+        SfxEngine.play(SfxEngine.SFX.Blocker);
+
+        // TODO: Decide given board status?
+        var bubblesToGenerate : Int = FlxG.random.int(3, 5);
+        // Overflow effect
+        Bubble.CreateAt(cellPosition.x, cellPosition.y, world.generator.getNextBubbleColor(), world);
+        bubblesToGenerate--;
+        new FlxTimer().start(0.3, function(t:FlxTimer){
+            bubbleFlow(0.3, cellPosition, bubblesToGenerate, false);
+        });
+    }
+
+    function bubbleFlow(delay : Float, fromCell : FlxPoint, remainingBubbles : Int, repeatingOrigin : Bool)
+    {
+        var abort : Bool = false;
+
+        var adjacents : Array<FlxPoint> = world.grid.getLowerAdjacentPositions(fromCell);
+        FlxG.random.shuffle(adjacents);
+
+        var chosenAdjacents : Array<FlxPoint> = [];
+        for (adj in adjacents)
+        {
+            // Consider only lower positions
+            if (remainingBubbles > 0)
+            {
+                // Avoid generating a bubble under the line
+                // so the player can save the situation!
+                if (adj.y >= world.grid.bottomRow)
+                {
+                    abort = true;
+                    break;
+                }
+
+                if (world.grid.isPositionValid(adj) && world.grid.getData(adj.x, adj.y) == null)
+                {
+                    // Don't always choose all the adjacents
+                    if (FlxG.random.bool(100 - (chosenAdjacents.length / adjacents.length) * 90))
+                    {
+                        chosenAdjacents.push(adj);
+                        remainingBubbles--;
+                        var bubble : Bubble = Bubble.CreateAt(adj.x, adj.y, world.generator.getNextBubbleColor(), world);
+                        SfxEngine.play(SfxEngine.SFX.BubbleFall);
+                        
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!abort && remainingBubbles > 0)
+        {
+            var nextCell : FlxPoint = FlxG.random.getObject(chosenAdjacents);
+            if (nextCell == null)
+            {
+                // We can't repeat the origin twice: that means something is really wrong
+                if (repeatingOrigin)
+                {
+                    new FlxTimer().start(0.2, afterOpening);
+                    return;
+                }
+                else
+                {
+                    nextCell = fromCell;
+                    repeatingOrigin = true;
+                }
+            }
+
+            new FlxTimer().start(delay * 0.75, function(t:FlxTimer){
+                bubbleFlow(delay * 0.75, nextCell, remainingBubbles, repeatingOrigin);
+            });
+        }
+        else
+        {
+            new FlxTimer().start(0.2, afterOpening);
         }
     }
 

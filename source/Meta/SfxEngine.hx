@@ -24,6 +24,7 @@ enum SFX {
     StickerA;
     StickerB;
     Chime;
+    Curtain;
 }
 
 class SfxEngine
@@ -66,6 +67,7 @@ class SfxEngine
         sfx.set(SFX.StickerA,       loadSfx("sticker-paste.wav"));
         sfx.set(SFX.StickerB,       loadSfx("sticker-paste-b.wav"));
         sfx.set(SFX.Chime,          loadSfx("temp-chime.wav"));
+        sfx.set(SFX.Curtain,        loadSfx("temp-curtain.wav"));
 
         sfxFiles = new Map<SFX, String>();
         sfxFiles.set(SFX.Click,          path + ("btn_click.wav"));
@@ -85,6 +87,7 @@ class SfxEngine
         sfxFiles.set(SFX.StickerA,       path + ("sticker-paste.wav"));
         sfxFiles.set(SFX.StickerB,       path + ("sticker-paste-b.wav"));
         sfxFiles.set(SFX.Chime,          path + ("temp-chime.wav"));
+        sfxFiles.set(SFX.Curtain,        path + ("temp-curtain.wav"));
 
         for (sf in sfx.keys())
         {

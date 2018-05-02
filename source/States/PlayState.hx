@@ -478,10 +478,10 @@ class PlayState extends FlxTransitionableState
 		}
 	}
 
-	function generateRow()
+	function generateRow(?allowPresents : Bool = true)
 	{
 		SfxEngine.play(SfxEngine.SFX.RowGeneration);
-		generator.generateRow();
+		generator.generateRow(allowPresents);
 		flowController.onRowGenerated();
 		specialBubbleController.onRowGenerated();
 	}
@@ -661,14 +661,19 @@ class PlayState extends FlxTransitionableState
 				dropTimer.cancel();
 
 				// Generate a row while exiting
-				generateRow();
-				// Generate a row after a while
+				generateRow(false);
+
+				// And generate 3 more rows
 				new FlxTimer().start(0.7, function(_t:FlxTimer) {
-					generateRow();
+					generateRow(false);
 				});
-				// Generate another row after a while more
-				new FlxTimer().start(1.4, function(_t:FlxTimer) {
-					generateRow();
+
+				new FlxTimer().start(1.3, function(_t:FlxTimer) {
+					generateRow(false);
+				});
+
+				new FlxTimer().start(1.6, function(_t:FlxTimer) {
+					generateRow(false);
 					// And resume playing
 					switchState(StateAiming);
 
@@ -870,7 +875,7 @@ class PlayState extends FlxTransitionableState
 
 				var bubble : Bubble = null;
 				bubble = new PresentBubble(cellCenter.x, cellCenter.y - grid.cellSize, this, Color);
-				cast(bubble, PresentBubble).setContent(contentIndex);
+				cast(bubble, PresentBubble).setContent(SpecialBubbleController.PresentContent.Bubbles);
 
 				bubble.cellPosition.set(cell.x, cell.y);
 				bubble.cellCenterPosition.set(cellCenter.x, cellCenter.y);

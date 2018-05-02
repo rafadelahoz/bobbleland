@@ -29,6 +29,7 @@ class SaveStateManager
             data = {
                 grid: save.data.grid,
                 flow: save.data.flow,
+                special: save.data.special,
                 session: save.data.session
             };
         }
@@ -37,6 +38,7 @@ class SaveStateManager
         save.data.active = 0;
         save.data.grid = null;
         save.data.flow = null;
+        save.data.special = null;
         save.data.session = null;
 
         save.close();
@@ -51,13 +53,15 @@ class SaveStateManager
 
         var gridData : BubbleGrid.BubbleGridData = state.grid.getSaveData();
         var flowData : PlayFlowController.PlayFlowSaveData = state.flowController.getSaveData();
+        var specialData : SpecialBubbleController.SpecialBubbleSaveData = state.specialBubbleController.getSaveData();
         var sessionData : PlaySessionData = state.playSessionData;
 
         save.data.active = 1;
         save.data.grid = gridData;
         save.data.flow = flowData;
+        save.data.special = specialData;
         save.data.session = sessionData;
-        
+
         save.close();
     }
 }

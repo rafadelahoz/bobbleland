@@ -142,6 +142,40 @@ class ArcadeGameStatus
         saveArcadeConfigData();
     }
 
+    public static function setupDifficulty(difficulty : Int)
+    {
+        playSessionData.initialDifficulty = difficulty;
+
+        switch (difficulty)
+        {
+            case 0:
+                setGuideEnabled(true);
+                setDropDelay(30);
+                setInitialRows(5);
+                setUsedColors(4);
+            case 1:
+                setGuideEnabled(true);
+                setDropDelay(25);
+                setInitialRows(5);
+                setUsedColors(4);
+            case 2:
+                setGuideEnabled(true);
+                setDropDelay(20);
+                setInitialRows(5);
+                setUsedColors(5);
+            case 3:
+                setGuideEnabled(true);
+                setDropDelay(20);
+                setInitialRows(6);
+                setUsedColors(6);
+            case 4:
+                setGuideEnabled(false);
+                setDropDelay(15);
+                setInitialRows(6);
+                setUsedColors(6);
+        }
+    }
+
     public static function setInitialRows(rows : Int)
     {
         playSessionData.initialRows = rows;

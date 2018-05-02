@@ -89,13 +89,13 @@ class BubbleGenerator
         }
     }
 
-    public function generateRow()
+    public function generateRow(?allowPresents : Bool = true)
     {
         var row : Array<BubbleColor> = [];
         switch (world.mode)
         {
             case PlayState.ModeArcade:
-                row = getArcadeRow(row);
+                row = getArcadeRow(row, allowPresents);
             case PlayState.ModePuzzle:
                 row = getPuzzleRow(row);
         }
@@ -103,14 +103,17 @@ class BubbleGenerator
         grid.generateBubbleRow(row);
     }
 
-    function getArcadeRow(row : Array<BubbleColor>) : Array<BubbleColor>
+    function getArcadeRow(row : Array<BubbleColor>, allowPresents : Bool) : Array<BubbleColor>
     {
         // Special bubble generation
         var specialBubbleColumn : Int = -1;
-        var specialBubbleProbability = world.specialBubbleController.getGenerationProbability();
-        if (FlxG.random.bool(specialBubbleProbability * 100))
+        if (allowPresents)
         {
-            specialBubbleColumn = FlxG.random.int(0, grid.columns);
+            var specialBubbleProbability = world.specialBubbleController.getGenerationProbability();
+            if (FlxG.random.bool(specialBubbleProbability * 100))
+            {
+                specialBubbleColumn = FlxG.random.int(0, grid.columns);
+            }
         }
 
         for (col in 0...grid.columns)
@@ -140,7 +143,7 @@ class BubbleGenerator
                 // If the stored row is empty, it means it is a random row
                 if (row.length == 0)
                 {
-                    row = getArcadeRow(row);
+                    row = getArcadeRow(row, true);
                 }
             }
             else
@@ -152,7 +155,7 @@ class BubbleGenerator
         }
         else if (sessionData.mode == PlaySessionData.ModeHold)
         {
-            row = getArcadeRow(row);
+            row = getArcadeRow(row, true);
             currentRow++;
         }
 
