@@ -57,6 +57,7 @@ class BubbleGenerator
 
     public function generateSaveData(data : BubbleGrid.BubbleGridData)
     {
+        trace("GRID DATA", data);
         // Restore padded row data
         grid.padded = data.padded;
 
@@ -85,7 +86,7 @@ class BubbleGenerator
                     bubLine.push(null);
             }
 
-            grid.generateBubbleRow(bubLine);
+            grid.generateBubbleRow(bubLine, data.presentContents);
         }
     }
 

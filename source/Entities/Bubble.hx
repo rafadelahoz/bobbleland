@@ -765,7 +765,7 @@ class Bubble extends Entity
 		return A.x == B.x && A.y == B.y;
 	}
 
-	public static function CreateAt(X : Float, Y : Float, Color : BubbleColor, World : PlayState) : Bubble
+	public static function CreateAt(X : Float, Y : Float, Color : BubbleColor, World : PlayState, ?Content : Int = -1) : Bubble
 	{
 		var cellCenter : FlxPoint = World.grid.getCellCenter(Std.int(X), Std.int(Y));
 
@@ -773,7 +773,12 @@ class Bubble extends Entity
 		if (Color.colorIndex == BubbleColor.SpecialPresent)
 		{
 			bubble = new PresentBubble(cellCenter.x, cellCenter.y - World.grid.cellSize, World, Color);
-			cast(bubble, PresentBubble).setContent(World.specialBubbleController.getPresentContent());
+			// Generate a new content if not provided
+			if (Content == -1)
+			{
+				Content = World.specialBubbleController.getPresentContent();
+			}
+			cast(bubble, PresentBubble).setContent(Content);
 			World.specialBubbleController.onSpecialBubbleGenerated(); // TODO: Provide content?
 		}
 		else

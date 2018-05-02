@@ -144,7 +144,7 @@ class BubbleGrid extends FlxObject
 			return null;
 	}
 
-	public function generateBubbleRow(row : Array<BubbleColor>)
+	public function generateBubbleRow(row : Array<BubbleColor>, ?presentContents : Array<Int> = null)
 	{
 		// Shift bubble rows down, considering the game over scenario
 		var lostGame : Bool = shiftRowsDown();
@@ -169,7 +169,14 @@ class BubbleGrid extends FlxObject
 
 			for (col in specialColumns)
 			{
-				Bubble.CreateAt(col, 0, row[col], world);
+				if (row[col].colorIndex == BubbleColor.SpecialPresent &&
+					presentContents != null && presentContents.length > 0)
+				{
+					var content : Int = presentContents.shift();
+					Bubble.CreateAt(col, 0, row[col], world, content);
+				}
+				else
+					Bubble.CreateAt(col, 0, row[col], world);
 			}
 		}
 		else
@@ -548,7 +555,8 @@ class BubbleGrid extends FlxObject
 	{
 		return {
 			padded: padded,
-			serializedGrid: serializeData()
+			serializedGrid: serializeData(),
+			presentContents: buildPresentContentsData()
 		};
 	}
 
@@ -573,6 +581,26 @@ class BubbleGrid extends FlxObject
 			data += "\n";
 		}
 
+		return data;
+	}
+
+	function buildPresentContentsData() : Array<Int>
+	{
+		var data : Array<Int> = [];
+
+		for (row in 0...rows)
+		{
+			for (col in 0...columns)
+			{
+				var bubble : Bubble = getData(col, rows-row);
+				if (bubble != null && bubble.special == BubbleColor.SpecialPresent)
+				{
+					data.push(cast(bubble, PresentBubble).content);
+				}
+			}
+		}
+
+		trace("Saving PResnets", data);
 		return data;
 	}
 
@@ -669,4 +697,5 @@ class BubbleGrid extends FlxObject
 typedef BubbleGridData = {
 	var padded : Int;
 	var serializedGrid : String;
+	var presentContents : Array<Int>;
 };

@@ -40,6 +40,9 @@ class PlayState extends FlxTransitionableState
 	public var state : Int;
 	public var paused : Bool;
 
+	var afterCleanRowsLeft : Int;
+	var afterCleanTimer : FlxTimer;
+
 	public var availableColors : Array<BubbleColor>;
 	public var bubbles : FlxTypedGroup<Bubble>;
 	public var presents : FlxTypedGroup<Bubble>;
@@ -182,9 +185,10 @@ class PlayState extends FlxTransitionableState
 
 		paused = false;
 
-		handleDebugInit();
+		afterCleanRowsLeft = 0;
+		afterCleanTimer = new FlxTimer();
 
-		// flowController.disableGuide();
+		handleDebugInit();
 	}
 
 	function prepareRandomizedSessionData()
@@ -629,6 +633,16 @@ class PlayState extends FlxTransitionableState
 
 		// Things are happing, so wait!
 		switchState(StateRemoving);
+
+		if (grid.getCount() <= 0)
+		{
+			// If the grid has been cleaned
+			// Four rows are to be generated
+			// This is declared here
+			// 			to avoid problems on deactivation
+			afterCleanRowsLeft = 4;
+		}
+
 		waitTimer.start(WaitTime, function(_t:FlxTimer) {
 			afterRemoving();
 		});
@@ -661,29 +675,42 @@ class PlayState extends FlxTransitionableState
 				dropTimer.cancel();
 
 				// Generate a row while exiting
+				afterCleanRowsLeft--;
 				generateRow(false);
-
 				// And generate 3 more rows
-				new FlxTimer().start(0.7, function(_t:FlxTimer) {
-					generateRow(false);
-				});
-
-				new FlxTimer().start(1.3, function(_t:FlxTimer) {
-					generateRow(false);
-				});
-
-				new FlxTimer().start(1.6, function(_t:FlxTimer) {
-					generateRow(false);
-					// And resume playing
-					switchState(StateAiming);
-
-					startDropTimer(dropDelay);
-				});
+				afterCleanTimer.start(0.7, handleAfterCleanGeneration);
 			});
 		}
 		else
 		{
 			switchState(StateAiming);
+		}
+	}
+
+	function handleAfterCleanGeneration(t : FlxTimer)
+	{
+		afterCleanRowsLeft -= 1;
+		generateRow(false);
+
+		if (afterCleanRowsLeft > 0)
+		{
+			afterCleanTimer.start(0.7, handleAfterCleanGeneration);
+		}
+		else
+		{
+			// And resume playing
+			switchState(StateAiming);
+			startDropTimer(dropDelay);
+		}
+	}
+
+	function finishAfterCleanGeneration()
+	{
+		afterCleanTimer.cancel();
+		while (afterCleanRowsLeft > 0)
+		{
+			afterCleanRowsLeft -= 1;
+			generateRow(false);
 		}
 	}
 
@@ -744,6 +771,14 @@ class PlayState extends FlxTransitionableState
 				 PlayState.StateAiming,
 				 PlayState.StateWaiting,
 				 PlayState.StateRemoving:
+
+				// Special case when the deactivation happens
+				// after a clean screen, while rows are generating
+				trace("AfterCleanRowsLeft", afterCleanRowsLeft);
+				if (afterCleanRowsLeft > 0)
+				{
+					finishAfterCleanGeneration();
+				}
 				// Store play state
 				SaveStateManager.savePlayStateData(this);
 			case PlayState.StateLosing, PlayState.StateWinning:
@@ -820,7 +855,7 @@ class PlayState extends FlxTransitionableState
 		add(btnDebugGrid);
 	}
 
-	var contentIndex : Int = 0;
+	var contentIndex : Int = -1;
 	function handleDebugRoutines()
 	{
 		// Avoid debug on android
@@ -856,11 +891,7 @@ class PlayState extends FlxTransitionableState
 		if (FlxG.keys.justPressed.FOUR)
 		{
 			var Color : BubbleColor = new BubbleColor(BubbleColor.SpecialPresent);
-			// contentIndex += 1;
-			if (contentIndex >= SpecialBubbleController.PresentContent.Contents.length)
-			{
-				contentIndex = 0;
-			}
+
 
 			if (grid.getData(cell.x, cell.y) != null)
 			{
@@ -871,11 +902,17 @@ class PlayState extends FlxTransitionableState
 			}
 			else
 			{
+				contentIndex += 1;
+				if (contentIndex >= SpecialBubbleController.PresentContent.Contents.length)
+				{
+					contentIndex = 0;
+				}
+
 				var cellCenter : FlxPoint = grid.getCellCenter(Std.int(cell.x), Std.int(cell.y));
 
 				var bubble : Bubble = null;
 				bubble = new PresentBubble(cellCenter.x, cellCenter.y - grid.cellSize, this, Color);
-				cast(bubble, PresentBubble).setContent(SpecialBubbleController.PresentContent.Bubbles);
+				cast(bubble, PresentBubble).setContent(contentIndex);
 
 				bubble.cellPosition.set(cell.x, cell.y);
 				bubble.cellCenterPosition.set(cellCenter.x, cellCenter.y);
