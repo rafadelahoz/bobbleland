@@ -512,7 +512,7 @@ class PlayState extends FlxTransitionableState
 
 	function generateNextBubble()
 	{
-		var nextColor : BubbleColor = generator.getNextBubbleColor();
+		var nextColor : BubbleColor = generator.getPositiveColor();
 
 		nextBubble = new Bubble(cursor.x + cursor.aimOrigin.x - grid.cellSize / 2 + 20,
 							cursor.y + cursor.aimOrigin.y - grid.cellSize / 2 + 8, this, nextColor);
@@ -928,27 +928,6 @@ class PlayState extends FlxTransitionableState
 			var filename : String = Screenshot.take();
 			trace(filename);
 		}
-
-		/* Generate 6 bubbles around mouse click */
-		/*if (FlxG.mouse.justPressed && grid.bounds.containsPoint(mouse))
-		{
-			// Create an anchor
-			// var anchor : Bubble = Bubble.CreateAt(cell.x, cell.y, generator.getNextBubbleColor(), this);
-			var adjacentCells : Array<FlxPoint> = grid.getAdjacentPositions(cell);
-			for (pos in adjacentCells)
-			{
-				if (pos.x >= 0 && pos.y >= 0 && pos.x < grid.columns && pos.y < grid.rows)
-				{
-					var old : Bubble = grid.getData(pos.x, pos.y);
-					if (old != null)
-					{
-						old.triggerPop();
-					}
-
-					Bubble.CreateAt(pos.x, pos.y, generator.getNextBubbleColor(), this);
-				}
-			}
-		}*/
 
 		if (FlxG.keys.justPressed.DOWN)
 		{

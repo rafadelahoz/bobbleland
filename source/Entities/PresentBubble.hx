@@ -240,7 +240,7 @@ class PresentBubble extends Bubble
         // TODO: Decide given board status?
         var bubblesToGenerate : Int = FlxG.random.int(3, 5);
         // Overflow effect
-        Bubble.CreateAt(cellPosition.x, cellPosition.y, world.generator.getNextBubbleColor(), world);
+        Bubble.CreateAt(cellPosition.x, cellPosition.y, world.generator.getPositiveColor(), world);
         bubblesToGenerate--;
         new FlxTimer().start(0.3, function(t:FlxTimer){
             bubbleFlow(0.3, cellPosition, bubblesToGenerate, false);
@@ -275,9 +275,9 @@ class PresentBubble extends Bubble
                     {
                         chosenAdjacents.push(adj);
                         remainingBubbles--;
-                        var bubble : Bubble = Bubble.CreateAt(adj.x, adj.y, world.generator.getNextBubbleColor(), world);
+                        var bubble : Bubble = Bubble.CreateAt(adj.x, adj.y, world.generator.getPositiveColor(), world);
                         SfxEngine.play(SfxEngine.SFX.BubbleFall);
-                        
+
                         break;
                     }
                 }

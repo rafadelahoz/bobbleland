@@ -48,13 +48,6 @@ class BubbleGenerator
         }
     }
 
-    /* Returns an appropriate color index for a bubble */
-    public function getNextBubbleColor() : BubbleColor
-    {
-        var color : BubbleColor = getNextGridColor();
-        return color;
-    }
-
     public function generateSaveData(data : BubbleGrid.BubbleGridData)
     {
         trace("GRID DATA", data);
@@ -130,7 +123,20 @@ class BubbleGenerator
             row.push(bubble);
         }
 
+        // Find blockers
+        var blockers : Array<BubbleColor> = row.filter(filterOnlyBlockers);
+        // Limit to max three blockers
+        while (blockers.length > 3)
+        {
+            blockers[FlxG.random.int(0, blockers.length)].colorIndex = getPositiveColor().colorIndex;
+            blockers = row.filter(filterOnlyBlockers);
+        }
+
         return row;
+    }
+
+    function filterOnlyBlockers(c : BubbleColor) : Bool {
+        return (c.colorIndex == BubbleColor.SpecialBlocker);
     }
 
     function getPuzzleRow(row : Array<BubbleColor>) : Array<BubbleColor>
@@ -175,10 +181,16 @@ class BubbleGenerator
 		return FlxG.random.getObject(usedColors.filter(onlyPositiveIndexes));
 	}
 
+    public function getPositiveColor() : BubbleColor
+    {
+        var list : Array<BubbleColor> = world.availableColors.filter(onlyPositiveIndexes);
+        return list[FlxG.random.int(0, list.length - 1)];
+    }
+
     /* Returns a random color index for a bubble */
 	function getRandomColor() : BubbleColor
 	{
-        var list : Array<BubbleColor> = world.availableColors.filter(onlyPositiveIndexes);
+        var list : Array<BubbleColor> = world.availableColors;
 		return list[FlxG.random.int(0, list.length - 1)];
 	}
 

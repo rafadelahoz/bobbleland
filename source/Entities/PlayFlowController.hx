@@ -166,6 +166,14 @@ class PlayFlowController
         if (currentColors < 6)
         {
             world.availableColors.push(new BubbleColor(currentColors));
+            added = true;
+            trace("Included new color");
+        }
+        else if (currentColors == 6)
+        {
+            world.availableColors.push(new BubbleColor(BubbleColor.SpecialBlocker));
+            added = true;
+            trace("Included blocker");
         }
 
         return added;
