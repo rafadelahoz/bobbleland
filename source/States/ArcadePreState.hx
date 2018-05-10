@@ -357,7 +357,7 @@ class ArcadePreState extends FlxTransitionableState
 
     function onCharCatPressed()
     {
-        ArcadeGameStatus.setCharacter("cat");
+        ArcadeGameStatus.setCharacter("crab");
         // Deactivate other buttons
         btnDog.setPressed(false);
     }
