@@ -29,6 +29,7 @@ class ArcadePreState extends FlxTransitionableState
 
     var btnDog : HoldButton;
     var btnCat : HoldButton;
+    var btnCrab : HoldButton;
 
     var btnBgmA : HoldButton;
     var btnBgmB : HoldButton;
@@ -109,6 +110,8 @@ class ArcadePreState extends FlxTransitionableState
                 btnDog.setPressed(true, true);
             case "cat":
                 btnCat.setPressed(true, true);
+            case "crab":
+                btnCrab.setPressed(true, true);
         }
     }
 
@@ -325,6 +328,10 @@ class ArcadePreState extends FlxTransitionableState
         btnCat = new HoldButton(80, 128, onCharCatPressed, onCharReleased);
         btnCat.loadSpritesheet("assets/ui/char-cat.png", 32, 32);
         group.add(btnCat);
+
+        btnCrab = new HoldButton(120, 128, onCharCrabPressed, onCharReleased);
+        btnCrab.loadSpritesheet("assets/ui/char-crab.png", 32, 32);
+        group.add(btnCrab);
     }
 
     function generateBgmButtons(group : FlxSpriteGroup)
@@ -353,13 +360,23 @@ class ArcadePreState extends FlxTransitionableState
         ArcadeGameStatus.setCharacter("pug");
         // Deactivate other buttons
         btnCat.setPressed(false);
+        btnCrab.setPressed(false);
     }
 
     function onCharCatPressed()
     {
+        ArcadeGameStatus.setCharacter("cat");
+        // Deactivate other buttons
+        btnDog.setPressed(false);
+        btnCrab.setPressed(false);
+    }
+
+    function onCharCrabPressed()
+    {
         ArcadeGameStatus.setCharacter("crab");
         // Deactivate other buttons
         btnDog.setPressed(false);
+        btnCat.setPressed(false);
     }
 
     function onBgmReleased()

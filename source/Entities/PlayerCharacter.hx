@@ -134,7 +134,7 @@ class PlayerCharacter extends FlxSprite
                 case "crab":
                     flipX = false;
                 default:
-                    flipX = (facing == FlxObject.LEFT);
+                    flipX = !(facing == FlxObject.LEFT);
             }
 
 
