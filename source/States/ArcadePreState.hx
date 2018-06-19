@@ -17,9 +17,9 @@ import flixel.addons.transition.FlxTransitionableState;
 import text.PixelText;
 import text.TextUtils;
 
-#if android
+/*#if android
 import Hardware;
-#end
+#end*/
 
 class ArcadePreState extends FlxTransitionableState
 {

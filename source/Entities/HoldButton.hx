@@ -3,9 +3,9 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 
-#if android
+/*#if android
 import Hardware;
-#end
+#end*/
 
 class HoldButton extends Button
 {

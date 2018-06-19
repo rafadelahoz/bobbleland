@@ -5,9 +5,9 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 
-#if android
+/*#if android
 import Hardware;
-#end
+#end*/
 
 class ScreenButtons extends FlxSpriteGroup
 {

@@ -155,17 +155,17 @@ class Button extends Entity
 
     public function click()
     {
-        #if android
+        /*#if android
         Hardware.vibrate(20);
-        #end
+        #end*/
         SfxEngine.play(SfxEngine.SFX.Click);
     }
 
     public function clock()
     {
-        #if android
+        /*#if android
         Hardware.vibrate(10);
-        #end
+        #end*/
         SfxEngine.play(SfxEngine.SFX.Clock);
     }
 }
