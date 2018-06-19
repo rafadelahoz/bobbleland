@@ -75,6 +75,7 @@ class PlayState extends FlxTransitionableState
 
 	public var notifyAiming : Bool;
 	public var notifyDrop : Bool;
+	public var wasNotifyingDrop : Bool;
 
 	public var scoreDisplay : ScoreDisplay;
 
@@ -301,6 +302,9 @@ class PlayState extends FlxTransitionableState
 		waitTimer.active = false;
 		aimingTimer.active = false;
 
+		wasNotifyingDrop = notifyDrop;
+		notifyDrop = false;
+
 		flowController.pause();
 		specialBubbleController.pause();
 	}
@@ -315,6 +319,13 @@ class PlayState extends FlxTransitionableState
 		dropNoticeTimer.active = true;
 		waitTimer.active = true;
 		aimingTimer.active = true;
+
+		notifyDrop = wasNotifyingDrop;
+		wasNotifyingDrop = false;
+		if (notifyDrop)
+		{
+			beginDropNotice(null);
+		}
 
 		flowController.resume();
 		specialBubbleController.resume();
@@ -355,6 +366,9 @@ class PlayState extends FlxTransitionableState
 
 				// Disable cursor
 				cursor.disable();
+
+				// Disable drop notice
+				stopDropNotice();
 
 			case PlayState.StateWinning:
 				// Prepare for winning
@@ -673,6 +687,7 @@ class PlayState extends FlxTransitionableState
 				});
 
 				dropTimer.cancel();
+				stopDropNotice();
 
 				// Generate a row while exiting
 				afterCleanRowsLeft--;
