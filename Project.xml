@@ -50,7 +50,7 @@
 	<!--Use the addons package-->
 	<haxelib name="flixel-addons" />
 
-	<haxelib name="haxe-hardware" if="android" />
+	<!--<haxelib name="haxe-hardware" if="android" />-->
 
 	<haxelib name="extension-share"/>
 
