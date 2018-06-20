@@ -4,3 +4,5 @@ export/
 *.sublime-workspace
 *.sublime-project
 *.hxml
+*.keystore
+Project-Release.xml
