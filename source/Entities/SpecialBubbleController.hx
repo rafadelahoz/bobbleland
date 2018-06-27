@@ -217,10 +217,10 @@ typedef SpecialBubbleSaveData = {
 
 class PresentContent
 {
-    public static var Points    : Int = 0;
-    public static var Guideline : Int = 1;
-    public static var Blocker   : Int = 2;
-    public static var Bubbles   : Int = 3;
+    public static inline var Points    : Int = 0;
+    public static inline var Guideline : Int = 1;
+    public static inline var Blocker   : Int = 2;
+    public static inline var Bubbles   : Int = 3;
 
     public static var Contents : Array<Int> = [Points, Guideline, Blocker, Bubbles];
 }

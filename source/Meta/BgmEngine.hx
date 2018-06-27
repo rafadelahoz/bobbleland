@@ -20,6 +20,10 @@ class BgmEngine
 
     public static function init()
     {
+        #if flash
+            return;
+        #end
+
         if (initialized)
             return;
 
@@ -51,6 +55,10 @@ class BgmEngine
 
     public static function enable()
     {
+        #if flash
+            return;
+        #end
+
         Enabled = true;
         save();
 
@@ -65,6 +73,10 @@ class BgmEngine
 
     public static function disable()
     {
+        #if flash
+            return;
+        #end
+
         Enabled = false;
         save();
 
@@ -76,6 +88,10 @@ class BgmEngine
 
     public static function play(bgm : BGM, ?volume : Float = 0.75, ?restart : Bool = false)
     {
+        #if flash
+            return;
+        #end
+
         // Better to stop than to play what we don't want
         if (current != bgm)
         {
@@ -114,22 +130,39 @@ class BgmEngine
 
     public static function resumeCurrent()
     {
+        #if flash
+            return;
+        #end
+
         if (tunes.get(current) != null && !tunes.get(current).playing)
             tunes.get(current).resume();
     }
+
     public static function pauseCurrent()
     {
+        #if flash
+            return;
+        #end
+
         if (tunes.get(current) != null && tunes.get(current).playing)
             tunes.get(current).pause();
     }
 
     public static function stopCurrent()
     {
+        #if flash
+            return;
+        #end
+
         stop(current);
     }
 
     public static function stop(bgm : BGM)
     {
+        #if flash
+            return;
+        #end
+
         if (playing.get(bgm))
         {
             if (tunes.get(bgm) != null)
@@ -145,6 +178,10 @@ class BgmEngine
 
     public static function getBgm(bgmName : String) : BGM
     {
+        #if flash
+            return null;
+        #end
+
         return BGM.createByName(bgmName);
     }
 

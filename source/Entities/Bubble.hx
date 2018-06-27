@@ -14,11 +14,11 @@ import SfxEngine.SFX;
 
 class Bubble extends Entity
 {
-	public static var StateAiming : Int = 0;
-	public static var StateFlying : Int = 1;
-	public static var StateIdling : Int = 2;
-	public static var StatePopping : Int = 3;
-	public static var StateDebug  : Int = 4;
+	public static inline var StateAiming : Int = 0;
+	public static inline var StateFlying : Int = 1;
+	public static inline var StateIdling : Int = 2;
+	public static inline var StatePopping : Int = 3;
+	public static inline var StateDebug  : Int = 4;
 
 	public var crunchTime : Float = 0.25;
 	public var waitTime : Float = 0.25;

@@ -13,7 +13,7 @@ class TextUtils
 		return string;
 	}
 
-	static var MAX_TIME : Int = 3599999;
+	static var MAX_TIME : UInt = 3599999;
 
     public static function formatTime(seconds : UInt) : String
     {

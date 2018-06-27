@@ -127,7 +127,7 @@ class MenuState extends FlxTransitionableState
 
 		if (interactable)
 		{
-			#if desktop
+			#if (!mobile)
 			if (startTouchZone.getHitbox().containsPoint(FlxG.mouse.getPosition()))
 			{
 		        if (FlxG.mouse.pressed)
@@ -140,9 +140,7 @@ class MenuState extends FlxTransitionableState
 					onArcadeButtonPressed();
 		        }
 			}
-	        #end
-
-	        #if mobile
+	        #else
 	        for (touch in FlxG.touches.list)
 			{
 	            if (touch.overlaps(startTouchZone))

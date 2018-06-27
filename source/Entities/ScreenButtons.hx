@@ -122,7 +122,7 @@ class ScreenButtons extends FlxSpriteGroup
 
 	function handleMouseInput()
 	{
-		#if desktop
+		#if (!mobile)
 		if (FlxG.mouse.pressed)
 		{
 			if (mouseOver(leftButton))

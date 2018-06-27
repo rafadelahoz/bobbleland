@@ -193,7 +193,7 @@ class PauseSubstate extends FlxSubState
             if (tween != null)
                 tween.cancel();
 
-            FlxG.camera.fade(0xFF000000, 1, function() {
+            FlxG.camera.fade(0xFF000000, 1, true, function() {
                 clean();
                 GameController.OnPuzzleGiveup(world.mode, world.flowController.getStoredData());
             });

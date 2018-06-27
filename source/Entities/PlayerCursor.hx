@@ -49,7 +49,7 @@ class PlayerCursor extends FlxSprite
 
 		updateSpriteAngle();
 
-		label = new FlxText(x + width, y - 16, "");
+		label = new FlxText(x + width, y - 16, -1, "");
 
 		guideEnabled = false;
 

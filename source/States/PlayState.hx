@@ -17,15 +17,15 @@ import database.BackgroundDatabase;
 
 class PlayState extends FlxTransitionableState
 {
-	public static var ModeArcade 	: Int = 0;
-	public static var ModePuzzle 	: Int = 1;
+	public static inline var ModeArcade 	: Int = 0;
+	public static inline var ModePuzzle 	: Int = 1;
 
-	public static var StateStarting : Int = -1;
-	public static var StateAiming 	: Int = 0;
-	public static var StateWaiting 	: Int = 1;
-	public static var StateRemoving : Int = 2;
-	public static var StateLosing 	: Int = 3;
-	public static var StateWinning	: Int = 4;
+	public static inline var StateStarting : Int = -1;
+	public static inline var StateAiming 	: Int = 0;
+	public static inline var StateWaiting 	: Int = 1;
+	public static inline var StateRemoving : Int = 2;
+	public static inline var StateLosing 	: Int = 3;
+	public static inline var StateWinning	: Int = 4;
 
 	public static var WaitTime 		: Float = 1;
 	public static var AimingTime 	: Float = 10;
@@ -385,7 +385,7 @@ class PlayState extends FlxTransitionableState
 				add(clearMessage);
 				clearMessage.init(function() {
 					new FlxTimer().start(1.5, function(_t:FlxTimer){
-						FlxG.camera.fade(0xFF000000, 1.5, onGameplayEnd);
+						FlxG.camera.fade(0xFF000000, 1.5, true, onGameplayEnd);
 					});
 				});
 
