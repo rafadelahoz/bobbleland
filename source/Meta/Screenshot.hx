@@ -37,6 +37,14 @@ class Screenshot
             // path += "/SOAP ALLEY/screenshots";
         #end
 
+        #if iphone
+            #if !lime_legacy
+                path = lime.system.System.applicationStorageDirectory;
+            #else
+                path = openfl.utils.SystemPath.applicationStorageDirectory;
+            #end
+        #end
+
         try
         {
             #if (android || ios)
