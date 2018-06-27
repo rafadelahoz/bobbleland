@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.math.FlxMath;
-import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 
@@ -49,7 +48,7 @@ class PlayerCursor extends FlxSprite
 
 		updateSpriteAngle();
 
-		label = new FlxText(x + width, y - 16, "");
+		label = new FlxText(x + width, y - 16, -1, "");
 
 		guideEnabled = false;
 

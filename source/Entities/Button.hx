@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 
 class Button extends Entity
 {
@@ -41,7 +40,7 @@ class Button extends Entity
         else
             visible = false;
 
-        #if desktop
+        #if (!mobile)
         if (mouseOver())
         {
             if (FlxG.mouse.pressed)
@@ -53,9 +52,7 @@ class Button extends Entity
                 pressed = false;
             }
         }
-        #end
-
-        #if mobile
+        #else
         for (touch in FlxG.touches.list)
 		{
             if (touch.overlaps(this))
@@ -85,14 +82,12 @@ class Button extends Entity
             whileReleased();
 
         // Post callback state handling?
-        #if desktop
+        #if !mobile
         if (pressed && FlxG.mouse.justReleased)
         {
             pressed = false;
         }
-        #end
-
-        #if mobile
+        #else
         if (pressed)
             for (touch in FlxG.touches.list)
     		{
@@ -155,17 +150,17 @@ class Button extends Entity
 
     public function click()
     {
-        #if android
+        /*#if android
         Hardware.vibrate(20);
-        #end
+        #end*/
         SfxEngine.play(SfxEngine.SFX.Click);
     }
 
     public function clock()
     {
-        #if android
+        /*#if android
         Hardware.vibrate(10);
-        #end
+        #end*/
         SfxEngine.play(SfxEngine.SFX.Clock);
     }
 }

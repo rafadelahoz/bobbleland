@@ -1,31 +1,28 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxState;
 import flixel.FlxSprite;
-import flixel.util.FlxSort;
 import flixel.text.FlxText;
 import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup;
-import flixel.addons.display.FlxBackdrop;
 import flixel.addons.transition.FlxTransitionableState;
 
 import database.BackgroundDatabase;
 
 class PlayState extends FlxTransitionableState
 {
-	public static var ModeArcade 	: Int = 0;
-	public static var ModePuzzle 	: Int = 1;
+	public static inline var ModeArcade 	: Int = 0;
+	public static inline var ModePuzzle 	: Int = 1;
 
-	public static var StateStarting : Int = -1;
-	public static var StateAiming 	: Int = 0;
-	public static var StateWaiting 	: Int = 1;
-	public static var StateRemoving : Int = 2;
-	public static var StateLosing 	: Int = 3;
-	public static var StateWinning	: Int = 4;
+	public static inline var StateStarting : Int = -1;
+	public static inline var StateAiming 	: Int = 0;
+	public static inline var StateWaiting 	: Int = 1;
+	public static inline var StateRemoving : Int = 2;
+	public static inline var StateLosing 	: Int = 3;
+	public static inline var StateWinning	: Int = 4;
 
 	public static var WaitTime 		: Float = 1;
 	public static var AimingTime 	: Float = 10;
@@ -75,6 +72,7 @@ class PlayState extends FlxTransitionableState
 
 	public var notifyAiming : Bool;
 	public var notifyDrop : Bool;
+	public var wasNotifyingDrop : Bool;
 
 	public var scoreDisplay : ScoreDisplay;
 
@@ -301,6 +299,9 @@ class PlayState extends FlxTransitionableState
 		waitTimer.active = false;
 		aimingTimer.active = false;
 
+		wasNotifyingDrop = notifyDrop;
+		notifyDrop = false;
+
 		flowController.pause();
 		specialBubbleController.pause();
 	}
@@ -315,6 +316,13 @@ class PlayState extends FlxTransitionableState
 		dropNoticeTimer.active = true;
 		waitTimer.active = true;
 		aimingTimer.active = true;
+
+		notifyDrop = wasNotifyingDrop;
+		wasNotifyingDrop = false;
+		if (notifyDrop)
+		{
+			beginDropNotice(null);
+		}
 
 		flowController.resume();
 		specialBubbleController.resume();
@@ -356,6 +364,9 @@ class PlayState extends FlxTransitionableState
 				// Disable cursor
 				cursor.disable();
 
+				// Disable drop notice
+				stopDropNotice();
+
 			case PlayState.StateWinning:
 				// Prepare for winning
 
@@ -371,7 +382,7 @@ class PlayState extends FlxTransitionableState
 				add(clearMessage);
 				clearMessage.init(function() {
 					new FlxTimer().start(1.5, function(_t:FlxTimer){
-						FlxG.camera.fade(0xFF000000, 1.5, onGameplayEnd);
+						FlxG.camera.fade(0xFF000000, 1.5, true, onGameplayEnd);
 					});
 				});
 
@@ -673,6 +684,7 @@ class PlayState extends FlxTransitionableState
 				});
 
 				dropTimer.cancel();
+				stopDropNotice();
 
 				// Generate a row while exiting
 				afterCleanRowsLeft--;

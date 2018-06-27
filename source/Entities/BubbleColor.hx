@@ -5,12 +5,12 @@ import flixel.util.FlxColor;
 
 class BubbleColor
 {
-    public static var SpecialNone : Int = 0;
-    public static var SpecialTarget : Int = -1;
-    public static var SpecialAnchor : Int = -2;
+    public static inline var SpecialNone : Int = 0;
+    public static inline var SpecialTarget : Int = -1;
+    public static inline var SpecialAnchor : Int = -2;
 
-    public static var SpecialPresent : Int = -3;
-    public static var SpecialBlocker : Int = -4;
+    public static inline var SpecialPresent : Int = -3;
+    public static inline var SpecialBlocker : Int = -4;
 
     public var colorIndex : Int;
     public var color : Int;

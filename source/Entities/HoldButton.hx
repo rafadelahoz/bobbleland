@@ -1,16 +1,15 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 
-#if android
+/*#if android
 import Hardware;
-#end
+#end*/
 
 class HoldButton extends Button
 {
-    static var StateIdle : Int = 0;
-    static var StatePressed : Int = 1;
+    static inline var StateIdle : Int = 0;
+    static inline var StatePressed : Int = 1;
 
     var beingTapped : Bool;
 
@@ -75,14 +74,12 @@ class HoldButton extends Button
 
         beingTapped = false;
 
-        #if desktop
+        #if (!mobile)
         if (mouseOver() && FlxG.mouse.pressed)
         {
             beingTapped = true;
         }
-        #end
-
-        #if mobile
+        #else
         for (touch in FlxG.touches.list)
 		{
             if (touch.overlaps(this) && touch.pressed)

@@ -50,7 +50,7 @@
 	<!--Use the addons package-->
 	<haxelib name="flixel-addons" />
 
-	<haxelib name="haxe-hardware" if="android" />
+	<!--<haxelib name="haxe-hardware" if="android" />-->
 
 	<haxelib name="extension-share"/>
 
@@ -109,4 +109,8 @@
 	<icon path="assets/images/icon114.png" size="114" if="android"/>
 	<icon path="assets/images/icon128.png" size="128" />
 	<icon path="assets/images/icon512.png" size="512" if="android"/>
+    
+    <!-- Android manifest -->
+    <template path="android/AndroidManifest.xml" rename="AndroidManifest.xml" if="android"/>
+    
 </project>

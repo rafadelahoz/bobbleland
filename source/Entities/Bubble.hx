@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
@@ -14,11 +13,11 @@ import SfxEngine.SFX;
 
 class Bubble extends Entity
 {
-	public static var StateAiming : Int = 0;
-	public static var StateFlying : Int = 1;
-	public static var StateIdling : Int = 2;
-	public static var StatePopping : Int = 3;
-	public static var StateDebug  : Int = 4;
+	public static inline var StateAiming : Int = 0;
+	public static inline var StateFlying : Int = 1;
+	public static inline var StateIdling : Int = 2;
+	public static inline var StatePopping : Int = 3;
+	public static inline var StateDebug  : Int = 4;
 
 	public var crunchTime : Float = 0.25;
 	public var waitTime : Float = 0.25;
@@ -739,7 +738,7 @@ class Bubble extends Entity
 
 	public function reposition(X : Float, Y : Float)
 	{
-		var oldPos : FlxPoint = new FlxPoint(cellPosition.x, cellPosition.y);
+		// var oldPos : FlxPoint = new FlxPoint(cellPosition.x, cellPosition.y);
 
 		cellPosition.set(Std.int(X), Std.int(Y));
 		cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));

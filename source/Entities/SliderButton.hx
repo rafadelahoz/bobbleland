@@ -1,13 +1,12 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.input.touch.FlxTouch;
 
 class SliderButton extends Button
 {
-    static var StateIdle : Int = 0;
-    static var StateBound : Int = 1;
+    static inline var StateIdle : Int = 0;
+    static inline var StateBound : Int = 1;
 
     var state : Int;
     var boundTouch : FlxTouch;
