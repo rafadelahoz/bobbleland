@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.input.touch.FlxTouch;
 
 class SliderButton extends Button

@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
@@ -739,7 +738,7 @@ class Bubble extends Entity
 
 	public function reposition(X : Float, Y : Float)
 	{
-		var oldPos : FlxPoint = new FlxPoint(cellPosition.x, cellPosition.y);
+		// var oldPos : FlxPoint = new FlxPoint(cellPosition.x, cellPosition.y);
 
 		cellPosition.set(Std.int(X), Std.int(Y));
 		cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));

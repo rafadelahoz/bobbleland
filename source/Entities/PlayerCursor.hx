@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.math.FlxMath;
-import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 

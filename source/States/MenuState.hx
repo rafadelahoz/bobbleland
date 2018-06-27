@@ -3,17 +3,13 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.FlxState;
-import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxBitmapText;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
-import flixel.math.FlxPoint;
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.transition.FlxTransitionableState;
 
 import text.PixelText;
-import text.TextUtils;
 
 import database.BackgroundDatabase;
 
@@ -41,6 +37,8 @@ class MenuState extends FlxTransitionableState
 		SfxEngine.init();
 
 		GameController.Init();
+
+		// Set scale mode?
 
 		interactable = false;
 
