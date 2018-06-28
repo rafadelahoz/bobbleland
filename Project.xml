@@ -2,8 +2,10 @@
 <project>
 	<!------------------------------APPLICATION SETTINGS---------------------------->
 
+	<!--<meta title="SOAP ALLEY" package="com.badladns.the" version="0.1.0" company="The Badladns" if="android"/>-->
+
 	<app title="SOAP ALLEY" file="soap-alley" main="Main" version="0.1.0" company="The Badladns" />
-	<app title="SOAP ALLEY" file="soap-alley" main="Main" version="0.1.0" company="com.badladns.the" if="android" />
+	<app title="SOAP ALLEY" file="soap-alley" main="Main" version="0.1.0" company="The Badladns" package="badladns.the.soapalley" if="android"/>
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 	<!--or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"!-->
@@ -89,7 +91,7 @@
 	<!--haxedef name="FLX_NO_FOCUS_LOST_SCREEN" /-->
 
 	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
-	<haxedef name="FLX_NO_DEBUG" />
+	<haxedef name="FLX_NO_DEBUG"/>
 
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
@@ -109,8 +111,8 @@
 	<icon path="assets/images/icon114.png" size="114" if="android"/>
 	<icon path="assets/images/icon128.png" size="128" />
 	<icon path="assets/images/icon512.png" size="512" if="android"/>
-    
+
     <!-- Android manifest -->
     <template path="android/AndroidManifest.xml" rename="AndroidManifest.xml" if="android"/>
-    
+
 </project>

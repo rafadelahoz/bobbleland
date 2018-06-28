@@ -964,7 +964,7 @@ class PlayState extends FlxTransitionableState
 		mouseCell.set(cell.x, cell.y);
 		// label.text = "" + cell + " | " + dropDelay;
 		// label.text = grid.getUsedColors().toString();
-		FlxG.watch.addQuick("Cell", cell);
+		// FlxG.watch.addQuick("Cell", cell);
 	}
 
 	function spawnDebugBubble(cell : FlxPoint, color : BubbleColor)
