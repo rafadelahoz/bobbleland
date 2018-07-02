@@ -199,7 +199,7 @@ class PlayFlowController
 
     public function getStoredData() : Dynamic
     {
-        return {score : world.scoreDisplay.realScore, time : playTime, bubbles : bubbleCount, cleans: screenCleanCount};
+        return {score : world.scoreDisplay.realScore, time : playTime, bubbles : bubbleCount, cleans: screenCleanCount, character: world.playSessionData.character};
     }
 
     public function enableGuide()
