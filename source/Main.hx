@@ -51,7 +51,7 @@ class Main extends Sprite
 	private function onDeactivate(?E:Event):Void
 	{
 		// Save here!
-		trace("BYEBYE SOAP from " + GameController.currentState);
+		// trace("BYEBYE SOAP from " + GameController.currentState);
 		switch (GameController.currentState)
 		{
 			case GameController.GameState.Menu:
@@ -76,7 +76,7 @@ class Main extends Sprite
 	{
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
-		
+
 		if (zoom == -1)
 		{
 			var ratioX:Float = stageWidth / gameWidth;

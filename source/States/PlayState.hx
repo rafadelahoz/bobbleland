@@ -550,7 +550,6 @@ class PlayState extends FlxTransitionableState
 		switchState(StateLosing);
 
 		grid.forEach(function (bubble : Bubble) {
-			trace("Grid for each, bubble", bubble);
 			bubble.triggerRot();
 			bubbles.remove(bubble);
 			presents.remove(bubble);
