@@ -847,7 +847,8 @@ class PlayState extends FlxTransitionableState
 
 		DEBUG_dropDisabled = false;
 
-		var btnDebugLine : HoldButton = new HoldButton(156, 220,
+		// Avoid generating debug buttons
+		/*var btnDebugLine : HoldButton = new HoldButton(156, 220,
 			function() {
 				cursor.enableGuide(10000);
 			}, function () {
@@ -864,7 +865,7 @@ class PlayState extends FlxTransitionableState
 				trace("grid: " + grid.DEBUG_diplayGrid);
 			});
 		btnDebugGrid.loadSpritesheet("assets/ui/btn-debug.png", 24, 21);
-		add(btnDebugGrid);
+		add(btnDebugGrid);*/
 	}
 
 	var contentIndex : Int = -1;
