@@ -600,7 +600,6 @@ class BubbleGrid extends FlxObject
 			}
 		}
 
-		trace("Saving PResnets", data);
 		return data;
 	}
 

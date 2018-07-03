@@ -50,7 +50,7 @@ class BubbleGenerator
 
     public function generateSaveData(data : BubbleGrid.BubbleGridData)
     {
-        trace("GRID DATA", data);
+        // trace("GRID DATA", data);
         // Restore padded row data
         grid.padded = data.padded;
 

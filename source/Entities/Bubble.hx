@@ -331,7 +331,6 @@ class Bubble extends Entity
 		if (special == BubbleColor.SpecialPresent)
 		{
 			world.bubbles.add(other);
-			trace(other.velocity);
 			other.velocity.x = flyingVelocity.x * -0.25;
 			other.fall(flyingVelocity.y * 0.1);
 			FlxTween.tween(other, {alpha : 0}, 0.75, {ease : FlxEase.expoIn});

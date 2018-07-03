@@ -74,7 +74,7 @@ class Ticket extends FlxSpriteGroup
         if (data.cleansRecord)
             baseY = record(sprite, baseY);
 
-        var signature : FlxSprite = new FlxSprite(0, 0, "assets/ui/signature-dog.png");
+        var signature : FlxSprite = new FlxSprite(0, 0, getCharSignature(data.character));
         sprite.stamp(signature, sprWidth - 72, sprHeight - 64);
 
         // Store the generated ticket
@@ -98,6 +98,21 @@ class Ticket extends FlxSpriteGroup
 
         score = data.score;
         time = TextUtils.formatTime(data.time);
+    }
+
+    function getCharSignature(character : String) : String
+    {
+        switch (character)
+        {
+            case "dog":
+                return "assets/ui/signature-dog.png";
+            case "cat":
+                return "assets/ui/signature-cat.png";
+            case "crab":
+                return "assets/ui/signature-crab.png";
+            default:
+                return "assets/ui/signature-dog.png";
+        }
     }
 
     function onSignReceipt()

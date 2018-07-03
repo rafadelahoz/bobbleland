@@ -50,7 +50,7 @@ class SpecialBubbleController
             // TODO:load generationProbabilityBase (when it's used)
             generationProbabilityBase = 0;
 
-            trace("SpecialBubbleGenerator data", SaveData);
+            // trace("SpecialBubbleGenerator data", SaveData);
         }
         else
         {

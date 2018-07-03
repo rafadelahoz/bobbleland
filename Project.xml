@@ -110,7 +110,9 @@
 	<icon path="assets/images/icon72.png" size="72" if="android"/>
 	<icon path="assets/images/icon72.png" size="96" if="android"/>
 	<icon path="assets/images/icon114.png" size="114" if="android"/>
-	<icon path="assets/images/icon128.png" size="128" />
+	<icon path="assets/images/icon128.png" size="128"/>
+	<icon path="assets/images/icon192.png" size="144" if="android"/>
+	<icon path="assets/images/icon192.png" size="192" if="android"/>
 	<icon path="assets/images/icon512.png" size="512" if="android"/>
 
 </project>
