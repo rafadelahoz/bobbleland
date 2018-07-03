@@ -199,10 +199,8 @@ class PlayState extends FlxTransitionableState
 
 	function getRandomCharacterId() : String
 	{
-	    if (FlxG.random.bool(50))
-	        return "pug";
-	    else
-	        return "cat";
+		var chars = ["pug", "cat", "crab"];
+	    return FlxG.random.getObject(chars);
 	}
 
 	function handleBgm()
@@ -301,6 +299,11 @@ class PlayState extends FlxTransitionableState
 
 		wasNotifyingDrop = notifyDrop;
 		notifyDrop = false;
+
+		if (wasNotifyingDrop)
+		{
+			stopDropNotice();
+		}
 
 		flowController.pause();
 		specialBubbleController.pause();
@@ -817,8 +820,10 @@ class PlayState extends FlxTransitionableState
 
 	function beginDropNotice(t : FlxTimer)
 	{
-		background.color = 0xFFFF5151;
-		t.cancel();
+		if (t != null) {
+			t.cancel();
+		}
+
 		// Play a low hummm
 		SfxEngine.play(SfxEngine.SFX.Print, 0.18, true);
 		// Vibrate bubble grid or something
@@ -827,7 +832,6 @@ class PlayState extends FlxTransitionableState
 
 	function stopDropNotice()
 	{
-		background.color = 0xFFFFFFFF;
 		// Stop vibration sound
 		SfxEngine.stop(SfxEngine.SFX.Print);
 		// Stop vibration
