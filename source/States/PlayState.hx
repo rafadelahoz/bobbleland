@@ -91,6 +91,7 @@ class PlayState extends FlxTransitionableState
 		{
 			trace("Using saved session data");
 			trace(saveData.session);
+			trace("Colors", saveData.session.usedColors.length);
 			playSessionData = saveData.session;
 		}
 		else
@@ -793,7 +794,10 @@ class PlayState extends FlxTransitionableState
 				{
 					finishAfterCleanGeneration();
 				}
+
 				// Store play state
+				// Update colors!
+				playSessionData.usedColors = availableColors;
 				SaveStateManager.savePlayStateData(this);
 			case PlayState.StateLosing, PlayState.StateWinning:
 				// Add the session data to totals

@@ -79,6 +79,7 @@ class PlayFlowController
             timesIncreased = 0;
         }
 
+        trace("Current PlayFlowData", {playTime: playTime, score: score, bubbleCount: bubbleCount, screenCleanCount: screenCleanCount, rowCount: rowCount, lastBubbleCount: lastBubbleCount, lastIncreaseTime: lastIncreaseTime, timesIncreased: timesIncreased});
         trace("Colors: " + world.availableColors.length);
 
         /*FlxG.watch.add(this, "playTime");
@@ -135,7 +136,7 @@ class PlayFlowController
         lastIncreaseTime = playTime;
 
         // Some times, add a bubble color (this should be revisited)
-        if ([2, 6, 10, 14, 20, 30].indexOf(timesIncreased) > -1)
+        if ([2, 6, 10, 14, 20, 30, 50].indexOf(timesIncreased) > -1)
         {
             // Add a color
             if (!addColor())
@@ -169,7 +170,7 @@ class PlayFlowController
             added = true;
             trace("Included new color");
         }
-        else if (currentColors == 6)
+        else if (currentColors >= 6)
         {
             world.availableColors.push(new BubbleColor(BubbleColor.SpecialBlocker));
             added = true;
@@ -225,6 +226,9 @@ class PlayFlowController
             lastIncreaseTime: lastIncreaseTime,
             timesIncreased: timesIncreased
         };
+
+        trace("PlayFlowController saved data", data);
+        trace("Current colors", world.availableColors.length);
 
         return data;
     }

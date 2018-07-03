@@ -126,7 +126,9 @@ class BubbleGenerator
         // Find blockers
         var blockers : Array<BubbleColor> = row.filter(filterOnlyBlockers);
         // Limit to max three blockers
-        while (blockers.length > 3)
+        var maxBlockers : Int = world.availableColors.filter(filterOnlyBlockers).length;
+        trace("Max blockers", maxBlockers);
+        while (blockers.length > maxBlockers)
         {
             blockers[FlxG.random.int(0, blockers.length)].colorIndex = getPositiveColor().colorIndex;
             blockers = row.filter(filterOnlyBlockers);
