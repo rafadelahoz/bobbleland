@@ -18,6 +18,8 @@ class HoldButton extends Button
 
     var state : Int;
 
+    public var allowRelease : Bool;
+
     public function new(X : Float, Y : Float, ?PressedCallback : Void -> Void = null, ?ReleasedCallback : Void -> Void = null)
     {
         super(X, Y, onHoldButtonReleased);
@@ -27,6 +29,7 @@ class HoldButton extends Button
 
         state = StateIdle;
         beingTapped = false;
+        allowRelease = true;
     }
 
     function onHoldButtonReleased()
@@ -38,9 +41,12 @@ class HoldButton extends Button
                 if (pressedCallback != null)
                     pressedCallback();
             case HoldButton.StatePressed:
-                state = HoldButton.StateIdle;
-                if (releasedCallback != null)
-                    releasedCallback();
+                if (allowRelease)
+                {
+                    state = HoldButton.StateIdle;
+                    if (releasedCallback != null)
+                        releasedCallback();
+                }
         }
     }
 

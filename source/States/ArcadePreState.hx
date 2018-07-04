@@ -106,6 +106,8 @@ class ArcadePreState extends FlxTransitionableState
         var character = data.character;
         switch (character)
         {
+            case null:
+                btnDog.setPressed(true, true);
             case "pug":
                 btnDog.setPressed(true, true);
             case "cat":
@@ -323,14 +325,17 @@ class ArcadePreState extends FlxTransitionableState
     {
         btnDog = new HoldButton(40, 128, onCharDogPressed, onCharReleased);
         btnDog.loadSpritesheet("assets/ui/char-dog.png", 32, 32);
+        btnDog.allowRelease = false;
         group.add(btnDog);
 
         btnCat = new HoldButton(80, 128, onCharCatPressed, onCharReleased);
         btnCat.loadSpritesheet("assets/ui/char-cat.png", 32, 32);
+        btnCat.allowRelease = false;
         group.add(btnCat);
 
         btnCrab = new HoldButton(120, 128, onCharCrabPressed, onCharReleased);
         btnCrab.loadSpritesheet("assets/ui/char-crab.png", 32, 32);
+        btnCrab.allowRelease = false;
         group.add(btnCrab);
     }
 
