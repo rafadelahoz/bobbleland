@@ -943,6 +943,32 @@ class PlayState extends FlxTransitionableState
 			}
 		}
 
+		if (FlxG.keys.justPressed.C)
+		{
+			for (c in 0...grid.columns)
+			{
+				for (r in 1...grid.rows)
+				{
+					if (grid.getData(c, r) != null) 
+					{
+						bubbles.remove(grid.getData(c, r));
+						grid.setData(c, r, null);
+					}
+					
+				}
+			}
+		}
+
+		if (FlxG.keys.pressed.B)
+		{
+			flowController.onBubbleDestroyed(100);
+		}
+
+		if (FlxG.keys.justReleased.B)
+		{
+			add(new TextNotice(16, 100, "Bubbles " + flowController.getSaveData().bubbleCount));
+		}
+
 		if (FlxG.keys.justPressed.S)
 		{
 			var filename : String = Screenshot.take();

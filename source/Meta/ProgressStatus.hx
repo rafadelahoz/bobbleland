@@ -6,6 +6,11 @@ class ProgressStatus
 {
     static var savefile : String = "progress";
 
+    static var CrabHintBubbles : Int = 1500;
+    static var FrogHintBubbles : Int = 5000;
+    static var BearHintBubbles : Int = 15000;
+    static var CatbombHintBubbles : Int = 20000; // Or 3000?
+
     public static var progressData : ProgressData;
 
     public static function init()
@@ -26,11 +31,48 @@ class ProgressStatus
                 save();
             }
 
-            // progressData.crabHint = true;
+            progressData.crabChar = true;
             // progressData.frogHint = true;
             // progressData.bearHint = true;
             // progressData.catbombHint = true;
         }
+    }
+
+    public static function check()
+    {
+        var arcadeData : ArcadeGameStatus.ArcadeData = ArcadeGameStatus.getConfigData();
+        
+        // Check conditions for each char hint
+        if (!progressData.crabHint)
+        {            
+            if (arcadeData.totalBubbles > CrabHintBubbles)
+            {
+                progressData.crabHint = true;
+            }
+        } 
+        else if (progressData.crabChar && !progressData.frogHint)
+        {
+            if (arcadeData.totalBubbles > FrogHintBubbles)
+            {
+                progressData.frogHint = true;
+            }
+        }
+        else if (progressData.frogChar && !progressData.bearHint)
+        {
+            if (arcadeData.totalBubbles > BearHintBubbles)
+            {
+                progressData.bearHint = true;
+            }
+        }
+        else if (progressData.bearChar && !progressData.catbombHint)
+        {
+            if (arcadeData.totalBubbles > CatbombHintBubbles)
+            {
+                progressData.catbombHint = true;
+            }
+        }
+
+        save();
     }
 
     public static function save()

@@ -194,6 +194,9 @@ class GameOverState extends FlxTransitionableState
 		FlxTween.tween(machineBG, {y : 264 + 128}, hideDuration, {ease: FlxEase.circInOut});
 		FlxTween.tween(machineFG, {y : 264 + 128}, hideDuration, {ease: FlxEase.circInOut});
 		FlxTween.tween(btnCheckout, {y : 288 + 128}, hideDuration, {ease: FlxEase.circInOut});
+
+		// TODO: Check if the unlock ticket machine is to be displayed
+		// For now, just show a message!
 	}
 
 	function startMachineVibration()

@@ -23,19 +23,19 @@ class GameController
 
 	public static function StartArcadeGame(?DontLoad : Bool = false)
 	{
+		ArcadeGameStatus.init();
+		ProgressStatus.init();
+
+		ProgressStatus.check();
+
 		if (!DontLoad && SaveStateManager.savestateExists())
 		{
 			trace("Savestate data exists!");
-			ArcadeGameStatus.init();
-			ProgressStatus.init();
 			BeginArcade(true);
 		}
 		else
 		{
 			currentState = Menu;
-
-			ArcadeGameStatus.init();
-			ProgressStatus.init();
 			FlxG.switchState(new ArcadePreState());
 		}
 	}
@@ -72,6 +72,8 @@ class GameController
 		{
 			ArcadeGameStatus.storePlayData(data);
 		}
+
+		// TODO: Check here for unlocks? Or better only when the ticket has been printed?
 
 		FlxG.switchState(new GameOverState(mode, data));
 	}
