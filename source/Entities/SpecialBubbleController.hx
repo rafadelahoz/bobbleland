@@ -104,19 +104,19 @@ class SpecialBubbleController
 
         // Score
         score = world.scoreDisplay.realScore;
-        trace("score - lastScore", score, lastScore, score-lastScore);
+        // trace("score - lastScore", score, lastScore, score-lastScore);
         if (score - lastScore > 5000)
         {
             var diff : Int = (score - lastScore) - 5000;
-            trace("Diff", diff);
+            // trace("Diff", diff);
             var deltas : Int = Std.int(diff / 1000);
-            trace("Deltas", deltas);
+            // trace("Deltas", deltas);
             probability += deltas * 0.1;
         }
 
         // TODO: Others
 
-        trace("Special Bubble probability", probability);
+        // trace("Special Bubble probability", probability);
 
         return probability;
     }

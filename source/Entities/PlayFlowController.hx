@@ -79,8 +79,8 @@ class PlayFlowController
             timesIncreased = 0;
         }
 
-        trace("Current PlayFlowData", {playTime: playTime, score: score, bubbleCount: bubbleCount, screenCleanCount: screenCleanCount, rowCount: rowCount, lastBubbleCount: lastBubbleCount, lastIncreaseTime: lastIncreaseTime, timesIncreased: timesIncreased});
-        trace("Colors: " + world.availableColors.length);
+        // trace("Current PlayFlowData", {playTime: playTime, score: score, bubbleCount: bubbleCount, screenCleanCount: screenCleanCount, rowCount: rowCount, lastBubbleCount: lastBubbleCount, lastIncreaseTime: lastIncreaseTime, timesIncreased: timesIncreased});
+        // trace("Colors: " + world.availableColors.length);
 
         /*FlxG.watch.add(this, "playTime");
         FlxG.watch.add(this, "bubbleCount");
@@ -227,8 +227,8 @@ class PlayFlowController
             timesIncreased: timesIncreased
         };
 
-        trace("PlayFlowController saved data", data);
-        trace("Current colors", world.availableColors.length);
+        // trace("PlayFlowController saved data", data);
+        // trace("Current colors", world.availableColors.length);
 
         return data;
     }
