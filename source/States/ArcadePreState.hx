@@ -30,6 +30,9 @@ class ArcadePreState extends FlxTransitionableState
     var btnDog : HoldButton;
     var btnCat : HoldButton;
     var btnCrab : HoldButton;
+    var btnFrog : HoldButton;
+    var btnBear : HoldButton;
+    var btnCatbomb : HoldButton;
 
     var btnBgmA : HoldButton;
     var btnBgmB : HoldButton;
@@ -64,6 +67,8 @@ class ArcadePreState extends FlxTransitionableState
     {
         super.create();
 
+        initProgress();
+
         centerScreen = new FlxSpriteGroup(0, 0);
 
         background = database.BackgroundDatabase.BuildRandomBackground();
@@ -97,6 +102,11 @@ class ArcadePreState extends FlxTransitionableState
         BgmEngine.play(BgmEngine.BGM.Menu);
     }
 
+    function initProgress()
+    {
+        
+    }
+
     function initData()
     {
         var data = ArcadeGameStatus.getConfigData();
@@ -113,7 +123,17 @@ class ArcadePreState extends FlxTransitionableState
             case "cat":
                 btnCat.setPressed(true, true);
             case "crab":
-                btnCrab.setPressed(true, true);
+                if (btnCrab != null)
+                    btnCrab.setPressed(true, true);
+            case "frog":
+                if (btnFrog != null)
+                    btnFrog.setPressed(true, true);
+            case "bear":
+                if (btnBear != null)
+                    btnBear.setPressed(true, true);
+            case "catbomb":
+                if (btnCatbomb != null)
+                    btnCatbomb.setPressed(true, true);
         }
     }
 
@@ -333,10 +353,61 @@ class ArcadePreState extends FlxTransitionableState
         btnCat.allowRelease = false;
         group.add(btnCat);
 
-        btnCrab = new HoldButton(120, 128, onCharCrabPressed, onCharReleased);
-        btnCrab.loadSpritesheet("assets/ui/char-crab.png", 32, 32);
-        btnCrab.allowRelease = false;
-        group.add(btnCrab);
+        if (ProgressStatus.progressData.crabChar)
+        {
+            btnCrab = new HoldButton(120, 128, onCharCrabPressed, onCharReleased);
+            btnCrab.loadSpritesheet("assets/ui/char-crab.png", 32, 32);
+            btnCrab.allowRelease = false;
+            group.add(btnCrab);
+        }
+        else if (ProgressStatus.progressData.crabHint)
+        {
+            // Instantiate crab hint over his button
+            var btnCrabHint : HintButton = new HintButton(120, 128, this, "Try getting a\nhigh score!");
+            group.add(btnCrabHint);
+        }
+
+        if (ProgressStatus.progressData.frogChar)
+        {
+            /*btnFrog = new HoldButton(40, 168, onCharFrogPressed, onCharReleased);
+            btnFrog.loadSpritesheet("assets/ui/char-frog.png", 32, 32);
+            btnFrog.allowRelease = false;
+            group.add(btnFrog);*/
+        }
+        else if (ProgressStatus.progressData.frogHint)
+        {
+            // Instantiate frog hint over his button
+            var btnFrogHint : HintButton = new HintButton(40, 168, this, "This can't be easy:\nMore bubbles! A lot\nof them at once!");
+            group.add(btnFrogHint);
+        }
+
+        if (ProgressStatus.progressData.bearChar)
+        {
+            /*btnBear = new HoldButton(120, 128, onCharBearPressed, onCharReleased);
+            btnBear.loadSpritesheet("assets/ui/char-bear.png", 32, 32);
+            btnBear.allowRelease = false;
+            group.add(btnBear);*/
+        }
+        else if (ProgressStatus.progressData.bearHint)
+        {
+            // Instantiate bear hint over his button
+            var btnBearHint : HintButton = new HintButton(80, 168, this, "This must be hard:\nGet a high score\n       ...QUICKLY!");
+            group.add(btnBearHint);
+        }
+
+        if (ProgressStatus.progressData.catbombChar)
+        {
+            /*btnCatbomb = new HoldButton(120, 128, onCharCatbombPressed, onCharReleased);
+            btnCatbomb.loadSpritesheet("assets/ui/char-catbomb.png", 32, 32);
+            btnCatbomb.allowRelease = false;
+            group.add(btnCatbomb);*/
+        }
+        else if (ProgressStatus.progressData.catbombHint)
+        {
+            // Instantiate catbomb hint over his button
+            var btnCatbombHint : HintButton = new HintButton(120, 168, this, "Oh, you lazy cat\\", false);
+            group.add(btnCatbombHint);
+        }
     }
 
     function generateBgmButtons(group : FlxSpriteGroup)
@@ -364,8 +435,7 @@ class ArcadePreState extends FlxTransitionableState
     {
         ArcadeGameStatus.setCharacter("pug");
         // Deactivate other buttons
-        btnCat.setPressed(false);
-        btnCrab.setPressed(false);
+        releaseCharButtons("pug");
     }
 
     function onCharCatPressed()
@@ -373,7 +443,8 @@ class ArcadePreState extends FlxTransitionableState
         ArcadeGameStatus.setCharacter("cat");
         // Deactivate other buttons
         btnDog.setPressed(false);
-        btnCrab.setPressed(false);
+        if (btnCrab != null)
+            btnCrab.setPressed(false);
     }
 
     function onCharCrabPressed()
@@ -382,6 +453,22 @@ class ArcadePreState extends FlxTransitionableState
         // Deactivate other buttons
         btnDog.setPressed(false);
         btnCat.setPressed(false);
+    }
+
+    function releaseCharButtons(except : String)
+    {
+        if (except != "pug")
+            btnDog.setPressed(false);
+        if (except != "cat")
+            btnCat.setPressed(false);
+        if (except != "crab" && btnCrab != null)
+            btnCrab.setPressed(false);
+        if (except != "frog" && btnFrog != null)
+            btnFrog.setPressed(false);
+        if (except != "bear" && btnBear != null)
+            btnBear.setPressed(false);
+        if (except != "catbomb" && btnCatbomb != null)
+            btnCatbomb.setPressed(false);
     }
 
     function onBgmReleased()

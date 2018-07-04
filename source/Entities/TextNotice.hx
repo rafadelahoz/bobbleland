@@ -11,11 +11,12 @@ class TextNotice extends FlxSprite
 {
     var textDelta : FlxPoint;
 
+    var border : Int;
     var pxtext : FlxBitmapText;
     var background : FlxSprite;
     var colorTween : FlxTween;
 
-    public function new(X : Float, Y : Float, Text : String, ?Color : Int = -1)
+    public function new(X : Float, Y : Float, Text : String, ?Color : Int = -1, ?seriousMode : Bool = false)
     {
         super(X, Y);
 
@@ -31,15 +32,20 @@ class TextNotice extends FlxSprite
         }
         pxtext.y = Y - pxtext.height / 2;
 
-        background = new FlxSprite(pxtext.x - 2, pxtext.y - 2);
-        background.makeGraphic(Std.int(pxtext.width + 4), Std.int(pxtext.height + 4), Palette.Black);
+        border = 4;
+        if (seriousMode) 
+            border = 16;
+
+        background = new FlxSprite(pxtext.x - border/2, pxtext.y - border/2);
+        background.makeGraphic(Std.int(pxtext.width + border), Std.int(pxtext.height + border), Palette.Black);
 
         textDelta = FlxPoint.get(pxtext.x - x, pxtext.y - y);
 
         FlxTween.tween(this, {y: y-8}, 0.3, {ease: FlxEase.cubeOut, startDelay: 0});
         FlxTween.tween(this, {alpha: 1}, 0.3, {ease: FlxEase.circOut, startDelay: 0, onComplete: onAppeared});
 
-        doColor(null);
+        if (!seriousMode)
+            doColor(null);
     }
 
     function doColor(t : FlxTween)
@@ -54,8 +60,12 @@ class TextNotice extends FlxSprite
     {
         textDelta.put();
         pxtext.destroy();
-        colorTween.cancel();
-        colorTween.destroy();
+        if (colorTween != null)
+        {
+            colorTween.cancel();
+            colorTween.destroy();
+        }
+
         super.destroy();
     }
 
@@ -67,11 +77,11 @@ class TextNotice extends FlxSprite
 
     function onDisapeared(t:FlxTween)
     {
-        t.cancel();
+        if (t != null)
+            t.cancel();
 
         destroy();
     }
-
 
     override public function update(elapsed : Float)
     {
@@ -83,8 +93,8 @@ class TextNotice extends FlxSprite
         pxtext.update(elapsed);
 
         background.alpha = alpha;
-        background.x = pxtext.x - 2;
-        background.y = pxtext.y - 2;
+        background.x = pxtext.x - border/2;
+        background.y = pxtext.y - border/2;
     }
 
     override public function draw()

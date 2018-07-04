@@ -27,6 +27,7 @@ class GameController
 		{
 			trace("Savestate data exists!");
 			ArcadeGameStatus.init();
+			ProgressStatus.init();
 			BeginArcade(true);
 		}
 		else
@@ -34,6 +35,7 @@ class GameController
 			currentState = Menu;
 
 			ArcadeGameStatus.init();
+			ProgressStatus.init();
 			FlxG.switchState(new ArcadePreState());
 		}
 	}

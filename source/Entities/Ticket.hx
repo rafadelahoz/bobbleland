@@ -104,7 +104,7 @@ class Ticket extends FlxSpriteGroup
     {
         switch (character)
         {
-            case "dog":
+            case "pug":
                 return "assets/ui/signature-dog.png";
             case "cat":
                 return "assets/ui/signature-cat.png";

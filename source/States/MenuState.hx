@@ -21,6 +21,7 @@ class MenuState extends FlxTransitionableState
 	var yearsLabel : FlxBitmapText;
 	var creditsLabel : FlxBitmapText;
 	var background : FlxBackdrop;
+	var backgroundShader : FlxSprite;
 
 	var startTouchZone : FlxObject;
 
@@ -47,12 +48,12 @@ class MenuState extends FlxTransitionableState
         background = BackgroundDatabase.BuildRandomBackground();
 		background.scrollFactor.set(0.35, 0.35);
         background.velocity.set(0, 10);
-		background.alpha = 0;
+		background.alpha = 1;
         add(background);
 
-		var backgroundShader : FlxSprite = new FlxSprite(0, 0);
+		backgroundShader = new FlxSprite(0, 0);
 		backgroundShader.makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
-		backgroundShader.alpha = 0.22;
+		backgroundShader.alpha = 1;
 		add(backgroundShader);
 
 		var borderTop : FlxSprite = new FlxSprite(0, -8, "assets/ui/border-top.png");
@@ -95,7 +96,7 @@ class MenuState extends FlxTransitionableState
 		add(startTouchZone);
 
 		FlxTween.tween(touchLabel, {alpha : 1}, 1, {ease : FlxEase.cubeInOut});
-		FlxTween.tween(background, {alpha : 1}, 1.5, {ease : FlxEase.cubeInOut});
+		FlxTween.tween(backgroundShader, {alpha : 0.22}, 1.5, {ease : FlxEase.cubeInOut});
 		FlxTween.tween(optionsPanel.optionsTab, {alpha: 1}, 1, {ease : FlxEase.cubeInOut});
 
 		startTouchBuzz(null);
