@@ -31,7 +31,7 @@ class PauseSubstate extends FlxSubState
 
     var tween : FlxTween;
 
-    var enabled : Bool;
+    public var enabled : Bool;
 
     var callback : Void -> Void;
 
@@ -160,6 +160,10 @@ class PauseSubstate extends FlxSubState
         if (enabled)
         {
             enabled = false;
+
+            btnExit.disable();
+            btnResume.disable();
+
             if (tween != null)
                 tween.cancel();
 
@@ -187,6 +191,10 @@ class PauseSubstate extends FlxSubState
     {
         if (enabled)
         {
+            enabled = false;
+            btnExit.disable();
+            btnResume.disable();
+            
             BgmEngine.stopCurrent();
 
             active = false;

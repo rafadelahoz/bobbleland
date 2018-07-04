@@ -11,6 +11,8 @@ class Button extends Entity
 
     var pressed : Bool;
 
+    var enabled : Bool;
+
     public function new(X : Float, Y : Float, ?Callback : Void -> Void = null)
     {
         super(X, Y);
@@ -18,6 +20,8 @@ class Button extends Entity
         callback = Callback;
 
         hasGraphic = false;
+
+        enabled = true;
     }
 
     public function loadSpritesheet(Sprite : String, Width : Float, Height : Float)
@@ -40,64 +44,67 @@ class Button extends Entity
         else
             visible = false;
 
-        #if (!mobile)
-        if (mouseOver())
+        if (enabled) 
         {
-            if (FlxG.mouse.pressed)
+            #if (!mobile)
+            if (mouseOver())
             {
-                pressed = true;
+                if (FlxG.mouse.pressed)
+                {
+                    pressed = true;
+                }
+                else if (FlxG.mouse.justReleased)
+                {
+                    pressed = false;
+                }
             }
-            else if (FlxG.mouse.justReleased)
+            #else
+            for (touch in FlxG.touches.list)
+            {
+                if (touch.overlaps(this))
+                {
+                    if (touch.pressed)
+                    {
+                        pressed = true;
+                        break;
+                    }
+                    else if (touch.justReleased)
+                    {
+                        pressed = false;
+                        break ;
+                    }
+                }
+            }
+            #end
+
+            if (!wasPressed && pressed)
+                onPressed();
+            else if (pressed)
+                whilePressed();
+
+            if (wasPressed && !pressed)
+                onReleased();
+            else if (!pressed)
+                whileReleased();
+
+            // Post callback state handling?
+            #if !mobile
+            if (pressed && FlxG.mouse.justReleased)
             {
                 pressed = false;
             }
-        }
-        #else
-        for (touch in FlxG.touches.list)
-		{
-            if (touch.overlaps(this))
-            {
-    			if (touch.pressed)
-    			{
-                    pressed = true;
-                    break;
-                }
-                else if (touch.justReleased)
+            #else
+            if (pressed)
+                for (touch in FlxG.touches.list)
                 {
-                    pressed = false;
-                    break ;
+                    if (touch.justReleased)
+                    {
+                        pressed = false;
+                        break;
+                    }
                 }
-            }
+            #end
         }
-        #end
-
-        if (!wasPressed && pressed)
-            onPressed();
-        else if (pressed)
-            whilePressed();
-
-        if (wasPressed && !pressed)
-            onReleased();
-        else if (!pressed)
-            whileReleased();
-
-        // Post callback state handling?
-        #if !mobile
-        if (pressed && FlxG.mouse.justReleased)
-        {
-            pressed = false;
-        }
-        #else
-        if (pressed)
-            for (touch in FlxG.touches.list)
-    		{
-                if (touch.justReleased)
-                {
-                    pressed = false;
-                    break;
-                }
-            }
-        #end
 
         super.update(elapsed);
     }
@@ -162,5 +169,15 @@ class Button extends Entity
         Hardware.vibrate(10);
         #end*/
         SfxEngine.play(SfxEngine.SFX.Clock);
+    }
+
+    public function enable()
+    {
+        enabled = true;
+    }
+
+    public function disable()
+    {
+        enabled = false;
     }
 }
