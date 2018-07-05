@@ -25,7 +25,7 @@ class ProgressStatus
         if (progressData == null)
         {
             progressData = load();
-            
+
             if (progressData == null) {
                 // Init first progressData if required
                 progressData = {
@@ -54,15 +54,15 @@ class ProgressStatus
     public static function check()
     {
         var arcadeData : ArcadeGameStatus.ArcadeData = ArcadeGameStatus.getConfigData();
-        
+
         // Check conditions for each char hint
         if (!progressData.crabHint)
-        {            
+        {
             if (arcadeData.totalBubbles > CrabHintBubbles)
             {
                 progressData.crabHint = true;
             }
-        } 
+        }
         else if (progressData.crabChar && !progressData.frogHint)
         {
             if (arcadeData.totalBubbles > FrogHintBubbles)
@@ -97,21 +97,21 @@ class ProgressStatus
                 progressData.crabChar = true;
                 progressData.fanfare = "crab";
             }
-        } 
+        }
         else if (progressData.crabChar && progressData.frogHint && !progressData.frogChar)
         {
-            if (playSessionData.bubbles > FrogUnlockBubbles && 
-                playSessionData.level > FrogUnlockLevel)
+            if (playSessionData.bubbles > FrogUnlockBubbles &&
+                playSessionData.level >= FrogUnlockLevel)
             {
                 progressData.frogChar = true;
                 progressData.fanfare = "frog";
             }
         }
-        else if (progressData.bearChar && progressData.bearHint && !progressData.bearChar)
+        else if (progressData.frogChar && progressData.bearHint && !progressData.bearChar)
         {
-            if (playSessionData.score > BearUnlockScore && 
-                playSessionData.time < BearUnlockScore && 
-                playSessionData.level > BearUnlockLevel)
+            if (playSessionData.score > BearUnlockScore &&
+                playSessionData.time < BearUnlockScore &&
+                playSessionData.level >= BearUnlockLevel)
             {
                 progressData.bearChar = true;
                 progressData.fanfare = "bear";
