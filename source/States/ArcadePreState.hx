@@ -121,6 +121,7 @@ class ArcadePreState extends FlxTransitionableState
 
                 var ticket : Entity = new Entity(0, 0);
                 ticket.makeGraphic(144, 144, Palette.White);
+                ticket.x = FlxG.width / 2 - ticket.width / 2;
 
                 var printer : PrinterMachine = new PrinterMachine();
                 printer.create(ticket, function() {
