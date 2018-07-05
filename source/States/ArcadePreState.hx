@@ -103,6 +103,19 @@ class ArcadePreState extends FlxTransitionableState
         start();
     }
 
+    function stampText(sprite : FlxSprite, ?color : Int = 0xFF000000, string : String, x : Float, y : Float)
+    {
+        var t : flixel.text.FlxBitmapText = PixelText.New(0, 0, string);
+        t.drawFrame(true);
+
+        var temp : FlxSprite = new FlxSprite(0, 0);
+        temp.makeGraphic(Std.int(t.width), Std.int(t.height), 0x00000000);
+        temp.pixels.copyPixels(t.framePixels, t.framePixels.rect, new openfl.geom.Point(0,0));
+        temp.color = color;
+
+        sprite.stamp(temp, Std.int(x), Std.int(y));
+    }
+
     function start()
     {
         if (ProgressStatus.progressData.fanfare != null && ProgressStatus.progressData.fanfare != "none")
@@ -117,34 +130,33 @@ class ArcadePreState extends FlxTransitionableState
             fanfareShader.shine();
             add(fanfareShader);
 
-            new FlxTimer().start(3.5, function(t:FlxTimer) { 
+            new FlxTimer().start(3.5, function(t:FlxTimer) {
 
                 var ticket : Entity = new Entity(0, 0);
-                ticket.makeGraphic(144, 144, Palette.White);
+                ticket.makeGraphic(144, 56, Palette.White);
                 ticket.x = FlxG.width / 2 - ticket.width / 2;
 
-                var printer : PrinterMachine = new PrinterMachine();
+                var thing : String = null;
+                switch (ProgressStatus.progressData.fanfare)
+                {
+                    case "crab": thing = "     A CRAB!";
+                    case "frog": thing = "     A FROG!";
+                    case "bear": thing = "     A BEAR!";
+                    case "catbomb": thing = "    CATBOMB!";
+                }
+
+                stampText(ticket, Palette.Black, "CONGRATULATIONS\n YOU UNLOCKED  \n" + thing, 8, 8);
+
+                var printer : PrinterMachine = new PrinterMachine(true);
                 printer.create(ticket, function() {
 
                     new FlxTimer().start(1, function(t:FlxTimer) {
 
                         FlxTween.tween(ticket, {y : -ticket.height}, 0.25, {ease: FlxEase.circOut});
-                        
-                        var thing : String = null;
-                        switch (ProgressStatus.progressData.fanfare)
-                        {
-                            case "crab": thing = "     A CRAB!";
-                            case "frog": thing = "     A FROG!";
-                            case "bear": thing = "     A BEAR!";
-                            case "catbomb": thing = "    CATBOMB!";
-                        }
-
-                        var notice : TextNotice = new TextNotice(FlxG.width/2-64, 160, "CONGRATULATIONS\n YOU UNLOCKED  \n" + thing);
-                        add(notice);
 
                         // And later
                         new FlxTimer().start(0.75, function(t) {
-                            FlxTween.tween(fanfareShader, {alpha: 0}, 0.4, 
+                            FlxTween.tween(fanfareShader, {alpha: 0}, 0.4,
                                 {onComplete: function(t:FlxTween){
                                     fanfareShader.destroy();
                                 }, ease: FlxEase.circOut
@@ -161,7 +173,7 @@ class ArcadePreState extends FlxTransitionableState
 
                             ProgressStatus.progressData.fanfare = "none";
                             ProgressStatus.save();
-                            
+
                             // Actually start
                             enableButtons();
                             actuallyStart();
@@ -171,7 +183,7 @@ class ArcadePreState extends FlxTransitionableState
 
                 add(printer);
             });
-            
+
         }
         else
         {
@@ -238,12 +250,12 @@ class ArcadePreState extends FlxTransitionableState
 
     function disableButtons()
     {
-        var buttons : Array<FlxSprite> = [sldDifficulty, 
-                                          btnDog, btnCat, btnCrab, 
+        var buttons : Array<FlxSprite> = [sldDifficulty,
+                                          btnDog, btnCat, btnCrab,
                                           btnFrog, btnBear, btnCatbomb,
                                           btnBgmA, btnBgmB, btnBgmOff,
                                           btnStart, btnBack];
-        
+
         for (button in buttons)
         {
             if (button != null)
@@ -256,12 +268,12 @@ class ArcadePreState extends FlxTransitionableState
 
     function enableButtons()
     {
-        var buttons : Array<FlxSprite> = [sldDifficulty, 
-                                          btnDog, btnCat, btnCrab, 
+        var buttons : Array<FlxSprite> = [sldDifficulty,
+                                          btnDog, btnCat, btnCrab,
                                           btnFrog, btnBear, btnCatbomb,
                                           btnBgmA, btnBgmB, btnBgmOff,
                                           btnStart, btnBack];
-        
+
         for (button in buttons)
         {
             if (button != null)

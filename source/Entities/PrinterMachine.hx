@@ -23,26 +23,30 @@ class PrinterMachine extends FlxGroup
 
     var callback : Void -> Void;
 
-    public function new()
+    var golden : Bool;
+
+    public function new(?Golden : Bool = false)
     {
         super();
+
+        golden = Golden;
     }
 
     public function create(builtTicket : FlxSprite, ?printFinishedCallback : Void -> Void = null)
     {
-        machineBG = new Entity(0, 264 + 64, "assets/ui/go-machine-bg.png");
+        machineBG = new Entity(0, 264 + 64, "assets/ui/" + (golden ? "unlock" : "go") + "-machine-bg.png");
         add(machineBG);
 
         // Ticket will go here
         ticketLayer = new FlxGroup();
         add(ticketLayer);
 
-        machineFG = new Entity(0, 264 + 64, "assets/ui/go-machine-fg.png");
+        machineFG = new Entity(0, 264 + 64, "assets/ui/" + (golden ? "unlock" : "go") + "-machine-fg.png");
         add(machineFG);
 
         // Checkout button
         btnCheckout = new Button(16, 288 + 64, onCheckoutButtonPressed);
-        btnCheckout.loadSpritesheet("assets/ui/btn-go-checkout.png", 80, 24);
+        btnCheckout.loadSpritesheet("assets/ui/btn-" + (golden ? "unlock" : "go") + "-checkout.png", 80, 24);
         add(btnCheckout);
 
         var appearDuration : Float = 0.5;
