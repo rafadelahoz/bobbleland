@@ -52,6 +52,8 @@ class PrinterMachine extends FlxGroup
 
         ticket = builtTicket;
 
+        callback = printFinishedCallback;
+
         printing = false;
 		printTween = null;
     }
