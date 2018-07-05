@@ -227,6 +227,7 @@ class GameOverState extends FlxTransitionableState
 		} else {
 			btnGiveup.ShineTimerBase = 0.3;
         	btnGiveup.ShineTimerVariation = 0.1;
+			btnGiveup.ShineSparkColor = Palette.Yellow;
 			btnGiveup.shine();
 		}
 	}

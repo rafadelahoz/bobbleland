@@ -59,7 +59,7 @@ class ArcadePreState extends FlxTransitionableState
     var btnBack : Button;
 
     /** Pomp & Fanfare **/
-    var fanfareShader : FlxSprite;
+    var fanfareShader : Entity;
 
     var target : FlxObject;
     var isCameraMoving : Bool;
@@ -111,11 +111,13 @@ class ArcadePreState extends FlxTransitionableState
             disableButtons();
 
             // Do fanfare!
-            fanfareShader = new FlxSprite(0, 0);
+            fanfareShader = new Entity(0, 0);
             fanfareShader.makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
+            fanfareShader.ShineTimerBase = 0.5;
+            fanfareShader.shine();
             add(fanfareShader);
 
-            new FlxTimer().start(2, function(t:FlxTimer) { 
+            new FlxTimer().start(3.5, function(t:FlxTimer) { 
                 var thing : String = null;
                 switch (ProgressStatus.progressData.fanfare)
                 {
@@ -125,12 +127,26 @@ class ArcadePreState extends FlxTransitionableState
                     case "catbomb": thing = "    CATBOMB!";
                 }
 
-                var notice : TextNotice = new TextNotice(8, 160, "CONGRATULATIONS\n YOU UNLOCKED  \n" + thing);
+                var notice : TextNotice = new TextNotice(FlxG.width/2-64, 160, "CONGRATULATIONS\n YOU UNLOCKED  \n" + thing);
                 add(notice);
 
                 // And later
-                new FlxTimer().start(0.5, function(t) {
-                    FlxTween.tween(fanfareShader, {alpha: 0}, 0.4);
+                new FlxTimer().start(0.75, function(t) {
+                    FlxTween.tween(fanfareShader, {alpha: 0}, 0.4, 
+                        {onComplete: function(t:FlxTween){
+                            fanfareShader.destroy();
+                        }, ease: FlxEase.circOut
+                    });
+
+                    // Effects!
+                    if (ProgressStatus.progressData.fanfare == "crab")
+                    {
+                        btnCrab.ShineTimerBase = 0.3;
+                        btnCrab.ShineTimerVariation = 0.1;
+                        btnCrab.ShineSparkColor = Palette.Yellow;
+                        btnCrab.shine();
+                    } // TODO: Other animals here
+
                     ProgressStatus.progressData.fanfare = "none";
                     // Actually start
                     enableButtons();
@@ -148,6 +164,7 @@ class ArcadePreState extends FlxTransitionableState
     function actuallyStart()
     {
         BgmEngine.play(BgmEngine.BGM.Menu);
+        // btnStart.shine();
     }
 
     function initData()
@@ -295,10 +312,9 @@ class ArcadePreState extends FlxTransitionableState
         btnStart = new Button(40, 276, onStartButtonPressed);
         btnStart.loadSpritesheet("assets/ui/btn-start.png", 96, 32);
         centerScreen.add(btnStart);
-        btnStart.ShineTimerBase = 0.3;
-        btnStart.ShineTimerVariation = 0.1;
-        btnStart.ShineSparkColor = Palette.Yellow;
-        btnStart.shine();
+        // btnStart.ShineTimerBase = 0.3;
+        // btnStart.ShineTimerVariation = 0.1;
+        // btnStart.ShineSparkColor = Palette.Yellow;
 
         return centerScreen;
     }

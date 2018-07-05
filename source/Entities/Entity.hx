@@ -77,12 +77,20 @@ class Entity extends FlxSprite
         }
 
         FlxG.state.add(new FxSpark(FlxG.random.float(x+2, x+width-10),
-                                   FlxG.random.float(y+2, y+width-10),
+                                   FlxG.random.float(y+2, y+height-10),
                                    this,
                                    getSparkColor()));
         t.start(FlxG.random.float(ShineTimerBase * (1-ShineTimerVariation),
                                   ShineTimerBase * (1 + ShineTimerVariation)),
                             shine);
+    }
+
+    public function matte()
+    {
+        if (shineTimer != null)
+        {
+            shineTimer.cancel();
+        }
     }
 
     public function getSparkColor() : Int
