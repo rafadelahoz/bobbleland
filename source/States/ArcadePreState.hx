@@ -148,6 +148,8 @@ class ArcadePreState extends FlxTransitionableState
                     } // TODO: Other animals here
 
                     ProgressStatus.progressData.fanfare = "none";
+                    ProgressStatus.save();
+                    
                     // Actually start
                     enableButtons();
                     actuallyStart();
