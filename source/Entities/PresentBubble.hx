@@ -10,31 +10,18 @@ import flixel.tweens.FlxEase;
 
 class PresentBubble extends Bubble
 {
-    var ShineTimerBase : Float = 1;
-    var ShineTimerVariation : Float = 0.25;
-
     public var content : Int;
 
-    var shineTimer : FlxTimer;
     var opened : Bool;
 
     public function new(X : Float, Y : Float, World : PlayState, Color : BubbleColor)
     {
         super(X, Y, World, Color);
 
+        ShineTimerBase = 1;
+        ShineTimerVariation = 0.25;
+
         opened = false;
-        shineTimer = new FlxTimer();
-    }
-
-    override public function destroy()
-    {
-        if (shineTimer != null)
-        {
-            shineTimer.cancel();
-            shineTimer.destroy();
-        }
-
-        super.destroy();
     }
 
     public function setContent(Content : Int)
@@ -42,7 +29,7 @@ class PresentBubble extends Bubble
         content = Content;
         trace("Present with content", Content);
 
-        shine(shineTimer);
+        shine();
     }
 
     override public function handleGraphic()
@@ -51,18 +38,7 @@ class PresentBubble extends Bubble
         offset.set(1, 1);
     }
 
-    function shine(t : FlxTimer)
-    {
-        world.add(new PresentSpark(FlxG.random.float(x+2, x+width-10),
-                                   FlxG.random.float(y+2, y+width-10),
-                                   this,
-                                   getSparkColor()));
-        t.start(FlxG.random.float(ShineTimerBase * (1-ShineTimerVariation),
-                                               ShineTimerBase * (1 + ShineTimerVariation)),
-                            shine);
-    }
-
-    function getSparkColor() : Int
+    override function getSparkColor() : Int
     {
         switch (content)
         {
@@ -317,50 +293,6 @@ class PresentBubble extends Bubble
         world.handlePostShoot();
         world.switchState(PlayState.StateAiming);
         onDeath();
-    }
-}
-
-class PresentSpark extends FlxSprite
-{
-    var delta : FlxPoint;
-    var owner : FlxSprite;
-
-    public function new(X : Float, Y : Float, Owner : FlxSprite, ?Color : Int = -1)
-    {
-        super(X, Y);
-
-        owner = Owner;
-        delta = FlxPoint.get(X - Owner.x, Y - Owner.y);
-
-        loadGraphic("assets/images/spark_sheet.png", true, 8, 8);
-        animation.add("blink", [0, 1, 2, 3, 1, 0], FlxG.random.int(7, 10), false);
-        animation.finishCallback = onAnimationFinish;
-        animation.play("blink");
-
-        if (Color != -1)
-            color = Color;
-        else
-            color = Palette.White;
-    }
-
-    override public function destroy()
-    {
-        delta.put();
-        super.destroy();
-    }
-
-    function onAnimationFinish(animName : String)
-    {
-        destroy();
-    }
-
-    override public function draw()
-    {
-        // Move with your owner entity
-        x = owner.x + delta.x;
-        y = owner.y + delta.y;
-
-        super.draw();
     }
 }
 

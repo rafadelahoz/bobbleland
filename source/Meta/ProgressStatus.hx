@@ -11,6 +11,13 @@ class ProgressStatus
     static var BearHintBubbles : Int = 15000;
     static var CatbombHintBubbles : Int = 20000; // Or 3000?
 
+    static var CrabUnlockScore : Int = 50000;
+    static var FrogUnlockBubbles : Int = 500;
+    static var FrogUnlockLevel : Int = 3;
+    static var BearUnlockScore : Int = 100000;
+    static var BearUnlockTime : Int = 600;
+    static var BearUnlockLevel : Int = 5;
+
     public static var progressData : ProgressData;
 
     public static function init()
@@ -22,16 +29,22 @@ class ProgressStatus
             if (progressData == null) {
                 // Init first progressData if required
                 progressData = {
-                    crabHint: false, crabChar: false,
-                    frogHint: false, frogChar: false,
-                    bearHint: false, bearChar: false,
-                    catbombHint: false, catbombChar: false
+                    crabHint: false,    crabChar: false,
+                    frogHint: false,    frogChar: false,
+                    bearHint: false,    bearChar: false,
+                    catbombHint: false, catbombChar: false,
+                    fanfare: "none"
                 }
 
                 save();
             }
 
-            progressData.crabChar = true;
+            progressData.fanfare = "none";
+            progressData.crabChar = false;
+
+            // progressData.fanfare = "crab";
+            // progressData.crabChar = true;
+
             // progressData.frogHint = true;
             // progressData.bearHint = true;
             // progressData.catbombHint = true;
@@ -75,6 +88,37 @@ class ProgressStatus
         save();
     }
 
+    public static function checkForCharacterUnlock(playSessionData : Dynamic)
+    {
+        if (progressData.crabHint && !progressData.crabChar)
+        {
+            if (playSessionData.score > CrabUnlockScore)
+            {
+                progressData.crabChar = true;
+                progressData.fanfare = "crab";
+            }
+        } 
+        else if (progressData.crabChar && progressData.frogHint && !progressData.frogChar)
+        {
+            if (playSessionData.bubbles > FrogUnlockBubbles /* && level? */)
+            {
+                progressData.frogChar = true;
+                progressData.fanfare = "frog";
+            }
+        }
+        else if (progressData.bearChar && progressData.bearHint && !progressData.bearChar)
+        {
+            if (playSessionData.score > BearUnlockScore && 
+                playSessionData.time < BearUnlockScore /* && level? */)
+            {
+                progressData.bearChar = true;
+                progressData.fanfare = "bear";
+            }
+        }
+
+        save();
+    }
+
     public static function save()
     {
         var save : FlxSave = new FlxSave();
@@ -99,6 +143,8 @@ typedef ProgressData = {
     var frogHint : Bool;
     var bearHint : Bool;
     var catbombHint : Bool;
+
+    var fanfare : String;
 
     var crabChar : Bool;
     var frogChar : Bool;

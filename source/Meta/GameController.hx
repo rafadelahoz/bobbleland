@@ -74,6 +74,7 @@ class GameController
 		}
 
 		// TODO: Check here for unlocks? Or better only when the ticket has been printed?
+		ProgressStatus.checkForCharacterUnlock(data);
 
 		FlxG.switchState(new GameOverState(mode, data));
 	}

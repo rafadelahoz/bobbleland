@@ -216,9 +216,18 @@ class GameOverState extends FlxTransitionableState
 	function onTicketSigned()
 	{
 		// Enable buttons
-		btnRetry.active = true;
-		btnRetry.visible = true;
 		btnGiveup.active = true;
 		btnGiveup.visible = true;
+		
+		if (ProgressStatus.progressData.fanfare == null || ProgressStatus.progressData.fanfare == "none")
+		{
+			// Don't allow to retry if a new character has been unlocked
+			btnRetry.active = true;
+			btnRetry.visible = true;
+		} else {
+			btnGiveup.ShineTimerBase = 0.3;
+        	btnGiveup.ShineTimerVariation = 0.1;
+			btnGiveup.shine();
+		}
 	}
 }

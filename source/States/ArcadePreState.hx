@@ -58,6 +58,9 @@ class ArcadePreState extends FlxTransitionableState
     var background : FlxBackdrop;
     var btnBack : Button;
 
+    /** Pomp & Fanfare **/
+    var fanfareShader : FlxSprite;
+
     var target : FlxObject;
     var isCameraMoving : Bool;
 
@@ -66,8 +69,6 @@ class ArcadePreState extends FlxTransitionableState
     override public function create()
     {
         super.create();
-
-        initProgress();
 
         centerScreen = new FlxSpriteGroup(0, 0);
 
@@ -99,12 +100,54 @@ class ArcadePreState extends FlxTransitionableState
 
         initData();
 
-        BgmEngine.play(BgmEngine.BGM.Menu);
+        start();
     }
 
-    function initProgress()
+    function start()
     {
-        
+        if (ProgressStatus.progressData.fanfare != null && ProgressStatus.progressData.fanfare != "none")
+        {
+            // Disable interaction
+            disableButtons();
+
+            // Do fanfare!
+            fanfareShader = new FlxSprite(0, 0);
+            fanfareShader.makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
+            add(fanfareShader);
+
+            new FlxTimer().start(2, function(t:FlxTimer) { 
+                var thing : String = null;
+                switch (ProgressStatus.progressData.fanfare)
+                {
+                    case "crab": thing = "     A CRAB!";
+                    case "frog": thing = "     A FROG!";
+                    case "bear": thing = "     A BEAR!";
+                    case "catbomb": thing = "    CATBOMB!";
+                }
+
+                var notice : TextNotice = new TextNotice(8, 160, "CONGRATULATIONS\n YOU UNLOCKED  \n" + thing);
+                add(notice);
+
+                // And later
+                new FlxTimer().start(0.5, function(t) {
+                    FlxTween.tween(fanfareShader, {alpha: 0}, 0.4);
+                    ProgressStatus.progressData.fanfare = "none";
+                    // Actually start
+                    enableButtons();
+                    actuallyStart();
+                });
+            });
+            
+        }
+        else
+        {
+            actuallyStart();
+        }
+    }
+
+    function actuallyStart()
+    {
+        BgmEngine.play(BgmEngine.BGM.Menu);
     }
 
     function initData()
@@ -156,6 +199,42 @@ class ArcadePreState extends FlxTransitionableState
     {
         updateArcadeConfig();
         ArcadeGameStatus.saveArcadeConfigData();
+    }
+
+    function disableButtons()
+    {
+        var buttons : Array<FlxSprite> = [sldDifficulty, 
+                                          btnDog, btnCat, btnCrab, 
+                                          btnFrog, btnBear, btnCatbomb,
+                                          btnBgmA, btnBgmB, btnBgmOff,
+                                          btnStart, btnBack];
+        
+        for (button in buttons)
+        {
+            if (button != null)
+            {
+                button.alive = false;
+                button.active = false;
+            }
+        }
+    }
+
+    function enableButtons()
+    {
+        var buttons : Array<FlxSprite> = [sldDifficulty, 
+                                          btnDog, btnCat, btnCrab, 
+                                          btnFrog, btnBear, btnCatbomb,
+                                          btnBgmA, btnBgmB, btnBgmOff,
+                                          btnStart, btnBack];
+        
+        for (button in buttons)
+        {
+            if (button != null)
+            {
+                button.alive = true;
+                button.active = true;
+            }
+        }
     }
 
     function onBackButtonPressed()
@@ -216,6 +295,10 @@ class ArcadePreState extends FlxTransitionableState
         btnStart = new Button(40, 276, onStartButtonPressed);
         btnStart.loadSpritesheet("assets/ui/btn-start.png", 96, 32);
         centerScreen.add(btnStart);
+        btnStart.ShineTimerBase = 0.3;
+        btnStart.ShineTimerVariation = 0.1;
+        btnStart.ShineSparkColor = Palette.Yellow;
+        btnStart.shine();
 
         return centerScreen;
     }
