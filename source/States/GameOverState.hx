@@ -21,21 +21,10 @@ class GameOverState extends FlxTransitionableState
 	public var btnRetry : Button;
 	public var btnGiveup : Button;
 
-	var machineBG : Entity;
-
-	var ticketLayer : FlxGroup;
-
-	var machineFG : Entity;
-	var btnCheckout : Button;
-
 	var ticket : Ticket;
-	var printing : Bool;
-	var quickPrinting : Bool;
-	var printTween : FlxTween;
-
 	var data : Dynamic;
 
-	var mode : Int;
+	var mode : Int; // Unused
 
 	public function new(Mode : Int, Data : Dynamic)
 	{
@@ -60,48 +49,29 @@ class GameOverState extends FlxTransitionableState
 		add(blackStrip);
 
 		// Build action button layer
-			buttonLayer = new FlxGroup();
-			add(buttonLayer);
+		buttonLayer = new FlxGroup();
+		add(buttonLayer);
 
-			btnGiveup = new Button(8, 280, onGiveupButtonPressed);
-			btnGiveup.loadSpritesheet("assets/ui/btn-gameover-tomenu.png", 80, 26);
-			btnGiveup.active = false;
-			btnGiveup.visible = false;
-			buttonLayer.add(btnGiveup);
+		btnGiveup = new Button(8, 280, onGiveupButtonPressed);
+		btnGiveup.loadSpritesheet("assets/ui/btn-gameover-tomenu.png", 80, 26);
+		btnGiveup.active = false;
+		btnGiveup.visible = false;
+		buttonLayer.add(btnGiveup);
 
-			btnRetry = new Button(92, 280, onRetryButtonPressed);
-			btnRetry.loadSpritesheet("assets/ui/btn-gameover-again.png", 80, 26);
-			btnRetry.active = false;
-			btnRetry.visible = false;
-			buttonLayer.add(btnRetry);
-
-		// Build machine
-			machineBG = new Entity(0, 264 + 64, "assets/ui/go-machine-bg.png");
-			add(machineBG);
-
-			// Ticket will go here
-			ticketLayer = new FlxGroup();
-			add(ticketLayer);
-
-			machineFG = new Entity(0, 264 + 64, "assets/ui/go-machine-fg.png");
-			add(machineFG);
-
-			// Checkout button
-			btnCheckout = new Button(16, 288 + 64, onCheckoutButtonPressed);
-			btnCheckout.loadSpritesheet("assets/ui/btn-go-checkout.png", 80, 24);
-			add(btnCheckout);
-
-		var appearDuration : Float = 0.5;
-		FlxTween.tween(machineBG, {y : 264}, appearDuration, {ease: FlxEase.circOut});
-		FlxTween.tween(machineFG, {y : 264}, appearDuration, {ease: FlxEase.circOut});
-		FlxTween.tween(btnCheckout, {y : 288}, appearDuration, {ease: FlxEase.circOut});
+		btnRetry = new Button(92, 280, onRetryButtonPressed);
+		btnRetry.loadSpritesheet("assets/ui/btn-gameover-again.png", 80, 26);
+		btnRetry.active = false;
+		btnRetry.visible = false;
+		buttonLayer.add(btnRetry);
 
 		// Generate results ticket
 		ticket = new Ticket();
 		ticket.init(data);
 		ticket.signatureCallback = onTicketSigned;
-		printing = false;
-		printTween = null;
+
+		var printer : PrinterMachine = new PrinterMachine();
+		printer.create(ticket);
+		add(printer);
 	}
 
 	override public function update(elapsed:Float)
@@ -125,92 +95,6 @@ class GameOverState extends FlxTransitionableState
 		// if (mode == PlayState.ModeArcade)
 		// TODO: Missing difficulty setting?
 		GameController.BeginArcade();
-	}
-
-	function onCheckoutButtonPressed() : Void
-	{
-		// Print ticket
-		if (!printing)
-		{
-			printing = true;
-			ticketLayer.add(ticket);
-			ticket.y = FlxG.height - 32;
-			printTicket();
-		}
-		else if (!quickPrinting)
-		{
-			quickPrinting = true;
-			printTween.cancel();
-			printTicket();
-		}
-	}
-
-	function printTicket(?t : FlxTween = null)
-	{
-		var targetY : Float = 256 - ticket.height;
-		var delta : Float = 0;
-		var done : Bool = false;
-		if (quickPrinting || Math.abs(targetY - ticket.y) < 48)
-		{
-			delta = targetY - ticket.y;
-			done = true;
-		}
-		else
-		{
-			delta = FlxG.random.float(-16, (targetY - ticket.y) * 0.4);
-		}
-
-		// Stop vibration
-		stopMachineVibration();
-
-		var printTime : Float = (Math.abs(delta) / 8) * FlxG.random.float(0.05, 0.08);
-		if (quickPrinting)
-			printTime *= 0.5;
-
-		var startDelay : Float = (quickPrinting ? 0 : FlxG.random.float(0, 0.45));
-		new FlxTimer().start(startDelay, playPrintSfx);
-
-		printTween = FlxTween.tween(ticket, {y : ticket.y + delta}, printTime, {
-			ease : FlxEase.sineOut,
-			startDelay: startDelay,
-			onComplete: (done ? onPrintFinished : printTicket)
-		});
-	}
-
-	function playPrintSfx(t : FlxTimer)
-	{
-		SfxEngine.play(SfxEngine.SFX.Print, 0.25);
-		startMachineVibration();
-	}
-
-	function onPrintFinished(?t : FlxTween = null)
-	{
-		// Stop vibration and sound
-		stopMachineVibration();
-		SfxEngine.stop(SfxEngine.SFX.Print);
-
-		// Hide machine
-		var hideDuration : Float = 0.5;
-		FlxTween.tween(machineBG, {y : 264 + 128}, hideDuration, {ease: FlxEase.circInOut});
-		FlxTween.tween(machineFG, {y : 264 + 128}, hideDuration, {ease: FlxEase.circInOut});
-		FlxTween.tween(btnCheckout, {y : 288 + 128}, hideDuration, {ease: FlxEase.circInOut});
-
-		// TODO: Check if the unlock ticket machine is to be displayed
-		// For now, just show a message!
-	}
-
-	function startMachineVibration()
-	{
-		machineBG.vibrate();
-		machineFG.vibrate();
-		btnCheckout.vibrate();
-	}
-
-	function stopMachineVibration()
-	{
-		machineBG.vibrate(false);
-		machineFG.vibrate(false);
-		btnCheckout.vibrate(false);
 	}
 
 	function onTicketSigned()

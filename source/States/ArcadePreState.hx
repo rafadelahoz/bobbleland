@@ -118,42 +118,52 @@ class ArcadePreState extends FlxTransitionableState
             add(fanfareShader);
 
             new FlxTimer().start(3.5, function(t:FlxTimer) { 
-                var thing : String = null;
-                switch (ProgressStatus.progressData.fanfare)
-                {
-                    case "crab": thing = "     A CRAB!";
-                    case "frog": thing = "     A FROG!";
-                    case "bear": thing = "     A BEAR!";
-                    case "catbomb": thing = "    CATBOMB!";
-                }
 
-                var notice : TextNotice = new TextNotice(FlxG.width/2-64, 160, "CONGRATULATIONS\n YOU UNLOCKED  \n" + thing);
-                add(notice);
+                var ticket : Entity = new Entity(0, 0);
+                ticket.makeGraphic(144, 144, Palette.White);
 
-                // And later
-                new FlxTimer().start(0.75, function(t) {
-                    FlxTween.tween(fanfareShader, {alpha: 0}, 0.4, 
-                        {onComplete: function(t:FlxTween){
-                            fanfareShader.destroy();
-                        }, ease: FlxEase.circOut
-                    });
+                var printer : PrinterMachine = new PrinterMachine();
+                printer.create(ticket, function() {
 
-                    // Effects!
-                    if (ProgressStatus.progressData.fanfare == "crab")
+                    var thing : String = null;
+                    switch (ProgressStatus.progressData.fanfare)
                     {
-                        btnCrab.ShineTimerBase = 0.3;
-                        btnCrab.ShineTimerVariation = 0.1;
-                        btnCrab.ShineSparkColor = Palette.Yellow;
-                        btnCrab.shine();
-                    } // TODO: Other animals here
+                        case "crab": thing = "     A CRAB!";
+                        case "frog": thing = "     A FROG!";
+                        case "bear": thing = "     A BEAR!";
+                        case "catbomb": thing = "    CATBOMB!";
+                    }
 
-                    ProgressStatus.progressData.fanfare = "none";
-                    ProgressStatus.save();
-                    
-                    // Actually start
-                    enableButtons();
-                    actuallyStart();
+                    var notice : TextNotice = new TextNotice(FlxG.width/2-64, 160, "CONGRATULATIONS\n YOU UNLOCKED  \n" + thing);
+                    add(notice);
+
+                    // And later
+                    new FlxTimer().start(0.75, function(t) {
+                        FlxTween.tween(fanfareShader, {alpha: 0}, 0.4, 
+                            {onComplete: function(t:FlxTween){
+                                fanfareShader.destroy();
+                            }, ease: FlxEase.circOut
+                        });
+
+                        // Effects!
+                        if (ProgressStatus.progressData.fanfare == "crab")
+                        {
+                            btnCrab.ShineTimerBase = 0.3;
+                            btnCrab.ShineTimerVariation = 0.1;
+                            btnCrab.ShineSparkColor = Palette.Yellow;
+                            btnCrab.shine();
+                        } // TODO: Other animals here
+
+                        ProgressStatus.progressData.fanfare = "none";
+                        ProgressStatus.save();
+                        
+                        // Actually start
+                        enableButtons();
+                        actuallyStart();
+                    });
                 });
+
+                add(printer);
             });
             
         }
