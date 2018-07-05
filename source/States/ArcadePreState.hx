@@ -336,9 +336,11 @@ class ArcadePreState extends FlxTransitionableState
         totalCleansDisplay = PixelText.New(72, 232, "", white, 128);
         screen.add(totalCleansDisplay);
 
-        /*var btnClearData : HoldButton = new HoldButton(40, 272, null, onClearDataReleased);
+        #if (!release)
+        var btnClearData : HoldButton = new HoldButton(56+32, 282, null, onClearDataReleased);
         btnClearData.loadSpritesheet("assets/ui/btn-cleardata.png", 96, 24);
-        screen.add(btnClearData);*/
+        screen.add(btnClearData);
+        #end
 
         screen.add(buildScrollButton(FlxG.width - 12, 144, false));
 
@@ -412,7 +414,7 @@ class ArcadePreState extends FlxTransitionableState
     function moveToRightScreen()
     {
         // Don't allow moving right of right
-        if (target.x < FlxG.width)
+        if (target.x < 0)
         {
             isCameraMoving = true;
             FlxTween.tween(target, {x : target.x + FlxG.width}, 0.5, { ease : FlxEase.cubeInOut, onComplete: onFinishedMoving });
@@ -594,8 +596,10 @@ class ArcadePreState extends FlxTransitionableState
     function onClearDataReleased()
     {
         ArcadeGameStatus.clearHistoryData();
+        ProgressStatus.clearData();
         FlxG.camera.flash(0xFFFF5151);
-        updateHistoryDisplays();
+        // updateHistoryDisplays();
+        onBackButtonPressed();
     }
 
     function snapToDifficultyGrid()

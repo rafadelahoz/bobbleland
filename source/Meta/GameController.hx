@@ -12,6 +12,8 @@ class GameController
 
 		database.BackgroundDatabase.Init();
 		database.SceneCharacterDatabase.Init();
+
+		// FlxG.scaleMode = new flixel.system.scaleModes.PixelPerfectScaleMode();
 	}
 
 	public static function ToMenu()

@@ -39,8 +39,8 @@ class ProgressStatus
                 save();
             }
 
-            progressData.fanfare = "none";
-            progressData.crabChar = false;
+            // progressData.fanfare = "none";
+            // progressData.crabChar = false;
 
             // progressData.fanfare = "crab";
             // progressData.crabChar = true;
@@ -100,7 +100,8 @@ class ProgressStatus
         } 
         else if (progressData.crabChar && progressData.frogHint && !progressData.frogChar)
         {
-            if (playSessionData.bubbles > FrogUnlockBubbles /* && level? */)
+            if (playSessionData.bubbles > FrogUnlockBubbles && 
+                playSessionData.level > FrogUnlockLevel)
             {
                 progressData.frogChar = true;
                 progressData.fanfare = "frog";
@@ -109,13 +110,20 @@ class ProgressStatus
         else if (progressData.bearChar && progressData.bearHint && !progressData.bearChar)
         {
             if (playSessionData.score > BearUnlockScore && 
-                playSessionData.time < BearUnlockScore /* && level? */)
+                playSessionData.time < BearUnlockScore && 
+                playSessionData.level > BearUnlockLevel)
             {
                 progressData.bearChar = true;
                 progressData.fanfare = "bear";
             }
         }
 
+        save();
+    }
+
+    public static function clearData()
+    {
+        progressData = null;
         save();
     }
 

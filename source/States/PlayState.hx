@@ -873,6 +873,15 @@ class PlayState extends FlxTransitionableState
 			});
 		btnDebugGrid.loadSpritesheet("assets/ui/btn-debug.png", 24, 21);
 		add(btnDebugGrid);*/
+		#if (!release)
+		var btnScorer : Button = new Button(156, 220, function() {
+				flowController.onBubbleDestroyed(1000);
+				add(new TextNotice(156, 220, "Bubbles " + flowController.getSaveData().bubbleCount));
+				scoreDisplay.add(10000);
+			});
+		btnScorer.loadSpritesheet("assets/ui/btn-debug.png", 24, 21);
+		add(btnScorer);
+		#end
 	}
 
 	var contentIndex : Int = -1;
