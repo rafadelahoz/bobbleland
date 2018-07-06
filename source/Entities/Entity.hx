@@ -8,9 +8,14 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class Entity extends FlxSprite
 {
+    static var vibrationSharedTimestamp : Float = 0;
+    static var vibrationSharedDelta : FlxPoint = new FlxPoint(0, 0);
+    static var vibrationSharedIntensity : Float;
+
     public var vibrationEnabled : Bool;
     public var vibrationIntensity : Float;
-
+    public var vibrationShared : Bool;
+    
     public var ShineTimerBase : Float = 1;
     public var ShineTimerVariation : Float = 0.25;
     public var ShineSparkColor : Int = Palette.White;
@@ -23,6 +28,7 @@ class Entity extends FlxSprite
 
         vibrationEnabled = false;
         vibrationIntensity = 0;
+        vibrationShared = false;
 
         shineTimer = new FlxTimer();
     }
@@ -38,10 +44,29 @@ class Entity extends FlxSprite
         super.destroy();
     }
 
-    public function vibrate(?enabled = true, ?intensity : Float = 1)
+    public function vibrate(?enabled : Bool = true, ?intensity : Float = 1, ?shared : Bool = false)
     {
         vibrationEnabled = enabled;
         vibrationIntensity = intensity;
+        vibrationShared = shared;
+
+        if (shared)
+        {
+            vibrationSharedIntensity = intensity;
+        }
+    }
+
+    static function getSharedVibrationDelta() : FlxPoint
+    {
+        var now : Float = Sys.time();
+        if (now > vibrationSharedTimestamp)
+        {
+            vibrationSharedTimestamp = now;
+            vibrationSharedDelta.x = FlxG.random.float(-vibrationSharedIntensity, vibrationSharedIntensity);
+            vibrationSharedDelta.y = FlxG.random.float(-vibrationSharedIntensity, vibrationSharedIntensity);
+        }
+
+        return vibrationSharedDelta;
     }
 
     override public function draw()
@@ -50,8 +75,17 @@ class Entity extends FlxSprite
 			var tx : Float = x;
 			var ty : Float = y;
 
-			x += FlxG.random.float(-vibrationIntensity, vibrationIntensity);
-			y += FlxG.random.float(-vibrationIntensity, vibrationIntensity);
+            if (vibrationShared)
+            {
+                var delta : FlxPoint = getSharedVibrationDelta();
+                x += delta.x;
+                y += delta.y;
+            }
+            else
+            {
+                x += FlxG.random.float(-vibrationIntensity, vibrationIntensity);
+			    y += FlxG.random.float(-vibrationIntensity, vibrationIntensity);
+            }
 
 			super.draw();
 

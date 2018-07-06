@@ -142,9 +142,10 @@ class PrinterMachine extends FlxGroup
 
     function startMachineVibration()
 	{
-		machineBG.vibrate();
-		machineFG.vibrate();
-		btnCheckout.vibrate();
+		var shared : Bool = golden;
+		machineBG.vibrate(true, shared);
+		machineFG.vibrate(true, shared);
+		btnCheckout.vibrate(true, shared);
 	}
 
 	function stopMachineVibration()
