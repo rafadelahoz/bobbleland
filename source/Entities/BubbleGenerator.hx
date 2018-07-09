@@ -5,6 +5,9 @@ import PlaySessionData;
 
 class BubbleGenerator
 {
+    static var MaxGridBlockers : Int = 6;
+    static var MaxRowBlockers : Int = 2;
+
     public var world : PlayState;
     public var sessionData : PlaySessionData;
     public var grid : BubbleGrid;
@@ -125,8 +128,11 @@ class BubbleGenerator
 
         // Find blockers
         var blockers : Array<BubbleColor> = row.filter(filterOnlyBlockers);
-        // Limit to max three blockers
-        var maxBlockers : Int = world.availableColors.filter(filterOnlyBlockers).length;
+        // Limit blockers number
+        var maxGridBlockers = Std.int(Math.max(MaxGridBlockers, world.availableColors.filter(filterOnlyBlockers).length));
+        var currentGridBlockers : Int = grid.getCount(filterBubbleBlockers);
+        var maxBlockers : Int = Std.int(Math.min(MaxRowBlockers, maxGridBlockers));
+        maxBlockers = Std.int(Math.min(maxBlockers, maxGridBlockers - currentGridBlockers));
         // trace("Max blockers", maxBlockers);
         while (blockers.length > maxBlockers)
         {
@@ -139,7 +145,16 @@ class BubbleGenerator
         return row;
     }
 
-    function filterOnlyBlockers(c : BubbleColor) : Bool {
+    function filterBubbleBlockers(b : Bubble) : Bool
+    {
+        if (b != null)
+            return filterOnlyBlockers(b.bubbleColor);
+        else
+            return false;
+    }
+
+    function filterOnlyBlockers(c : BubbleColor) : Bool 
+    {
         return (c.colorIndex == BubbleColor.SpecialBlocker);
     }
 

@@ -533,7 +533,7 @@ class BubbleGrid extends FlxObject
 		return colors;
 	}
 
-	public function getCount() : Int
+	public function getCount(?filter : Bubble -> Bool = null) : Int
 	{
 		var count : Int = 0;
 
@@ -543,7 +543,8 @@ class BubbleGrid extends FlxObject
 			{
 				if (getData(col, row) != null)
 				{
-					count++;
+					if (filter == null || filter(getData(col, row)))
+						count++;
 				}
 			}
 		}
