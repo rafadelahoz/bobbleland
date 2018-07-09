@@ -130,7 +130,9 @@ class BubbleGenerator
         // trace("Max blockers", maxBlockers);
         while (blockers.length > maxBlockers)
         {
-            blockers[FlxG.random.int(0, blockers.length)].colorIndex = getPositiveColor().colorIndex;
+            var randomBlockerIndex : Int = FlxG.random.int(0, blockers.length-1);
+            var randomColor : BubbleColor = getPositiveColor();
+            blockers[randomBlockerIndex].colorIndex = randomColor.colorIndex;
             blockers = row.filter(filterOnlyBlockers);
         }
 
@@ -183,6 +185,15 @@ class BubbleGenerator
 		return FlxG.random.getObject(usedColors.filter(onlyPositiveIndexes));
 	}
 
+    public function getNextBubbleColor() : BubbleColor
+    {
+        var list : Array<BubbleColor> = grid.getUsedColors().filter(onlyPositiveIndexes);
+        if (list.length > 0)
+            return list[FlxG.random.int(0, list.length - 1)];
+        else
+            return getPositiveColor();
+    }
+
     public function getPositiveColor() : BubbleColor
     {
         var list : Array<BubbleColor> = world.availableColors.filter(onlyPositiveIndexes);
@@ -193,7 +204,7 @@ class BubbleGenerator
 	function getRandomColor() : BubbleColor
 	{
         var list : Array<BubbleColor> = world.availableColors;
-		return list[FlxG.random.int(0, list.length - 1)];
+		return list[FlxG.random.int(0, list.length - 1)].clone();
 	}
 
     function onlyPositiveIndexes(color : BubbleColor) : Bool

@@ -166,7 +166,7 @@ class Bubble extends Entity
 				else
 				{
 					animation.add("idle", [5]);
-					color = bubbleColor.getColor();
+					// color = bubbleColor.getColor();
 				}
 
 				animation.play("idle");

@@ -25,7 +25,10 @@ class BubbleColor
     public function new(?Color : Int = -1, ?IsTarget : Bool = false)
     {
         colorIndex = Color;
-        color = getColorList()[colorIndex];
+        if (colorIndex > -1)
+            color = getColorList()[colorIndex];
+        else
+            color = 0xFFFF00FF;
 
         isTarget = IsTarget;
     }
@@ -37,16 +40,13 @@ class BubbleColor
 
     function getColorList() : Array<Int>
     {
-        // var colors = [0xFFFF5151, 0xFF5151FF, 0xFF51FF51, 0xFF414471, 0xFF250516];
-
-        var colors : Array<Int> = [];
-
-        for (index in 0...6)
-            colors.push(0xFFFFFFFF);
-
-        for (index in 0...15)
-            colors.push(FlxColor.fromRGB(FlxG.random.int(0x66, 0xFF), FlxG.random.int(0x66, 0xFF), FlxG.random.int(0x66, 0xFF)));
+        var colors = [Palette.Red, Palette.Green, Palette.Yellow, Palette.Blue, Palette.Pink, Palette.LightGray];
 
         return colors;
+    }
+
+    public function clone() : BubbleColor
+    {
+        return new BubbleColor(colorIndex, isTarget);
     }
 }

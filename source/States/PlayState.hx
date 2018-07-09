@@ -527,7 +527,7 @@ class PlayState extends FlxTransitionableState
 
 	function generateNextBubble()
 	{
-		var nextColor : BubbleColor = generator.getPositiveColor();
+		var nextColor : BubbleColor = generator.getNextBubbleColor();
 
 		nextBubble = new Bubble(cursor.x + cursor.aimOrigin.x - grid.cellSize / 2 + 20,
 							cursor.y + cursor.aimOrigin.y - grid.cellSize / 2 + 8, this, nextColor);
@@ -1020,7 +1020,10 @@ class PlayState extends FlxTransitionableState
 		}
 		else
 		{
-			Bubble.CreateAt(cell.x, cell.y, color, this);
+			if (grid.isPositionValid(cell) && cell.y < grid.rows-1)
+			{
+				Bubble.CreateAt(cell.x, cell.y, color, this);
+			}
 		}
 	}
 }
