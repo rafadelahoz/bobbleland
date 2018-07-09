@@ -70,12 +70,13 @@ class GameController
 	{
 		currentState = GameState.GameOver;
 
+		// This will also save
 		if (mode == PlayState.ModeArcade)
 		{
 			ArcadeGameStatus.storePlayData(data);
 		}
 
-		// TODO: Check here for unlocks? Or better only when the ticket has been printed?
+		// Check for unlocks
 		ProgressStatus.checkForCharacterUnlock(data);
 
 		FlxG.switchState(new GameOverState(mode, data));

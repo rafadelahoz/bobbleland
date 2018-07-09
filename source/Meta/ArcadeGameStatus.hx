@@ -93,6 +93,8 @@ class ArcadeGameStatus
         arcadeData.totalTime += clamp(playData.time, MAX_TIME);
         arcadeData.totalCleans += clamp(playData.cleans, MAX_SCS);
 
+        saveArcadeConfigData();
+
         return playData;
     }
 
@@ -170,7 +172,7 @@ class ArcadeGameStatus
                 setUsedColors(6);
             case 4:
                 setGuideEnabled(false);
-                setDropDelay(15);
+                setDropDelay(18);
                 setInitialRows(6);
                 setUsedColors(6);
         }
