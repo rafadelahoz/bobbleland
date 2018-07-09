@@ -44,7 +44,7 @@ class Button extends Entity
         else
             visible = false;
 
-        if (enabled) 
+        if (enabled)
         {
             #if (!mobile)
             if (mouseOver())
@@ -137,22 +137,6 @@ class Button extends Entity
     {
         if (hasGraphic)
             animation.play("released");
-    }
-
-
-    function mouseOver()
-    {
-        var mouseX : Float = FlxG.mouse.x;
-        var mouseY : Float = FlxG.mouse.y;
-
-        if (scrollFactor.x == 0)
-            mouseX = FlxG.mouse.screenX;
-
-        if (scrollFactor.y == 0)
-            mouseY = FlxG.mouse.screenY;
-
-        return mouseX >= x && mouseX < (x + width) &&
-               mouseY >= y && mouseY < (y + height);
     }
 
     public function click()
