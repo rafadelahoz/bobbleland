@@ -16,10 +16,6 @@ class Screenshot
 
     public static function save(bitmap : flash.display.Bitmap, ?fname : String = null) : String
     {
-        #if mobile
-            // return;
-        #end
-
         if (fname == null)
             fname = "soap-alley-" + Date.now().getTime();
 

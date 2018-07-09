@@ -41,7 +41,7 @@ class BackgroundDatabase
         }
     }
 
-    public static function BuildRandomBackground() : FlxBackdrop
+    public static function GetRandomBackgroundAsset() : String
     {
         var bgs : Array<String> = [];
         for (i in 0...8)
@@ -50,6 +50,12 @@ class BackgroundDatabase
         }
 
         var bg : String = "assets/backgrounds/" + FlxG.random.getObject(bgs);
+        return bg;
+    }
+
+    public static function BuildRandomBackground() : FlxBackdrop
+    {
+        var bg : String = GetRandomBackgroundAsset();
 
         return new FlxBackdrop(bg);
     }

@@ -286,7 +286,7 @@ class Bubble extends Entity
 
 		if (world.notifyDrop && state == StateIdling)
 		{
-			vibrate(true, 0.5);
+			vibrate(true, 0.5, true);
 		}
 		else
 		{
