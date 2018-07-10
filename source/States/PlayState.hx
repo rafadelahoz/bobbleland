@@ -180,7 +180,7 @@ class PlayState extends FlxTransitionableState
 		screenButtons = new ScreenButtons(0, 0, this, 240);
 		add(screenButtons);
 
-		handleBgm();
+		setupBgm();
 
 		paused = false;
 
@@ -204,7 +204,7 @@ class PlayState extends FlxTransitionableState
 	    return FlxG.random.getObject(chars);
 	}
 
-	function handleBgm()
+	function setupBgm()
 	{
 		if (playSessionData.bgm != null)
 			BgmEngine.play(BgmEngine.getBgm(playSessionData.bgm));
@@ -254,11 +254,30 @@ class PlayState extends FlxTransitionableState
 				onWinningState();
 		}
 
+		handleBGM();
+
 		handleDebugRoutines();
 
 		bubbles.sort(sortBubbles);
 
 		super.update(elapsed);
+	}
+
+	function handleBGM()
+	{
+		var lowestRow : Int = grid.getLowestBubbleRow();
+		if (lowestRow > 7)
+		{
+			// Play also when not configured?
+			BgmEngine.play(BgmEngine.BGM.Danger);
+		}
+		else
+		{
+			if (playSessionData.bgm != null)
+				BgmEngine.play(BgmEngine.getBgm(playSessionData.bgm));
+			else
+				BgmEngine.stopCurrent();
+		}
 	}
 
 	function sortBubbles(Order : Int, one : Bubble, two : Bubble) : Int

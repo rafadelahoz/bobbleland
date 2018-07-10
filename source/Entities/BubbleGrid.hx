@@ -552,6 +552,22 @@ class BubbleGrid extends FlxObject
 		return count;
 	}
 
+	public function getLowestBubbleRow() : Int
+	{
+		var row : Int = rows-1;
+		while (row >= 0)
+		{
+			for (col in 0...columns)
+			{
+				if (getData(col, row) != null)
+					return row;
+			}
+			row--;
+		}
+
+		return 0;
+	}
+
 	public function getSaveData() : BubbleGridData
 	{
 		return {
