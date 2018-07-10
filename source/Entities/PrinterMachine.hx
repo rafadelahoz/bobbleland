@@ -23,8 +23,6 @@ class PrinterMachine extends FlxGroup
 
     var callback : Void -> Void;
 
-    var golden : Bool;
-
     public function new()
     {
         super();
@@ -82,6 +80,11 @@ class PrinterMachine extends FlxGroup
 	}
 
     function onCheckoutButtonPressed() : Void
+	{
+		startPrinting();
+	}
+
+	public function startPrinting()
 	{
 		// Print ticket
 		if (!printing)
@@ -159,12 +162,11 @@ class PrinterMachine extends FlxGroup
 		startMachineVibration();
 	}
 
-    function startMachineVibration()
+    function startMachineVibration(?Intensity : Float = 1)
 	{
-		var shared : Bool = golden;
-		machineBG.vibrate(true, shared);
-		machineFG.vibrate(true, shared);
-		btnCheckout.vibrate(true, shared);
+		machineBG.vibrate(true, Intensity);
+		machineFG.vibrate(true, Intensity);
+		btnCheckout.vibrate(true, Intensity);
 	}
 
 	function stopMachineVibration()

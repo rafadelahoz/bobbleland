@@ -6,6 +6,9 @@ class Button extends Entity
 {
     public var callback : Void -> Void;
     public var onPressCallback : Void -> Void;
+    public var whilePressedCallback : Void -> Void;
+
+    public var allowReleaseOutside : Bool;
 
     var hasGraphic : Bool;
 
@@ -22,6 +25,8 @@ class Button extends Entity
         hasGraphic = false;
 
         enabled = true;
+
+        allowReleaseOutside = false;
     }
 
     public function loadSpritesheet(Sprite : String, Width : Float, Height : Float)
@@ -75,6 +80,22 @@ class Button extends Entity
                     }
                 }
             }
+
+            // Check for release outside of button
+            if (pressed && allowReleaseOutside)
+            {
+                for (touch in FlxG.touches.list)
+                {
+                    if (!touch.overlaps(this))
+                    {
+                        if (touch.justReleased)
+                        {
+                            pressed = false;
+                            break ;
+                        }
+                    }
+                }
+            }
             #end
 
             if (!wasPressed && pressed)
@@ -122,6 +143,8 @@ class Button extends Entity
     {
         if (hasGraphic)
             animation.play("pressed");
+        if (whilePressedCallback != null)
+            whilePressedCallback();
     }
 
     function onReleased() : Void

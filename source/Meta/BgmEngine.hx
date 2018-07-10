@@ -37,6 +37,7 @@ class BgmEngine
         tunes.set(BGM.GameA, FlxG.sound.load("assets/music/gameA.ogg"));
         tunes.set(BGM.GameC, FlxG.sound.load("assets/music/gameC.ogg"));
         tunes.set(BGM.Danger, FlxG.sound.load("assets/music/danger.ogg"));
+        tunes.set(BGM.Unlock, FlxG.sound.load("assets/sounds/unlock-hum.wav"));
 
         playing = new Map<BGM, Bool>();
         for (tune in tunes.keys())
@@ -127,6 +128,10 @@ class BgmEngine
 
                     playing.set(bgm, true);
                     current = bgm;
+                }
+                else if (currentVolume != volume)
+                {
+                    tunes.get(bgm).volume = volume;
                 }
             }
         }
@@ -223,4 +228,5 @@ enum BGM {
     GameC;
     Danger;
     Other;
+    Unlock;
 }

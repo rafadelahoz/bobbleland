@@ -124,11 +124,13 @@ class ArcadePreState extends FlxTransitionableState
             disableButtons();
 
             BgmEngine.stopCurrent();
-            SfxEngine.play(SfxEngine.SFX.UnlockHum, 0.5, true);
+            // SfxEngine.play(SfxEngine.SFX.UnlockHum, 0.5, true);
+            BgmEngine.play(BgmEngine.BGM.Unlock, 0.5);
 
             // Do fanfare!
             fanfareShader = new Entity(0, 0);
-            fanfareShader.makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
+            fanfareShader.makeGraphic(FlxG.width, FlxG.height, 0xFFFFFFFF);
+            fanfareShader.color = 0xFF000000;
             fanfareShader.ShineTimerBase = 0.5;
             fanfareShader.shine();
             add(fanfareShader);
@@ -159,7 +161,34 @@ class ArcadePreState extends FlxTransitionableState
                 ticket.x = FlxG.width / 2 - ticket.width / 2;
 
                 var printer : GoldenPrinter = new GoldenPrinter();
+                printer.backgroundShader = fanfareShader;
+                printer.intensityCallback = function() {
+                    SfxEngine.play(SfxEngine.SFX.UnlockShine, 1.5);
+                    FlxG.camera.flash(Palette.White, 0.5);
+                    fanfareShader.color = 0xFF000000;
+                    // Rotate background?
+                    /*fanfareShader.loadGraphic("assets/backgrounds/rotater.png");
+                    fanfareShader.color = 0xFFFFFFFF;
+                    fanfareShader.centerOrigin();
+                    FlxTween.tween(fanfareShader, {angle: 360}, 1, {type: FlxTween.LOOPING});*/
+                    // Show ticket
+                    printer.startPrinting();
+                    // Fast
+                    printer.startPrinting();
+                };
+
                 printer.create(ticket, function() {
+
+                    var target : Int = FlxG.random.int(30, 40);
+                    var counter : Int = 0;
+                    while (counter < target)
+                    {
+                        new FlxTimer().start(FlxG.random.float(0.2, 1.3), function(t:FlxTimer) {
+                            t.destroy();
+                            add(new TextNotice(FlxG.random.int(8, FlxG.width-16), FlxG.random.int(8, FlxG.height-16), "/"));
+                        });
+                        counter++;
+                    }
 
                     ticket.onTap(function () {
                         FlxTween.tween(ticket, {y : -ticket.height}, 0.25, {ease: FlxEase.circOut});
