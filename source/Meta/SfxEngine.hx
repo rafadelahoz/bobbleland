@@ -28,6 +28,7 @@ enum SFX {
     SmallFanfare;
     BigFanfare;
     CleanFanfare;
+    UnlockHum;
 }
 
 class SfxEngine
@@ -74,6 +75,7 @@ class SfxEngine
         sfx.set(SFX.SmallFanfare,   loadSfx("small-fanfare.wav"));
         sfx.set(SFX.BigFanfare,     loadSfx("big-fanfare.wav"));
         sfx.set(SFX.CleanFanfare,   loadSfx("clear-fanfare-loud.wav"));
+        sfx.set(SFX.UnlockHum,      loadSfx("unlock-hum-fader.wav"));
 
         sfxFiles = new Map<SFX, String>();
         sfxFiles.set(SFX.Click,          path + ("btn_click.wav"));
@@ -97,6 +99,7 @@ class SfxEngine
         sfxFiles.set(SFX.SmallFanfare,   path + ("small-fanfare.wav"));
         sfxFiles.set(SFX.BigFanfare,     path + ("big-fanfare.wav"));
         sfxFiles.set(SFX.CleanFanfare,   path + ("clear-fanfare-loud.wav"));
+        sfxFiles.set(SFX.UnlockHum,      path + ("unlock-hum-fader.wav"));
 
         for (sf in sfx.keys())
         {

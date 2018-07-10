@@ -139,7 +139,8 @@ class Ticket extends FlxSpriteGroup
         var height : Int = Std.int(bd.bitmapData.rect.height + border) * scale;
 
         var scaledBitmap : flash.display.Bitmap = new flash.display.Bitmap(new flash.display.BitmapData(width, height, true, 0x00000000));
-        // Fill with background?
+        
+        // Fill with background
         var bgSprite : FlxSprite = new FlxSprite(0, 0, database.BackgroundDatabase.GetRandomBackgroundAsset());
         var bgBitmap : flash.display.Bitmap = new flash.display.Bitmap(bgSprite.pixels);
         var bgWidth : Int = Std.int(bgBitmap.bitmapData.rect.width);
@@ -172,6 +173,7 @@ class Ticket extends FlxSpriteGroup
 
         var path : String = Screenshot.save(scaledBitmap);
         BubbleShare.share("Check out my latest SOAP ALLEY ticket: " + score + " points in " + time + "!", path);
+        // sys.FileSystem.deleteFile(path);
     }
 
     function record(sprite : FlxSprite, baseY : Int) : Int

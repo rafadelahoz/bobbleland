@@ -123,6 +123,9 @@ class ArcadePreState extends FlxTransitionableState
             // Disable interaction
             disableButtons();
 
+            BgmEngine.stopCurrent();
+            SfxEngine.play(SfxEngine.SFX.UnlockHum, 0.5, true);
+
             // Do fanfare!
             fanfareShader = new Entity(0, 0);
             fanfareShader.makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
@@ -155,7 +158,7 @@ class ArcadePreState extends FlxTransitionableState
 
                 ticket.x = FlxG.width / 2 - ticket.width / 2;
 
-                var printer : PrinterMachine = new PrinterMachine(true);
+                var printer : GoldenPrinter = new GoldenPrinter();
                 printer.create(ticket, function() {
 
                     ticket.onTap(function () {
@@ -180,6 +183,8 @@ class ArcadePreState extends FlxTransitionableState
 
                             ProgressStatus.progressData.fanfare = "none";
                             ProgressStatus.save();
+
+                            SfxEngine.stop(SfxEngine.SFX.UnlockHum);
 
                             // Actually start
                             enableButtons();

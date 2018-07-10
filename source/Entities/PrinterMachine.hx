@@ -25,34 +25,28 @@ class PrinterMachine extends FlxGroup
 
     var golden : Bool;
 
-    public function new(?Golden : Bool = false)
+    public function new()
     {
         super();
-
-        golden = Golden;
     }
 
     public function create(builtTicket : FlxSprite, ?printFinishedCallback : Void -> Void = null)
     {
-        machineBG = new Entity(0, 264 + 64, "assets/ui/" + (golden ? "unlock" : "go") + "-machine-bg.png");
+        machineBG = new Entity(0, 264 + 64, getBgGraphic());
         add(machineBG);
 
         // Ticket will go here
         ticketLayer = new FlxGroup();
         add(ticketLayer);
 
-        machineFG = new Entity(0, 264 + 64, "assets/ui/" + (golden ? "unlock" : "go") + "-machine-fg.png");
+        machineFG = new Entity(0, 264 + 64, getFgGraphic());
         add(machineFG);
 
         // Checkout button
-        btnCheckout = new Button(16, 288 + 64, onCheckoutButtonPressed);
-        btnCheckout.loadSpritesheet("assets/ui/btn-" + (golden ? "unlock" : "go") + "-checkout.png", 80, 24);
-        add(btnCheckout);
+        btnCheckout = buildButton();
+		add(btnCheckout);
 
-        var appearDuration : Float = 0.5;
-		FlxTween.tween(machineBG, {y : 264}, appearDuration, {ease: FlxEase.circOut});
-		FlxTween.tween(machineFG, {y : 264}, appearDuration, {ease: FlxEase.circOut});
-		FlxTween.tween(btnCheckout, {y : 288}, appearDuration, {ease: FlxEase.circOut});
+		appear();
 
         ticket = builtTicket;
 
@@ -61,6 +55,31 @@ class PrinterMachine extends FlxGroup
         printing = false;
 		printTween = null;
     }
+
+	function getBgGraphic() : String
+	{
+		return "assets/ui/go-machine-bg.png";
+	}
+
+	function getFgGraphic() : String
+	{
+		return "assets/ui/go-machine-fg.png";
+	}
+
+	function buildButton() : Button
+	{
+		var button = new Button(16, 288 + 64, onCheckoutButtonPressed);
+        button.loadSpritesheet("assets/ui/btn-go-checkout.png", 80, 24);
+        return button;
+	}
+
+	function appear()
+	{
+		var appearDuration : Float = 0.5;
+		FlxTween.tween(machineBG, {y : 264}, appearDuration, {ease: FlxEase.circOut});
+		FlxTween.tween(machineFG, {y : 264}, appearDuration, {ease: FlxEase.circOut});
+		FlxTween.tween(btnCheckout, {y : 288}, appearDuration, {ease: FlxEase.circOut});
+	}
 
     function onCheckoutButtonPressed() : Void
 	{
