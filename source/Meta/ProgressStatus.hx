@@ -42,8 +42,8 @@ class ProgressStatus
             // progressData.fanfare = "none";
             // progressData.crabChar = false;
 
-            progressData.fanfare = "crab";
-            progressData.crabChar = true;
+            // progressData.fanfare = "crab";
+            // progressData.crabChar = true;
 
             // progressData.frogHint = true;
             // progressData.bearHint = true;
