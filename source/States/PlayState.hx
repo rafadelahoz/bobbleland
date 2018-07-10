@@ -675,31 +675,59 @@ class PlayState extends FlxTransitionableState
 			flowController.onScreenCleared();
 			specialBubbleController.onScreenCleared();
 
-			scoreDisplay.add(Constants.ScClearField);
-			var congratsSign : ArcadeClear = new ArcadeClear(FlxG.width/2, 0);
-			add(congratsSign);
-			congratsSign.init(function() {
+			dropTimer.cancel();
+			stopDropNotice();
 
-				// Exit after appearing
-				congratsSign.exit(function() {
-					// Destroying yourself in the process
-					congratsSign.destroy();
+			FlxG.camera.flash(Palette.Yellow, 1);
+
+			var shiny : Entity = new Entity(FlxG.width / 2 - 64, 16);
+			shiny.makeGraphic(128, 240 - 32, 0x00FFFFFF);
+			add(shiny);
+
+			shiny.ShineTimerBase = 0.1;
+			shiny.ShineTimerVariation = 0.25;
+			shiny.ShineSparkColor = Palette.Yellow;
+			shiny.shine();
+
+			new FlxTimer().start(0.9, function(t:FlxTimer) {
+
+				var baseY : Int = FlxG.random.int(64, 164);
+
+				add(new TextNotice(FlxG.random.int(0, FlxG.width), baseY, "FULL TANK CLEAN!"));
+
+				t.start(0.55, function(t:FlxTimer) {
+					
+					scoreDisplay.add(Constants.ScClearField);
+					add(new TextNotice(FlxG.random.int(0, FlxG.width), baseY+10, " + 10000 POINTS!"));
+
+					remove(shiny);
+					shiny.destroy();
+
+					t.start(0.55, function(t:FlxTimer) {
+						add(new TextNotice(FlxG.random.int(0, FlxG.width), baseY+20, getCleanMessage()));
+
+						// Generate a row while exiting
+						afterCleanRowsLeft--;
+						generateRow(false);
+						
+						// And generate 3 more rows
+						afterCleanTimer.start(0.7, handleAfterCleanGeneration);
+
+						t.destroy();
+					});
 				});
-
-				dropTimer.cancel();
-				stopDropNotice();
-
-				// Generate a row while exiting
-				afterCleanRowsLeft--;
-				generateRow(false);
-				// And generate 3 more rows
-				afterCleanTimer.start(0.7, handleAfterCleanGeneration);
 			});
 		}
 		else
 		{
 			switchState(StateAiming);
 		}
+	}
+
+	function getCleanMessage() : String
+	{
+		var messages = ["GO GO YOU!", "WAY TO GO!", "GREAT JOB!", "DO IT AGAIN!", "INCREDIBLE!"];
+		return FlxG.random.getObject(messages);
 	}
 
 	function handleAfterCleanGeneration(t : FlxTimer)
@@ -956,7 +984,7 @@ class PlayState extends FlxTransitionableState
 		{
 			for (c in 0...grid.columns)
 			{
-				for (r in 1...grid.rows)
+				for (r in 0...grid.rows)
 				{
 					if (grid.getData(c, r) != null) 
 					{
