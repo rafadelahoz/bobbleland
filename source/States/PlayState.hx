@@ -265,18 +265,20 @@ class PlayState extends FlxTransitionableState
 
 	function handleBGM()
 	{
-		var lowestRow : Int = grid.getLowestBubbleRow();
-		if (lowestRow > 7)
+		if (playSessionData.bgm != null)
 		{
-			// Play also when not configured?
-			BgmEngine.play(BgmEngine.BGM.Danger);
+			if (grid.getLowestBubbleRow() > 7)
+			{
+				BgmEngine.play(BgmEngine.BGM.Danger);
+			}
+			else
+			{
+				BgmEngine.play(BgmEngine.getBgm(playSessionData.bgm));
+			}
 		}
 		else
 		{
-			if (playSessionData.bgm != null)
-				BgmEngine.play(BgmEngine.getBgm(playSessionData.bgm));
-			else
-				BgmEngine.stopCurrent();
+			BgmEngine.stopCurrent();
 		}
 	}
 

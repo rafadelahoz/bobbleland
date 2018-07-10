@@ -13,9 +13,13 @@ class OptionsPanel extends FlxGroup
     var bgmButton : HoldButton;
     var sfxButton : HoldButton;
 
-    public function new()
+	var ingame : Bool;
+
+    public function new(?Ingame : Bool = false)
     {
         super();
+
+		ingame = Ingame;
 
         optionsTab = new Button(72, 0, onOptionsTabReleased);
 		optionsTab.loadSpritesheet("assets/ui/options-tab.png", 40, 24);
@@ -89,8 +93,7 @@ class OptionsPanel extends FlxGroup
 
 	function onBgmButtonPressed()
 	{
-		BgmEngine.enable();
-		// BgmEngine.play(BgmEngine.BGM.Title);
+		BgmEngine.enable(!ingame);
 	}
 
 	function onBgmButtonReleased()

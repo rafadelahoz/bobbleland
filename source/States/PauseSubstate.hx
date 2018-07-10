@@ -71,7 +71,7 @@ class PauseSubstate extends FlxSubState
         add(borderTop);
         FlxTween.tween(borderTop, {alpha: 1}, 0.5, {ease : FlxEase.circInOut});
 
-		optionsPanel = new OptionsPanel();
+		optionsPanel = new OptionsPanel(true);
 		add(optionsPanel);
         FlxTween.tween(optionsPanel.optionsTab, {alpha: 1}, 1, {ease : FlxEase.cubeInOut});
 

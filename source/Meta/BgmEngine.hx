@@ -53,7 +53,7 @@ class BgmEngine
         currentVolume = 0;
     }
 
-    public static function enable()
+    public static function enable(?resumePlaying : Bool = true)
     {
         #if flash
             return;
@@ -62,12 +62,16 @@ class BgmEngine
         Enabled = true;
         save();
 
-        if (current != null && tunes.get(current) != null)
+        if (resumePlaying && current != null && tunes.get(current) != null)
         {
             tunes.get(current).fadeIn(FadeTime * 0.5, 0, currentVolume);
 
             playing.set(current, true);
             current = current;
+        }
+        else
+        {
+            playing.set(current, false);
         }
     }
 
