@@ -133,25 +133,32 @@ class ArcadePreState extends FlxTransitionableState
             new FlxTimer().start(3.5, function(t:FlxTimer) {
 
                 var ticket : Entity = new Entity(0, 0);
-                ticket.makeGraphic(144, 56, Palette.White);
-                ticket.x = FlxG.width / 2 - ticket.width / 2;
-
-                var thing : String = null;
-                switch (ProgressStatus.progressData.fanfare)
+                if (ProgressStatus.progressData.fanfare != "bear")
                 {
-                    case "crab": thing = "     A CRAB!";
-                    case "frog": thing = "     A FROG!";
-                    case "bear": thing = "     A BEAR!";
-                    case "catbomb": thing = "    CATBOMB!";
+                    ticket.makeGraphic(144, 56, Palette.White);
+
+                    var thing : String = null;
+                    switch (ProgressStatus.progressData.fanfare)
+                    {
+                        case "crab": thing = "     A CRAB!";
+                        case "frog": thing = "     A FROG!";
+                        case "bear": thing = "     A BEAR!";
+                        case "catbomb": thing = "    CATBOMB!";
+                    }
+
+                    stampText(ticket, Palette.Black, "CONGRATULATIONS\n YOU UNLOCKED  \n" + thing, 8, 8);
+                }
+                else
+                {
+                    ticket.loadGraphic("assets/ui/unlock-card-bear.png");
                 }
 
-                stampText(ticket, Palette.Black, "CONGRATULATIONS\n YOU UNLOCKED  \n" + thing, 8, 8);
+                ticket.x = FlxG.width / 2 - ticket.width / 2;
 
                 var printer : PrinterMachine = new PrinterMachine(true);
                 printer.create(ticket, function() {
 
-                    new FlxTimer().start(1, function(t:FlxTimer) {
-
+                    ticket.onTap(function () {
                         FlxTween.tween(ticket, {y : -ticket.height}, 0.25, {ease: FlxEase.circOut});
 
                         // And later

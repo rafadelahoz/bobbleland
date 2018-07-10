@@ -15,13 +15,15 @@ class Entity extends FlxSprite
     public var vibrationEnabled : Bool;
     public var vibrationIntensity : Float;
     public var vibrationShared : Bool;
-    
+
     public var ShineTimerBase : Float = 1;
     public var ShineTimerVariation : Float = 0.25;
     public var ShineSparkColor : Int = Palette.White;
 
     var shineTimer : FlxTimer;
-    
+
+    var tapCallback : Void -> Void;
+
     public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
     {
         super(X, Y, SimpleGraphic);
@@ -31,6 +33,8 @@ class Entity extends FlxSprite
         vibrationShared = false;
 
         shineTimer = new FlxTimer();
+
+        tapCallback = null;
     }
 
     override public function destroy()
@@ -42,6 +46,56 @@ class Entity extends FlxSprite
         }
 
         super.destroy();
+    }
+
+    public function onTap(?callback : Void -> Void)
+    {
+        tapCallback = callback;
+    }
+
+    override public function update(elapsed : Float)
+    {
+        if (tapCallback != null)
+        {
+            #if (!mobile)
+            if (mouseOver())
+            {
+                if (FlxG.mouse.pressed)
+                {
+                    tapCallback();
+                }
+            }
+            #else
+            for (touch in FlxG.touches.list)
+            {
+                if (touch.overlaps(this))
+                {
+                    if (touch.pressed)
+                    {
+                        tapCallback();
+                        break;
+                    }
+                }
+            }
+            #end
+        }
+
+        super.update(elapsed);
+    }
+
+    function mouseOver()
+    {
+        var mouseX : Float = FlxG.mouse.x;
+        var mouseY : Float = FlxG.mouse.y;
+
+        if (scrollFactor.x == 0)
+            mouseX = FlxG.mouse.screenX;
+
+        if (scrollFactor.y == 0)
+            mouseY = FlxG.mouse.screenY;
+
+        return mouseX >= x && mouseX < (x + width) &&
+               mouseY >= y && mouseY < (y + height);
     }
 
     public function vibrate(?enabled : Bool = true, ?intensity : Float = 1, ?shared : Bool = false)
