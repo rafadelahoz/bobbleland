@@ -632,7 +632,10 @@ class PlayState extends FlxTransitionableState
 
 			if (condemned.length + disconnected.length > 5)
 			{
-				SfxEngine.play(SfxEngine.SFX.NiceBig);
+				if (disconnected.length > 5)
+					SfxEngine.play(SfxEngine.SFX.BigFanfare);
+				else
+					SfxEngine.play(SfxEngine.SFX.SmallFanfare);
 			}
 
 			handlePostShoot();
@@ -698,6 +701,8 @@ class PlayState extends FlxTransitionableState
 
 			dropTimer.cancel();
 			stopDropNotice();
+
+			SfxEngine.play(SfxEngine.SFX.CleanFanfare);
 
 			FlxG.camera.flash(Palette.Yellow, 1);
 

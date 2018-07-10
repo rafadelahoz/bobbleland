@@ -25,6 +25,9 @@ enum SFX {
     StickerB;
     Chime;
     Curtain;
+    SmallFanfare;
+    BigFanfare;
+    CleanFanfare;
 }
 
 class SfxEngine
@@ -68,6 +71,9 @@ class SfxEngine
         sfx.set(SFX.StickerB,       loadSfx("sticker-paste-b.wav"));
         sfx.set(SFX.Chime,          loadSfx("temp-chime.wav"));
         sfx.set(SFX.Curtain,        loadSfx("temp-curtain.wav"));
+        sfx.set(SFX.SmallFanfare,   loadSfx("small-fanfare.wav"));
+        sfx.set(SFX.BigFanfare,     loadSfx("big-fanfare.wav"));
+        sfx.set(SFX.CleanFanfare,   loadSfx("clear-fanfare.wav"));
 
         sfxFiles = new Map<SFX, String>();
         sfxFiles.set(SFX.Click,          path + ("btn_click.wav"));
@@ -88,6 +94,9 @@ class SfxEngine
         sfxFiles.set(SFX.StickerB,       path + ("sticker-paste-b.wav"));
         sfxFiles.set(SFX.Chime,          path + ("temp-chime.wav"));
         sfxFiles.set(SFX.Curtain,        path + ("temp-curtain.wav"));
+        sfxFiles.set(SFX.SmallFanfare,   path + ("small-fanfare.wav"));
+        sfxFiles.set(SFX.BigFanfare,     path + ("big-fanfare.wav"));
+        sfxFiles.set(SFX.CleanFanfare,   path + ("clear-fanfare.wav"));
 
         for (sf in sfx.keys())
         {
@@ -118,10 +127,7 @@ class SfxEngine
     {
         if (Enabled && sfx.exists(sf))
         {
-            /*sfx.get(sf).looped = loop;
-            sfx.get(sf).volume = volume;*/
             sfx.set(sf, FlxG.sound.play(sfxFiles.get(sf), volume, loop));
-            // sfx.get(sf).play();
         }
     }
 
