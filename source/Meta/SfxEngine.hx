@@ -73,7 +73,7 @@ class SfxEngine
         sfx.set(SFX.Curtain,        loadSfx("temp-curtain.wav"));
         sfx.set(SFX.SmallFanfare,   loadSfx("small-fanfare.wav"));
         sfx.set(SFX.BigFanfare,     loadSfx("big-fanfare.wav"));
-        sfx.set(SFX.CleanFanfare,   loadSfx("clear-fanfare.wav"));
+        sfx.set(SFX.CleanFanfare,   loadSfx("clear-fanfare-loud.wav"));
 
         sfxFiles = new Map<SFX, String>();
         sfxFiles.set(SFX.Click,          path + ("btn_click.wav"));
@@ -96,7 +96,7 @@ class SfxEngine
         sfxFiles.set(SFX.Curtain,        path + ("temp-curtain.wav"));
         sfxFiles.set(SFX.SmallFanfare,   path + ("small-fanfare.wav"));
         sfxFiles.set(SFX.BigFanfare,     path + ("big-fanfare.wav"));
-        sfxFiles.set(SFX.CleanFanfare,   path + ("clear-fanfare.wav"));
+        sfxFiles.set(SFX.CleanFanfare,   path + ("clear-fanfare-loud.wav"));
 
         for (sf in sfx.keys())
         {

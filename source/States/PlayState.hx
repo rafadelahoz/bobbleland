@@ -719,17 +719,22 @@ class PlayState extends FlxTransitionableState
 
 				var baseY : Int = FlxG.random.int(64, 164);
 
+				// SfxEngine.play(SfxEngine.SFX.Accept);
 				add(new TextNotice(FlxG.random.int(0, FlxG.width), baseY, "FULL TANK CLEAN!"));
 
 				t.start(0.55, function(t:FlxTimer) {
 					
 					scoreDisplay.add(Constants.ScClearField);
+					
+					// SfxEngine.play(SfxEngine.SFX.Accept);
 					add(new TextNotice(FlxG.random.int(0, FlxG.width), baseY+10, " + 10000 POINTS!"));
 
 					remove(shiny);
 					shiny.destroy();
 
 					t.start(0.55, function(t:FlxTimer) {
+
+						// SfxEngine.play(SfxEngine.SFX.Accept);
 						add(new TextNotice(FlxG.random.int(0, FlxG.width), baseY+20, getCleanMessage()));
 
 						// Generate a row while exiting
