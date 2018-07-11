@@ -9,13 +9,12 @@ class ProgressStatus
     static var CrabHintBubbles : Int = 1500;
     static var FrogHintBubbles : Int = 5000;
     static var BearHintBubbles : Int = 15000;
-    static var CatbombHintBubbles : Int = 20000; // Or 3000?
+    static var CatbombHintBubbles : Int = 1500; // Or 2000?
 
     static var CrabUnlockScore : Int = 50000;
     static var FrogUnlockBubbles : Int = 500;
     static var FrogUnlockLevel : Int = 3;
-    static var BearUnlockScore : Int = 100000;
-    static var BearUnlockTime : Int = 600;
+    static var BearUnlockScore : Int = 50000;
     static var BearUnlockLevel : Int = 5;
 
     public static var progressData : ProgressData;
@@ -115,6 +114,14 @@ class ProgressStatus
             {
                 progressData.bearChar = true;
                 progressData.fanfare = "bear";
+            }
+        }
+        else if (progressData.bearChar && progressData.catbombHint && !progressData.catbombChar)
+        {
+            if (playSessionData.character == "cat" && playSessionData.catSleeping)
+            {
+                progressData.catbombChar = true;
+                progressData.fanfare = "catbomb";
             }
         }
 

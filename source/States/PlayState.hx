@@ -265,21 +265,26 @@ class PlayState extends FlxTransitionableState
 
 	function handleBGM()
 	{
-		if (playSessionData.bgm != null)
+		if (state != StateLosing)
 		{
-			if (grid.getLowestBubbleRow() > 7)
+			if (playSessionData.bgm != null)
 			{
-				BgmEngine.play(BgmEngine.BGM.Danger);
+				if (grid.getLowestBubbleRow() > 7)
+				{
+					BgmEngine.play(BgmEngine.BGM.Danger);
+				}
+				else
+				{
+					BgmEngine.play(BgmEngine.getBgm(playSessionData.bgm));
+				}
 			}
 			else
 			{
-				BgmEngine.play(BgmEngine.getBgm(playSessionData.bgm));
+				BgmEngine.stopCurrent();
 			}
 		}
 		else
-		{
 			BgmEngine.stopCurrent();
-		}
 	}
 
 	function sortBubbles(Order : Int, one : Bubble, two : Bubble) : Int
@@ -479,10 +484,7 @@ class PlayState extends FlxTransitionableState
 	function shoot(?forced : Bool = false)
 	{
 		// Play anim or whatever
-		cursor.onShoot();
-		// Store forced shot data
-		if (forced)
-			flowController.onForcedShot();
+		cursor.onShoot(forced);
 
 		var aimAngle : Float = cursor.aimAngle;
 
@@ -726,9 +728,9 @@ class PlayState extends FlxTransitionableState
 				add(new TextNotice(FlxG.random.int(0, FlxG.width), baseY, "FULL TANK CLEAN!"));
 
 				t.start(0.55, function(t:FlxTimer) {
-					
+
 					scoreDisplay.add(Constants.ScClearField);
-					
+
 					// SfxEngine.play(SfxEngine.SFX.Accept);
 					add(new TextNotice(FlxG.random.int(0, FlxG.width), baseY+10, " + 10000 POINTS!"));
 
@@ -743,7 +745,7 @@ class PlayState extends FlxTransitionableState
 						// Generate a row while exiting
 						afterCleanRowsLeft--;
 						generateRow(false);
-						
+
 						// And generate 3 more rows
 						afterCleanTimer.start(0.7, handleAfterCleanGeneration);
 
@@ -1020,12 +1022,12 @@ class PlayState extends FlxTransitionableState
 			{
 				for (r in 0...grid.rows)
 				{
-					if (grid.getData(c, r) != null) 
+					if (grid.getData(c, r) != null)
 					{
 						bubbles.remove(grid.getData(c, r));
 						grid.setData(c, r, null);
 					}
-					
+
 				}
 			}
 		}

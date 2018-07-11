@@ -25,8 +25,6 @@ class PlayFlowController
     var lastIncreaseTime : Float;
     var timesIncreased : Int;
 
-    var forcedShots : Int;
-
     // Maximum time allowed without a difficulty increase (in seconds)
     var MaxIdleTime : Float = 120;
     // Factor to apply to current world dropDelay for substraction
@@ -80,9 +78,6 @@ class PlayFlowController
             lastIncreaseTime = 0;
             timesIncreased = 0;
         }
-
-        // Forced shots are resetted each time
-        forcedShots = 0;
 
         // trace("Current PlayFlowData", {playTime: playTime, score: score, bubbleCount: bubbleCount, screenCleanCount: screenCleanCount, rowCount: rowCount, lastBubbleCount: lastBubbleCount, lastIncreaseTime: lastIncreaseTime, timesIncreased: timesIncreased});
         // trace("Colors: " + world.availableColors.length);
@@ -203,19 +198,14 @@ class PlayFlowController
         increaseDifficulty();
     }
 
-    public function onForcedShot()
-    {
-        forcedShots++;
-    }
-
     public function getStoredData() : Dynamic
     {
-        return {score : world.scoreDisplay.realScore, 
-                time : playTime, bubbles : bubbleCount, 
-                cleans: screenCleanCount, 
+        return {score : world.scoreDisplay.realScore,
+                time : playTime, bubbles : bubbleCount,
+                cleans: screenCleanCount,
                 level: world.playSessionData.initialDifficulty + 1,
                 character: world.playSessionData.character,
-                forcedShots: forcedShots};
+                catSleeping: world.cursor.isSleeping};
     }
 
     public function enableGuide()

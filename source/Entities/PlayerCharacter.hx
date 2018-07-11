@@ -59,6 +59,10 @@ class PlayerCharacter extends FlxSprite
                 animation.add("run", [5, 6, 7, 1, 2, 3, 4], 20);
                 animation.add("action", [0, 8, 9, 10, 11, 12, 13, 14, 15], 30, false);
                 animation.add("happy", [0, 8, 9, 10, 11, 12, 13, 14, 15], 30);
+
+                // Specials!
+                animation.add("yawn", [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], 30, false);
+                animation.add("sleep-in", [32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45], 30, false);
             case "crab":
                 loadGraphic("assets/images/char-crab-sheet.png", true, 32, 40);
                 animation.add("idle", [0, 1, 2, 3, 0, 0, 0, 0, 0], 4, true);

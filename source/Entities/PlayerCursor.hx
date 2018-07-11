@@ -28,6 +28,8 @@ class PlayerCursor extends FlxSprite
 	var tiny : FlxSprite;
 	var tester : Bubble;
 
+	public var isSleeping : Bool;
+
 	public function new(X : Float, Y : Float, World : PlayState)
 	{
 		super(X, Y);
@@ -61,6 +63,8 @@ class PlayerCursor extends FlxSprite
 		tester = new Bubble(0, 0, world, world.availableColors[0]);
 
 		shots = 0;
+
+		isSleeping = true;
 	}
 
 	override public function update(elapsed:Float)
@@ -83,6 +87,8 @@ class PlayerCursor extends FlxSprite
 				moving = true;
 				updateSpriteAngle();
 				label.text = "" + aimAngle;
+
+				isSleeping = false;
 			}
 
 			if (world.notifyAiming)
@@ -132,7 +138,7 @@ class PlayerCursor extends FlxSprite
 			guideEnabled = false;
 	}
 
-	public function onShoot()
+	public function onShoot(?forced : Bool = false)
 	{
 		// ??
 		if (shots > 0)
@@ -144,6 +150,9 @@ class PlayerCursor extends FlxSprite
 				guideEnabled = false;
 			}
 		}
+
+		if (!forced)
+			isSleeping = false;
 	}
 
 	override public function draw()
