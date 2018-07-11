@@ -471,15 +471,18 @@ class PlayState extends FlxTransitionableState
 
 		if (state == StateAiming)
 		{
-			shoot();
+			shoot(true);
 		}
 	}
 
 	// Shoot function: sets the current bubble in motion and changes to wait state
-	function shoot()
+	function shoot(?forced : Bool = false)
 	{
 		// Play anim or whatever
 		cursor.onShoot();
+		// Store forced shot data
+		if (forced)
+			flowController.onForcedShot();
 
 		var aimAngle : Float = cursor.aimAngle;
 
