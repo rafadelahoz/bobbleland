@@ -45,7 +45,15 @@ class Ticket extends FlxSpriteGroup
         var baseY : Int = Std.int(top.height);
         text(sprite, getDate(), 8, baseY+8);
         text(sprite, getTime(), sprWidth - 48, baseY+8);
-        baseY += 24;
+        baseY += 16;
+        text(sprite, "DIFFICULTY ", 8, baseY);
+        text(sprite, Palette.LightGray, "/////", sprWidth - 8 - 40, baseY);
+        var difficultyText : String = "";
+        for (i in 0...data.level)
+            difficultyText += "/";
+        // difficultyText = TextUtils.padWith(difficultyText, 5, " ");
+        text(sprite, getDifficultyColor(data.level), difficultyText, sprWidth - 8 - 40, baseY);
+        baseY += 16;
 
         text(sprite, "***GAME  OVER***", 8, baseY);
         baseY += 16;
@@ -98,6 +106,26 @@ class Ticket extends FlxSpriteGroup
 
         score = data.score;
         time = TextUtils.formatTime(data.time);
+    }
+
+    function getDifficultyColor(level : Int) : Int
+    {
+        return Palette.Black;
+        
+        /*if (level < 5)
+            return Palette.Black;
+        else 
+            return Palette.DarkPurple;
+        
+        switch (level)
+        {
+            case 1: return Palette.DarkGreen;
+            case 2: return Palette.Yellow;
+            case 3: return Palette.Orange;
+            case 4: return Palette.Brown;
+            case 5: return Palette.Red;
+            default: return Palette.Black;
+        }*/
     }
 
     function getCharSignature(character : String) : String
@@ -195,6 +223,7 @@ class Ticket extends FlxSpriteGroup
         temp.makeGraphic(Std.int(t.width), Std.int(t.height), 0x00000000);
         temp.pixels.copyPixels(t.framePixels, t.framePixels.rect, new openfl.geom.Point(0,0));
         temp.color = color;
+        // temp.angle = FlxG.random.int(-2, 2);
 
         sprite.stamp(temp, Std.int(x), Std.int(y));
     }
