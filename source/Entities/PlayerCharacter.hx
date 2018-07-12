@@ -84,7 +84,7 @@ class PlayerCharacter extends FlxSprite
                 animation.add("idle", [0]);
                 animation.add("run", [5, 6, 7, 1, 2, 3, 4], 20);
                 animation.add("action", [0, 8, 9, 10, 11, 12, 13, 14, 15], 30, false);
-                animation.add("happy", [32, 33, 34, 35, 36, 37], 30, false);
+                animation.add("happy", [0, 0, 0, 0, 32, 33, 34, 35, 46, 35, 46, 35, 46, 35, 46, 35, 46, 35, 46, 35, 46, 35, 46, 35, 46, 35, 46], 3, false);
 
                 // Special animations for catbomb unlocking
                 animation.add("yawn", [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], 20, false);
