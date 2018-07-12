@@ -13,9 +13,9 @@ class ProgressStatus
     static var CatbombHintBubbles : Int = 3000; // ~1h15
 
     // Crab: Reack 50k
-    static var CrabUnlockScore : Int = 50000; 
+    static var CrabUnlockScore : Int = 50000;
     // Frog: Reach 650 bubbles in level 3 or more
-    static var FrogUnlockBubbles : Int = 650; 
+    static var FrogUnlockBubbles : Int = 650;
     static var FrogUnlockLevel : Int = 3;
     // Bear: Hold on for 8.45 minutes in level 5
     static var BearUnlockTime : Int = 525;
@@ -41,6 +41,11 @@ class ProgressStatus
 
                 save();
             }
+
+            /*progressData.crabChar = true;
+            progressData.frogChar = true;
+            progressData.bearChar = true;
+            progressData.catbombChar = true;*/
 
             // progressData.fanfare = "none";
             // progressData.crabChar = false;
@@ -80,7 +85,7 @@ class ProgressStatus
                 progressData.bearHint = true;
             }
         }
-        
+
         if (!progressData.catbombHint)
         {
             if (arcadeData.totalBubbles > CatbombHintBubbles)
@@ -120,7 +125,7 @@ class ProgressStatus
                 progressData.fanfare = "bear";
             }
         }
-        
+
         if (progressData.catbombHint && !progressData.catbombChar)
         {
             if (playSessionData.character == "cat" && playSessionData.catSleeping)
