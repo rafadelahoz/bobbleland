@@ -6,15 +6,19 @@ class ProgressStatus
 {
     static var savefile : String = "progress";
 
-    static var CrabHintBubbles : Int = 1500;
-    static var FrogHintBubbles : Int = 5000;
-    static var BearHintBubbles : Int = 15000;
-    static var CatbombHintBubbles : Int = 1500; // Or 2000?
+    // Hint unlocking
+    static var CrabHintBubbles : Int = 1500; // ~30mins
+    static var FrogHintBubbles : Int = 5000; // ~1h45
+    static var BearHintBubbles : Int = 8000; // ~3h
+    static var CatbombHintBubbles : Int = 3000; // ~1h15
 
-    static var CrabUnlockScore : Int = 50000;
-    static var FrogUnlockBubbles : Int = 500;
+    // Crab: Reack 50k
+    static var CrabUnlockScore : Int = 50000; 
+    // Frog: Reach 650 bubbles in level 3 or more
+    static var FrogUnlockBubbles : Int = 650; 
     static var FrogUnlockLevel : Int = 3;
-    static var BearUnlockScore : Int = 50000;
+    // Bear: Hold on for 8.45 minutes in level 5
+    static var BearUnlockTime : Int = 525;
     static var BearUnlockLevel : Int = 5;
 
     public static var progressData : ProgressData;
@@ -109,8 +113,7 @@ class ProgressStatus
         }
         else if (progressData.frogChar && progressData.bearHint && !progressData.bearChar)
         {
-            if (playSessionData.score > BearUnlockScore &&
-                playSessionData.time < BearUnlockScore &&
+            if (playSessionData.time >= BearUnlockTime &&
                 playSessionData.level >= BearUnlockLevel)
             {
                 progressData.bearChar = true;
