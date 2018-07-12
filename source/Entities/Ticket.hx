@@ -111,12 +111,12 @@ class Ticket extends FlxSpriteGroup
     function getDifficultyColor(level : Int) : Int
     {
         return Palette.Black;
-        
+
         /*if (level < 5)
             return Palette.Black;
-        else 
+        else
             return Palette.DarkPurple;
-        
+
         switch (level)
         {
             case 1: return Palette.DarkGreen;
@@ -138,6 +138,10 @@ class Ticket extends FlxSpriteGroup
                 return "assets/ui/signature-cat.png";
             case "crab":
                 return "assets/ui/signature-crab.png";
+            case "frog":
+                return "assets/ui/signature-frog.png";
+            case "catbomb":
+                return "assets/ui/signature-catbomb.png";
             default:
                 return "assets/ui/signature-dog.png";
         }
@@ -162,12 +166,12 @@ class Ticket extends FlxSpriteGroup
         // Scale the ticket at 3x
         var scale : Int = 3;
         var border : Int = 24;
-        
+
         var width : Int = Std.int(bd.bitmapData.rect.width + border) * scale;
         var height : Int = Std.int(bd.bitmapData.rect.height + border) * scale;
 
         var scaledBitmap : flash.display.Bitmap = new flash.display.Bitmap(new flash.display.BitmapData(width, height, true, 0x00000000));
-        
+
         // Fill with background
         var bgSprite : FlxSprite = new FlxSprite(0, 0, database.BackgroundDatabase.GetRandomBackgroundAsset());
         var bgBitmap : flash.display.Bitmap = new flash.display.Bitmap(bgSprite.pixels);
@@ -189,10 +193,10 @@ class Ticket extends FlxSpriteGroup
 
                 bgX += bgWidth;
             }
-            
+
             bgY += bgHeight;
         }
-        
+
         // Draw ticket scaled
         var matrix : openfl.geom.Matrix = new openfl.geom.Matrix();
         matrix.translate(border/2, border/2);
