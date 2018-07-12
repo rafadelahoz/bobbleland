@@ -45,6 +45,15 @@ class PlayerCharacter extends FlxSprite
         {
             belt.y -= 4;
         }
+        else if (characterId == "catbomb")
+        {
+            belt.y += 8;
+        }
+
+        if (characterId == "catbomb")
+            belt.color = Palette.CatBombDarkGray;
+        else
+            belt.color = Palette.DarkPurple;
 
         hurry = new FlxSprite(x-8, y-19, "assets/images/hurry.png");
         hurry.visible = false;
@@ -98,6 +107,14 @@ class PlayerCharacter extends FlxSprite
                 animation.add("happy", [22, 23, 24], 20, false);
                 offset.x = 8;
                 offset.y = 4;
+            case "catbomb":
+                loadGraphic("assets/images/char-catbomb-sheet.png", true, 16, 16);
+                animation.add("idle", [0, 1], 1, true);
+                animation.add("run", [0, 1], 8, true);
+                animation.add("action", [6, 7, 6, 7], 8, false);
+                animation.add("happy", [4, 5], 6, true);
+                offset.x = -8;
+                offset.y = -8;
         }
 
     }

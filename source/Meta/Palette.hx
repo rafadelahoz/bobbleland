@@ -18,4 +18,9 @@ class Palette
     public static var Indigo        : Int = 0xFF83769C;
     public static var Pink          : Int = 0xFFFF77A8;
     public static var Peach         : Int = 0xFFFFCCAA;
+
+    public static var CatBombBlack      : Int = 0xFF282828;
+    public static var CatBombDarkGray   : Int = 0xFF697070;
+    public static var CatBombGray       : Int = 0xFFB8C0C0;
+    public static var CatBombWhite      : Int = 0xFFF8FCF8;
 }

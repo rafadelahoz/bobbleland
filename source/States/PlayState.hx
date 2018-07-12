@@ -269,7 +269,7 @@ class PlayState extends FlxTransitionableState
 	{
 		if (character.isSleepy)
 			return;
-		
+
 		if (state != StateLosing)
 		{
 			if (playSessionData.bgm != null)
@@ -844,6 +844,11 @@ class PlayState extends FlxTransitionableState
 										baseDecoration.y + 24,
 										this, characterId);
 		add(character);
+
+		if (characterId == "catbomb")
+			baseDecoration.color = Palette.CatBombDarkGray;
+		else
+			baseDecoration.color = Palette.DarkPurple;
 	}
 
 	public function onDeactivate()

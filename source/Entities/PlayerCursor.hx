@@ -6,8 +6,10 @@ import flixel.text.FlxText;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 
-class PlayerCursor extends FlxSprite
+class PlayerCursor extends Entity
 {
 	public var Length : Float;
 	public var AngleDelta : Float;
@@ -37,7 +39,7 @@ class PlayerCursor extends FlxSprite
 		world = World;
 		enabled = true;
 
-		loadGraphic("assets/images/cursor.png");
+		loadGraphic("assets/images/cursor" + (world.character.characterId == "catbomb" ? "-catbomb" : "") + ".png");
 		centerOffsets();
 		centerOrigin();
 
@@ -92,9 +94,9 @@ class PlayerCursor extends FlxSprite
 			}
 
 			if (world.notifyAiming)
-				color = 0xFFFF5151;
+				vibrate();
 			else
-				color = 0xFFFFFFFF;
+				vibrate(false);
 
 			label.update(elapsed);
 		}
@@ -153,6 +155,9 @@ class PlayerCursor extends FlxSprite
 
 		if (!forced)
 			isSleeping = false;
+
+		scale.set(0.75, 0.75);
+		FlxTween.tween(this.scale, {x : 1, y : 1}, 0.25, {ease: FlxEase.expoOut});
 	}
 
 	override public function draw()

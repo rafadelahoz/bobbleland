@@ -168,11 +168,6 @@ class ArcadePreState extends FlxTransitionableState
                     SfxEngine.play(SfxEngine.SFX.UnlockShine, 1.5);
                     FlxG.camera.flash(Palette.White, 0.5);
                     fanfareShader.color = 0xFF000000;
-                    // Rotate background?
-                    /*fanfareShader.loadGraphic("assets/backgrounds/rotater.png");
-                    fanfareShader.color = 0xFFFFFFFF;
-                    fanfareShader.centerOrigin();
-                    FlxTween.tween(fanfareShader, {angle: 360}, 1, {type: FlxTween.LOOPING});*/
                     // Show ticket
                     printer.startPrinting();
                     // Fast
@@ -204,13 +199,26 @@ class ArcadePreState extends FlxTransitionableState
                             });
 
                             // Effects!
-                            if (ProgressStatus.progressData.fanfare == "crab")
+                            var shinyButton : Entity = null;
+                            switch (ProgressStatus.progressData.fanfare)
                             {
-                                btnCrab.ShineTimerBase = 0.3;
-                                btnCrab.ShineTimerVariation = 0.1;
-                                btnCrab.ShineSparkColor = Palette.Yellow;
-                                btnCrab.shine();
-                            } // TODO: Other animals here
+                                case "crab":
+                                    shinyButton = btnCrab;
+                                case "frog":
+                                    shinyButton = btnFrog;
+                                case "bear":
+                                    // TODO: Add bear button
+                                case "catbomb":
+                                    shinyButton = btnCatbomb;
+                            }
+
+                            if (shinyButton != null)
+                            {
+                                shinyButton.ShineTimerBase = 0.3;
+                                shinyButton.ShineTimerVariation = 0.1;
+                                shinyButton.ShineSparkColor = Palette.Yellow;
+                                shinyButton.shine();
+                            }
 
                             ProgressStatus.progressData.fanfare = "none";
                             ProgressStatus.save();
@@ -571,10 +579,10 @@ class ArcadePreState extends FlxTransitionableState
 
         if (ProgressStatus.progressData.catbombChar)
         {
-            /*btnCatbomb = new HoldButton(120, 128, onCharCatbombPressed, onCharReleased);
+            btnCatbomb = new HoldButton(120, 168, onCharCatbombPressed, onCharReleased);
             btnCatbomb.loadSpritesheet("assets/ui/char-catbomb.png", 32, 32);
             btnCatbomb.allowRelease = false;
-            group.add(btnCatbomb);*/
+            group.add(btnCatbomb);
         }
         else if (ProgressStatus.progressData.catbombHint)
         {
@@ -631,6 +639,13 @@ class ArcadePreState extends FlxTransitionableState
         ArcadeGameStatus.setCharacter("frog");
         // Deactivate other buttons
         releaseCharButtons("frog");
+    }
+
+    function onCharCatbombPressed()
+    {
+        ArcadeGameStatus.setCharacter("catbomb");
+        // Deactivate other buttons
+        releaseCharButtons("catbomb");
     }
 
     function releaseCharButtons(except : String)
