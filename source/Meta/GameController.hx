@@ -13,6 +13,7 @@ class GameController
 		database.BackgroundDatabase.Init();
 		database.SceneCharacterDatabase.Init();
 
+		// FlxG.autoPause = false;
 		// FlxG.scaleMode = new flixel.system.scaleModes.PixelPerfectScaleMode();
 	}
 

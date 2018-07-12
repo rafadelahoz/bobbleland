@@ -211,6 +211,23 @@ class BgmEngine
         }
     }
 
+    public static function fadeInCurrent(?time : Float = 2, ?volume : Float = 1)
+    {
+        #if flash
+            return;
+        #end
+
+        if (playing.get(current))
+        {
+            if (tunes.get(current) != null && currentVolume < volume)
+            {
+                tunes.get(current).fadeIn(time, 0, volume);
+            }
+
+            currentVolume = volume;
+        }
+    }
+
     public static function getBgm(bgmName : String) : BGM
     {
         #if flash

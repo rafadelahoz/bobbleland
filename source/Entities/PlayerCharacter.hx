@@ -108,7 +108,7 @@ class PlayerCharacter extends FlxSprite
                     belt.animation.paused = true;
 
                     // Actions make the cat awake, and he can't sleep again
-                    sleepy = -1;
+                    awake();
                 }
                 else if (GamePad.checkButton(GamePad.Left))
                 {
@@ -127,7 +127,7 @@ class PlayerCharacter extends FlxSprite
                     }
 
                     // Actions make the cat awake, and he can't sleep again
-                    sleepy = -1;
+                    awake();
                 }
                 else if (GamePad.checkButton(GamePad.Right))
                 {
@@ -145,8 +145,7 @@ class PlayerCharacter extends FlxSprite
                             belt.animation.paused = false;
                     }
 
-                    // Actions make the cat awake, and he can't sleep again
-                    sleepy = -1;
+                    awake();
                 }
                 else
                 {
@@ -231,6 +230,18 @@ class PlayerCharacter extends FlxSprite
         hurry.update(elapsed);
 
         super.update(elapsed);
+    }
+
+    function awake()
+    {
+        if (sleepy > -1)
+        {
+            // Actions make the cat awake, and he can't sleep again
+            sleepy = -1;
+
+            // BgmEngine.play(BgmEngine.current, 1);
+            BgmEngine.fadeInCurrent(2);
+        }
     }
 
     override public function draw()
