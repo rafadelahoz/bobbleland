@@ -24,7 +24,6 @@ enum SFX {
     StickerA;
     StickerB;
     Chime;
-    Curtain;
     SmallFanfare;
     BigFanfare;
     CleanFanfare;
@@ -54,55 +53,35 @@ class SfxEngine
 
         initialized = true;
 
-        sfx = new Map<SFX, FlxSound>();
-        sfx.set(SFX.Click,          loadSfx("btn_click.wav"));
-        sfx.set(SFX.Clock,          loadSfx("btn_clock.wav"));
-        sfx.set(SFX.BubbleBounce,   loadSfx("bubble-stop.wav"));
-        sfx.set(SFX.BubbleStop,     loadSfx("bubble-bounce.wav"));
-        sfx.set(SFX.BubbleFall,     loadSfx("bubble-fall.wav"));
-        sfx.set(SFX.NiceSmall,      loadSfx("nice-small.wav"));
-        sfx.set(SFX.NiceBig,        loadSfx("nice-big.wav"));
-        sfx.set(SFX.Lost,           loadSfx("lose.wav"));
-        sfx.set(SFX.Print,          loadSfx("low-vibration.wav"));
-        sfx.set(SFX.RowGeneration,  loadSfx("row.wav"));
-        sfx.set(SFX.Rumble,         loadSfx("low-vibration.wav"));
-        sfx.set(SFX.PresentOpen,    loadSfx("temp-present-open.wav"));
-        sfx.set(SFX.Blocker,        loadSfx("blocker.wav"));
-        sfx.set(SFX.Accept,         loadSfx("accept.wav"));
-        sfx.set(SFX.StickerA,       loadSfx("sticker-paste.wav"));
-        sfx.set(SFX.StickerB,       loadSfx("sticker-paste-b.wav"));
-        sfx.set(SFX.Chime,          loadSfx("temp-chime.wav"));
-        sfx.set(SFX.Curtain,        loadSfx("temp-curtain.wav"));
-        sfx.set(SFX.SmallFanfare,   loadSfx("small-fanfare.wav"));
-        sfx.set(SFX.BigFanfare,     loadSfx("big-fanfare.wav"));
-        sfx.set(SFX.CleanFanfare,   loadSfx("clear-fanfare-loud.wav"));
-        sfx.set(SFX.UnlockHum,      loadSfx("unlock-hum-fader.wav"));
-        sfx.set(SFX.UnlockShine,    loadSfx("399904_e.wav"));
-
         sfxFiles = new Map<SFX, String>();
-        sfxFiles.set(SFX.Click,          path + ("btn_click.wav"));
-        sfxFiles.set(SFX.Clock,          path + ("btn_clock.wav"));
-        sfxFiles.set(SFX.BubbleBounce,   path + ("bubble-stop.wav"));
-        sfxFiles.set(SFX.BubbleStop,     path + ("bubble-bounce.wav"));
-        sfxFiles.set(SFX.BubbleFall,     path + ("bubble-fall.wav"));
-        sfxFiles.set(SFX.NiceSmall,      path + ("nice-small.wav"));
-        sfxFiles.set(SFX.NiceBig,        path + ("nice-big.wav"));
-        sfxFiles.set(SFX.Lost,           path + ("lose.wav"));
-        sfxFiles.set(SFX.Print,          path + ("low-vibration.wav"));
-        sfxFiles.set(SFX.RowGeneration,  path + ("row.wav"));
-        sfxFiles.set(SFX.Rumble,         path + ("low-vibration.wav"));
-        sfxFiles.set(SFX.PresentOpen,    path + ("temp-present-open.wav"));
-        sfxFiles.set(SFX.Blocker,        path + ("blocker.wav"));
-        sfxFiles.set(SFX.Accept,         path + ("accept.wav"));
-        sfxFiles.set(SFX.StickerA,       path + ("sticker-paste.wav"));
-        sfxFiles.set(SFX.StickerB,       path + ("sticker-paste-b.wav"));
-        sfxFiles.set(SFX.Chime,          path + ("temp-chime.wav"));
-        sfxFiles.set(SFX.Curtain,        path + ("temp-curtain.wav"));
-        sfxFiles.set(SFX.SmallFanfare,   path + ("small-fanfare.wav"));
-        sfxFiles.set(SFX.BigFanfare,     path + ("big-fanfare.wav"));
-        sfxFiles.set(SFX.CleanFanfare,   path + ("clear-fanfare-loud.wav"));
-        sfxFiles.set(SFX.UnlockHum,      path + ("unlock-hum-fader.wav"));
-        sfxFiles.set(SFX.UnlockShine,    path + ("399904_e.wav"));
+        sfxFiles.set(SFX.Click,          path + "btn_click.wav");
+        sfxFiles.set(SFX.Clock,          path + "btn_clock.wav");
+        sfxFiles.set(SFX.BubbleBounce,   path + "bubble-stop.wav");
+        sfxFiles.set(SFX.BubbleStop,     path + "bubble-bounce.wav");
+        sfxFiles.set(SFX.BubbleFall,     path + "bubble-fall.wav");
+        sfxFiles.set(SFX.NiceSmall,      path + "nice-small.wav");
+        sfxFiles.set(SFX.NiceBig,        path + "nice-big.wav");
+        sfxFiles.set(SFX.Lost,           path + "lose.wav");
+        sfxFiles.set(SFX.Print,          path + "low-vibration.wav");
+        sfxFiles.set(SFX.RowGeneration,  path + "row.wav");
+        sfxFiles.set(SFX.Rumble,         path + "low-vibration.wav");
+        sfxFiles.set(SFX.PresentOpen,    path + "temp-present-open.wav");
+        sfxFiles.set(SFX.Blocker,        path + "blocker.wav");
+        sfxFiles.set(SFX.Accept,         path + "accept.wav");
+        sfxFiles.set(SFX.StickerA,       path + "sticker-paste.wav");
+        sfxFiles.set(SFX.StickerB,       path + "sticker-paste-b.wav");
+        sfxFiles.set(SFX.Chime,          path + "temp-chime.wav");
+        sfxFiles.set(SFX.SmallFanfare,   path + "small-fanfare.wav");
+        sfxFiles.set(SFX.BigFanfare,     path + "big-fanfare.wav");
+        sfxFiles.set(SFX.CleanFanfare,   path + "clear-fanfare-loud.wav");
+        sfxFiles.set(SFX.UnlockHum,      path + "unlock-hum-fader.wav");
+        sfxFiles.set(SFX.UnlockShine,    path + "399904_e.wav");
+
+        sfx = new Map<SFX, FlxSound>();
+        for (sf in sfxFiles.keys())
+        {
+            sfx.set(SFX.Click, loadSfx(sfxFiles.get(sf)));
+        }
 
         for (sf in sfx.keys())
         {
@@ -112,7 +91,7 @@ class SfxEngine
 
     static function loadSfx(name : String) : FlxSound
     {
-        return FlxG.sound.load(path + name);
+        return FlxG.sound.load(name);
     }
 
     public static function enable()
