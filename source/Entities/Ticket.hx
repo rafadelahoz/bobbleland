@@ -28,7 +28,7 @@ class Ticket extends FlxSpriteGroup
     {
         var top : FlxSprite = new FlxSprite(0, 0, "assets/ui/ticket-top.png");
         var bottom : FlxSprite = new FlxSprite(0, 96, "assets/ui/ticket-bottom.png");
-        var contentsHeight : Int = 13*8;
+        var contentsHeight : Int = 14*8;
         // Adjust to include record lines
         contentsHeight += 8*((data.scoreRecord ? 1 : 0) + (data.bubblesRecord ? 1 : 0) + (data.timeRecord ? 1 : 0) + (data.cleansRecord ? 1 : 0));
 
