@@ -578,7 +578,7 @@ class ArcadePreState extends FlxTransitionableState
         else if (ProgressStatus.progressData.bearHint)
         {
             // Instantiate bear hint over his button
-            var btnBearHint : HintButton = new HintButton(80, 168, this, "This must be hard:\nGet a high score\n       ...QUICKLY!");
+            var btnBearHint : HintButton = new HintButton(80, 168, this, "This must be hard:\nHold on, baby,\nas much as you can");
             group.add(btnBearHint);
         }
 
@@ -592,7 +592,7 @@ class ArcadePreState extends FlxTransitionableState
         else if (ProgressStatus.progressData.catbombHint)
         {
             // Instantiate catbomb hint over his button
-            var btnCatbombHint : HintButton = new HintButton(120, 168, this, "Oh, you lazy cat\\", false);
+            var btnCatbombHint : HintButton = new HintButton(120, 168, this, "Oh, you lazy cat\\");
             group.add(btnCatbombHint);
         }
     }

@@ -16,9 +16,13 @@ class TextNotice extends FlxSprite
     var background : FlxSprite;
     var colorTween : FlxTween;
 
+    var serious : Bool;
+
     public function new(X : Float, Y : Float, Text : String, ?Color : Int = -1, ?seriousMode : Bool = false)
     {
         super(X, Y);
+
+        serious = seriousMode;
 
         // Initial displacement
         y += 8;
@@ -33,7 +37,7 @@ class TextNotice extends FlxSprite
         pxtext.y = Y - pxtext.height / 2;
 
         border = 4;
-        if (seriousMode) 
+        if (seriousMode)
             border = 16;
 
         background = new FlxSprite(pxtext.x - border/2, pxtext.y - border/2);
@@ -44,7 +48,7 @@ class TextNotice extends FlxSprite
         FlxTween.tween(this, {y: y-8}, 0.3, {ease: FlxEase.cubeOut, startDelay: 0});
         FlxTween.tween(this, {alpha: 1}, 0.3, {ease: FlxEase.circOut, startDelay: 0, onComplete: onAppeared});
 
-        if (!seriousMode)
+        if (!seriousMode || Text.indexOf("\\") >= 0)
             doColor(null);
     }
 
@@ -71,8 +75,8 @@ class TextNotice extends FlxSprite
 
     function onAppeared(t:FlxTween)
     {
-        FlxTween.tween(this, {y: y-8}, 1, {ease: FlxEase.cubeOut, startDelay: 0.5});
-        FlxTween.tween(this, {alpha: 0}, 0.5, {ease: FlxEase.circOut, startDelay: 1, onComplete: onDisapeared});
+        FlxTween.tween(this, {y: y-8}, 1, {ease: FlxEase.cubeOut, startDelay: 0.5 + (serious ? 1 : 0)});
+        FlxTween.tween(this, {alpha: 0}, 0.5, {ease: FlxEase.circOut, startDelay: 1 + (serious ? 1 : 0), onComplete: onDisapeared});
     }
 
     function onDisapeared(t:FlxTween)
