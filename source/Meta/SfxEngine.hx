@@ -80,7 +80,7 @@ class SfxEngine
         sfx = new Map<SFX, FlxSound>();
         for (sf in sfxFiles.keys())
         {
-            sfx.set(SFX.Click, loadSfx(sfxFiles.get(sf)));
+            sfx.set(sf, loadSfx(sfxFiles.get(sf)));
         }
 
         for (sf in sfx.keys())

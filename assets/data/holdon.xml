@@ -1,8 +1,0 @@
-<puzzle>
-	<mode name="hold" seconds="10" />
-	<background id="squares" />
-	<initial rows="8" colors="2,3,4,5" dropdelay="5"/>
-	<rows>
-		<row colors="x,x,x,0,3,x,x,x"/>
-	</rows>
-</puzzle>

@@ -8,8 +8,6 @@ import openfl.Assets;
 
 class PixelText
 {
-	private static var fontFile : String = "assets/fonts/nes";
-
 	// System pixel font
 	public static var font : FlxBitmapFont;
 
@@ -19,12 +17,6 @@ class PixelText
 	{
 		// if (!initialized)
 		{
-			// Load system font
-			// AngelCode
-			/*var textBytes = Assets.getText(fontFile + ".fnt");
-			var XMLData = Xml.parse(textBytes);*/
-			// font = new PxBitmapFont().loadAngelCode(Assets.getBitmapData(fontFile + "_0.png"), XMLData);
-
 			// Monospace
 			var monospaceLetters = "!\"#$%&'()*+,-./0123456789:;<=>?@"+
 									"ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_ab"+

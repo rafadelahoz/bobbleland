@@ -1,6 +1,0 @@
-fade out 0 0x000000
-bg pink now
-fade in 2 0x000000
-say "You beat puzzle 1? Awesome!"
-say "Now comes puzzle 2!"
-puzzle puzzle-0.xml 0.scene
