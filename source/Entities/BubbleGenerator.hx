@@ -53,7 +53,6 @@ class BubbleGenerator
 
     public function generateSaveData(data : BubbleGrid.BubbleGridData)
     {
-        // trace("GRID DATA", data);
         // Restore padded row data
         grid.padded = data.padded;
 
@@ -133,7 +132,7 @@ class BubbleGenerator
         var currentGridBlockers : Int = grid.getCount(filterBubbleBlockers);
         var maxBlockers : Int = Std.int(Math.min(MaxRowBlockers, maxGridBlockers));
         maxBlockers = Std.int(Math.min(maxBlockers, maxGridBlockers - currentGridBlockers));
-        // trace("Max blockers", maxBlockers);
+
         while (blockers.length > maxBlockers)
         {
             var randomBlockerIndex : Int = FlxG.random.int(0, blockers.length-1);

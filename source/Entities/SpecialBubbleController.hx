@@ -68,18 +68,18 @@ class SpecialBubbleController
             switch (World.playSessionData.initialDifficulty)
             {
                 case 0:
-                    contentProbability = [30, 70, 30, 0];
+                    contentProbability = [30, 70, 30, 30];
                 case 1:
-                    contentProbability = [50, 50, 20, 0];
+                    contentProbability = [50, 50, 30, 30];
                 case 2:
-                    contentProbability = [50, 50, 20, 10];
+                    contentProbability = [50, 50, 30, 30];
                 case 3:
-                    contentProbability = [50, 50, 30, 30];
+                    contentProbability = [25, 25, 25, 25];
                 case 4:
-                    contentProbability = [50, 50, 30, 30];
+                    contentProbability = [25, 25, 25, 25];
                 default:
                     trace("NO INITIAL DIFFICULTY PROVIDED");
-                    contentProbability = [50, 50, 30, 10];
+                    contentProbability = [50, 50, 30, 30];
             }
 
             trace("SpecialBubbleGenerator data reset");

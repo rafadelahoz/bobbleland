@@ -398,7 +398,7 @@ class Bubble extends Entity
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 
 				var neighbours : Array<FlxPoint> = grid.getValidAdjacentPositions(targetPosition, touchedBubble == null);
-				trace(neighbours + " contains " + cellPosition + "? " + containsPoint(neighbours, cellPosition));
+				// trace(neighbours + " contains " + cellPosition + "? " + containsPoint(neighbours, cellPosition));
 				if (!containsPoint(neighbours, cellPosition))
 				{
 					#if !mobile
@@ -720,10 +720,6 @@ class Bubble extends Entity
 		// Calculate the sum of the radii, then square it
 		var sumRadiiSquared : Float = Size * squish + bubble.Size * squish;
 		sumRadiiSquared *= sumRadiiSquared;
-
-		if (track) {
-			trace("Bubble vs target", deltaXSquared + deltaYSquared, sumRadiiSquared, (deltaXSquared + deltaYSquared <= sumRadiiSquared));
-		}
 
 		return (deltaXSquared + deltaYSquared <= sumRadiiSquared);
 	}

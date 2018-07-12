@@ -79,14 +79,6 @@ class PlayFlowController
             timesIncreased = 0;
         }
 
-        // trace("Current PlayFlowData", {playTime: playTime, score: score, bubbleCount: bubbleCount, screenCleanCount: screenCleanCount, rowCount: rowCount, lastBubbleCount: lastBubbleCount, lastIncreaseTime: lastIncreaseTime, timesIncreased: timesIncreased});
-        // trace("Colors: " + world.availableColors.length);
-
-        /*FlxG.watch.add(this, "playTime");
-        FlxG.watch.add(this, "bubbleCount");
-        FlxG.watch.add(this, "rowCount");
-        FlxG.watch.add(this, "screenCleanCount");*/
-
         timer = new FlxTimer().start(1, onPlayTimeTimer, 0);
     }
 
@@ -231,9 +223,6 @@ class PlayFlowController
             lastIncreaseTime: lastIncreaseTime,
             timesIncreased: timesIncreased
         };
-
-        // trace("PlayFlowController saved data", data);
-        // trace("Current colors", world.availableColors.length);
 
         return data;
     }

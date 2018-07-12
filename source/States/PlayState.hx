@@ -91,7 +91,7 @@ class PlayState extends FlxTransitionableState
 		{
 			trace("Using saved session data");
 			trace(saveData.session);
-			trace("Colors", saveData.session.usedColors.length);
+			trace("Colors " + saveData.session.usedColors.length);
 			playSessionData = saveData.session;
 		}
 		else
@@ -857,7 +857,6 @@ class PlayState extends FlxTransitionableState
 
 				// Special case when the deactivation happens
 				// after a clean screen, while rows are generating
-				trace("AfterCleanRowsLeft", afterCleanRowsLeft);
 				if (afterCleanRowsLeft > 0)
 				{
 					finishAfterCleanGeneration();
