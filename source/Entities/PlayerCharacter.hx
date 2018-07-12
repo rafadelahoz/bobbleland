@@ -251,7 +251,7 @@ class PlayerCharacter extends FlxSprite
         }
         // Then, lay down (ONLY if catbomb hint is on)
         else if (sleepy == 1 && world.grid.getLowestBubbleRow() == 9
-                 && ProgressStatus.progressData.catbombHint)
+                 && ProgressStatus.progressData.catbombHint && !ProgressStatus.progressData.catbombChar)
         {
             BgmEngine.fadeCurrent();
             sleepy = 2;

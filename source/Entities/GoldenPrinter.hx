@@ -49,7 +49,7 @@ class GoldenPrinter extends PrinterMachine
             return;
 
         intensity += FlxG.elapsed;
-        
+
         startMachineVibration(1 + intensity);
         BgmEngine.play(BgmEngine.BGM.Unlock, 0.5 + (intensity/TargetIntensity)*2);
 
@@ -114,7 +114,7 @@ class GoldenPrinter extends PrinterMachine
 			printTime *= 0.25;
 
 		var startDelay : Float = (quickPrinting ? 0 : FlxG.random.float(0, 0.45));
-		new FlxTimer().start(startDelay, playPrintSfx);
+		// new FlxTimer().start(startDelay, playPrintSfx);
 
 		printTween = FlxTween.tween(ticket, {y : ticket.y + delta}, printTime, {
 			ease : FlxEase.sineOut,

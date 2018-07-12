@@ -127,7 +127,7 @@ class ArcadePreState extends FlxTransitionableState
 
             BgmEngine.stopCurrent();
             // SfxEngine.play(SfxEngine.SFX.UnlockHum, 0.5, true);
-            BgmEngine.play(BgmEngine.BGM.Unlock, 0.5);
+            BgmEngine.play(BgmEngine.BGM.Unlock, 0.75);
 
             // Do fanfare!
             fanfareShader = new Entity(0, 0);
@@ -187,6 +187,11 @@ class ArcadePreState extends FlxTransitionableState
                         counter++;
                     }
 
+                    /*new FlxTimer().start(0.5, function(t:FlxTimer){
+                        t.destroy();
+                        SfxEngine.play(SfxEngine.SFX.CleanFanfare);
+                    });*/
+
                     ticket.onTap(function () {
                         FlxTween.tween(ticket, {y : -ticket.height}, 0.25, {ease: FlxEase.circOut});
 
@@ -214,7 +219,7 @@ class ArcadePreState extends FlxTransitionableState
 
                             if (shinyButton != null)
                             {
-                                shinyButton.ShineTimerBase = 0.3;
+                                shinyButton.ShineTimerBase = 0.4;
                                 shinyButton.ShineTimerVariation = 0.1;
                                 shinyButton.ShineSparkColor = Palette.Yellow;
                                 shinyButton.shine();
