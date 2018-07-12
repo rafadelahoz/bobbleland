@@ -131,9 +131,7 @@ class Bubble extends Entity
 				var sprite : String = world.playSessionData.target + ".png";
 				loadGraphic("assets/images/" + sprite);
 			case BubbleColor.SpecialPresent:
-				// TODO: Actual graphic
-				makeGraphic(Std.int((Size+1)*2.5), Std.int((Size+1)*2.5), 0x00000000);
-				FlxSpriteUtil.drawCircle(this, width/2, height/2, Size * 1.5, 0xFF00FF0A);
+				// Can't happen
 			case BubbleColor.SpecialBlocker:
 				loadGraphic("assets/images/blocker-sprite.png", true, 18, 18);
 				animation.add("idle", [FlxG.random.getObject([0, 1, 3])], 1, true);
@@ -203,7 +201,7 @@ class Bubble extends Entity
 				else if (UseMoveToContact && checkCollisionWithBubblesAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed))
 				{
 					// Check for presents
-					var present : Bubble = getBubbleMeetingAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed, onlyPresentBubbles);
+					var present : Bubble = getPresentBubbleMeetingAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed, onlyPresentBubbles);
 
 					var flyingVelocity = moveToContact(x + velocity.x * FlxG.elapsed,  y + velocity.y * FlxG.elapsed);
 
@@ -588,7 +586,7 @@ class Bubble extends Entity
 		return false;
 	}*/
 
-	public function getBubbleMeetingAt(X : Float, Y : Float, ?filter : Bubble -> Bool) : Bubble
+	public function getPresentBubbleMeetingAt(X : Float, Y : Float, ?filter : Bubble -> Bool) : Bubble
 	{
 		var collidedWith : Bubble = null;
 
@@ -598,8 +596,8 @@ class Bubble extends Entity
 		x = X;
 		y = Y;
 
-		// TODO: This only works for finding presents
-		var bubbles : FlxTypedGroup<Bubble> = world.presents;// world.bubbles;
+		// Note: this only works for finding presents
+		var bubbles : FlxTypedGroup<Bubble> = world.presents;
 		var iterator : FlxTypedGroupIterator<Bubble> =
 										bubbles.iterator(filter);
 		while (iterator.hasNext())
@@ -777,7 +775,7 @@ class Bubble extends Entity
 				Content = World.specialBubbleController.getPresentContent();
 			}
 			cast(bubble, PresentBubble).setContent(Content);
-			World.specialBubbleController.onSpecialBubbleGenerated(); // TODO: Provide content?
+			World.specialBubbleController.onSpecialBubbleGenerated();
 		}
 		else
 		{

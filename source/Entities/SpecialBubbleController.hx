@@ -47,10 +47,8 @@ class SpecialBubbleController
 
             contentProbability = SaveData.contentProbability;
 
-            // TODO:load generationProbabilityBase (when it's used)
+            // load generationProbabilityBase
             generationProbabilityBase = 0;
-
-            // trace("SpecialBubbleGenerator data", SaveData);
         }
         else
         {
@@ -104,19 +102,14 @@ class SpecialBubbleController
 
         // Score
         score = world.scoreDisplay.realScore;
-        // trace("score - lastScore", score, lastScore, score-lastScore);
         if (score - lastScore > 5000)
         {
             var diff : Int = (score - lastScore) - 5000;
-            // trace("Diff", diff);
             var deltas : Int = Std.int(diff / 1000);
-            // trace("Deltas", deltas);
             probability += deltas * 0.1;
         }
 
-        // TODO: Others
-
-        // trace("Special Bubble probability", probability);
+        // Others metrics go here
 
         return probability;
     }
@@ -143,7 +136,7 @@ class SpecialBubbleController
 
     public function onPlayStep()
     {
-        // TODO: Something?
+
     }
 
     function onPlayTimeTimer(timer : FlxTimer)

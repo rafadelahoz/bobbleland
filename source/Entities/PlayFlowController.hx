@@ -46,7 +46,7 @@ class PlayFlowController
         }
         else if (world.mode == PlayState.ModePuzzle)
         {
-            // TODO. Increase difficulty depending on the puzzle mode?
+            // For puzzles. Increase difficulty depending on the puzzle mode?
             updateDifficulty = false;
         }
 

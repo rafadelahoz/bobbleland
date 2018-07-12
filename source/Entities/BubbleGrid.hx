@@ -658,19 +658,11 @@ class BubbleGrid extends FlxObject
 
 		var lineStyle : flixel.util.LineStyle = { color : 0x50FFFFFF, thickness : 1 };
 
-		// TODO: Extract this from here: draw the ceiling falling in Puzzle Mode
+		// For puzzles: Extract this from here: draw the ceiling falling in Puzzle Mode
 		if (topRow > 0)
 		{
 			FlxSpriteUtil.drawRect(canvas, 0, 0, width-1, topRow*cellSize, 0x50FFFFFF, {thickness: 0});
 		}
-
-		// Draw the canvas borders
-		// FlxSpriteUtil.drawRect(canvas, 0, 0, width-1, height-1, 0x000000, lineStyle);
-
-		// TODO: Extract this from here: draw the limit line
-		// FlxSpriteUtil.drawRect(canvas, 0, bottomRow*cellSize-1, width-1, 2, 0x000000, { color : 0x90FF5151, thickness: 2 });
-
-		// return;
 
 		var cellOffset : Float;
 		var cellColor : Int = 0x20FFFFFF;

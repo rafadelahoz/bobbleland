@@ -139,7 +139,6 @@ class PrinterMachine extends FlxGroup
         stopMachineVibration();
 		SfxEngine.stop(SfxEngine.SFX.Print);
 
-        // TODO: hide?
         hide();
 
         if (callback != null)

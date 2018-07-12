@@ -95,7 +95,6 @@ class GameOverState extends FlxTransitionableState
 
 	function onRetryButtonPressed() : Void
 	{
-		// if (mode == PlayState.ModeArcade)
 		// TODO: Missing difficulty setting?
 		GameController.BeginArcade();
 	}

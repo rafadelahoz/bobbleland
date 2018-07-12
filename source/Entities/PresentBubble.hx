@@ -105,45 +105,18 @@ class PresentBubble extends Bubble
             world.add(new ParticleOpen(this));
         }
 
-        // t.start(0.3, function(t:FlxTimer) {
-            // TODO: Open explosion effect
-            switch (content)
-            {
-                case SpecialBubbleController.PresentContent.Points:
-                    onOpenPoints();
-                case SpecialBubbleController.PresentContent.Blocker:
-                    onOpenBlocker();
-                case SpecialBubbleController.PresentContent.Guideline:
-                    onOpenGuideline();
-                /*case SpecialBubbleController.PresentContent.Bumper:
-                    return Palette.Blue;
-                case SpecialBubbleController.PresentContent.Hole:
-                    return Palette.Red;*/
-                case SpecialBubbleController.PresentContent.Bubbles:
-                    onOpenBubbles();
-                default:
-
-            }
-        // });
-    }
-
-    // TODO: To be removed
-    function onOpenDefault()
-    {
-        SfxEngine.play(SfxEngine.SFX.PresentOpen);
-        // SfxEngine.play(SfxEngine.SFX.BubbleStop);
-		// SfxEngine.play(SfxEngine.SFX.Accept);
-
-        // Destroy neighbours
-        var neighbours : Array<Bubble> = grid.getNeighbours(this);
-        for (neigh in neighbours)
+        switch (content)
         {
-            neigh.triggerRot(true);
-            if (grid.isPositionValid(neigh.getCurrentCell()))
-                grid.setData(neigh.getCurrentCell().x, neigh.getCurrentCell().y, null);
+            case SpecialBubbleController.PresentContent.Points:
+                onOpenPoints();
+            case SpecialBubbleController.PresentContent.Blocker:
+                onOpenBlocker();
+            case SpecialBubbleController.PresentContent.Guideline:
+                onOpenGuideline();
+            case SpecialBubbleController.PresentContent.Bubbles:
+                onOpenBubbles();
+            default:
         }
-
-        new FlxTimer().start(0.7, afterOpening);
     }
 
     function onOpenBlocker()
@@ -213,7 +186,7 @@ class PresentBubble extends Bubble
         SfxEngine.play(SfxEngine.SFX.BubbleStop);
         SfxEngine.play(SfxEngine.SFX.Blocker);
 
-        // TODO: Decide given board status?
+        // Maybe decide given board status?
         var bubblesToGenerate : Int = FlxG.random.int(3, 5);
         // Overflow effect
         Bubble.CreateAt(cellPosition.x, cellPosition.y, world.generator.getPositiveColor(), world);

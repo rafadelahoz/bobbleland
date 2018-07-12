@@ -102,13 +102,6 @@ class ScreenButtons extends FlxSpriteGroup
 				}
 				else if (touch.overlaps(shootButton))
 				{
-					#if android
-					// TODO: Vibration disabled, really not working
-					/*if (!GamePad.checkButton(GamePad.Shoot)) {
-						Hardware.vibrate(100);
-					}*/
-					#end
-
 					GamePad.setPressed(GamePad.Shoot);
 				}
 				else if (touch.overlaps(pauseButton))

@@ -848,8 +848,7 @@ class PlayState extends FlxTransitionableState
 
 	public function onDeactivate()
     {
-        /* TODO: Save status! */
-		switch (state)
+        switch (state)
 		{
 			case PlayState.StateStarting,
 				 PlayState.StateAiming,

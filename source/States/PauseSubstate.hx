@@ -53,7 +53,6 @@ class PauseSubstate extends FlxSubState
         // Awful sound, avoid
         // SfxEngine.play(SfxEngine.SFX.Curtain, 1);
 
-        // TODO: Randomize a bit the sticker positions
         btnResume = new Button(83 + FlxG.random.int(-8, 8), 92 + FlxG.random.int(-8, 8), onResumeButtonPressed);
         btnResume.loadSpritesheet("assets/ui/pause-btn-continue.png", 58, 35);
         btnResume.visible = false;
