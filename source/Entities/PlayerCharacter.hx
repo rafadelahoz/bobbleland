@@ -41,6 +41,10 @@ class PlayerCharacter extends FlxSprite
         belt.animation.paused = true;
         if (characterId == "crab")
             belt.y -= 16;
+        else if (characterId == "frog")
+        {
+            belt.y -= 4;
+        }
 
         hurry = new FlxSprite(x-8, y-19, "assets/images/hurry.png");
         hurry.visible = false;
@@ -71,7 +75,7 @@ class PlayerCharacter extends FlxSprite
                 animation.add("idle", [0]);
                 animation.add("run", [5, 6, 7, 1, 2, 3, 4], 20);
                 animation.add("action", [0, 8, 9, 10, 11, 12, 13, 14, 15], 30, false);
-                animation.add("happy", [0, 8, 9, 10, 11, 12, 13, 14, 15], 30);
+                animation.add("happy", [32, 33, 34, 35, 36, 37], 30, false);
 
                 // Special animations for catbomb unlocking
                 animation.add("yawn", [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], 20, false);
@@ -79,18 +83,33 @@ class PlayerCharacter extends FlxSprite
                 animation.add("sleep", [44, 45], 2);
             case "crab":
                 loadGraphic("assets/images/char-crab-sheet.png", true, 32, 40);
-                animation.add("idle", [0, 1, 2, 3, 0, 0, 0, 0, 0], 4, true);
+                animation.add("idle", [0, 1, 2, 3, 0, 0], 4, true);
                 animation.add("left", [10, 11, 12, 13, 14, 15, 16], 20, true);
                 animation.add("right", [20, 21, 22, 23, 24, 25, 26], 20, true);
                 animation.add("action", [30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 30], 30, false);
+                animation.add("happy", [0, 1, 2, 3, 0, 0], 4, true);
                 offset.x = 2;
                 offset.y = 13;
+            case "frog":
+                loadGraphic("assets/images/char-frog-sheet.png", true, 48, 28);
+                animation.add("idle", [0]);
+                animation.add("run", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], 30, true);
+                animation.add("action", [22, 23, 24, 25, 26, 26, 27, 28, 28, 29, 30], 30, false);
+                animation.add("happy", [22, 23, 24], 20, false);
+                offset.x = 8;
+                offset.y = 4;
         }
 
     }
 
     override public function update(elapsed:Float)
     {
+        /*if (!canSwitchAnim())
+            color = Palette.Red;
+        else
+            color = Palette.White;
+            */
+
         if (world.cursor.enabled)
         {
             if (animation.name == "action")
@@ -120,10 +139,13 @@ class PlayerCharacter extends FlxSprite
                             facing = FlxObject.LEFT;
                             belt.animation.paused = false;
                         default:
-                            if (animation.name != "run")
-                                animation.play("run", true);
-                            facing = FlxObject.LEFT;
-                            belt.animation.paused = false;
+                            if (canSwitchAnim())
+                            {
+                                if (animation.name != "run")
+                                    animation.play("run", true);
+                                facing = FlxObject.LEFT;
+                                belt.animation.paused = false;
+                            }
                     }
 
                     // Actions make the cat awake, and he can't sleep again
@@ -139,10 +161,13 @@ class PlayerCharacter extends FlxSprite
                             facing = FlxObject.RIGHT;
                             belt.animation.paused = false;
                         default:
-                            if (animation.name != "run")
-                                animation.play("run", true);
-                            facing = FlxObject.RIGHT;
-                            belt.animation.paused = false;
+                            if (canSwitchAnim())
+                            {
+                                if (animation.name != "run")
+                                    animation.play("run", true);
+                                facing = FlxObject.RIGHT;
+                                belt.animation.paused = false;
+                            }
                     }
 
                     awake();
@@ -150,7 +175,7 @@ class PlayerCharacter extends FlxSprite
                 else
                 {
                     // Avoid changing animations while sleeping
-                    if (sleepy <= 0)
+                    if (sleepy <= 0 && canSwitchAnim())
                     {
                         animation.play("idle");
                     }
@@ -183,9 +208,10 @@ class PlayerCharacter extends FlxSprite
             // Avoid changing animations while sleeping
             if (sleepy < 3)
             {
-                if (world.state == PlayState.StateWinning)
+                if (world.state == PlayState.StateWinning || world.state == PlayState.StateLosing)
                 {
-                    animation.play("happy");
+                    if (animation.name != "happy")
+                        animation.play("happy");
                 }
                 else
                 {
@@ -205,7 +231,7 @@ class PlayerCharacter extends FlxSprite
         {
             sleepy = 1;
             animation.play("yawn");
-        } 
+        }
         // Then, lay down (ONLY if catbomb hint is on)
         else if (sleepy == 1 && world.grid.getLowestBubbleRow() == 9
                  && ProgressStatus.progressData.catbombHint)
@@ -230,6 +256,19 @@ class PlayerCharacter extends FlxSprite
         hurry.update(elapsed);
 
         super.update(elapsed);
+    }
+
+    function canSwitchAnim(?target : String = null)
+    {
+        switch (characterId)
+        {
+            case "frog":
+                if (animation.name == "run")
+                    return (animation.frameIndex == 0);
+                else return true;
+            default:
+                return true;
+        }
     }
 
     function awake()

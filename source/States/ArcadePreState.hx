@@ -543,10 +543,10 @@ class ArcadePreState extends FlxTransitionableState
 
         if (ProgressStatus.progressData.frogChar)
         {
-            /*btnFrog = new HoldButton(40, 168, onCharFrogPressed, onCharReleased);
+            btnFrog = new HoldButton(40, 168, onCharFrogPressed, onCharReleased);
             btnFrog.loadSpritesheet("assets/ui/char-frog.png", 32, 32);
             btnFrog.allowRelease = false;
-            group.add(btnFrog);*/
+            group.add(btnFrog);
         }
         else if (ProgressStatus.progressData.frogHint)
         {
@@ -616,17 +616,21 @@ class ArcadePreState extends FlxTransitionableState
     {
         ArcadeGameStatus.setCharacter("cat");
         // Deactivate other buttons
-        btnDog.setPressed(false);
-        if (btnCrab != null)
-            btnCrab.setPressed(false);
+        releaseCharButtons("cat");
     }
 
     function onCharCrabPressed()
     {
         ArcadeGameStatus.setCharacter("crab");
         // Deactivate other buttons
-        btnDog.setPressed(false);
-        btnCat.setPressed(false);
+        releaseCharButtons("crab");
+    }
+
+    function onCharFrogPressed()
+    {
+        ArcadeGameStatus.setCharacter("frog");
+        // Deactivate other buttons
+        releaseCharButtons("frog");
     }
 
     function releaseCharButtons(except : String)
