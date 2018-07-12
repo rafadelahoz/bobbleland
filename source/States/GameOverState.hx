@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
+import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
@@ -72,6 +73,8 @@ class GameOverState extends FlxTransitionableState
 		var printer : PrinterMachine = new PrinterMachine();
 		printer.create(ticket);
 		add(printer);
+
+		FlxG.camera.focusOn(FlxPoint.weak(90, 160));
 	}
 
 	override public function update(elapsed:Float)

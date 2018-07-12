@@ -5,6 +5,7 @@ import flixel.FlxState;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
+import flixel.math.FlxPoint;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxBitmapText;
@@ -92,6 +93,7 @@ class ArcadePreState extends FlxTransitionableState
         add(target);
         isCameraMoving = false;
 
+        FlxG.camera.focusOn(FlxPoint.weak(90, 160));
         FlxG.camera.follow(target);
 
         swipeManager = new SwipeManager();

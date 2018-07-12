@@ -187,6 +187,8 @@ class PlayState extends FlxTransitionableState
 		afterCleanRowsLeft = 0;
 		afterCleanTimer = new FlxTimer();
 
+		FlxG.camera.focusOn(FlxPoint.weak(90, 160));
+
 		handleDebugInit();
 	}
 
@@ -265,6 +267,9 @@ class PlayState extends FlxTransitionableState
 
 	function handleBGM()
 	{
+		if (character.isSleepy)
+			return;
+		
 		if (state != StateLosing)
 		{
 			if (playSessionData.bgm != null)

@@ -63,6 +63,8 @@ class GameController
 
 	public static function OnPuzzleGiveup(mode : Int, data : Dynamic)
 	{
+		// You can't get catbomb by quitting
+		data.catSleeping = false;
 		GameOver(mode, data);
 	}
 

@@ -131,7 +131,7 @@ class BgmEngine
                 }
                 else if (currentVolume != volume)
                 {
-                    tunes.get(bgm).volume = volume;
+                    tunes.get(bgm).fadeIn(FadeTime, currentVolume, volume);
                 }
             }
         }
@@ -181,6 +181,32 @@ class BgmEngine
 
             playing.set(bgm, false);
             current = None;
+            currentVolume = 0;
+        }
+    }
+
+    public static function fadeCurrent(?time : Float = 2)
+    {
+        #if flash
+            return;
+        #end
+
+        fade(current, time);
+    }
+
+    public static function fade(bgm : BGM, ?time : Float = 2)
+    {
+        #if flash
+            return;
+        #end
+
+        if (playing.get(bgm))
+        {
+            if (tunes.get(bgm) != null)
+            {
+                tunes.get(bgm).fadeOut(time, -10);
+            }
+
             currentVolume = 0;
         }
     }

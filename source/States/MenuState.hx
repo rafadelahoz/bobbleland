@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.math.FlxPoint;
 import flixel.text.FlxBitmapText;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
@@ -84,6 +85,8 @@ class MenuState extends FlxTransitionableState
 		var startDelay : Float = 0.35;
 		tween = FlxTween.tween(logo, {y : 64}, 0.75, {startDelay: startDelay, onComplete: onLogoPositioned, ease : FlxEase.elasticOut });
 		FlxTween.tween(credits, {alpha : 1}, 0.75, {startDelay:startDelay, ease : FlxEase.cubeInOut});
+
+		FlxG.camera.focusOn(FlxPoint.weak(90, 160));
 	}
 
 	public function onLogoPositioned(_t:FlxTween):Void

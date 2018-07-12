@@ -205,7 +205,7 @@ class PlayFlowController
                 cleans: screenCleanCount,
                 level: world.playSessionData.initialDifficulty + 1,
                 character: world.playSessionData.character,
-                catSleeping: world.cursor.isSleeping};
+                catSleeping: world.character.sleepy == 3};
     }
 
     public function enableGuide()

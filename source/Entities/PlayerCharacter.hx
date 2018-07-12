@@ -16,6 +16,14 @@ class PlayerCharacter extends FlxSprite
     public var hurry : FlxSprite;
     public var hurryTween : FlxTween;
 
+    public var sleepy : Int;
+
+    public var isSleepy(get, null) : Bool;
+    public inline function get_isSleepy() : Bool
+    {
+        return sleepy >= 2;
+    }
+
     public function new(X : Float, Y : Float, World : PlayState, CharacterId : String)
     {
         super(X, Y);
@@ -38,6 +46,11 @@ class PlayerCharacter extends FlxSprite
         hurry.visible = false;
         hurry.scale.set(0.9, 0.9);
         hurryTween = FlxTween.tween(hurry.scale, {x : 1, y : 1}, 0.25, { ease : FlxEase.elasticInOut, loopDelay: 0.15, type : FlxTween.PINGPONG });
+
+        if (characterId == "cat")
+            sleepy = 0;
+        else
+            sleepy = -1;
     }
 
     function prepareGraphic()
@@ -60,9 +73,10 @@ class PlayerCharacter extends FlxSprite
                 animation.add("action", [0, 8, 9, 10, 11, 12, 13, 14, 15], 30, false);
                 animation.add("happy", [0, 8, 9, 10, 11, 12, 13, 14, 15], 30);
 
-                // Specials!
-                animation.add("yawn", [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], 30, false);
-                animation.add("sleep-in", [32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45], 30, false);
+                // Special animations for catbomb unlocking
+                animation.add("yawn", [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], 20, false);
+                animation.add("sleep-in", [32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45], 25, false);
+                animation.add("sleep", [44, 45], 2);
             case "crab":
                 loadGraphic("assets/images/char-crab-sheet.png", true, 32, 40);
                 animation.add("idle", [0, 1, 2, 3, 0, 0, 0, 0, 0], 4, true);
@@ -92,6 +106,9 @@ class PlayerCharacter extends FlxSprite
                 {
                     animation.play("action");
                     belt.animation.paused = true;
+
+                    // Actions make the cat awake, and he can't sleep again
+                    sleepy = -1;
                 }
                 else if (GamePad.checkButton(GamePad.Left))
                 {
@@ -109,6 +126,8 @@ class PlayerCharacter extends FlxSprite
                             belt.animation.paused = false;
                     }
 
+                    // Actions make the cat awake, and he can't sleep again
+                    sleepy = -1;
                 }
                 else if (GamePad.checkButton(GamePad.Right))
                 {
@@ -125,10 +144,17 @@ class PlayerCharacter extends FlxSprite
                             facing = FlxObject.RIGHT;
                             belt.animation.paused = false;
                     }
+
+                    // Actions make the cat awake, and he can't sleep again
+                    sleepy = -1;
                 }
                 else
                 {
-                    animation.play("idle");
+                    // Avoid changing animations while sleeping
+                    if (sleepy <= 0)
+                    {
+                        animation.play("idle");
+                    }
                     belt.animation.paused = true;
                 }
             }
@@ -141,24 +167,64 @@ class PlayerCharacter extends FlxSprite
                     flipX = !(facing == FlxObject.LEFT);
             }
 
-
-            hurry.visible = (world.notifyAiming);
-            hurryTween.active = (world.notifyAiming && !world.paused);
-        }
-        else
-        {
-            if (world.state == PlayState.StateWinning)
+            // Avoid hurrying while sleeping
+            if (sleepy > 0)
             {
-                animation.play("happy");
+                hurry.visible = false;
+                hurryTween.active = false;
             }
             else
             {
-                animation.play("idle");
+                hurry.visible = (world.notifyAiming);
+                hurryTween.active = (world.notifyAiming && !world.paused);
             }
+        }
+        else
+        {
+            // Avoid changing animations while sleeping
+            if (sleepy < 3)
+            {
+                if (world.state == PlayState.StateWinning)
+                {
+                    animation.play("happy");
+                }
+                else
+                {
+                    animation.play("idle");
+                }
 
-            belt.animation.paused = true;
-            hurry.visible = false;
-            hurryTween.active = false;
+                belt.animation.paused = true;
+                hurry.visible = false;
+                hurryTween.active = false;
+            }
+        }
+
+        /** Catbomb unlocking gimmick **/
+        /* Handle sleepy status for the cat */
+        // First, yawn (always, even with hint off, foreshadowing the lazy cat thing)
+        if (sleepy == 0 && world.grid.getLowestBubbleRow() == 7)
+        {
+            sleepy = 1;
+            animation.play("yawn");
+        } 
+        // Then, lay down (ONLY if catbomb hint is on)
+        else if (sleepy == 1 && world.grid.getLowestBubbleRow() == 9
+                 && ProgressStatus.progressData.catbombHint)
+        {
+            BgmEngine.fadeCurrent();
+            sleepy = 2;
+            animation.play("sleep-in");
+        }
+        // When finished, sleep
+        else if (sleepy == 2 && animation.name == "sleep-in" && animation.finished)
+        {
+            sleepy = 3;
+            animation.play("sleep");
+        }
+        // And keep sleeping
+        else if (sleepy == 3)
+        {
+            animation.play("sleep");
         }
 
         belt.update(elapsed);

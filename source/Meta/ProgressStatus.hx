@@ -76,7 +76,8 @@ class ProgressStatus
                 progressData.bearHint = true;
             }
         }
-        else if (progressData.bearChar && !progressData.catbombHint)
+        
+        if (!progressData.catbombHint)
         {
             if (arcadeData.totalBubbles > CatbombHintBubbles)
             {
@@ -116,7 +117,8 @@ class ProgressStatus
                 progressData.fanfare = "bear";
             }
         }
-        else if (progressData.bearChar && progressData.catbombHint && !progressData.catbombChar)
+        
+        if (progressData.catbombHint && !progressData.catbombChar)
         {
             if (playSessionData.character == "cat" && playSessionData.catSleeping)
             {
