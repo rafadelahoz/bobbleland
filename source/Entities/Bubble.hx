@@ -185,60 +185,66 @@ class Bubble extends Entity
 
 			case Bubble.StateFlying:
 
-				// Bounce off walls
-				if (x + width/2 - Size * 1 <= grid.getLeft() || x + width/2 + Size * 1 >= grid.getRight())
-				{
-					velocity.x *= -1;
-					SfxEngine.play(SFX.BubbleBounce);
-				}
-
-				// Stick to the ceiling
-				if (y - HalfSize <= grid.getTop())
-				{
-					onHitCeiling();
-				}
-				// Check collision vs bubbles
-				else if (UseMoveToContact && checkCollisionWithBubblesAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed))
-				{
-					// Check for presents
-					var present : Bubble = getPresentBubbleMeetingAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed, onlyPresentBubbles);
-
-					var flyingVelocity = moveToContact(x + velocity.x * FlxG.elapsed,  y + velocity.y * FlxG.elapsed);
-
-					// Remember your way
-					var currentPosition : FlxPoint = getCurrentCell();
-					//if (!compare(currentPosition, cellPosition))
+				try {
+					// Bounce off walls
+					if (x + width/2 - Size * 1 <= grid.getLeft() || x + width/2 + Size * 1 >= grid.getRight())
 					{
-						lastPosition.set(cellPosition.x, cellPosition.y);
-						cellPosition.set(currentPosition.x, currentPosition.y);
-
-						world.grid.currentCell = cellPosition;
-						world.grid.lastCell = lastPosition;
+						velocity.x *= -1;
+						SfxEngine.play(SFX.BubbleBounce);
 					}
 
-					// trace(lastPosition + " -> " + cellPosition);
-					if (present != null)
+					// Stick to the ceiling
+					if (y - HalfSize <= grid.getTop())
 					{
-						// onHitBubbles(false);
-						present.onPresentHit(this, flyingVelocity);
+						onHitCeiling();
+					}
+					// Check collision vs bubbles
+					else if (UseMoveToContact && checkCollisionWithBubblesAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed))
+					{
+						// Check for presents
+						var present : Bubble = getPresentBubbleMeetingAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed, onlyPresentBubbles);
+
+						var flyingVelocity = moveToContact(x + velocity.x * FlxG.elapsed,  y + velocity.y * FlxG.elapsed);
+
+						// Remember your way
+						var currentPosition : FlxPoint = getCurrentCell();
+						//if (!compare(currentPosition, cellPosition))
+						{
+							lastPosition.set(cellPosition.x, cellPosition.y);
+							cellPosition.set(currentPosition.x, currentPosition.y);
+
+							world.grid.currentCell = cellPosition;
+							world.grid.lastCell = lastPosition;
+						}
+
+						// trace(lastPosition + " -> " + cellPosition);
+						if (present != null)
+						{
+							// onHitBubbles(false);
+							present.onPresentHit(this, flyingVelocity);
+						}
+						else
+						{
+							onHitBubbles();
+						}
 					}
 					else
 					{
-						onHitBubbles();
-					}
-				}
-				else
-				{
-					// Remember your way
-					var currentPosition : FlxPoint = getCurrentCell();
-					if (!compare(currentPosition, cellPosition))
-					{
-						lastPosition.set(cellPosition.x, cellPosition.y);
-						cellPosition.set(currentPosition.x, currentPosition.y);
+						// Remember your way
+						var currentPosition : FlxPoint = getCurrentCell();
+						if (!compare(currentPosition, cellPosition))
+						{
+							lastPosition.set(cellPosition.x, cellPosition.y);
+							cellPosition.set(currentPosition.x, currentPosition.y);
 
-						world.grid.currentCell = cellPosition;
-						world.grid.lastCell = lastPosition;
+							world.grid.currentCell = cellPosition;
+							world.grid.lastCell = lastPosition;
+						}
 					}
+				} 
+				catch (exception : Dynamic)
+				{
+					throw "There was a problem positioning the moving bubble: " + exception;
 				}
 
 			case Bubble.StateIdling, Bubble.StatePopping:
@@ -373,7 +379,7 @@ class Bubble extends Entity
 				cellPosition.set(currentPosition.x, currentPosition.y);
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 			}
-
+			
 			// If it's already occupied, go to the last one free you got
 			if (!grid.isPositionValid(currentPosition) || grid.getData(currentPosition.x, currentPosition.y) != null)
 			{

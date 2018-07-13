@@ -231,38 +231,45 @@ class PlayState extends FlxTransitionableState
 
 	override public function update(elapsed:Float)
 	{
-		GamePad.handlePadState();
+		try {
+			GamePad.handlePadState();
 
-		if (state != PlayState.StateLosing)
-		{
-			if (GamePad.justReleased(GamePad.Pause))
+			if (state != PlayState.StateLosing)
 			{
-				onPauseStart();
-				openSubState(new PauseSubstate(this, onPauseEnd));
+				if (GamePad.justReleased(GamePad.Pause))
+				{
+					onPauseStart();
+					openSubState(new PauseSubstate(this, onPauseEnd));
+				}
 			}
-		}
 
-		switch (state)
+			switch (state)
+			{
+				case PlayState.StateAiming:
+					onAimingState();
+				case PlayState.StateWaiting:
+					onWaitingState();
+				case PlayState.StateRemoving:
+					onRemovingState();
+				case PlayState.StateLosing:
+					onLosingState();
+				case PlayState.StateWinning:
+					onWinningState();
+			}
+
+			handleBGM();
+
+			handleDebugRoutines();
+
+			bubbles.sort(sortBubbles);
+
+			super.update(elapsed);
+		} 
+		catch (exception : Dynamic)
 		{
-			case PlayState.StateAiming:
-				onAimingState();
-			case PlayState.StateWaiting:
-				onWaitingState();
-			case PlayState.StateRemoving:
-				onRemovingState();
-			case PlayState.StateLosing:
-				onLosingState();
-			case PlayState.StateWinning:
-				onWinningState();
+			add(new TextNotice(40, 100, "A severe problem\noccurred.\nPlease, share\nthis with the\ndeveloper//", true));
+			ErrorReporter.handle(exception);
 		}
-
-		handleBGM();
-
-		handleDebugRoutines();
-
-		bubbles.sort(sortBubbles);
-
-		super.update(elapsed);
 	}
 
 	function handleBGM()
