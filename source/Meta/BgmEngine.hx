@@ -221,10 +221,14 @@ class BgmEngine
         {
             if (tunes.get(current) != null && currentVolume < volume)
             {
-                tunes.get(current).fadeIn(time, 0, volume);
+                if (Enabled)
+                {
+                    tunes.get(current).fadeIn(time, 0, volume);
+                    currentVolume = volume;
+                }
             }
 
-            currentVolume = volume;
+            
         }
     }
 
