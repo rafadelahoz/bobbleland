@@ -282,7 +282,7 @@ class Bubble extends Entity
 					alpha = 1;
 		}
 
-		if (world.notifyDrop && state == StateIdling)
+		if (world.notifyDrop && state == StateIdling && !world.paused)
 		{
 			vibrate(true, 0.5, true);
 		}

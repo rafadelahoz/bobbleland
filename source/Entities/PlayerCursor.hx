@@ -163,6 +163,10 @@ class PlayerCursor extends Entity
 	override public function draw()
 	{
 		canvas.draw();
+		// Disable vibration when paused
+		if (world.paused)
+			vibrationEnabled = false;
+
 		super.draw();
 		if (world.grid.DEBUG_diplayGrid)
 			label.draw();
