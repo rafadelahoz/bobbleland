@@ -93,12 +93,17 @@ class PlayerCursor extends Entity
 				isSleeping = false;
 			}
 
-			if (world.notifyAiming)
+			if (world.notifyAiming && world.state != PlayState.StateLosing)
 				vibrate();
 			else
 				vibrate(false);
 
 			label.update(elapsed);
+		}
+		else
+		{
+			if (world.state == PlayState.StateLosing)
+				vibrate(false);
 		}
 
 		if (world.baseDecoration != null)
