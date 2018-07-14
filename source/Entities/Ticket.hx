@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxTimer;
 
 import text.PixelText;
 import text.TextUtils;
@@ -12,10 +13,13 @@ class Ticket extends FlxSpriteGroup
 {
     var btnSignature : Button;
     var btnShare : Button;
+    var bottomHider : Entity;
 
-    var ticket : FlxSprite;
+    var ticket : Entity;
     var score : Int;
     var time : String;
+
+    var data : Dynamic;
 
     public var signatureCallback : Void -> Void;
 
@@ -26,8 +30,15 @@ class Ticket extends FlxSpriteGroup
 
     public function init(data : Dynamic)
     {
+        this.data = data;
+
         var top : FlxSprite = new FlxSprite(0, 0, "assets/ui/ticket-top.png");
-        var bottom : FlxSprite = new FlxSprite(0, 96, "assets/ui/ticket-bottom.png");
+        var bottom : FlxSprite = null;
+        if (data.character != "bear")
+            bottom = new FlxSprite(0, 96, "assets/ui/ticket-bottom.png");
+        else
+            bottom = new FlxSprite(0, 96, "assets/ui/ticket-bottom-bear.png");
+
         var contentsHeight : Int = 14*8;
         // Adjust to include record lines
         contentsHeight += 8*((data.scoreRecord ? 1 : 0) + (data.bubblesRecord ? 1 : 0) + (data.timeRecord ? 1 : 0) + (data.cleansRecord ? 1 : 0));
@@ -35,7 +46,7 @@ class Ticket extends FlxSpriteGroup
         var sprWidth : Int = Std.int(top.width);
         var sprHeight : Int = Std.int(top.height + contentsHeight + bottom.height);
 
-        var sprite : FlxSprite = new FlxSprite(0, 0);
+        var sprite : Entity = new Entity(0, 0);
         sprite.makeGraphic(sprWidth, sprHeight, 0x00FFFFFF);
 
         sprite.stamp(top, 0, 0);
@@ -82,23 +93,35 @@ class Ticket extends FlxSpriteGroup
         if (data.cleansRecord)
             baseY = record(sprite, baseY);
 
-        var signature : FlxSprite = new FlxSprite(0, 0, getCharSignature(data.character));
-        sprite.stamp(signature, sprWidth - 72, sprHeight - 64);
+        if (data.character != "bear")
+        {
+            var signature : FlxSprite = new FlxSprite(0, 0, getCharSignature(data.character));
+            sprite.stamp(signature, sprWidth - 72, sprHeight - 64);
+        }
 
         // Store the generated ticket
         ticket = sprite;
 
         // Display it
-        var spr : FlxSprite = new FlxSprite(FlxG.width/2 - sprWidth/2, 0);
+        /*var spr : FlxSprite = new FlxSprite(FlxG.width/2 - sprWidth/2, 0);
         spr.pixels = sprite.pixels;
-        add(spr);
+        add(spr);*/
+        ticket.x = FlxG.width/2 - sprWidth/2;
+        add(ticket);
+
+        if (data.character == "bear")
+        {
+            bottomHider = new Entity(ticket.x, Std.int(top.height + contentsHeight));
+            bottomHider.loadGraphic("assets/ui/ticket-bottom.png");
+            add(bottomHider);
+        }
 
         // Create buttons
         btnSignature = new Button(sprWidth-56, sprHeight-64, onSignReceipt);
         btnSignature.loadSpritesheet("assets/ui/btn-signature.png", 72, 56);
         add(btnSignature);
 
-        btnShare = new Button(spr.x + 8, sprHeight-48, onShare);
+        btnShare = new Button(ticket.x + 8, sprHeight-48, onShare);
         btnShare.loadSpritesheet("assets/ui/btn-share.png", 56, 24);
         btnShare.visible = false;
         btnShare.active = false;
@@ -149,6 +172,46 @@ class Ticket extends FlxSpriteGroup
 
     function onSignReceipt()
     {
+        // Make ticket vibrate
+        ticket.vibrate(true, 2, true);
+        btnShare.vibrate(true, 2, true);
+        // And stop after a while
+        new FlxTimer().start(0.2, function(t:FlxTimer){
+            t.destroy();
+            ticket.vibrate(false);
+            btnShare.vibrate(false);
+        });
+
+        // Shade ticket
+        ticket.color = Palette.DarkGray;
+        btnShare.color = Palette.DarkGray;
+        // But not for long
+        flixel.tweens.FlxTween.color(ticket, 0.3, ticket.color, 0xFFFFFFFF, {ease: flixel.tweens.FlxEase.circOut});
+        flixel.tweens.FlxTween.color(btnShare, 0.3, btnShare.color, 0xFFFFFFFF, {ease: flixel.tweens.FlxEase.circOut});
+
+        switch (data.character)
+        {
+            case "pug":
+                SfxEngine.play(SfxEngine.SFX.StickerB, 1);
+            case "cat":
+                // Play tear sound
+                SfxEngine.play(SfxEngine.SFX.TearTicket, 0.4);
+            case "crab":
+                SfxEngine.play(SfxEngine.SFX.SignatureShort, 0.8);
+            case "frog":
+                SfxEngine.play(SfxEngine.SFX.SignatureLong, 0.8);
+            case "bear":
+                if (bottomHider != null)
+                {
+                    // Play tear sound
+                    SfxEngine.play(SfxEngine.SFX.TearTicket);
+                    // Hide the hider
+                    bottomHider.destroy();
+                }
+            case "catbomb":
+                SfxEngine.play(SfxEngine.SFX.StickerA, 1);
+        }
+
         btnSignature.visible = false;
         btnSignature.active = false;
 
