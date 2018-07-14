@@ -140,25 +140,7 @@ class ArcadePreState extends FlxTransitionableState
             new FlxTimer().start(3.5, function(t:FlxTimer) {
 
                 var ticket : Entity = new Entity(0, 0);
-                if (ProgressStatus.progressData.fanfare != "bear")
-                {
-                    ticket.makeGraphic(144, 56, Palette.White);
-
-                    var thing : String = null;
-                    switch (ProgressStatus.progressData.fanfare)
-                    {
-                        case "crab": thing = "     A CRAB!";
-                        case "frog": thing = "     A FROG!";
-                        case "bear": thing = "     A BEAR!";
-                        case "catbomb": thing = "    CATBOMB!";
-                    }
-
-                    stampText(ticket, Palette.Black, "CONGRATULATIONS\n YOU UNLOCKED  \n" + thing, 8, 8);
-                }
-                else
-                {
-                    ticket.loadGraphic("assets/ui/unlock-card-bear.png");
-                }
+                ticket.loadGraphic("assets/ui/unlock-card-" + ProgressStatus.progressData.fanfare + ".png");
 
                 ticket.x = FlxG.width / 2 - ticket.width / 2;
 

@@ -41,21 +41,6 @@ class ProgressStatus
 
                 save();
             }
-
-            /*progressData.crabChar = true;
-            progressData.frogChar = true;
-            progressData.bearChar = true;
-            progressData.catbombChar = true;*/
-
-            // progressData.fanfare = "none";
-            // progressData.crabChar = false;
-
-            // progressData.fanfare = "crab";
-            // progressData.crabChar = true;
-
-            // progressData.frogHint = true;
-            // progressData.bearHint = true;
-            // progressData.catbombHint = true;
         }
     }
 
