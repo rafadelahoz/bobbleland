@@ -90,13 +90,16 @@ class PlayState extends FlxTransitionableState
 		if (saveData != null && saveData.session != null)
 		{
 			trace("Using saved session data");
-			trace(saveData.session);
-			trace("Colors " + saveData.session.usedColors.length);
+			/*trace(saveData.session);
+			trace("Colors " + saveData.session.usedColors.length);*/
 			playSessionData = saveData.session;
+			ArcadeGameStatus.setData(playSessionData);
 		}
 		else
 		{
+			trace("Using new session data");
 			playSessionData = ArcadeGameStatus.getData();
+			// trace("New Arcade Game, playSessionData is", playSessionData);
 		}
 	}
 

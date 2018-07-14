@@ -36,9 +36,9 @@ class ArcadeGameStatus
         {
             trace("Loading arcadeData");
             arcadeData = loadArcadeConfigData();
-
             if (arcadeData == null)
             {
+                trace("Arcade data reset");
                 arcadeData = {
                     difficulty: 2, character: null, bgm: "GameA",
                     highScore: 0, maxBubbles: 0, longestGame: 0, maxCleans: 0,
@@ -228,6 +228,11 @@ class ArcadeGameStatus
         }
 
         return usedColors;
+    }
+
+    public static function setData(data : PlaySessionData)
+    {
+        playSessionData = data;
     }
 
     public static function getData() : PlaySessionData
