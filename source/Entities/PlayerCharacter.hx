@@ -49,7 +49,7 @@ class PlayerCharacter extends FlxSprite
         else if (characterId == "bear")
         {
             belt.x -= 4;
-            belt.y -= 24;
+            belt.y -= 14;
         }
         else if (characterId == "catbomb")
         {
@@ -114,11 +114,11 @@ class PlayerCharacter extends FlxSprite
                 offset.x = 8;
                 offset.y = 4;
             case "bear":
-                loadGraphic("assets/images/char-bear-sheet.png", true, 64, 48);
+                loadGraphic("assets/images/char-bear-sheet.png", true, 64, 38);
                 animation.add("idle", [0]);
                 animation.add("run", [0, 1, 2, 3, 4, 5, 6, 7, 8], 25, true);
                 animation.add("action", [9, 10, 11, 12, 13, 14, 15, 16], 30, false);
-                animation.add("happy", [0, 1, 17], 4, false);
+                animation.add("happy", [17, 18], 2, true);
                 offset.x = 20;
                 offset.y = 14;
             case "catbomb":
