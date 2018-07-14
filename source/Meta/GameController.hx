@@ -16,6 +16,13 @@ class GameController
 		// FlxG.autoPause = false;
 		#if (!mobile)
 			FlxG.scaleMode = new flixel.system.scaleModes.PixelPerfectScaleMode();
+
+			var sprite : flixel.FlxSprite= new flixel.FlxSprite();
+			sprite.makeGraphic(20, 20, 0x00FFFFFF);
+			flixel.util.FlxSpriteUtil.drawCircle(sprite, 10, 10, 8, 0x00FFFFFF, {color: Palette.White, thickness: 2});
+
+			// Load the sprite's graphic to the cursor
+			FlxG.mouse.load(sprite.pixels, 1, -10, -10);
 		#end
 	}
 
@@ -40,6 +47,9 @@ class GameController
 		}
 		else
 		{
+			// Delete stored game
+			SaveStateManager.loadAndErase();
+			
 			currentState = Menu;
 			FlxG.switchState(new ArcadePreState());
 		}

@@ -34,6 +34,7 @@ class ArcadeGameStatus
 
         if (arcadeData == null)
         {
+            trace("Loading arcadeData");
             arcadeData = loadArcadeConfigData();
 
             if (arcadeData == null)
