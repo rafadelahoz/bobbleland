@@ -29,6 +29,9 @@ enum SFX {
     CleanFanfare;
     UnlockHum;
     UnlockShine;
+    TearTicket;
+    SignatureShort;
+    SignatureLong;
 }
 
 class SfxEngine
@@ -76,6 +79,9 @@ class SfxEngine
         sfxFiles.set(SFX.CleanFanfare,   path + "clear-fanfare-loud.wav");
         sfxFiles.set(SFX.UnlockHum,      path + "unlock-hum-fader.wav");
         sfxFiles.set(SFX.UnlockShine,    path + "399904_e.wav");
+        sfxFiles.set(SFX.TearTicket,     path + "tear-ticket.wav");
+        sfxFiles.set(SFX.SignatureShort,      path + "signature-short.wav");
+        sfxFiles.set(SFX.SignatureLong,      path + "signature-full.wav");
 
         sfx = new Map<SFX, FlxSound>();
         for (sf in sfxFiles.keys())

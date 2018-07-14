@@ -90,13 +90,16 @@ class PlayState extends FlxTransitionableState
 		if (saveData != null && saveData.session != null)
 		{
 			trace("Using saved session data");
-			trace(saveData.session);
-			trace("Colors " + saveData.session.usedColors.length);
+			/*trace(saveData.session);
+			trace("Colors " + saveData.session.usedColors.length);*/
 			playSessionData = saveData.session;
+			ArcadeGameStatus.setData(playSessionData);
 		}
 		else
 		{
+			trace("Using new session data");
 			playSessionData = ArcadeGameStatus.getData();
+			// trace("New Arcade Game, playSessionData is", playSessionData);
 		}
 	}
 
@@ -281,7 +284,7 @@ class PlayState extends FlxTransitionableState
 		{
 			if (playSessionData.bgm != null)
 			{
-				if (grid.getLowestBubbleRow() > 7)
+				if (inDanger())
 				{
 					BgmEngine.play(BgmEngine.BGM.Danger);
 				}
@@ -918,6 +921,11 @@ class PlayState extends FlxTransitionableState
 		SfxEngine.stop(SfxEngine.SFX.Print);
 		// Stop vibration
 		notifyDrop = false;
+	}
+
+	public function inDanger() : Bool
+	{
+		return grid.getLowestBubbleRow() > 7;
 	}
 
 	/* Debug things */

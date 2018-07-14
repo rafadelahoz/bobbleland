@@ -39,6 +39,10 @@ class ArcadePreState extends FlxTransitionableState
     var btnBgmB : HoldButton;
     var btnBgmOff : HoldButton;
 
+    var ledBgmA : FlxSprite;
+    var ledBgmB : FlxSprite;
+    var ledBgmOff : FlxSprite;
+
     var btnStart : Button;
 
     /** History screen **/
@@ -140,25 +144,7 @@ class ArcadePreState extends FlxTransitionableState
             new FlxTimer().start(3.5, function(t:FlxTimer) {
 
                 var ticket : Entity = new Entity(0, 0);
-                if (ProgressStatus.progressData.fanfare != "bear")
-                {
-                    ticket.makeGraphic(144, 56, Palette.White);
-
-                    var thing : String = null;
-                    switch (ProgressStatus.progressData.fanfare)
-                    {
-                        case "crab": thing = "     A CRAB!";
-                        case "frog": thing = "     A FROG!";
-                        case "bear": thing = "     A BEAR!";
-                        case "catbomb": thing = "    CATBOMB!";
-                    }
-
-                    stampText(ticket, Palette.Black, "CONGRATULATIONS\n YOU UNLOCKED  \n" + thing, 8, 8);
-                }
-                else
-                {
-                    ticket.loadGraphic("assets/ui/unlock-card-bear.png");
-                }
+                ticket.loadGraphic("assets/ui/unlock-card-" + ProgressStatus.progressData.fanfare + ".png");
 
                 ticket.x = FlxG.width / 2 - ticket.width / 2;
 
@@ -292,10 +278,29 @@ class ArcadePreState extends FlxTransitionableState
     {
         swipeManager.update(elapsed);
 
+        handleBgmLeds();
+
         if (FlxG.keys.justPressed.O)
             Screenshot.take();
 
         super.update(elapsed);
+    }
+
+    function handleBgmLeds()
+    {
+        ledBgmA.animation.play("off");
+        ledBgmB.animation.play("off");
+        ledBgmOff.animation.play("off");
+
+        switch (ArcadeGameStatus.getBgm())
+        {
+            case "GameA":
+                ledBgmA.animation.play("on");
+            case "GameC":
+                ledBgmB.animation.play("on");
+            default:
+                ledBgmOff.animation.play("on");
+        }
     }
 
     public function onDeactivate()
@@ -570,10 +575,10 @@ class ArcadePreState extends FlxTransitionableState
 
         if (ProgressStatus.progressData.bearChar)
         {
-            /*btnBear = new HoldButton(120, 128, onCharBearPressed, onCharReleased);
+            btnBear = new HoldButton(80, 168, onCharBearPressed, onCharReleased);
             btnBear.loadSpritesheet("assets/ui/char-bear.png", 32, 32);
             btnBear.allowRelease = false;
-            group.add(btnBear);*/
+            group.add(btnBear);
         }
         else if (ProgressStatus.progressData.bearHint)
         {
@@ -599,17 +604,40 @@ class ArcadePreState extends FlxTransitionableState
 
     function generateBgmButtons(group : FlxSpriteGroup)
     {
-        btnBgmA = new HoldButton(40, 224, onBgmAPressed, onBgmReleased);
+        var baseY : Int = 224;
+
+        btnBgmA = new HoldButton(40, baseY, onBgmAPressed, onBgmReleased);
         btnBgmA.loadSpritesheet("assets/ui/btn-bgmA.png", 32, 32);
         group.add(btnBgmA);
 
-        btnBgmB = new HoldButton(80, 224, onBgmBPressed, onBgmReleased);
+        ledBgmA = new FlxSprite(48, baseY-8);
+        ledBgmA.loadGraphic("assets/ui/led-selector-sheet.png", true, 16, 8);
+        ledBgmA.animation.add("off", [0]);
+        ledBgmA.animation.add("on", [1]);
+        ledBgmA.animation.play("off");
+        group.add(ledBgmA);
+
+        btnBgmB = new HoldButton(80, baseY, onBgmBPressed, onBgmReleased);
         btnBgmB.loadSpritesheet("assets/ui/btn-bgmB.png", 32, 32);
         group.add(btnBgmB);
 
-        btnBgmOff = new HoldButton(120, 224, onBgmOffPressed, onBgmReleased);
+        ledBgmB = new FlxSprite(88, baseY-8);
+        ledBgmB.loadGraphic("assets/ui/led-selector-sheet.png", true, 16, 8);
+        ledBgmB.animation.add("off", [2]);
+        ledBgmB.animation.add("on", [3]);
+        ledBgmB.animation.play("off");
+        group.add(ledBgmB);
+
+        btnBgmOff = new HoldButton(120, baseY, onBgmOffPressed, onBgmReleased);
         btnBgmOff.loadSpritesheet("assets/ui/btn-bgm-off.png", 32, 32);
         group.add(btnBgmOff);
+
+        ledBgmOff = new FlxSprite(128, baseY-8);
+        ledBgmOff.loadGraphic("assets/ui/led-selector-sheet.png", true, 16, 8);
+        ledBgmOff.animation.add("off", [4]);
+        ledBgmOff.animation.add("on", [5]);
+        ledBgmOff.animation.play("off");
+        group.add(ledBgmOff);
     }
 
     function onCharReleased()
@@ -646,6 +674,13 @@ class ArcadePreState extends FlxTransitionableState
         releaseCharButtons("frog");
     }
 
+    function onCharBearPressed()
+    {
+        ArcadeGameStatus.setCharacter("bear");
+        // Deactivate other buttons
+        releaseCharButtons("bear");
+    }
+
     function onCharCatbombPressed()
     {
         ArcadeGameStatus.setCharacter("catbomb");
@@ -671,7 +706,7 @@ class ArcadePreState extends FlxTransitionableState
 
     function onBgmReleased()
     {
-        ArcadeGameStatus.setBgm(null);
+        // ArcadeGameStatus.setBgm(null);
         BgmEngine.play(BgmEngine.BGM.Menu);
         // Deactivate other buttons
         btnBgmA.setPressed(false);
