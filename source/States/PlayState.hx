@@ -267,7 +267,7 @@ class PlayState extends FlxTransitionableState
 			bubbles.sort(sortBubbles);
 
 			super.update(elapsed);
-		} 
+		}
 		catch (exception : Dynamic)
 		{
 			add(new TextNotice(40, 100, "A severe problem\noccurred.\nPlease, share\nthis with the\ndeveloper//", true));
@@ -1102,6 +1102,7 @@ class PlayState extends FlxTransitionableState
 		if (grid.getData(cell.x, cell.y) != null)
 		{
 			bubbles.remove(grid.getData(cell.x, cell.y));
+			presents.remove(grid.getData(cell.x, cell.y));
 			grid.getData(cell.x, cell.y).destroy();
 			grid.setData(cell.x, cell.y, null);
 		}

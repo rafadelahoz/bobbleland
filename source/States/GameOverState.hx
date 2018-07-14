@@ -84,6 +84,12 @@ class GameOverState extends FlxTransitionableState
 			GameController.ToMenu();
 		}
 
+		if (FlxG.keys.justPressed.S)
+		{
+			var filename : String = Screenshot.take();
+			trace(filename);
+		}
+
 		super.update(elapsed);
 	}
 
@@ -104,7 +110,7 @@ class GameOverState extends FlxTransitionableState
 		// Enable buttons
 		btnGiveup.active = true;
 		btnGiveup.visible = true;
-		
+
 		if (ProgressStatus.progressData.fanfare == null || ProgressStatus.progressData.fanfare == "none")
 		{
 			// Don't allow to retry if a new character has been unlocked

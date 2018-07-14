@@ -51,6 +51,8 @@ class Bubble extends Entity
 
 	var touchedBubble : Bubble;
 
+	var turnTimer : FlxTimer;
+
 	public function new(X : Float, Y : Float, World : PlayState, Color : BubbleColor)
 	{
 		super(X, Y);
@@ -82,6 +84,18 @@ class Bubble extends Entity
 		handlePoints();
 
 		handleGraphic();
+	}
+
+	override public function destroy()
+	{
+		if (turnTimer != null)
+		{
+			turnTimer.cancel();
+			turnTimer.destroy();
+			turnTimer = null;
+		}
+
+		super.destroy();
 	}
 
 	public function handleSpecialBubble(color : BubbleColor)
@@ -153,7 +167,8 @@ class Bubble extends Entity
 					}
 				}
 
-				new FlxTimer().start(FlxG.random.float(1, 30), doTurn);
+				turnTimer = new FlxTimer();
+				turnTimer.start(FlxG.random.float(1, 30), doTurn);
 
 			default:
 				loadGraphic("assets/images/" + Bubble.GetSprite() + ".png", true, 16, 16);
@@ -241,7 +256,7 @@ class Bubble extends Entity
 							world.grid.lastCell = lastPosition;
 						}
 					}
-				} 
+				}
 				catch (exception : Dynamic)
 				{
 					throw "There was a problem positioning the moving bubble: " + exception;
@@ -379,7 +394,7 @@ class Bubble extends Entity
 				cellPosition.set(currentPosition.x, currentPosition.y);
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 			}
-			
+
 			// If it's already occupied, go to the last one free you got
 			if (!grid.isPositionValid(currentPosition) || grid.getData(currentPosition.x, currentPosition.y) != null)
 			{

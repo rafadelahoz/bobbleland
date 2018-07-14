@@ -444,9 +444,9 @@ class ArcadePreState extends FlxTransitionableState
         screen.add(totalCleansDisplay);
 
         #if (!release)
-        var btnClearData : HoldButton = new HoldButton(56+32, 282, null, onClearDataReleased);
-        btnClearData.loadSpritesheet("assets/ui/btn-cleardata.png", 96, 24);
-        screen.add(btnClearData);
+            var btnClearData : HoldButton = new HoldButton(56+32, 282, null, onClearDataReleased);
+            btnClearData.loadSpritesheet("assets/ui/btn-cleardata.png", 96, 24);
+            screen.add(btnClearData);
         #end
 
         screen.add(buildScrollButton(FlxG.width - 12, 144, false));
