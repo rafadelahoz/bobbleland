@@ -3,6 +3,8 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.math.FlxRect;
+import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
@@ -23,6 +25,12 @@ class PlayerCharacter extends FlxSprite
     {
         return sleepy >= 2;
     }
+
+    var sweatTimer : FlxTimer;
+    var sweatRight : Bool;
+    static var SweatDelay : Float = 0.75;
+
+    var sweatRect : FlxRect;
 
     public function new(X : Float, Y : Float, World : PlayState, CharacterId : String)
     {
@@ -61,6 +69,8 @@ class PlayerCharacter extends FlxSprite
         else
             belt.color = Palette.DarkPurple;
 
+        setupSweatRectangle();
+
         hurry = new FlxSprite(x-8, y-19, "assets/images/hurry.png");
         hurry.visible = false;
         hurry.scale.set(0.9, 0.9);
@@ -70,6 +80,62 @@ class PlayerCharacter extends FlxSprite
             sleepy = 0;
         else
             sleepy = -1;
+
+        sweatTimer = new FlxTimer();
+    }
+
+    function setupSweatRectangle()
+    {
+        switch (characterId)
+        {
+            case "pug":
+                sweatRect = FlxRect.get(x-4, y-3, width+4, height);
+            case "cat":
+                sweatRect = FlxRect.get(x-6, y-4, width+8, height+4);
+            case "crab":
+                sweatRect = FlxRect.get(x-4, y-4, width+8, height+4);
+            case "frog":
+                sweatRect = FlxRect.get(x+6-offset.x, y, width-16+4, height-4);
+            case "bear":
+                sweatRect = FlxRect.get(x - offset.x, y - offset.y, width, height);
+            case "catbomb":
+                sweatRect = FlxRect.get(x-4, y-4, 36, 24);
+            default:
+                sweatRect = null;
+        }
+    }
+
+    override public function destroy()
+    {
+        if (sweatTimer != null)
+        {
+            sweatTimer.cancel();
+            sweatTimer.destroy();
+            sweatTimer = null;
+        }
+
+        if (hurry != null)
+        {
+            hurry.destroy();
+            hurry = null;
+        }
+
+        if (hurryTween != null)
+        {
+            hurryTween.cancel();
+            hurryTween.destroy();
+            hurryTween = null;
+        }
+
+        if (belt != null)
+        {
+            belt.destroy();
+            belt = null;
+        }
+
+        sweatRect.put();
+
+        super.destroy();
     }
 
     function prepareGraphic()
@@ -140,6 +206,29 @@ class PlayerCharacter extends FlxSprite
         else
             color = Palette.White;
             */
+
+        if (world.state != PlayState.StateLosing)
+        {
+            if (world.inDanger() && !world.paused)
+            {
+                if (!sweatTimer.active)
+                {
+                    sweatTimer.start(SweatDelay, onSweatTimer);
+                    sweatRight = FlxG.random.bool();
+                }
+            }
+            else
+            {
+                if (sweatTimer.active)
+                {
+                    sweatTimer.active = false;
+                }
+            }
+        }
+        else
+        {
+            sweatTimer.cancel();
+        }
 
         if (world.cursor.enabled)
         {
@@ -289,6 +378,13 @@ class PlayerCharacter extends FlxSprite
         super.update(elapsed);
     }
 
+    function onSweatTimer(t : FlxTimer)
+    {
+        sweatRight = !sweatRight;
+        world.add(new Sweat(sweatRect, sweatRight));
+        t.start(SweatDelay, onSweatTimer);
+    }
+
     function canSwitchAnim(?target : String = null)
     {
         switch (characterId)
@@ -321,5 +417,36 @@ class PlayerCharacter extends FlxSprite
 
         if (hurry.visible)
             hurry.draw();
+    }
+}
+
+class Sweat extends FlxSprite
+{
+    public function new(owner : FlxRect, toRight : Bool)
+    {
+        super(owner.x, owner.y);
+
+        if (toRight)
+        {
+            x += owner.width - 8;
+        }
+        else
+        {
+            flipX = true;
+        }
+
+        loadGraphic("assets/images/sweat-sheet.png", true, 10, 14);
+        animation.add("go", [0, 1, 2, 3, 4, 5], 12, false);
+        animation.play("go");
+    }
+
+    override public function update(elapsed : Float)
+    {
+        if (animation.finished)
+        {
+            destroy();
+        }
+        else
+            super.update(elapsed);
     }
 }

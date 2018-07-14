@@ -274,7 +274,7 @@ class PlayState extends FlxTransitionableState
 		{
 			if (playSessionData.bgm != null)
 			{
-				if (grid.getLowestBubbleRow() > 7)
+				if (inDanger())
 				{
 					BgmEngine.play(BgmEngine.BGM.Danger);
 				}
@@ -911,6 +911,11 @@ class PlayState extends FlxTransitionableState
 		SfxEngine.stop(SfxEngine.SFX.Print);
 		// Stop vibration
 		notifyDrop = false;
+	}
+
+	public function inDanger() : Bool
+	{
+		return grid.getLowestBubbleRow() > 7;
 	}
 
 	/* Debug things */
