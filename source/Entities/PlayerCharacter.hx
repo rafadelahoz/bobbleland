@@ -209,7 +209,7 @@ class PlayerCharacter extends FlxSprite
 
         if (world.state != PlayState.StateLosing)
         {
-            if (world.inDanger() && !world.paused)
+            if (world.inDanger() && !world.paused && sleepy < 2)
             {
                 if (!sweatTimer.active)
                 {
