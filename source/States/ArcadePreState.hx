@@ -39,6 +39,10 @@ class ArcadePreState extends FlxTransitionableState
     var btnBgmB : HoldButton;
     var btnBgmOff : HoldButton;
 
+    var ledBgmA : FlxSprite;
+    var ledBgmB : FlxSprite;
+    var ledBgmOff : FlxSprite;
+
     var btnStart : Button;
 
     /** History screen **/
@@ -274,10 +278,29 @@ class ArcadePreState extends FlxTransitionableState
     {
         swipeManager.update(elapsed);
 
+        handleBgmLeds();
+
         if (FlxG.keys.justPressed.O)
             Screenshot.take();
 
         super.update(elapsed);
+    }
+
+    function handleBgmLeds()
+    {
+        ledBgmA.animation.play("off");
+        ledBgmB.animation.play("off");
+        ledBgmOff.animation.play("off");
+
+        switch (ArcadeGameStatus.getBgm())
+        {
+            case "GameA":
+                ledBgmA.animation.play("on");
+            case "GameC":
+                ledBgmB.animation.play("on");
+            default:
+                ledBgmOff.animation.play("on");
+        }
     }
 
     public function onDeactivate()
@@ -581,17 +604,40 @@ class ArcadePreState extends FlxTransitionableState
 
     function generateBgmButtons(group : FlxSpriteGroup)
     {
-        btnBgmA = new HoldButton(40, 224, onBgmAPressed, onBgmReleased);
+        var baseY : Int = 224;
+
+        btnBgmA = new HoldButton(40, baseY, onBgmAPressed, onBgmReleased);
         btnBgmA.loadSpritesheet("assets/ui/btn-bgmA.png", 32, 32);
         group.add(btnBgmA);
 
-        btnBgmB = new HoldButton(80, 224, onBgmBPressed, onBgmReleased);
+        ledBgmA = new FlxSprite(48, baseY-8);
+        ledBgmA.loadGraphic("assets/ui/led-selector-sheet.png", true, 16, 8);
+        ledBgmA.animation.add("off", [0]);
+        ledBgmA.animation.add("on", [1]);
+        ledBgmA.animation.play("off");
+        group.add(ledBgmA);
+
+        btnBgmB = new HoldButton(80, baseY, onBgmBPressed, onBgmReleased);
         btnBgmB.loadSpritesheet("assets/ui/btn-bgmB.png", 32, 32);
         group.add(btnBgmB);
 
-        btnBgmOff = new HoldButton(120, 224, onBgmOffPressed, onBgmReleased);
+        ledBgmB = new FlxSprite(88, baseY-8);
+        ledBgmB.loadGraphic("assets/ui/led-selector-sheet.png", true, 16, 8);
+        ledBgmB.animation.add("off", [2]);
+        ledBgmB.animation.add("on", [3]);
+        ledBgmB.animation.play("off");
+        group.add(ledBgmB);
+
+        btnBgmOff = new HoldButton(120, baseY, onBgmOffPressed, onBgmReleased);
         btnBgmOff.loadSpritesheet("assets/ui/btn-bgm-off.png", 32, 32);
         group.add(btnBgmOff);
+
+        ledBgmOff = new FlxSprite(128, baseY-8);
+        ledBgmOff.loadGraphic("assets/ui/led-selector-sheet.png", true, 16, 8);
+        ledBgmOff.animation.add("off", [4]);
+        ledBgmOff.animation.add("on", [5]);
+        ledBgmOff.animation.play("off");
+        group.add(ledBgmOff);
     }
 
     function onCharReleased()
@@ -660,7 +706,7 @@ class ArcadePreState extends FlxTransitionableState
 
     function onBgmReleased()
     {
-        ArcadeGameStatus.setBgm(null);
+        // ArcadeGameStatus.setBgm(null);
         BgmEngine.play(BgmEngine.BGM.Menu);
         // Deactivate other buttons
         btnBgmA.setPressed(false);
