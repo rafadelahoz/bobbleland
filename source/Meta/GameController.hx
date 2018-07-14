@@ -14,7 +14,9 @@ class GameController
 		database.SceneCharacterDatabase.Init();
 
 		// FlxG.autoPause = false;
-		// FlxG.scaleMode = new flixel.system.scaleModes.PixelPerfectScaleMode();
+		#if (!mobile)
+			FlxG.scaleMode = new flixel.system.scaleModes.PixelPerfectScaleMode();
+		#end
 	}
 
 	public static function ToMenu()
