@@ -93,7 +93,7 @@ class ArcadePreState extends FlxTransitionableState
         btnBack.scrollFactor.set();
         add(btnBack);
 
-        target = new FlxObject(FlxG.width/2, FlxG.height/2);
+        target = new FlxObject(Constants.Width/2, Constants.Height/2);
         add(target);
         isCameraMoving = false;
 
@@ -135,7 +135,7 @@ class ArcadePreState extends FlxTransitionableState
 
             // Do fanfare!
             fanfareShader = new Entity(0, 0);
-            fanfareShader.makeGraphic(FlxG.width, FlxG.height, 0xFFFFFFFF);
+            fanfareShader.makeGraphic(Constants.Width, Constants.Height, 0xFFFFFFFF);
             fanfareShader.color = 0xFF000000;
             fanfareShader.ShineTimerBase = 0.5;
             fanfareShader.shine();
@@ -146,7 +146,7 @@ class ArcadePreState extends FlxTransitionableState
                 var ticket : Entity = new Entity(0, 0);
                 ticket.loadGraphic("assets/ui/unlock-card-" + ProgressStatus.progressData.fanfare + ".png");
 
-                ticket.x = FlxG.width / 2 - ticket.width / 2;
+                ticket.x = Constants.Width / 2 - ticket.width / 2;
 
                 var printer : GoldenPrinter = new GoldenPrinter();
                 printer.backgroundShader = fanfareShader;
@@ -168,7 +168,7 @@ class ArcadePreState extends FlxTransitionableState
                     {
                         new FlxTimer().start(FlxG.random.float(0.2, 1.3), function(t:FlxTimer) {
                             t.destroy();
-                            add(new TextNotice(FlxG.random.int(8, FlxG.width-16), FlxG.random.int(8, FlxG.height-16), "/"));
+                            add(new TextNotice(FlxG.random.int(8, Constants.Width-16), FlxG.random.int(8, Constants.Height-16), "/"));
                         });
                         counter++;
                     }
@@ -398,7 +398,7 @@ class ArcadePreState extends FlxTransitionableState
         generateBgmButtons(centerScreen);
 
         centerScreen.add(buildScrollButton(0, 144, true));
-        // centerScreen.add(buildScrollButton(FlxG.width - 12, 144, false));
+        // centerScreen.add(buildScrollButton(Constants.Width - 12, 144, false));
 
         btnStart = new Button(40, 276, onStartButtonPressed);
         btnStart.loadSpritesheet("assets/ui/btn-start.png", 96, 32);
@@ -414,7 +414,7 @@ class ArcadePreState extends FlxTransitionableState
     {
         var white : Int = 0xFFFF1E8;
 
-        var screen : FlxSpriteGroup = new FlxSpriteGroup(-FlxG.width, 0);
+        var screen : FlxSpriteGroup = new FlxSpriteGroup(-Constants.Width, 0);
 
         var background : FlxSprite = new FlxSprite(0, 0, "assets/ui/arcade-history.png");
         screen.add(background);
@@ -449,7 +449,7 @@ class ArcadePreState extends FlxTransitionableState
             screen.add(btnClearData);
         #end
 
-        screen.add(buildScrollButton(FlxG.width - 12, 144, false));
+        screen.add(buildScrollButton(Constants.Width - 12, 144, false));
 
         creditsRafa = new HoldButton(16, 280, onRafaPressed, onRafaReleased);
         creditsRafa.loadSpritesheet("assets/ui/credits-man-a.png", 32, 32);
@@ -514,7 +514,7 @@ class ArcadePreState extends FlxTransitionableState
         if (target.x > 0)
         {
             isCameraMoving = true;
-            FlxTween.tween(target, {x : target.x + -1*FlxG.width}, 0.5, { ease : FlxEase.cubeInOut, onComplete: onFinishedMoving });
+            FlxTween.tween(target, {x : target.x + -1*Constants.Width}, 0.5, { ease : FlxEase.cubeInOut, onComplete: onFinishedMoving });
         }
     }
 
@@ -524,7 +524,7 @@ class ArcadePreState extends FlxTransitionableState
         if (target.x < 0)
         {
             isCameraMoving = true;
-            FlxTween.tween(target, {x : target.x + FlxG.width}, 0.5, { ease : FlxEase.cubeInOut, onComplete: onFinishedMoving });
+            FlxTween.tween(target, {x : target.x + Constants.Width}, 0.5, { ease : FlxEase.cubeInOut, onComplete: onFinishedMoving });
         }
     }
 

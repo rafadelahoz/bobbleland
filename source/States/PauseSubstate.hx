@@ -41,7 +41,7 @@ class PauseSubstate extends FlxSubState
 
         world = World;
 
-        shader = new FlxSprite(0, 240).makeGraphic(FlxG.width, FlxG.height-240, 0xFF000000);
+        shader = new FlxSprite(0, 240).makeGraphic(Constants.Width, Constants.Height-240, 0xFF000000);
         shader.alpha = 0;
         add(shader);
 
@@ -92,7 +92,7 @@ class PauseSubstate extends FlxSubState
 
     function onCurtainDrawn()
     {
-        // tween = FlxTween.tween(group, {y : FlxG.height / 2 - dialogHeight / 2}, 0.75, {onComplete: onGroupPositioned, ease : FlxEase.elasticOut });
+        // tween = FlxTween.tween(group, {y : Constants.Height / 2 - dialogHeight / 2}, 0.75, {onComplete: onGroupPositioned, ease : FlxEase.elasticOut });
         btnResume.scale.set(1.5, 1.5);
         btnResume.alpha = 0;
         btnResume.visible = true;

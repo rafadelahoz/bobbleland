@@ -30,7 +30,7 @@ class ScoreDisplay extends FlxObject
 		realScore = score;
 		targetScore = Score;
 
-		scoreLabel = text.PixelText.New(X, Y, "", 0xFFFFFFFF, FlxG.width);
+		scoreLabel = text.PixelText.New(X, Y, "", 0xFFFFFFFF, Constants.Width);
 
 		if (mode == PlayState.ModePuzzle)
 		{

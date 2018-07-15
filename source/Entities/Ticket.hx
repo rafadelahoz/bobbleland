@@ -103,10 +103,10 @@ class Ticket extends FlxSpriteGroup
         ticket = sprite;
 
         // Display it
-        /*var spr : FlxSprite = new FlxSprite(FlxG.width/2 - sprWidth/2, 0);
+        /*var spr : FlxSprite = new FlxSprite(Constants.Width/2 - sprWidth/2, 0);
         spr.pixels = sprite.pixels;
         add(spr);*/
-        ticket.x = FlxG.width/2 - sprWidth/2;
+        ticket.x = Constants.Width/2 - sprWidth/2;
         add(ticket);
 
         if (data.character == "bear")

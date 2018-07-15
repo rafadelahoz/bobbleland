@@ -46,7 +46,7 @@ class GameOverState extends FlxTransitionableState
 
 		var blackStrip : FlxSprite;
 		blackStrip = new FlxSprite(0, 272);
-		blackStrip.makeGraphic(FlxG.width, 48, 0xFF000000);
+		blackStrip.makeGraphic(Constants.Width, 48, 0xFF000000);
 		add(blackStrip);
 
 		// Build action button layer

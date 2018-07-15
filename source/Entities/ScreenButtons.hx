@@ -27,8 +27,8 @@ class ScreenButtons extends FlxSpriteGroup
 
 		state = State;
 
-		_width = Std.int(FlxG.width);
-		_height = Std.int(FlxG.height - BottomHeight);
+		_width = Std.int(Constants.Width);
+		_height = Std.int(Constants.Height - BottomHeight);
 		var halfWidth = Std.int(_width / 2);
 		var halfHeight = Std.int(_height / 2);
 
@@ -45,7 +45,7 @@ class ScreenButtons extends FlxSpriteGroup
 			button.animation.play("idle");
 		}
 
-		pauseButton.setSize(_width, FlxG.height/2);
+		pauseButton.setSize(_width, Constants.Height/2);
 		pauseButton.offset.set(-(width-20), 0);
 	}
 

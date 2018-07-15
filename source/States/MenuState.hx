@@ -53,7 +53,7 @@ class MenuState extends FlxTransitionableState
         add(background);
 
 		backgroundShader = new FlxSprite(0, 0);
-		backgroundShader.makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
+		backgroundShader.makeGraphic(Constants.Width, Constants.Height, 0xFF000000);
 		backgroundShader.alpha = 1;
 		add(backgroundShader);
 
@@ -63,7 +63,7 @@ class MenuState extends FlxTransitionableState
 		optionsPanel = new OptionsPanel();
 		add(optionsPanel);
 
-		var borderBottom : FlxSprite = new FlxSprite(0, FlxG.height - 24, "assets/ui/border-top.png");
+		var borderBottom : FlxSprite = new FlxSprite(0, Constants.Height - 24, "assets/ui/border-top.png");
 		borderBottom.scale.y = -1;
 		add(borderBottom);
 
@@ -73,12 +73,12 @@ class MenuState extends FlxTransitionableState
 		var startText : String = "Touch to start";
 		if (SaveStateManager.savestateExists())
 			startText = "Touch to continue";
-		// touchLabel = PixelText.New(FlxG.width / 2 - 56, Std.int(FlxG.height - FlxG.height/4), "Touch to start");
-		touchLabel = PixelText.New(FlxG.width / 2 - (startText.length/2)*8, Std.int(FlxG.height - FlxG.height/4), startText);
+		// touchLabel = PixelText.New(Constants.Width / 2 - 56, Std.int(Constants.Height - Constants.Height/4), "Touch to start");
+		touchLabel = PixelText.New(Constants.Width / 2 - (startText.length/2)*8, Std.int(Constants.Height - Constants.Height/4), startText);
 		touchLabel.alpha = 0;
 		add(touchLabel);
 
-		var credits : FlxSprite = new FlxSprite(FlxG.width / 2 - 42, Std.int(FlxG.height - FlxG.height/6) + 4, "assets/ui/title-credits.png");
+		var credits : FlxSprite = new FlxSprite(Constants.Width / 2 - 42, Std.int(Constants.Height - Constants.Height/6) + 4, "assets/ui/title-credits.png");
 		credits.alpha = 0;
 		add(credits);
 
@@ -95,7 +95,7 @@ class MenuState extends FlxTransitionableState
 
 		BgmEngine.play(BgmEngine.BGM.Title);
 
-		startTouchZone = new FlxObject(0, 160, FlxG.width, 120);
+		startTouchZone = new FlxObject(0, 160, Constants.Width, 120);
 		add(startTouchZone);
 
 		FlxTween.tween(touchLabel, {alpha : 1}, 1, {ease : FlxEase.cubeInOut});

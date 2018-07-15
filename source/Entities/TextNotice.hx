@@ -30,9 +30,9 @@ class TextNotice extends FlxSprite
 
         pxtext = text.PixelText.New(X, Y, Text, Color);
         pxtext.x = Math.max(16, X - pxtext.width / 2);
-        if (pxtext.x + pxtext.width + 16 > FlxG.width)
+        if (pxtext.x + pxtext.width + 16 > Constants.Width)
         {
-            pxtext.x = FlxG.width - 16 - pxtext.width;
+            pxtext.x = Constants.Width - 16 - pxtext.width;
         }
         pxtext.y = Y - pxtext.height / 2;
 

@@ -57,7 +57,7 @@ class PlayerCursor extends Entity
 		guideEnabled = false;
 
 		canvas = new FlxSprite(0, 0);
-		canvas.makeGraphic(FlxG.width, FlxG.height, 0x00FFFFFF);
+		canvas.makeGraphic(Constants.Width, Constants.Height, 0x00FFFFFF);
 		deltaOffset = 0;
 		tiny = new FlxSprite(0, 0, "assets/images/tiny-bubble.png");
 		tiny.centerOffsets(true);

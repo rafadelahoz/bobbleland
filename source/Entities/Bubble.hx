@@ -285,7 +285,7 @@ class Bubble extends Entity
 				{
 					acceleration.y = 400;
 
-					if (y > FlxG.height)
+					if (y > Constants.Height)
 					{
 						onDeath();
 					}

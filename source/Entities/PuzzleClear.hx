@@ -28,7 +28,7 @@ class PuzzleClear extends FlxSprite
 
         setupRotation(0.75);
 
-        FlxTween.tween(this, {y : FlxG.height/2-height/2}, 0.8, { ease : FlxEase.elasticOut,onComplete: function(_t:FlxTween) {
+        FlxTween.tween(this, {y : Constants.Height/2-height/2}, 0.8, { ease : FlxEase.elasticOut,onComplete: function(_t:FlxTween) {
             angleTween.cancel();
             if (completionHandler != null)
                 completionHandler();
@@ -42,7 +42,7 @@ class PuzzleClear extends FlxSprite
         }});
 
         new FlxTimer().start(0.5, function(_t:FlxTimer) {
-            FlxTween.tween(this, {y : FlxG.height+height/2}, 0.7, { ease : FlxEase.elasticOut, startDelay: 0.5,onComplete: function(_t:FlxTween) {
+            FlxTween.tween(this, {y : Constants.Height+height/2}, 0.7, { ease : FlxEase.elasticOut, startDelay: 0.5,onComplete: function(_t:FlxTween) {
                 if (OnComplete != null)
                     OnComplete();
                 }

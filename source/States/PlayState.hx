@@ -120,11 +120,11 @@ class PlayState extends FlxTransitionableState
 			availableColors.push(color);
 		}
 
-		shadow = new FlxSprite(FlxG.width / 2 - 64, 16).makeGraphic(128, 240-48, 0xFF000000);
+		shadow = new FlxSprite(Constants.Width / 2 - 64, 16).makeGraphic(128, 240-48, 0xFF000000);
 		shadow.alpha = 0.68;
 		add(shadow);
 
-		grid = new BubbleGrid(FlxG.width / 2 - 64, 16, 128, 240 - 32, this);
+		grid = new BubbleGrid(Constants.Width / 2 - 64, 16, 128, 240 - 32, this);
 		add(grid);
 
 		ceiling = new Ceiling(this);
@@ -145,7 +145,7 @@ class PlayState extends FlxTransitionableState
 		bottomBar = new FlxSprite(bottomBarPosition.x, bottomBarPosition.y - 1).loadGraphic("assets/images/red-bar.png");
 		add(bottomBar);
 
-		cursor = new PlayerCursor(FlxG.width / 2 - 10, 240 - 40, this);
+		cursor = new PlayerCursor(Constants.Width / 2 - 10, 240 - 40, this);
 		add(cursor);
 
 		if (playSessionData.guideEnabled)
@@ -423,7 +423,7 @@ class PlayState extends FlxTransitionableState
 				// Disable cursor
 				cursor.disable();
 
-				var clearMessage : PuzzleClear = new PuzzleClear(FlxG.width/2, 0);
+				var clearMessage : PuzzleClear = new PuzzleClear(Constants.Width/2, 0);
 				add(clearMessage);
 				clearMessage.init(function() {
 					new FlxTimer().start(1.5, function(_t:FlxTimer){
@@ -726,7 +726,7 @@ class PlayState extends FlxTransitionableState
 
 			FlxG.camera.flash(Palette.Yellow, 1);
 
-			var shiny : Entity = new Entity(FlxG.width / 2 - 64, 16);
+			var shiny : Entity = new Entity(Constants.Width / 2 - 64, 16);
 			shiny.makeGraphic(128, 240 - 32, 0x00FFFFFF);
 			add(shiny);
 
@@ -740,14 +740,14 @@ class PlayState extends FlxTransitionableState
 				var baseY : Int = FlxG.random.int(64, 164);
 
 				// SfxEngine.play(SfxEngine.SFX.Accept);
-				add(new TextNotice(FlxG.random.int(0, FlxG.width), baseY, "FULL TANK CLEAN!"));
+				add(new TextNotice(FlxG.random.int(0, Constants.Width), baseY, "FULL TANK CLEAN!"));
 
 				t.start(0.55, function(t:FlxTimer) {
 
 					scoreDisplay.add(Constants.ScClearField);
 
 					// SfxEngine.play(SfxEngine.SFX.Accept);
-					add(new TextNotice(FlxG.random.int(0, FlxG.width), baseY+10, " + 10000 POINTS!"));
+					add(new TextNotice(FlxG.random.int(0, Constants.Width), baseY+10, " + 10000 POINTS!"));
 
 					remove(shiny);
 					shiny.destroy();
@@ -755,7 +755,7 @@ class PlayState extends FlxTransitionableState
 					t.start(0.55, function(t:FlxTimer) {
 
 						// SfxEngine.play(SfxEngine.SFX.Accept);
-						add(new TextNotice(FlxG.random.int(0, FlxG.width), baseY+20, getCleanMessage()));
+						add(new TextNotice(FlxG.random.int(0, Constants.Width), baseY+20, getCleanMessage()));
 
 						// Generate a row while exiting
 						afterCleanRowsLeft--;
@@ -841,7 +841,7 @@ class PlayState extends FlxTransitionableState
 
 	function prepareBaseDecoration()
 	{
-		baseDecoration = new FlxSprite(FlxG.width / 2 - 64, 181);
+		baseDecoration = new FlxSprite(Constants.Width / 2 - 64, 181);
 		baseDecoration.loadGraphic("assets/images/base-decoration.png",
 									true, 128, 60);
 		baseDecoration.animation.add("move", [0, 1], 10, true);
@@ -936,7 +936,7 @@ class PlayState extends FlxTransitionableState
 	function handleDebugInit()
 	{
 		mouseCell = new FlxPoint();
-		label = new FlxText(4, FlxG.height - 16);
+		label = new FlxText(4, Constants.Height - 16);
 		// add(label);
 
 		DEBUG_dropDisabled = false;

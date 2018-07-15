@@ -91,7 +91,7 @@ class PrinterMachine extends FlxGroup
 		{
 			printing = true;
 			ticketLayer.add(ticket);
-			ticket.y = FlxG.height - 32;
+			ticket.y = Constants.Height - 32;
 			printTicket();
 		}
 		else if (!quickPrinting)

@@ -93,7 +93,7 @@ class GoldenPrinter extends PrinterMachine
 
     override function printTicket(?t : FlxTween = null)
 	{
-		var targetY : Float = FlxG.height/2 - ticket.height/2;
+		var targetY : Float = Constants.Height/2 - ticket.height/2;
 		var delta : Float = 0;
 		var done : Bool = false;
 		if (quickPrinting || Math.abs(targetY - ticket.y) < 48)
