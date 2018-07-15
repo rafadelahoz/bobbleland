@@ -52,6 +52,8 @@ class Bubble extends Entity
 	var touchedBubble : Bubble;
 
 	var turnTimer : FlxTimer;
+	var scaleTween : FlxTween;
+	var alphaTween : FlxTween;
 
 	public function new(X : Float, Y : Float, World : PlayState, Color : BubbleColor)
 	{
@@ -93,6 +95,20 @@ class Bubble extends Entity
 			turnTimer.cancel();
 			turnTimer.destroy();
 			turnTimer = null;
+		}
+
+		if (scaleTween != null)
+		{
+			scaleTween.cancel();
+			scaleTween.destroy();
+			scaleTween = null;
+		}
+
+		if (alphaTween != null)
+		{
+			alphaTween.cancel();
+			alphaTween.destroy();
+			alphaTween = null;
 		}
 
 		super.destroy();
@@ -352,7 +368,10 @@ class Bubble extends Entity
 			world.bubbles.add(other);
 			other.velocity.x = flyingVelocity.x * -0.25;
 			other.fall(flyingVelocity.y * 0.1);
-			FlxTween.tween(other, {alpha : 0}, 0.75, {ease : FlxEase.expoIn});
+			alphaTween = FlxTween.tween(other, {alpha : 0}, 0.75, {ease : FlxEase.expoIn, onComplete: function(t:FlxTween) {
+				alphaTween.destroy();
+				alphaTween = null;
+			}});
 			FlxSpriteUtil.flicker(other);
 
 			world.onPresentBubbleHit(this);
@@ -523,11 +542,18 @@ class Bubble extends Entity
 			if (grid.isPositionValid(cellPosition))
 				grid.setData(cellPosition.x, cellPosition.y, null);
 
-			FlxTween.tween(this.scale, {x : 0.5, y : 0.5}, immediate ? 0.01 : crunchTime,
+			scaleTween = FlxTween.tween(this.scale, {x : 0.5, y : 0.5}, immediate ? 0.01 : crunchTime,
 							{onComplete: function(_t:FlxTween) {
+								scaleTween.destroy();
+								scaleTween = null;
 								new FlxTimer().start(waitTime, function(__t:FlxTimer) {
-									FlxTween.tween(this.scale, {x : 3, y : 3}, popTime);
-									FlxTween.tween(this, {alpha : 0}, popTime, {onComplete: function(___t:FlxTween) {
+									scaleTween = FlxTween.tween(this.scale, {x : 3, y : 3}, popTime, {onComplete: function(t:FlxTween) {
+										scaleTween.destroy();
+										scaleTween = null;
+									}});
+									alphaTween = FlxTween.tween(this, {alpha : 0}, popTime, {onComplete: function(___t:FlxTween) {
+										alphaTween.destroy();
+										alphaTween = null;
 										onDeath();
 									}});
 								});
@@ -547,7 +573,10 @@ class Bubble extends Entity
 			if (grid.isPositionValid(cellPosition))
 				grid.setData(cellPosition.x, cellPosition.y, null);
 
-			FlxTween.tween(this.scale, {x : 0.9, y : 0.9}, immediate ? 0 : jumpWaitTime*0.5);
+			scaleTween = FlxTween.tween(this.scale, {x : 0.9, y : 0.9}, immediate ? 0 : jumpWaitTime*0.5, {onComplete: function(t:FlxTween) {
+				scaleTween.destroy();
+				scaleTween = null;
+			}});
 
 			new FlxTimer().start(jumpWaitTime, function (_t:FlxTimer) {
 				// Do a small jump before falling
