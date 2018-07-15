@@ -74,7 +74,7 @@ class GameOverState extends FlxTransitionableState
 		printer.create(ticket);
 		add(printer);
 
-		FlxG.camera.focusOn(FlxPoint.weak(90, 160));
+		FlxG.camera.setPosition(0, 0);
 	}
 
 	override public function update(elapsed:Float)

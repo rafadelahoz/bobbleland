@@ -97,7 +97,7 @@ class ArcadePreState extends FlxTransitionableState
         add(target);
         isCameraMoving = false;
 
-        FlxG.camera.focusOn(FlxPoint.weak(90, 160));
+        FlxG.camera.setPosition(0, 0);
         FlxG.camera.follow(target);
 
         swipeManager = new SwipeManager();

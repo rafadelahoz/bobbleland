@@ -190,7 +190,7 @@ class PlayState extends FlxTransitionableState
 		afterCleanRowsLeft = 0;
 		afterCleanTimer = new FlxTimer();
 
-		FlxG.camera.focusOn(FlxPoint.weak(90, 160));
+		FlxG.camera.setPosition(0, 0);
 
 		handleDebugInit();
 	}

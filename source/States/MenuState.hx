@@ -86,7 +86,7 @@ class MenuState extends FlxTransitionableState
 		tween = FlxTween.tween(logo, {y : 64}, 0.75, {startDelay: startDelay, onComplete: onLogoPositioned, ease : FlxEase.elasticOut });
 		FlxTween.tween(credits, {alpha : 1}, 0.75, {startDelay:startDelay, ease : FlxEase.cubeInOut});
 
-		FlxG.camera.focusOn(FlxPoint.weak(90, 160));
+		FlxG.camera.setPosition(0, 0);
 	}
 
 	public function onLogoPositioned(_t:FlxTween):Void
