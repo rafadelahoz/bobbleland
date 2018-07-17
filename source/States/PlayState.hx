@@ -12,7 +12,7 @@ import flixel.addons.transition.FlxTransitionableState;
 
 import database.BackgroundDatabase;
 
-class PlayState extends FlxTransitionableState
+class PlayState extends BubbleState
 {
 	public static inline var ModeArcade 	: Int = 0;
 	public static inline var ModePuzzle 	: Int = 1;

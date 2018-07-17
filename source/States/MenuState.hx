@@ -14,7 +14,7 @@ import text.PixelText;
 
 import database.BackgroundDatabase;
 
-class MenuState extends FlxTransitionableState
+class MenuState extends BubbleState
 {
 	public var tween : FlxTween;
 
@@ -86,7 +86,7 @@ class MenuState extends FlxTransitionableState
 		tween = FlxTween.tween(logo, {y : 64}, 0.75, {startDelay: startDelay, onComplete: onLogoPositioned, ease : FlxEase.elasticOut });
 		FlxTween.tween(credits, {alpha : 1}, 0.75, {startDelay:startDelay, ease : FlxEase.cubeInOut});
 
-		FlxG.camera.setPosition(0, 0);
+		FlxG.camera.scroll.set(0, 0);
 	}
 
 	public function onLogoPositioned(_t:FlxTween):Void

@@ -22,7 +22,7 @@ import text.TextUtils;
 import Hardware;
 #end*/
 
-class ArcadePreState extends FlxTransitionableState
+class ArcadePreState extends BubbleState
 {
     /** Play settings screen **/
     var centerScreen : FlxSpriteGroup;
