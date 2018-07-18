@@ -399,17 +399,27 @@ class ArcadePreState extends BubbleState
                               "SOAP ALLEY!\n\n" +
                               "I hope you\n" +
                               "enjoyed the game\n\n" +
+                              "      \\\\      \n\n" +
                             //|                |
-                              "A game by\n" +
+                              "A game by\n\n" +
                               " @thegraffo\n\n" +
+                              " With / for Lau\n\n" +
+                              "      \\\\      \n\n" +
                             //|                |
-                              "the Badladns are\n" +
-                              "  @thegraffo\n" +
-                              "       &    \n" +
-                              "  @crljmb\n\n" +
-
-                              " Special thanks\n" +
-                              "- A ";
+                              "the Badladns are\n\n" +
+                              " @crljmb\n" +
+                              "     &\n" +
+                              "   @thegraffo\n" +
+                              "\n\n" +
+                              "additional\n" +
+                              "  illustration\n" +
+                              " @evt_1905\n\n" +
+                              "      \\\\      \n\n" +
+                              "Special thanks\n\n" +
+                              " /mshobj\n" +
+                              " /pferv\n" +
+                              " /???\n" +
+                              "";
 
         // specialText.text = sanitizeWidth(lipsum, 16);
         specialText.text = lipsum;
