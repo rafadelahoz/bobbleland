@@ -88,6 +88,9 @@ class ArcadePreState extends BubbleState
         centerScreen = buildCenterScreen();
         add(centerScreen);
 
+        var specialScreen : FlxSpriteGroup = buildSpecialScreen();
+        add(specialScreen);
+
         btnBack = new HoldButton(0, 0, onBackButtonPressed);
         btnBack.loadSpritesheet("assets/ui/btn-back.png", 32, 24);
         btnBack.scrollFactor.set();
@@ -382,6 +385,108 @@ class ArcadePreState extends BubbleState
         ArcadeGameStatus.setupDifficulty(difficulty);
     }
 
+    function buildSpecialScreen() : FlxSpriteGroup
+    {
+        var specialScreen : FlxSpriteGroup = new FlxSpriteGroup(Constants.Width, 0);
+
+        var specialOverlay : FlxSprite = new FlxSprite(0, 0, "assets/ui/special-screen.png");
+        specialScreen.add(specialOverlay);
+
+        var specialText : FlxBitmapText = PixelText.New(24, 48, "DODO", Palette.White);
+                            //|                |
+        var lipsum : String = "Thank you so\n" +
+                              "much for playing\n" +
+                              "SOAP ALLEY!\n\n" +
+                              "I hope you\n" +
+                              "enjoyed the game\n\n" +
+                            //|                |
+                              "A game by\n" +
+                              " @thegraffo\n\n" +
+                            //|                |
+                              "the Badladns are\n" +
+                              "  @thegraffo\n" +
+                              "       &    \n" +
+                              "  @crljmb\n\n" +
+
+                              " Special thanks\n" +
+                              "- A ";
+
+        // specialText.text = sanitizeWidth(lipsum, 16);
+        specialText.text = lipsum;
+
+        specialScreen.add(specialText);
+
+        specialScreen.add(buildScrollButton(0, 144, true));
+
+        return specialScreen;
+    }
+
+    function sanitizeWidth(text : String, ?width : Int = 15) : String
+    {
+        var breaks : String = ".,!:#";
+        var sText : String = "";
+
+        var tokens : Array<String> = text.split(" ");
+        var next : String = tokens.shift();
+        var line : String = next;
+        while (tokens.length > 0)
+        {
+            next = tokens.shift();
+
+            if (next.length <= 0)
+                continue;
+
+            // if (next.charAt(next.length-1) in "[.,!\"']") allow 1 char extra
+            if (line.length + 1 + next.length <= width)
+            {
+                line += (line.length > 0 ? " " : "") + next;
+                if (breaks.indexOf(next.charAt(next.length-1)) >= 0)
+                {
+                    trace("Current token ends in special char: " + next);
+                    if (next.charAt(next.length-1) == "#")
+                    {
+                        // Remove # (they are used for formatting)
+                        trace("Removing trailing #");
+                        trace("Char at " + (next.length-1) + ": " + next.charAt(next.length-1));
+                        trace("line is: " + line);
+                        trace("adding: " + line.substring(0, line.length-1));
+                        sText += line.substring(0, line.length-1) + "\n";
+                    }
+                    else
+                    {
+                        trace("Keeping trailing special char");
+                        sText += line + "\n\n";
+                    }
+
+                    line = "";
+                }
+            }
+            else if (breaks.indexOf(next.charAt(next.length-1)) >= 0)
+            {
+                trace("Line is full");
+                // Remove # (they are used for formatting)
+                trace("line and next: " + line + " " + next);
+                trace("Char at " + (next.length-1) + ": ", next.charAt(next.length-1));
+                if (next.charAt(next.length-1) == "#")
+                {
+                    sText += line.substring(0, line.length-1) + "\n";
+                }
+                else
+                    sText += line + "\n\n";
+
+                line = "";
+            }
+            else
+            {
+                sText += line + "\n";
+                line = next;
+            }
+        }
+        sText += line;
+
+        return sText;
+    }
+
     function buildCenterScreen() : FlxSpriteGroup
     {
         var centerScreen : FlxSpriteGroup = new FlxSpriteGroup(0, 0);
@@ -398,7 +503,7 @@ class ArcadePreState extends BubbleState
         generateBgmButtons(centerScreen);
 
         centerScreen.add(buildScrollButton(0, 144, true));
-        // centerScreen.add(buildScrollButton(Constants.Width - 12, 144, false));
+        centerScreen.add(buildScrollButton(Constants.Width - 12, 144, false));
 
         btnStart = new Button(40, 276, onStartButtonPressed);
         btnStart.loadSpritesheet("assets/ui/btn-start.png", 96, 32);
@@ -511,7 +616,7 @@ class ArcadePreState extends BubbleState
     function moveToLeftScreen()
     {
         // Don't allow moving left of left
-        if (target.x > 0)
+        if (true || target.x >= 0)
         {
             isCameraMoving = true;
             FlxTween.tween(target, {x : target.x + -1*Constants.Width}, 0.5, { ease : FlxEase.cubeInOut, onComplete: onFinishedMoving });
@@ -521,7 +626,7 @@ class ArcadePreState extends BubbleState
     function moveToRightScreen()
     {
         // Don't allow moving right of right
-        if (target.x < 0)
+        if (true || target.x <= 0)
         {
             isCameraMoving = true;
             FlxTween.tween(target, {x : target.x + Constants.Width}, 0.5, { ease : FlxEase.cubeInOut, onComplete: onFinishedMoving });
