@@ -389,89 +389,92 @@ class ArcadePreState extends BubbleState
     {
         var specialScreen : FlxSpriteGroup = new FlxSpriteGroup(Constants.Width, 0);
 
-        var specialOverlay : FlxSprite = new FlxSprite(0, 0, "assets/ui/special-screen.png");
-        specialScreen.add(specialOverlay);
+        if (ProgressStatus.progressData.secretScreen)
+        {
+            var specialOverlay : FlxSprite = new FlxSprite(0, 0, "assets/ui/special-screen.png");
+            specialScreen.add(specialOverlay);
 
-        var specialText : FlxBitmapText = PixelText.New(24, 48, "DODO", Palette.White);
-                            //|                |
-        var lipsum : String = "Thank you so\n" +
-                              "much for playing\n" +
-                              "SOAP ALLEY!\n\n" +
-                              "I hope you\n" +
-                              "enjoyed the game\n\n" +
-                              "      \\\\      \n\n" +
-                            //|                |
-                              "a game by\n" +
-                              "      @thegraffo\n\n\n" +
-                              "Additional\n" +
-                              "design\n" +
-                              "         @crljmb\n\n\n" +
-                              "additional\n" +
-                              "illustration\n" +
-                              "       @evt_1905\n\n" +
-                              "      \\\\      \n\n" +
-                            //|                |
-                              "Presented by\n"+
-                              " the Badladns\n\n" +
-                              "      \\\\      \n\n" +
-                            //|                |
-                              "the Badladns are\n\n" +
-                              " @crljmb\n" +
-                              "     &\n" +
-                              "   @thegraffo\n" +
-                              "\n\n" +
-                              "      \\\\      \n\n" +
-                              "Special thanks\n\n" +
-                              " / emechan\n" +
-                              " / pferv\n" +
-                              " / avacas\n" +
-                              " / beadarkelf\n" +
-                              " / bronsonio\n" +
-                              " / jr\n" +
-                              " / lauritamix\n" +
-                              " / vero8a\n" +
-                              // " /gsux\n" +
-                              "\n      \\\\      \n\n" +
-                              "for laura with /\n\n" +
-                              "\n      \\\\      \n\n" +
-                              "/ YOU ARE \n"+
-                              "  SUPER PLAYER /" +
-                            //|                |
-                              "";
+            var specialText : FlxBitmapText = PixelText.New(24, 48, "DODO", Palette.White);
+                                //|                |
+            var lipsum : String = "Thank you so\n" +
+                                  "much for playing\n" +
+                                  "SOAP ALLEY!\n\n" +
+                                  "I hope you\n" +
+                                  "enjoyed the game\n\n" +
+                                  "      \\\\      \n\n" +
+                                //|                |
+                                  "a game by\n" +
+                                  "      @thegraffo\n\n\n" +
+                                  "Additional\n" +
+                                  "design\n" +
+                                  "         @crljmb\n\n\n" +
+                                  "additional\n" +
+                                  "illustration\n" +
+                                  "       @evt_1905\n\n" +
+                                  "      \\\\      \n\n" +
+                                //|                |
+                                  "Presented by\n"+
+                                  " the Badladns\n\n" +
+                                  "      \\\\      \n\n" +
+                                //|                |
+                                  "the Badladns are\n\n" +
+                                  " @crljmb\n" +
+                                  "     &\n" +
+                                  "   @thegraffo\n" +
+                                  "\n\n" +
+                                  "      \\\\      \n\n" +
+                                  "Special thanks\n\n" +
+                                  " / emechan\n" +
+                                  " / pferv\n" +
+                                  " / avacas\n" +
+                                  " / beadarkelf\n" +
+                                  " / bronsonio\n" +
+                                  " / jr\n" +
+                                  " / lauritamix\n" +
+                                  " / vero8a\n" +
+                                  // " /gsux\n" +
+                                  "\n      \\\\      \n\n" +
+                                  "for laura with /\n\n" +
+                                  "\n      \\\\      \n\n" +
+                                  "/ YOU ARE \n"+
+                                  "  SUPER PLAYER /" +
+                                //|                |
+                                  "";
 
-        // specialText.text = sanitizeWidth(lipsum, 16);
-        specialText.text = lipsum;
+            // specialText.text = sanitizeWidth(lipsum, 16);
+            specialText.text = lipsum;
 
-        specialScreen.add(specialText);
+            specialScreen.add(specialText);
 
-        var finalButton : Button = new Button(136, specialText.y + specialText.height + 32, onFinalButtonReleased);
-        finalButton.loadSpritesheet("assets/ui/btn-debug.png", 24, 21);
-        specialScreen.add(finalButton);
+            var finalButton : Button = new Button(136, specialText.y + specialText.height + 32, onFinalButtonReleased);
+            finalButton.loadSpritesheet("assets/ui/btn-debug.png", 24, 21);
+            specialScreen.add(finalButton);
 
-        var totalHeight : Int = Std.int(specialText.height);
-        if (!ProgressStatus.progressData.alternate)
-            totalHeight += Std.int(32 + finalButton.height);
-
-        var scrollButton : ScrollButton = null;
-        scrollButton = new ScrollButton(160, 48, function() {
-            specialText.y = Std.int(48 - scrollButton.progress * (totalHeight - 256));
-            finalButton.y = specialText.y + specialText.height + 32;
-            finalButton.active = false;
-            finalButton.visible = false;
-        });
-        scrollButton.unboundCallback = function() {
+            var totalHeight : Int = Std.int(specialText.height);
             if (!ProgressStatus.progressData.alternate)
-            {
-                finalButton.active = true;
-                finalButton.visible = true;
-            }
-        };
+                totalHeight += Std.int(32 + finalButton.height);
 
-        scrollButton.setLimits(48, 272);
-        specialScreen.add(scrollButton);
+            var scrollButton : ScrollButton = null;
+            scrollButton = new ScrollButton(160, 48, function() {
+                specialText.y = Std.int(48 - scrollButton.progress * (totalHeight - 256));
+                finalButton.y = specialText.y + specialText.height + 32;
+                finalButton.active = false;
+                finalButton.visible = false;
+            });
+            scrollButton.unboundCallback = function() {
+                if (!ProgressStatus.progressData.alternate)
+                {
+                    finalButton.active = true;
+                    finalButton.visible = true;
+                }
+            };
 
-        specialScreen.add(new FlxSprite(16, 0, "assets/ui/special-fg-top.png"));
-        specialScreen.add(new FlxSprite(16, 304, "assets/ui/special-fg-bottom.png"));
+            scrollButton.setLimits(48, 272);
+            specialScreen.add(scrollButton);
+
+            specialScreen.add(new FlxSprite(16, 0, "assets/ui/special-fg-top.png"));
+            specialScreen.add(new FlxSprite(16, 304, "assets/ui/special-fg-bottom.png"));
+        }
 
         specialScreen.add(buildScrollButton(0, 144, true));
 
@@ -502,14 +505,12 @@ class ArcadePreState extends BubbleState
         generateBgmButtons(centerScreen);
 
         centerScreen.add(buildScrollButton(0, 144, true));
-        centerScreen.add(buildScrollButton(Constants.Width - 12, 144, false));
+        if (ProgressStatus.progressData.secretScreen)
+            centerScreen.add(buildScrollButton(Constants.Width - 12, 144, false));
 
         btnStart = new Button(40, 276, onStartButtonPressed);
         btnStart.loadSpritesheet("assets/ui/btn-start.png", 96, 32);
         centerScreen.add(btnStart);
-        // btnStart.ShineTimerBase = 0.3;
-        // btnStart.ShineTimerVariation = 0.1;
-        // btnStart.ShineSparkColor = Palette.Yellow;
 
         return centerScreen;
     }

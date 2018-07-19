@@ -37,6 +37,7 @@ class ProgressStatus
                     bearHint: false,    bearChar: false,
                     catbombHint: false, catbombChar: false,
                     fanfare: "none",
+                    secretScreen: false,
                     alternate: false
                 }
 
@@ -80,6 +81,13 @@ class ProgressStatus
             {
                 progressData.catbombHint = true;
             }
+        }
+
+        if (!progressData.secretScreen)
+        {
+            if (progressData.crabChar && progressData.frogChar &&
+                progressData.bearChar && progressData.catbombChar)
+                progressData.secretScreen = true;
         }
 
         save();
@@ -164,5 +172,6 @@ typedef ProgressData = {
     var bearChar : Bool;
     var catbombChar : Bool;
 
+    var secretScreen : Bool;
     var alternate : Bool;
 }
