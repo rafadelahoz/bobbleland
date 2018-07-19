@@ -36,11 +36,14 @@ class ProgressStatus
                     frogHint: false,    frogChar: false,
                     bearHint: false,    bearChar: false,
                     catbombHint: false, catbombChar: false,
-                    fanfare: "none"
+                    fanfare: "none",
+                    alternate: false
                 }
 
                 save();
             }
+
+            progressData.alternate = false;
         }
     }
 
@@ -160,4 +163,6 @@ typedef ProgressData = {
     var frogChar : Bool;
     var bearChar : Bool;
     var catbombChar : Bool;
+
+    var alternate : Bool;
 }

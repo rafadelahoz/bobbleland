@@ -401,9 +401,18 @@ class ArcadePreState extends BubbleState
                               "enjoyed the game\n\n" +
                               "      \\\\      \n\n" +
                             //|                |
-                              "A game by\n\n" +
-                              " @thegraffo\n\n" +
-                              " With / for Lau\n\n" +
+                              "a game by\n" +
+                              "      @thegraffo\n\n\n" +
+                              "Additional\n" +
+                              "design\n" +
+                              "         @crljmb\n\n\n" +
+                              "additional\n" +
+                              "illustration\n" +
+                              "       @evt_1905\n\n" +
+                              "      \\\\      \n\n" +
+                            //|                |
+                              "Presented by\n"+
+                              " the Badladns\n\n" +
                               "      \\\\      \n\n" +
                             //|                |
                               "the Badladns are\n\n" +
@@ -411,14 +420,23 @@ class ArcadePreState extends BubbleState
                               "     &\n" +
                               "   @thegraffo\n" +
                               "\n\n" +
-                              "additional\n" +
-                              "  illustration\n" +
-                              " @evt_1905\n\n" +
                               "      \\\\      \n\n" +
                               "Special thanks\n\n" +
-                              " /mshobj\n" +
-                              " /pferv\n" +
-                              " /???\n" +
+                              " / emechan\n" +
+                              " / pferv\n" +
+                              " / avacas\n" +
+                              " / beadarkelf\n" +
+                              " / bronsonio\n" +
+                              " / jr\n" +
+                              " / lauritamix\n" +
+                              " / vero8a\n" +
+                              // " /gsux\n" +
+                              "\n      \\\\      \n\n" +
+                              "for laura with /\n\n" +
+                              "\n      \\\\      \n\n" +
+                              "/ YOU ARE \n"+
+                              "  SUPER PLAYER /" +
+                            //|                |
                               "";
 
         // specialText.text = sanitizeWidth(lipsum, 16);
@@ -426,75 +444,46 @@ class ArcadePreState extends BubbleState
 
         specialScreen.add(specialText);
 
+        var finalButton : Button = new Button(136, specialText.y + specialText.height + 32, onFinalButtonReleased);
+        finalButton.loadSpritesheet("assets/ui/btn-debug.png", 24, 21);
+        specialScreen.add(finalButton);
+
+        var totalHeight : Int = Std.int(specialText.height);
+        if (!ProgressStatus.progressData.alternate)
+            totalHeight += Std.int(32 + finalButton.height);
+
+        var scrollButton : ScrollButton = null;
+        scrollButton = new ScrollButton(160, 48, function() {
+            specialText.y = Std.int(48 - scrollButton.progress * (totalHeight - 256));
+            finalButton.y = specialText.y + specialText.height + 32;
+            finalButton.active = false;
+            finalButton.visible = false;
+        });
+        scrollButton.unboundCallback = function() {
+            if (!ProgressStatus.progressData.alternate)
+            {
+                finalButton.active = true;
+                finalButton.visible = true;
+            }
+        };
+
+        scrollButton.setLimits(48, 272);
+        specialScreen.add(scrollButton);
+
+        specialScreen.add(new FlxSprite(16, 0, "assets/ui/special-fg-top.png"));
+        specialScreen.add(new FlxSprite(16, 304, "assets/ui/special-fg-bottom.png"));
+
         specialScreen.add(buildScrollButton(0, 144, true));
 
         return specialScreen;
     }
 
-    function sanitizeWidth(text : String, ?width : Int = 15) : String
+    function onFinalButtonReleased()
     {
-        var breaks : String = ".,!:#";
-        var sText : String = "";
-
-        var tokens : Array<String> = text.split(" ");
-        var next : String = tokens.shift();
-        var line : String = next;
-        while (tokens.length > 0)
-        {
-            next = tokens.shift();
-
-            if (next.length <= 0)
-                continue;
-
-            // if (next.charAt(next.length-1) in "[.,!\"']") allow 1 char extra
-            if (line.length + 1 + next.length <= width)
-            {
-                line += (line.length > 0 ? " " : "") + next;
-                if (breaks.indexOf(next.charAt(next.length-1)) >= 0)
-                {
-                    trace("Current token ends in special char: " + next);
-                    if (next.charAt(next.length-1) == "#")
-                    {
-                        // Remove # (they are used for formatting)
-                        trace("Removing trailing #");
-                        trace("Char at " + (next.length-1) + ": " + next.charAt(next.length-1));
-                        trace("line is: " + line);
-                        trace("adding: " + line.substring(0, line.length-1));
-                        sText += line.substring(0, line.length-1) + "\n";
-                    }
-                    else
-                    {
-                        trace("Keeping trailing special char");
-                        sText += line + "\n\n";
-                    }
-
-                    line = "";
-                }
-            }
-            else if (breaks.indexOf(next.charAt(next.length-1)) >= 0)
-            {
-                trace("Line is full");
-                // Remove # (they are used for formatting)
-                trace("line and next: " + line + " " + next);
-                trace("Char at " + (next.length-1) + ": ", next.charAt(next.length-1));
-                if (next.charAt(next.length-1) == "#")
-                {
-                    sText += line.substring(0, line.length-1) + "\n";
-                }
-                else
-                    sText += line + "\n\n";
-
-                line = "";
-            }
-            else
-            {
-                sText += line + "\n";
-                line = next;
-            }
-        }
-        sText += line;
-
-        return sText;
+        FlxG.camera.flash(Palette.White);
+        ProgressStatus.progressData.alternate = true;
+        ProgressStatus.save();
+        onBackButtonPressed();
     }
 
     function buildCenterScreen() : FlxSpriteGroup
