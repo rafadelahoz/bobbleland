@@ -410,7 +410,7 @@ class ArcadePreState extends BubbleState
                                   "         @crljmb\n\n\n" +
                                   "additional\n" +
                                   "illustration\n" +
-                                  "       @evt_1905\n\n" +
+                                  "       @evt1905\n\n" +
                                   "      \\\\      \n\n" +
                                 //|                |
                                   "Presented by\n"+
@@ -421,7 +421,7 @@ class ArcadePreState extends BubbleState
                                   " @crljmb\n" +
                                   "     &\n" +
                                   "   @thegraffo\n" +
-                                  "\n\n" +
+                                  "\n" +
                                   "      \\\\      \n\n" +
                                   "Special thanks\n\n" +
                                   " / emechan\n" +
@@ -435,9 +435,10 @@ class ArcadePreState extends BubbleState
                                   // " /gsux\n" +
                                   "\n      \\\\      \n\n" +
                                   "for laura with /\n\n" +
-                                  "\n      \\\\      \n\n" +
-                                  "/ YOU ARE \n"+
-                                  "  SUPER PLAYER /" +
+                                  "      \\\\      \n\n";
+                    if (ProgressStatus.progressData.alternate)
+                        lipsum += "/ YOU ARE \n"+
+                                  "  SUPER PLAYER /\n\n" +
                                 //|                |
                                   "";
 
@@ -496,6 +497,14 @@ class ArcadePreState extends BubbleState
         var centerOverlay : FlxSprite = new FlxSprite(0, 0, "assets/ui/arcade-config.png");
         centerScreen.add(centerOverlay);
 
+        if (ProgressStatus.progressData.alternate)
+        {
+            centerScreen.add(new FlxSprite(144, 112, "assets/ui/alternate-bg.png"));
+            var alternateButton : Button = new Button(152, 116, onAlternateButton);
+            alternateButton.loadSpritesheet("assets/ui/btn-debug.png", 24, 21);
+            centerScreen.add(alternateButton);
+        }
+
         sldDifficulty = new SliderButton(40, 64, snapToDifficultyGrid);
         sldDifficulty.loadSpritesheet("assets/ui/slider.png", 16, 32);
         sldDifficulty.setLimits(28, 140);
@@ -513,6 +522,12 @@ class ArcadePreState extends BubbleState
         centerScreen.add(btnStart);
 
         return centerScreen;
+    }
+
+    function onAlternateButton()
+    {
+        FlxG.camera.flash(Palette.White, 0.6);
+        trace("SUPER PLAYER!");
     }
 
     function buildHistoryScreen() : FlxSpriteGroup
