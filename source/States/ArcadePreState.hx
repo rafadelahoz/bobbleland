@@ -34,6 +34,7 @@ class ArcadePreState extends BubbleState
     var btnFrog : HoldButton;
     var btnBear : HoldButton;
     var btnCatbomb : HoldButton;
+    var hintButtons : Array<Button>;
 
     var btnBgmA : HoldButton;
     var btnBgmB : HoldButton;
@@ -69,8 +70,6 @@ class ArcadePreState extends BubbleState
     var target : FlxObject;
     var isCameraMoving : Bool;
 
-    var swipeManager : SwipeManager;
-
     override public function create()
     {
         super.create();
@@ -81,6 +80,8 @@ class ArcadePreState extends BubbleState
         background.scrollFactor.set(0.35, 0.35);
         background.velocity.set(10, 10);
         add(background);
+
+        hintButtons = [];
 
         historyScreen = buildHistoryScreen();
         add(historyScreen);
@@ -102,10 +103,6 @@ class ArcadePreState extends BubbleState
 
         FlxG.camera.setPosition(0, 0);
         FlxG.camera.follow(target);
-
-        swipeManager = new SwipeManager();
-        swipeManager.leftCallback = moveToRightScreen;
-        swipeManager.rightCallback = moveToLeftScreen;
 
         initData();
 
@@ -279,8 +276,6 @@ class ArcadePreState extends BubbleState
 
     override public function update(elapsed:Float)
     {
-        swipeManager.update(elapsed);
-
         handleBgmLeds();
 
         if (FlxG.keys.justPressed.O)
@@ -314,12 +309,13 @@ class ArcadePreState extends BubbleState
 
     function disableButtons()
     {
-        var buttons : Array<FlxSprite> = [sldDifficulty,
-                                          btnDog, btnCat, btnCrab,
-                                          btnFrog, btnBear, btnCatbomb,
-                                          btnBgmA, btnBgmB, btnBgmOff,
-                                          btnStart, btnBack];
-
+        var buttons : Array<Button> =
+        hintButtons.concat([sldDifficulty,
+                        btnDog, btnCat, btnCrab,
+                        btnFrog, btnBear, btnCatbomb,
+                        btnBgmA, btnBgmB, btnBgmOff,
+                        btnStart, btnBack,
+                       ]);
         for (button in buttons)
         {
             if (button != null)
@@ -332,12 +328,13 @@ class ArcadePreState extends BubbleState
 
     function enableButtons()
     {
-        var buttons : Array<FlxSprite> = [sldDifficulty,
-                                          btnDog, btnCat, btnCrab,
-                                          btnFrog, btnBear, btnCatbomb,
-                                          btnBgmA, btnBgmB, btnBgmOff,
-                                          btnStart, btnBack];
-
+        var buttons : Array<Button> =
+        hintButtons.concat([sldDifficulty,
+                        btnDog, btnCat, btnCrab,
+                        btnFrog, btnBear, btnCatbomb,
+                        btnBgmA, btnBgmB, btnBgmOff,
+                        btnStart, btnBack,
+                       ]);
         for (button in buttons)
         {
             if (button != null)
@@ -677,6 +674,7 @@ class ArcadePreState extends BubbleState
             // Instantiate crab hint over his button
             var btnCrabHint : HintButton = new HintButton(120, 128, this, "Try getting a\nhigh score!");
             group.add(btnCrabHint);
+            hintButtons.push(btnCrabHint);
         }
 
         if (ProgressStatus.progressData.frogChar)
@@ -691,6 +689,7 @@ class ArcadePreState extends BubbleState
             // Instantiate frog hint over his button
             var btnFrogHint : HintButton = new HintButton(40, 168, this, "This can't be easy:\nMore bubbles! A lot\nof them at once!");
             group.add(btnFrogHint);
+            hintButtons.push(btnFrogHint);
         }
 
         if (ProgressStatus.progressData.bearChar)
@@ -705,6 +704,7 @@ class ArcadePreState extends BubbleState
             // Instantiate bear hint over his button
             var btnBearHint : HintButton = new HintButton(80, 168, this, "This must be hard:\nHold on, baby,\nas much as you can");
             group.add(btnBearHint);
+            hintButtons.push(btnBearHint);
         }
 
         if (ProgressStatus.progressData.catbombChar)
@@ -719,6 +719,7 @@ class ArcadePreState extends BubbleState
             // Instantiate catbomb hint over his button
             var btnCatbombHint : HintButton = new HintButton(120, 168, this, "Oh, you lazy cat\\");
             group.add(btnCatbombHint);
+            hintButtons.push(btnCatbombHint);
         }
     }
 
