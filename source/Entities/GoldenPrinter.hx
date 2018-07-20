@@ -7,7 +7,7 @@ import flixel.tweens.FlxEase;
 
 class GoldenPrinter extends PrinterMachine
 {
-    public static var TargetIntensity : Float = 10;
+    public static var TargetIntensity : Float = 7.5;
 
     public var intensity : Float;
 

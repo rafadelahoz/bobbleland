@@ -18,7 +18,7 @@ class TextNotice extends FlxSprite
 
     var serious : Bool;
 
-    public function new(X : Float, Y : Float, Text : String, ?Color : Int = -1, ?seriousMode : Bool = false)
+    public function new(X : Float, Y : Float, Text : String, ?Color : Int = -1, ?seriousMode : Bool = false, ?borderless : Bool = false)
     {
         super(X, Y);
 
@@ -41,7 +41,7 @@ class TextNotice extends FlxSprite
             border = 16;
 
         background = new FlxSprite(pxtext.x - border/2, pxtext.y - border/2);
-        background.makeGraphic(Std.int(pxtext.width + border), Std.int(pxtext.height + border), Palette.Black);
+        background.makeGraphic(Std.int(pxtext.width + border), Std.int(pxtext.height + border), (borderless ? 0x00000000 : Palette.Black));
 
         textDelta = FlxPoint.get(pxtext.x - x, pxtext.y - y);
 

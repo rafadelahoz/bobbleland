@@ -168,7 +168,7 @@ class ArcadePreState extends BubbleState
                     {
                         new FlxTimer().start(FlxG.random.float(0.2, 1.3), function(t:FlxTimer) {
                             t.destroy();
-                            add(new TextNotice(FlxG.random.int(8, Constants.Width-16), FlxG.random.int(8, Constants.Height-16), "/"));
+                            add(new TextNotice(FlxG.random.int(8, Constants.Width-16), FlxG.random.int(8, Constants.Height-16), "/", false, true));
                         });
                         counter++;
                     }
