@@ -36,6 +36,8 @@ class ArcadePreState extends BubbleState
     var btnCatbomb : HoldButton;
     var hintButtons : Array<Button>;
 
+    var alternateButton : Button;
+
     var btnBgmA : HoldButton;
     var btnBgmB : HoldButton;
     var btnBgmOff : HoldButton;
@@ -423,13 +425,13 @@ class ArcadePreState extends BubbleState
                                   "Special thanks\n\n" +
                                   " / emechan\n" +
                                   " / pferv\n" +
-                                  " / avacas\n" +
+                                  " / alwarr\n" +
                                   " / beadarkelf\n" +
                                   " / bronsonio\n" +
                                   " / jr\n" +
-                                  " / lauritamix\n" +
+                                  " / manzanita\n" +
                                   " / vero8a\n" +
-                                  // " /gsux\n" +
+                                  // " / gsux\n" +
                                   "\n      \\\\      \n\n" +
                                   "for laura with /\n\n" +
                                   "      \\\\      \n\n";
@@ -497,7 +499,7 @@ class ArcadePreState extends BubbleState
         if (ProgressStatus.progressData.alternate)
         {
             centerScreen.add(new FlxSprite(144, 112, "assets/ui/alternate-bg.png"));
-            var alternateButton : Button = new Button(152, 116, onAlternateButton);
+            alternateButton = new Button(152, 116, onAlternateButton);
             alternateButton.loadSpritesheet("assets/ui/btn-debug.png", 24, 21);
             centerScreen.add(alternateButton);
         }
@@ -523,13 +525,14 @@ class ArcadePreState extends BubbleState
 
     function onAlternateButton()
     {
-        FlxG.camera.flash(Palette.White, 0.6);
+        alternateButton.active = false;
+        FlxG.camera.flash(Palette.White, 0.6, function() {
+            alternateButton.active = true;
+        });
         ArcadeGameStatus.getConfigData().alternate = !ArcadeGameStatus.getConfigData().alternate;
         ArcadeGameStatus.saveArcadeConfigData();
 
         handleCharacterButtonGraphics();
-
-        trace("SUPER PLAYER!");
     }
 
     function handleCharacterButtonGraphics()
