@@ -429,6 +429,11 @@ class BubbleGrid extends FlxObject
 
 	public function getAdjacentPositions(pos : FlxPoint) : Array<FlxPoint>
 	{
+		if (pos == null)
+		{
+			return [];
+		}
+		
 		var x : Int = Std.int(pos.x);
 		var y : Int = Std.int(pos.y);
 

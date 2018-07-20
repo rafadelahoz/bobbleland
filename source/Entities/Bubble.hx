@@ -216,66 +216,60 @@ class Bubble extends Entity
 
 			case Bubble.StateFlying:
 
-				try {
-					// Bounce off walls
-					if (x + width/2 - Size * 1 <= grid.getLeft() || x + width/2 + Size * 1 >= grid.getRight())
+				// Bounce off walls
+				if (x + width/2 - Size * 1 <= grid.getLeft() || x + width/2 + Size * 1 >= grid.getRight())
+				{
+					velocity.x *= -1;
+					SfxEngine.play(SFX.BubbleBounce);
+				}
+
+				// Stick to the ceiling
+				if (y - HalfSize <= grid.getTop())
+				{
+					onHitCeiling();
+				}
+				// Check collision vs bubbles
+				else if (UseMoveToContact && checkCollisionWithBubblesAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed))
+				{
+					// Check for presents
+					var present : Bubble = getPresentBubbleMeetingAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed, onlyPresentBubbles);
+
+					var flyingVelocity = moveToContact(x + velocity.x * FlxG.elapsed,  y + velocity.y * FlxG.elapsed);
+
+					// Remember your way
+					var currentPosition : FlxPoint = getCurrentCell();
+					//if (!compare(currentPosition, cellPosition))
 					{
-						velocity.x *= -1;
-						SfxEngine.play(SFX.BubbleBounce);
+						lastPosition.set(cellPosition.x, cellPosition.y);
+						cellPosition.set(currentPosition.x, currentPosition.y);
+
+						world.grid.currentCell = cellPosition;
+						world.grid.lastCell = lastPosition;
 					}
 
-					// Stick to the ceiling
-					if (y - HalfSize <= grid.getTop())
+					// trace(lastPosition + " -> " + cellPosition);
+					if (present != null)
 					{
-						onHitCeiling();
-					}
-					// Check collision vs bubbles
-					else if (UseMoveToContact && checkCollisionWithBubblesAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed))
-					{
-						// Check for presents
-						var present : Bubble = getPresentBubbleMeetingAt(x + velocity.x * FlxG.elapsed, y + velocity.y * FlxG.elapsed, onlyPresentBubbles);
-
-						var flyingVelocity = moveToContact(x + velocity.x * FlxG.elapsed,  y + velocity.y * FlxG.elapsed);
-
-						// Remember your way
-						var currentPosition : FlxPoint = getCurrentCell();
-						//if (!compare(currentPosition, cellPosition))
-						{
-							lastPosition.set(cellPosition.x, cellPosition.y);
-							cellPosition.set(currentPosition.x, currentPosition.y);
-
-							world.grid.currentCell = cellPosition;
-							world.grid.lastCell = lastPosition;
-						}
-
-						// trace(lastPosition + " -> " + cellPosition);
-						if (present != null)
-						{
-							// onHitBubbles(false);
-							present.onPresentHit(this, flyingVelocity);
-						}
-						else
-						{
-							onHitBubbles();
-						}
+						// onHitBubbles(false);
+						present.onPresentHit(this, flyingVelocity);
 					}
 					else
 					{
-						// Remember your way
-						var currentPosition : FlxPoint = getCurrentCell();
-						if (!compare(currentPosition, cellPosition))
-						{
-							lastPosition.set(cellPosition.x, cellPosition.y);
-							cellPosition.set(currentPosition.x, currentPosition.y);
-
-							world.grid.currentCell = cellPosition;
-							world.grid.lastCell = lastPosition;
-						}
+						onHitBubbles();
 					}
 				}
-				catch (exception : Dynamic)
+				else
 				{
-					throw "There was a problem positioning the moving bubble: " + exception;
+					// Remember your way
+					var currentPosition : FlxPoint = getCurrentCell();
+					if (!compare(currentPosition, cellPosition))
+					{
+						lastPosition.set(cellPosition.x, cellPosition.y);
+						cellPosition.set(currentPosition.x, currentPosition.y);
+
+						world.grid.currentCell = cellPosition;
+						world.grid.lastCell = lastPosition;
+					}
 				}
 
 			case Bubble.StateIdling, Bubble.StatePopping:
@@ -365,21 +359,25 @@ class Bubble extends Entity
 	{
 		if (special == BubbleColor.SpecialPresent)
 		{
-			world.bubbles.add(other);
-			other.velocity.x = flyingVelocity.x * -0.25;
-			other.fall(flyingVelocity.y * 0.1);
-			alphaTween = FlxTween.tween(other, {alpha : 0}, 0.75, {ease : FlxEase.expoIn, onComplete: function(t:FlxTween) {
-				alphaTween.destroy();
-				alphaTween = null;
-			}});
-			FlxSpriteUtil.flicker(other);
-
+			bounceBubble(other, flyingVelocity);
 			world.onPresentBubbleHit(this);
 		}
 
 		if (flyingVelocity != null)
 			flyingVelocity.put();
 	}
+
+	public function bounceBubble(other : Bubble, flyingVelocity : FlxPoint)
+	{
+		world.bubbles.add(other);
+		other.velocity.x = flyingVelocity.x * -0.25;
+		other.fall(flyingVelocity.y * 0.1);
+		alphaTween = FlxTween.tween(other, {alpha : 0}, 0.75, {ease : FlxEase.expoIn, onComplete: function(t:FlxTween) {
+			alphaTween.destroy();
+			alphaTween = null;
+		}});
+		FlxSpriteUtil.flicker(other);
+	};
 
 	public function onHitCeiling()
 	{
@@ -448,25 +446,37 @@ class Bubble extends Entity
 						trace("Trying to find closest to " + cellPosition + " between " + neighbours);
 					#end
 					cellPosition = findClosestCell(cellPosition, neighbours);
-					cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
-					#if !mobile
-						trace("Found: " + cellPosition);
-					#end
+					if (cellPosition != null)
+					{
+						cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
+						#if !mobile
+							trace("Found: " + cellPosition);
+						#end
+					}
+					else
+					{
+						// No valid position found?;
+						trace("Invalid position found!");
+						bounceBubble(this, FlxPoint.get(0, 0));
+					}
 				}
 
 				targetPosition.put();
 			}
 
 			var mayHaveLost : Bool = false;
-			// Check whether the bubble is below the target line
-			if (cellPosition.y >= grid.bottomRow)
+			if (cellPosition != null)
 			{
-				reposition(cellPosition.x, cellPosition.y);
-				mayHaveLost = true;
-			}
+				// Check whether the bubble is below the target line
+				if (cellPosition.y >= grid.bottomRow)
+				{
+					reposition(cellPosition.x, cellPosition.y);
+					mayHaveLost = true;
+				}
 
-			// Store your data
-			grid.setData(cellPosition.x, cellPosition.y, this);
+				// Store your data
+				grid.setData(cellPosition.x, cellPosition.y, this);
+			}
 
 			if (notifyWorld)
 			{
