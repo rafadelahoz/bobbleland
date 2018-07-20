@@ -32,11 +32,15 @@ class PlayerCharacter extends FlxSprite
 
     var sweatRect : FlxRect;
 
+    var alternate : Bool;
+
     public function new(X : Float, Y : Float, World : PlayState, CharacterId : String)
     {
         super(X, Y);
         world = World;
         characterId = CharacterId;
+
+        alternate = ArcadeGameStatus.getConfigData().alternate;
 
         prepareGraphic();
         animation.play("idle");
@@ -146,13 +150,13 @@ class PlayerCharacter extends FlxSprite
         switch (characterId)
         {
             case "pug":
-                loadGraphic("assets/images/char-pug-sheet.png", true, 32, 24);
+                loadGraphic("assets/images/char-pug-sheet" + (alternate ? "-alternate.png" : ".png"), true, 32, 24);
                 animation.add("idle", [0, 7], 3);
                 animation.add("run", [0, 1, 2, 3, 4, 5, 6], 20);
                 animation.add("action", [8, 9, 10, 11, 12, 13], 30, false);
                 animation.add("happy", [14, 15, 16, 17, 17, 16, 15, 14], 20);
             case "cat":
-                loadGraphic("assets/images/char-cat-sheet.png", true, 32, 24);
+                loadGraphic("assets/images/char-cat-sheet" + (alternate ? "-alternate.png" : ".png"), true, 32, 24);
                 animation.add("idle", [0]);
                 animation.add("run", [5, 6, 7, 1, 2, 3, 4], 20);
                 animation.add("action", [0, 8, 9, 10, 11, 12, 13, 14, 15], 30, false);
@@ -163,7 +167,7 @@ class PlayerCharacter extends FlxSprite
                 animation.add("sleep-in", [32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45], 25, false);
                 animation.add("sleep", [44, 45], 2);
             case "crab":
-                loadGraphic("assets/images/char-crab-sheet.png", true, 32, 40);
+                loadGraphic("assets/images/char-crab-sheet" + (alternate ? "-alternate.png" : ".png"), true, 32, 40);
                 animation.add("idle", [0, 1, 2, 3, 0, 0], 4, true);
                 animation.add("left", [10, 11, 12, 13, 14, 15, 16], 20, true);
                 animation.add("right", [20, 21, 22, 23, 24, 25, 26], 20, true);
@@ -172,7 +176,7 @@ class PlayerCharacter extends FlxSprite
                 offset.x = 2;
                 offset.y = 13;
             case "frog":
-                loadGraphic("assets/images/char-frog-sheet.png", true, 48, 28);
+                loadGraphic("assets/images/char-frog-sheet" + (alternate ? "-alternate.png" : ".png"), true, 48, 28);
                 animation.add("idle", [0]);
                 animation.add("run", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], 30, true);
                 animation.add("action", [22, 23, 24, 25, 26, 26, 27, 28, 28, 29, 30], 30, false);
@@ -180,7 +184,7 @@ class PlayerCharacter extends FlxSprite
                 offset.x = 8;
                 offset.y = 4;
             case "bear":
-                loadGraphic("assets/images/char-bear-sheet.png", true, 64, 38);
+                loadGraphic("assets/images/char-bear-sheet" + (alternate ? "-alternate.png" : ".png"), true, 64, 38);
                 animation.add("idle", [0]);
                 animation.add("run", [0, 1, 2, 3, 4, 5, 6, 7, 8], 25, true);
                 animation.add("action", [9, 10, 11, 12, 13, 14, 15, 16], 30, false);
@@ -188,7 +192,7 @@ class PlayerCharacter extends FlxSprite
                 offset.x = 20;
                 offset.y = 14;
             case "catbomb":
-                loadGraphic("assets/images/char-catbomb-sheet.png", true, 16, 16);
+                loadGraphic("assets/images/char-catbomb-sheet" + (alternate ? "-alternate.png" : ".png"), true, 16, 16);
                 animation.add("idle", [0, 1], 1, true);
                 animation.add("run", [0, 1], 8, true);
                 animation.add("action", [6, 7, 6, 7], 8, false);

@@ -41,6 +41,7 @@ class ArcadeGameStatus
                 trace("Arcade data reset");
                 arcadeData = {
                     difficulty: 2, character: null, bgm: "GameA",
+                    alternate: false,
                     highScore: 0, maxBubbles: 0, longestGame: 0, maxCleans: 0,
                     totalBubbles: 0, totalTime: 0, totalCleans: 0
                 };
@@ -245,6 +246,8 @@ typedef ArcadeData = {
     var difficulty : Int;
     var character : String;
     var bgm : String;
+
+    var alternate : Bool;
 
     var highScore : Int;
     var longestGame : Int;

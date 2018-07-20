@@ -524,7 +524,33 @@ class ArcadePreState extends BubbleState
     function onAlternateButton()
     {
         FlxG.camera.flash(Palette.White, 0.6);
+        ArcadeGameStatus.getConfigData().alternate = !ArcadeGameStatus.getConfigData().alternate;
+        ArcadeGameStatus.saveArcadeConfigData();
+
+        handleCharacterButtonGraphics();
+
         trace("SUPER PLAYER!");
+    }
+
+    function handleCharacterButtonGraphics()
+    {
+        var alt : Bool = (ArcadeGameStatus.getConfigData().alternate);
+        for (char in ["dog", "cat", "crab", "frog", "bear", "catbomb"])
+        {
+            var btn : Button = null;
+            switch (char)
+            {
+                case "dog": btn = btnDog;
+                case "cat": btn = btnCat;
+                case "crab": btn = btnCrab;
+                case "frog": btn = btnFrog;
+                case "bear": btn = btnBear;
+                case "catbomb": btn = btnCatbomb;
+            }
+
+            if (btn != null)
+                btn.loadSpritesheet("assets/ui/char-" + char + (alt ? "-alternate" : "") + ".png", 32, 32);
+        }
     }
 
     function buildHistoryScreen() : FlxSpriteGroup
@@ -687,7 +713,7 @@ class ArcadePreState extends BubbleState
         else if (ProgressStatus.progressData.frogHint)
         {
             // Instantiate frog hint over his button
-            var btnFrogHint : HintButton = new HintButton(40, 168, this, "This can't be easy:\nMore bubbles! A lot\nof them at once!");
+            var btnFrogHint : HintButton = new HintButton(40, 168, this, "This can't be easy:\nGet lots of bubbles\nin a single session");
             group.add(btnFrogHint);
             hintButtons.push(btnFrogHint);
         }
@@ -702,7 +728,7 @@ class ArcadePreState extends BubbleState
         else if (ProgressStatus.progressData.bearHint)
         {
             // Instantiate bear hint over his button
-            var btnBearHint : HintButton = new HintButton(80, 168, this, "This must be hard:\nHold on, baby,\nas much as you can");
+            var btnBearHint : HintButton = new HintButton(80, 168, this, "This must be hard:\nHold on, baby,\nas long as you can");
             group.add(btnBearHint);
             hintButtons.push(btnBearHint);
         }
@@ -721,6 +747,8 @@ class ArcadePreState extends BubbleState
             group.add(btnCatbombHint);
             hintButtons.push(btnCatbombHint);
         }
+
+        handleCharacterButtonGraphics();
     }
 
     function generateBgmButtons(group : FlxSpriteGroup)
