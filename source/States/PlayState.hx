@@ -340,6 +340,8 @@ class PlayState extends BubbleState
 			stopDropNotice();
 		}
 
+		character.onPause();
+
 		flowController.pause();
 		specialBubbleController.pause();
 	}
@@ -361,6 +363,8 @@ class PlayState extends BubbleState
 		{
 			beginDropNotice(null);
 		}
+
+		character.onResume();
 
 		flowController.resume();
 		specialBubbleController.resume();

@@ -8,7 +8,7 @@ import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
-class PlayerCharacter extends FlxSprite
+class PlayerCharacter extends Entity
 {
     public var world : PlayState;
 
@@ -33,6 +33,7 @@ class PlayerCharacter extends FlxSprite
     var sweatRect : FlxRect;
 
     var alternate : Bool;
+    var shiner : Entity;
 
     public function new(X : Float, Y : Float, World : PlayState, CharacterId : String)
     {
@@ -74,6 +75,14 @@ class PlayerCharacter extends FlxSprite
             belt.color = Palette.DarkPurple;
 
         setupSweatRectangle();
+
+        if (alternate && characterId == "frog")
+        {
+            shiner = new Entity(sweatRect.x, sweatRect.y);
+            shiner.makeGraphic(Std.int(sweatRect.width), Std.int(sweatRect.height), 0x00000000);
+            world.add(shiner);
+            shiner.shine();
+        }
 
         hurry = new FlxSprite(x-8, y-19, "assets/images/hurry.png");
         hurry.visible = false;
@@ -380,6 +389,18 @@ class PlayerCharacter extends FlxSprite
         hurry.update(elapsed);
 
         super.update(elapsed);
+    }
+
+    override function onPause()
+    {
+        if (shiner != null)
+            shiner.matte();
+    }
+
+    override function onResume()
+    {
+        if (shiner != null)
+            shiner.shine();
     }
 
     function onSweatTimer(t : FlxTimer)

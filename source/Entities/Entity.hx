@@ -48,6 +48,14 @@ class Entity extends FlxSprite
         super.destroy();
     }
 
+    public function onPause()
+    {
+    }
+
+    public function onResume()
+    {
+    }
+
     public function onTap(?callback : Void -> Void)
     {
         tapCallback = callback;
