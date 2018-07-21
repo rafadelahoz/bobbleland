@@ -446,7 +446,7 @@ class ArcadePreState extends BubbleState
 
             specialScreen.add(specialText);
 
-            var finalButton : Button = new Button(136, specialText.y + specialText.height + 32, onFinalButtonReleased);
+            var finalButton : Button = new Button(80, specialText.y + specialText.height + 24, onFinalButtonReleased);
             finalButton.loadSpritesheet("assets/ui/btn-debug.png", 24, 21);
             specialScreen.add(finalButton);
 
@@ -457,12 +457,12 @@ class ArcadePreState extends BubbleState
             var scrollButton : ScrollButton = null;
             scrollButton = new ScrollButton(160, 48, function() {
                 specialText.y = Std.int(48 - scrollButton.progress * (totalHeight - 256));
-                finalButton.y = specialText.y + specialText.height + 32;
+                finalButton.y = specialText.y + specialText.height + 24;
                 finalButton.active = false;
                 finalButton.visible = false;
             });
             scrollButton.unboundCallback = function() {
-                if (!ProgressStatus.progressData.alternate)
+                if (!ProgressStatus.progressData.alternate && scrollButton.progress >= 1)
                 {
                     finalButton.active = true;
                     finalButton.visible = true;
