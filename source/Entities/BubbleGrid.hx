@@ -433,7 +433,7 @@ class BubbleGrid extends FlxObject
 		{
 			return [];
 		}
-		
+
 		var x : Int = Std.int(pos.x);
 		var y : Int = Std.int(pos.y);
 
@@ -551,6 +551,21 @@ class BubbleGrid extends FlxObject
 		}
 
 		return count;
+	}
+
+	public function onlyBlockersRemaining() : Bool
+	{
+		for (row in 0...rows)
+		{
+			for (col in 0...columns)
+			{
+				var bubble : Bubble = getData(col, row);
+				if (bubble != null && !bubble.bubbleColor.isBlocker())
+					return false;
+			}
+		}
+
+		return true;
 	}
 
 	public function getLowestBubbleRow() : Int

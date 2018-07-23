@@ -331,6 +331,7 @@ class PlayState extends BubbleState
 		dropNoticeTimer.active = false;
 		waitTimer.active = false;
 		aimingTimer.active = false;
+		afterCleanTimer.active = false;
 
 		wasNotifyingDrop = notifyDrop;
 		notifyDrop = false;
@@ -356,6 +357,7 @@ class PlayState extends BubbleState
 		dropNoticeTimer.active = true;
 		waitTimer.active = true;
 		aimingTimer.active = true;
+		afterCleanTimer.active = true;
 
 		notifyDrop = wasNotifyingDrop;
 		wasNotifyingDrop = false;
@@ -689,7 +691,7 @@ class PlayState extends BubbleState
 		// Things are happing, so wait!
 		switchState(StateRemoving);
 
-		if (grid.getCount() <= 0)
+		if (grid.getCount() <= 0 || grid.onlyBlockersRemaining())
 		{
 			// If the grid has been cleaned
 			// Four rows are to be generated
@@ -711,13 +713,23 @@ class PlayState extends BubbleState
 			handlePuzzleCompleted();
 		}
 		// Check whether the field is empty to award bonuses
-		else if (mode == ModeArcade && grid.getCount() == 0)
+		else if (mode == ModeArcade && (grid.getCount() == 0 || grid.onlyBlockersRemaining()))
 		{
 			flowController.onScreenCleared();
 			specialBubbleController.onScreenCleared();
 
 			dropTimer.cancel();
 			stopDropNotice();
+
+			if (grid.onlyBlockersRemaining())
+			{
+				grid.forEach(function (bubble : Bubble) {
+					bubble.triggerFall();
+					bubbles.remove(bubble);
+					presents.remove(bubble);
+					fallingBubbles.add(bubble);
+				});
+			}
 
 			SfxEngine.play(SfxEngine.SFX.CleanFanfare);
 
@@ -732,14 +744,14 @@ class PlayState extends BubbleState
 			shiny.ShineSparkColor = Palette.Yellow;
 			shiny.shine();
 
-			new FlxTimer().start(0.9, function(t:FlxTimer) {
+			afterCleanTimer.start(0.9, function(t:FlxTimer) {
 
 				var baseY : Int = FlxG.random.int(64, 164);
 
 				// SfxEngine.play(SfxEngine.SFX.Accept);
 				add(new TextNotice(FlxG.random.int(0, Constants.Width), baseY, "FULL TANK CLEAN!"));
 
-				t.start(0.55, function(t:FlxTimer) {
+				afterCleanTimer.start(0.55, function(t:FlxTimer) {
 
 					scoreDisplay.add(Constants.ScClearField);
 
@@ -749,7 +761,7 @@ class PlayState extends BubbleState
 					remove(shiny);
 					shiny.destroy();
 
-					t.start(0.55, function(t:FlxTimer) {
+					afterCleanTimer.start(0.55, function(t:FlxTimer) {
 
 						// SfxEngine.play(SfxEngine.SFX.Accept);
 						add(new TextNotice(FlxG.random.int(0, Constants.Width), baseY+20, getCleanMessage()));
@@ -760,8 +772,6 @@ class PlayState extends BubbleState
 
 						// And generate 3 more rows
 						afterCleanTimer.start(0.7, handleAfterCleanGeneration);
-
-						t.destroy();
 					});
 				});
 			});
@@ -959,9 +969,22 @@ class PlayState extends BubbleState
 		add(btnDebugGrid);*/
 		#if (!release)
 		var btnCrasher : Button = new Button(0, 220, function() {
-				var nullThing : FlxSprite = null;
-				nullThing.updateHitbox();
-			});
+			// Clear and setup a blocker
+			for (c in 0...grid.columns)
+			{
+				for (r in 0...grid.rows)
+				{
+					if (grid.getData(c, r) != null)
+					{
+						bubbles.remove(grid.getData(c, r));
+						grid.setData(c, r, null);
+					}
+				}
+			}
+
+			var col : Int = FlxG.random.int(0, grid.columns-1);
+			Bubble.CreateAt(col, 0, new BubbleColor(BubbleColor.SpecialBlocker), this);
+		});
 		btnCrasher.loadSpritesheet("assets/ui/btn-debug.png", 24, 21);
 		add(btnCrasher);
 

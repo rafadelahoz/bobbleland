@@ -49,4 +49,9 @@ class BubbleColor
     {
         return new BubbleColor(colorIndex, isTarget);
     }
+
+    public function isBlocker() : Bool
+    {
+        return colorIndex == SpecialBlocker;
+    }
 }
