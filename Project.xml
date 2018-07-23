@@ -2,10 +2,10 @@
 <project>
 	<!------------------------------APPLICATION SETTINGS---------------------------->
 
-	<!--<meta title="SOAP ALLEY" package="com.badladns.the" version="0.1.0" company="The Badladns" if="android"/>-->
+	<!--<meta title="SOAP ALLEY" package="com.badladns.the" version="0.9.0" company="The Badladns" if="android"/>-->
 
-	<app title="SOAP ALLEY" file="soap-alley" main="Main" version="0.1.0" company="The Badladns" />
-	<app title="SOAP ALLEY" file="soapalley" main="Main" version="0.1.0" company="The Badladns" if="android"/>
+	<app title="SOAP ALLEY" file="soap-alley" main="Main" version="0.9.0" company="The Badladns" />
+	<app title="SOAP ALLEY" file="soapalley" main="Main" version="0.9.0" company="The Badladns" if="android"/>
 	<meta package="badladns.the.soapalley"/>
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
