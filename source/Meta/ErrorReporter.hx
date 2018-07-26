@@ -11,7 +11,13 @@ class ErrorReporter
         var stack : String = CallStack.toString(CallStack.exceptionStack());
         trace(stack);
 
-        Share.init(Share.TWITTER);
-        Share.share(error + "\n" + stack, "Exception occurred", null, null, "the@badladns.com");
+        Logger.batch("### ERROR @ " + Date.now().toString() + " ###");
+        Logger.batch(error);
+        Logger.batch(">> STACK");
+        Logger.batch(stack);
+        Logger.done();
+
+        /*Share.init(Share.TWITTER);
+        Share.share(error + "\n" + stack, "Exception occurred", null, null, "the@badladns.com");*/
     }
 }

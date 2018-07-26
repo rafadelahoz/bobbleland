@@ -46,6 +46,7 @@ class Main extends Sprite
 		}
 
 		Lib.current.stage.addEventListener(Event.DEACTIVATE, onDeactivate);
+		Lib.current.stage.addEventListener(Event.RESIZE, onResize);
 	}
 
 	private function onDeactivate(?E:Event):Void
@@ -60,6 +61,31 @@ class Main extends Sprite
 				cast(FlxG.state, PlayState).onDeactivate();
 			default:
 		}
+	}
+
+	private function onResize(?E:Event) : Void
+	{
+		Logger.batch("### RESIZE EVENT @ " + Date.now().toString() + " ###");
+		Logger.batch("Lib.current.stage.stageWidth: " + Lib.current.stage.stageWidth);
+		Logger.batch("Lib.current.stage.stageHeight: " + Lib.current.stage.stageHeight);
+
+		Logger.batch("Lib.current.stage.width: " + Lib.current.stage.width);
+		Logger.batch("Lib.current.stage.height: " + Lib.current.stage.height);
+
+		Logger.batch("Lib.current.width: " + Lib.current.width);
+		Logger.batch("Lib.current.height: " + Lib.current.height);
+
+		Logger.batch("Capabilities.screenDPI: " + openfl.system.Capabilities.screenDPI);
+		Logger.batch("pixelAspectRatio:" + openfl.system.Capabilities.pixelAspectRatio);
+
+		Logger.batch("os: " + openfl.system.Capabilities.os);
+		Logger.batch("pixelAspectRatio: " + openfl.system.Capabilities.pixelAspectRatio);
+		Logger.batch("playerType: " + openfl.system.Capabilities.playerType);
+		Logger.batch("screenColor: " + openfl.system.Capabilities.screenColor);
+		Logger.batch("screenDPI: " + openfl.system.Capabilities.screenDPI);
+		Logger.batch("screenResolutionX: " + openfl.system.Capabilities.screenResolutionX);
+		Logger.batch("screenResolutionY: " + openfl.system.Capabilities.screenResolutionY);
+		Logger.done();
 	}
 
 	private function init(?E:Event):Void
