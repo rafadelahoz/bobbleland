@@ -426,9 +426,8 @@ class ArcadePreState extends BubbleState
                                   " / emechan\n" +
                                   " / pferv\n" +
                                   " / alwarr\n" +
-                                  " / beadarkelf\n" +
+                                  " / bea\n" +
                                   " / bronsonio\n" +
-                                  " / jr\n" +
                                   " / manzanita\n" +
                                   " / vero8a\n" +
                                   // " / gsux\n" +
