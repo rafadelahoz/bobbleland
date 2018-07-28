@@ -27,7 +27,7 @@ class PresentBubble extends Bubble
     public function setContent(Content : Int)
     {
         content = Content;
-        trace("Present with content " + Content);
+        // trace("Present with content " + Content);
 
         shine();
     }

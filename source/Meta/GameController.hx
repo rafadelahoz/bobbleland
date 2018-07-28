@@ -42,14 +42,14 @@ class GameController
 
 		if (!DontLoad && SaveStateManager.savestateExists())
 		{
-			trace("Savestate data exists!");
+			// trace("Savestate data exists!");
 			BeginArcade(true);
 		}
 		else
 		{
 			// Delete stored game
 			SaveStateManager.loadAndErase();
-			
+
 			currentState = Menu;
 			FlxG.switchState(new ArcadePreState());
 		}
@@ -62,7 +62,7 @@ class GameController
 		if (Continue)
 		{
 			data = SaveStateManager.loadAndErase();
-			trace("Save data is " + (SaveStateManager.savestateExists() ? "present" : "not present") + " after loading");
+			// trace("Save data is " + (SaveStateManager.savestateExists() ? "present" : "not present") + " after loading");
 	 	}
 
 		FlxG.switchState(new PlayState(PlayState.ModeArcade, data));

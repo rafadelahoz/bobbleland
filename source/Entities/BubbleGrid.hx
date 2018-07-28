@@ -132,8 +132,8 @@ class BubbleGrid extends FlxObject
 		{
 			data[Std.int(row)][Std.int(col)] = bubble;
 		}
-		else
-			trace("Trying to set invalid grid position (" + col + ", " + row + ")");
+		// else
+			// trace("Trying to set invalid grid position (" + col + ", " + row + ")");
 	}
 
 	public function getData(col : Float, row : Float) : Bubble

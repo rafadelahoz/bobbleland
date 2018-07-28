@@ -52,7 +52,7 @@ class PlayFlowController
 
         if (SaveData != null)
         {
-            trace("Loaded playFlowData");
+            // trace("Loaded playFlowData");
 
             playTime = SaveData.playTime;
             score = SaveData.score;
@@ -66,7 +66,7 @@ class PlayFlowController
         }
         else
         {
-            trace("Reset playFlowData");
+            // trace("Reset playFlowData");
 
             playTime = 0;
             score = 0;
@@ -123,7 +123,7 @@ class PlayFlowController
         if (!updateDifficulty)
             return;
 
-        trace("Increasing difficulty...");
+        // trace("Increasing difficulty...");
 
         lastIncreaseTime = playTime;
 
@@ -160,13 +160,13 @@ class PlayFlowController
         {
             world.availableColors.push(new BubbleColor(currentColors));
             added = true;
-            trace("Included new color");
+            // trace("Included new color");
         }
         else if (currentColors >= 6)
         {
             world.availableColors.push(new BubbleColor(BubbleColor.SpecialBlocker));
             added = true;
-            trace("Included blocker");
+            // trace("Included blocker");
         }
 
         return added;

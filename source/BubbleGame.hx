@@ -6,6 +6,7 @@ class BubbleGame extends FlxGame
 {
     override public function step() : Void
     {
+        #if !release
         try
         {
             super.step();
@@ -14,5 +15,8 @@ class BubbleGame extends FlxGame
         {
             ErrorReporter.handle(someProblem);
         }
+        #else
+            super.step();
+        #end
     }
 }

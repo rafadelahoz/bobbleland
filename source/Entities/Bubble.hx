@@ -157,7 +157,7 @@ class Bubble extends Entity
 				FlxSpriteUtil.drawCircle(this, width/2, height/2, Size, 0xFFFFFFFF);
 				// offset.set(0, 0);
 			case BubbleColor.SpecialTarget:
-				trace("Target bubble instantiated");
+				// trace("Target bubble instantiated");
 				var sprite : String = world.playSessionData.target + ".png";
 				loadGraphic("assets/images/" + sprite);
 			case BubbleColor.SpecialPresent:
@@ -349,7 +349,7 @@ class Bubble extends Entity
 	{
 		if (special == BubbleColor.SpecialTarget)
 		{
-			trace("Target bubble hit!");
+			// trace("Target bubble hit!");
 			world.onTargetBubbleHit();
 			// Some effect to the target or something?
 		}
@@ -427,10 +427,10 @@ class Bubble extends Entity
 				var occupied : Bool = grid.getData(targetPosition.x, targetPosition.y) != null;
 
 				#if !mobile
-				trace(cellPosition + " is" +
+				/* trace(cellPosition + " is" +
 						(occupied ? " already occupied by " + grid.getData(targetPosition.x, targetPosition.y) : "") +
 						(invalid ? " invalid" : "") +
-						", returning to " + lastPosition);
+						", returning to " + lastPosition);*/
 				#end
 				cellPosition.set(lastPosition.x, lastPosition.y);
 				cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
@@ -441,22 +441,22 @@ class Bubble extends Entity
 				{
 					#if !mobile
 						// Non adjacent position reached
-						trace("Invalid fallback from " + targetPosition + " to " + cellPosition);
+						// trace("Invalid fallback from " + targetPosition + " to " + cellPosition);
 						// Find the closest cell
-						trace("Trying to find closest to " + cellPosition + " between " + neighbours);
+						// trace("Trying to find closest to " + cellPosition + " between " + neighbours);
 					#end
 					cellPosition = findClosestCell(cellPosition, neighbours);
 					if (cellPosition != null)
 					{
 						cellCenterPosition = grid.getCellCenter(Std.int(cellPosition.x), Std.int(cellPosition.y));
 						#if !mobile
-							trace("Found: " + cellPosition);
+							// trace("Found: " + cellPosition);
 						#end
 					}
 					else
 					{
 						// No valid position found?;
-						trace("Invalid position found!");
+						// trace("Invalid position found!");
 						bounceBubble(this, FlxPoint.get(0, 0));
 					}
 				}

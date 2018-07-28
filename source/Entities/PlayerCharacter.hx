@@ -153,8 +153,8 @@ class PlayerCharacter extends Entity
 
     function prepareGraphic()
     {
-        if (characterId == null)
-            trace("No character specified");
+        // if (characterId == null)
+        //     trace("No character specified");
 
         switch (characterId)
         {

@@ -34,11 +34,11 @@ class ArcadeGameStatus
 
         if (arcadeData == null)
         {
-            trace("Loading arcadeData");
+            // trace("Loading arcadeData");
             arcadeData = loadArcadeConfigData();
             if (arcadeData == null)
             {
-                trace("Arcade data reset");
+                // trace("Arcade data reset");
                 arcadeData = {
                     difficulty: 2, character: null, bgm: "GameA",
                     alternate: false,

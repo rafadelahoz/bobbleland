@@ -33,7 +33,7 @@ class SpecialBubbleController
 
         if (SaveData != null)
         {
-            trace("Loaded SpecialBubbleData");
+            // trace("Loaded SpecialBubbleData");
 
             playTime = SaveData.playTime;
             score = SaveData.score;
@@ -52,7 +52,7 @@ class SpecialBubbleController
         }
         else
         {
-            trace("Reset SpecialBubbleData");
+            // trace("Reset SpecialBubbleData");
 
             playTime = 0;
             score = 0;
@@ -78,11 +78,11 @@ class SpecialBubbleController
                 case 4:
                     contentProbability = [25, 25, 25, 25];
                 default:
-                    trace("NO INITIAL DIFFICULTY PROVIDED");
+                    // trace("NO INITIAL DIFFICULTY PROVIDED");
                     contentProbability = [50, 50, 30, 30];
             }
 
-            trace("SpecialBubbleGenerator data reset");
+            // trace("SpecialBubbleGenerator data reset");
         }
 
         timer = new FlxTimer().start(1, onPlayTimeTimer, 0);

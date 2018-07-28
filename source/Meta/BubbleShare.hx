@@ -26,6 +26,6 @@ class BubbleShare
 
 		Share.share(msg, null, imagePath);
 
-        trace("share ok");
+        // trace("share ok");
     }
 }

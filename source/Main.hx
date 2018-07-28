@@ -65,6 +65,7 @@ class Main extends Sprite
 
 	private function onResize(?E:Event) : Void
 	{
+		#if !release
 		Logger.batch("### RESIZE EVENT @ " + Date.now().toString() + " ###");
 		Logger.batch("Lib.current.stage.stageWidth: " + Lib.current.stage.stageWidth);
 		Logger.batch("Lib.current.stage.stageHeight: " + Lib.current.stage.stageHeight);
@@ -86,6 +87,7 @@ class Main extends Sprite
 		Logger.batch("screenResolutionX: " + openfl.system.Capabilities.screenResolutionX);
 		Logger.batch("screenResolutionY: " + openfl.system.Capabilities.screenResolutionY);
 		Logger.done();
+		#end
 	}
 
 	private function init(?E:Event):Void

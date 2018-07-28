@@ -87,7 +87,7 @@ class GameOverState extends FlxTransitionableState
 		if (FlxG.keys.justPressed.S)
 		{
 			var filename : String = Screenshot.take();
-			trace(filename);
+			// trace(filename);
 		}
 
 		super.update(elapsed);

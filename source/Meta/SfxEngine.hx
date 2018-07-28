@@ -50,7 +50,7 @@ class SfxEngine
         if (initialized)
             return;
 
-        trace("SFX ENGINE INIT");
+        // trace("SFX ENGINE INIT");
 
         load();
 
@@ -157,7 +157,7 @@ class SfxEngine
         if (save.data.sfx != null)
         {
             Enabled = save.data.sfx;
-            trace("Loaded SFX " + (Enabled ? "ON" : "OFF"));
+            // trace("Loaded SFX " + (Enabled ? "ON" : "OFF"));
         }
         else
             Enabled = true;

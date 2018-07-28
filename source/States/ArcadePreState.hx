@@ -375,7 +375,7 @@ class ArcadePreState extends BubbleState
         data.character = ArcadeGameStatus.getCharacter();
         // data.bgm = "GameC";
         ArcadeGameStatus.setConfigData(data);
-        trace("arcade data: " + ArcadeGameStatus.getConfigData());
+        // trace("arcade data: " + ArcadeGameStatus.getConfigData());
     }
 
     function prepareDifficultySetting()

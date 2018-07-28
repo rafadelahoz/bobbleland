@@ -30,7 +30,7 @@ class BubbleGenerator
         {
             if (SaveData == null)
             {
-                trace("Starting random grid");
+                // trace("Starting random grid");
                 for (row in 0...sessionData.initialRows)
                 {
                     generateRow();
@@ -38,7 +38,7 @@ class BubbleGenerator
             }
             else
             {
-                trace("Loading saved grid");
+                // trace("Loading saved grid");
                 generateSaveData(SaveData);
             }
         }
@@ -152,7 +152,7 @@ class BubbleGenerator
             return false;
     }
 
-    function filterOnlyBlockers(c : BubbleColor) : Bool 
+    function filterOnlyBlockers(c : BubbleColor) : Bool
     {
         return (c.colorIndex == BubbleColor.SpecialBlocker);
     }

@@ -89,7 +89,7 @@ class PlayState extends BubbleState
 		saveData = SaveData;
 		if (saveData != null && saveData.session != null)
 		{
-			trace("Using saved session data");
+			// trace("Using saved session data");
 			/*trace(saveData.session);
 			trace("Colors " + saveData.session.usedColors.length);*/
 			playSessionData = saveData.session;
@@ -97,7 +97,7 @@ class PlayState extends BubbleState
 		}
 		else
 		{
-			trace("Using new session data");
+			// trace("Using new session data");
 			playSessionData = ArcadeGameStatus.getData();
 			// trace("New Arcade Game, playSessionData is", playSessionData);
 		}
@@ -192,7 +192,9 @@ class PlayState extends BubbleState
 
 		FlxG.camera.setPosition(0, 0);
 
+		#if !release
 		handleDebugInit();
+		#end
 	}
 
 	function prepareRandomizedSessionData()
@@ -261,7 +263,9 @@ class PlayState extends BubbleState
 
 		handleBGM();
 
+		#if !release
 		handleDebugRoutines();
+		#end
 
 		bubbles.sort(sortBubbles);
 
@@ -1012,7 +1016,7 @@ class PlayState extends BubbleState
 		if (FlxG.keys.justPressed.TAB)
 		{
 			DEBUG_dropDisabled = !DEBUG_dropDisabled;
-			trace("Drop " + (DEBUG_dropDisabled ? "disabled" : "enabled"));
+			// trace("Drop " + (DEBUG_dropDisabled ? "disabled" : "enabled"));
 		}
 
 		if (FlxG.keys.justPressed.G)
@@ -1095,7 +1099,7 @@ class PlayState extends BubbleState
 		if (FlxG.keys.justPressed.S)
 		{
 			var filename : String = Screenshot.take();
-			trace(filename);
+			// trace(filename);
 		}
 
 		if (FlxG.keys.justPressed.DOWN)

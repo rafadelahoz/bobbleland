@@ -45,14 +45,14 @@ class Screenshot
         {
             #if (!flash)
                 sys.FileSystem.createDirectory(path);
-                trace("Saving to " + sys.FileSystem.absolutePath(path));
+                // trace("Saving to " + sys.FileSystem.absolutePath(path));
                 var ba : openfl.utils.ByteArray = bitmap.bitmapData.encode(bitmap.bitmapData.rect, new openfl.display.PNGEncoderOptions());
                 var fo : sys.io.FileOutput = sys.io.File.write(path + "/" + fname, true);
                 fo.writeBytes(ba, 0, ba.length);
                 fo.close();
             #end
         } catch (e:Dynamic) {
-            trace("Save failed");
+            // trace("Save failed");
             trace(e);
         }
 
