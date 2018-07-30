@@ -267,7 +267,7 @@ class Ticket extends FlxSpriteGroup
         scaledBitmap.bitmapData.draw(bd.bitmapData, matrix);
 
         var path : String = Screenshot.save(scaledBitmap);
-        BubbleShare.share("Check out my latest SOAP ALLEY ticket: " + score + " points in " + time + "!", path);
+        BubbleShare.share("Check out my latest SOAP ALLEY ticket: " + score + " points in " + time + "!\n#soapalley #ticket", path);
         // sys.FileSystem.deleteFile(path);
     }
 
