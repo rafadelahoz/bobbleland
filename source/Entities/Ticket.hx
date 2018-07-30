@@ -267,8 +267,22 @@ class Ticket extends FlxSpriteGroup
         scaledBitmap.bitmapData.draw(bd.bitmapData, matrix);
 
         var path : String = Screenshot.save(scaledBitmap);
-        BubbleShare.share("Check out my latest SOAP ALLEY ticket: " + score + " points in " + time + "!\n#soapalley #ticket", path);
+
+        BubbleShare.share("Check out my latest SOAP ALLEY ticket: " + score + " points in " + time + " on " + getDifficultyLabel(data.level) + " difficulty!\n#soapalley #ticket", path);
         // sys.FileSystem.deleteFile(path);
+    }
+
+    function getDifficultyLabel(difficulty) : String
+    {
+        switch (difficulty)
+        {
+            case 1: return "easiest";
+            case 2: return "easy";
+            case 3: return "medium";
+            case 4: return "hard";
+            case 5: return "hardest";
+            default: return "any";
+        }
     }
 
     function record(sprite : FlxSprite, baseY : Int) : Int
