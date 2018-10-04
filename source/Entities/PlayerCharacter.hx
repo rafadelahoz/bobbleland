@@ -87,7 +87,7 @@ class PlayerCharacter extends Entity
         hurry = new FlxSprite(x-8, y-19, "assets/images/hurry.png");
         hurry.visible = false;
         hurry.scale.set(0.9, 0.9);
-        hurryTween = FlxTween.tween(hurry.scale, {x : 1, y : 1}, 0.25, { ease : FlxEase.elasticInOut, loopDelay: 0.15, type : FlxTween.PINGPONG });
+        hurryTween = FlxTween.tween(hurry.scale, {x : 1, y : 1}, 0.25, { ease : FlxEase.elasticInOut, loopDelay: 0.15, type : FlxTweenType.PINGPONG });
 
         if (characterId == "cat")
             sleepy = 0;
