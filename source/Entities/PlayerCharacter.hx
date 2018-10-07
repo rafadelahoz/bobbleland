@@ -53,7 +53,9 @@ class PlayerCharacter extends Entity
         belt.animation.play("move");
         belt.animation.paused = true;
 
-        if (characterId == "crab")
+        if (characterId == "cat")
+            belt.y -= 1;
+        else if (characterId == "crab")
             belt.y -= 16;
         else if (characterId == "frog")
         {
@@ -104,7 +106,7 @@ class PlayerCharacter extends Entity
             case "pug":
                 sweatRect = FlxRect.get(x-4, y-3, width+4, height);
             case "cat":
-                sweatRect = FlxRect.get(x-6, y-4, width+8, height+4);
+                sweatRect = FlxRect.get(x-6, y-4, width+8, height+3);
             case "crab":
                 sweatRect = FlxRect.get(x-4, y-4, width+8, height+4);
             case "frog":
@@ -165,16 +167,16 @@ class PlayerCharacter extends Entity
                 animation.add("action", [8, 9, 10, 11, 12, 13], 30, false);
                 animation.add("happy", [14, 15, 16, 17, 17, 16, 15, 14], 20);
             case "cat":
-                loadGraphic("assets/images/char-cat-sheet" + (alternate ? "-alternate.png" : ".png"), true, 32, 24);
+                loadGraphic("assets/images/char-cat-sheet" + (alternate ? "-alternate.png" : ".png"), true, 32, 25);
                 animation.add("idle", [0]);
                 animation.add("run", [5, 6, 7, 1, 2, 3, 4], 20);
                 animation.add("action", [0, 8, 9, 10, 11, 12, 13, 14, 15], 30, false);
                 animation.add("happy", [0, 0, 0, 0, 32, 33, 34, 35, 46, 35, 46, 35, 46, 35, 46, 35, 46, 35, 46, 35, 46, 35, 46, 35, 46, 35, 46], 3, false);
-
                 // Special animations for catbomb unlocking
                 animation.add("yawn", [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], 20, false);
                 animation.add("sleep-in", [32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45], 25, false);
                 animation.add("sleep", [44, 45], 2);
+                offset.y = 1;
             case "crab":
                 loadGraphic("assets/images/char-crab-sheet" + (alternate ? "-alternate.png" : ".png"), true, 32, 40);
                 animation.add("idle", [0, 1, 2, 3, 0, 0], 4, true);
