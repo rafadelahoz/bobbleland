@@ -20,6 +20,9 @@
 	<!--<set name="work"/>-->
 	<!--<haxedef name="work"/>-->
 
+	<!-- <set name="release"/> -->
+	<!-- <haxedef name="release"/> -->
+
 	<!--These window settings apply to all targets-->
 	<window width="360" height="640" fps="60" background="#212121" hardware="true" vsync="true" />
 	<window if="work" width="180" height="320" fps="60" background="#212121" hardware="true" vsync="true" />
@@ -99,20 +102,40 @@
 
 	<!--------------------------------CUSTOM---------------------------------------->
 
+	<config:ios deployment="8.0" />
+
 	<!--<config:android permission="android.permission.WRITE_EXTERNAL_STORAGE" />-->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	<icon path="assets/icons/bubble-icon16.png" size="16" />
+	<icon path="assets/icons/bubble-icon20.png" size="20" if="ios"/>
+	<icon path="assets/icons/bubble-icon29.png" size="29" if="ios"/>
 	<icon path="assets/icons/bubble-icon32.png" size="32" />
 	<icon path="assets/icons/bubble-icon36.png" size="36" if="android"/>
+	<icon path="assets/icons/bubble-icon40.png" size="40" if="ios"/>
 	<icon path="assets/icons/bubble-icon48.png" size="48" if="android"/>
+	<icon path="assets/icons/bubble-icon50.png" size="50" if="ios"/>
+	<icon path="assets/icons/bubble-icon57.png" size="57" if="ios"/>
+	<icon path="assets/icons/bubble-icon58.png" size="58" if="ios"/>
+	<icon path="assets/icons/bubble-icon60.png" size="60" if="ios"/>
 	<icon path="assets/icons/bubble-icon64.png" size="64" />
-	<icon path="assets/icons/bubble-icon72.png" size="72" if="android"/>
+	<icon path="assets/icons/bubble-icon72.png" size="72" />
+	<icon path="assets/icons/bubble-icon76.png" size="76" if="ios"/>
+	<icon path="assets/icons/bubble-icon80.png" size="80" if="ios"/>
+	<icon path="assets/icons/bubble-icon87.png" size="87" if="ios"/>
 	<icon path="assets/icons/bubble-icon96.png" size="96" if="android"/>
-	<icon path="assets/icons/bubble-icon114.png" size="114" if="android"/>
+  <icon path="assets/icons/bubble-icon100.png" size="100" if="ios"/>
+  <icon path="assets/icons/bubble-icon114.png" size="114" if="android"/>
+  <icon path="assets/icons/bubble-icon114.png" size="114" if="ios"/>
+	<icon path="assets/icons/bubble-icon120.png" size="120" if="ios"/>
 	<icon path="assets/icons/bubble-icon128.png" size="128"/>
 	<icon path="assets/icons/bubble-icon144.png" size="144" if="android"/>
+	<icon path="assets/icons/bubble-icon144-ios.png" size="144" if="ios"/>
+	<icon path="assets/icons/bubble-icon152.png" size="152" if="ios"/>
+	<icon path="assets/icons/bubble-icon167.png" size="167" if="ios"/>
+	<icon path="assets/icons/bubble-icon180.png" size="180" if="ios"/>
 	<icon path="assets/icons/bubble-icon192.png" size="192" if="android"/>
 	<icon path="assets/icons/bubble-icon512.png" size="512" if="android"/>
+	<icon path="assets/icons/bubble-icon1024.png" size="1024" if="ios"/>
 
 </project>
