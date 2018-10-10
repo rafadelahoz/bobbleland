@@ -65,9 +65,9 @@ class Main extends Sprite
 
 	private function onResize(?E:Event) : Void
 	{
-#if mobile
-    Lib.current.stage.displayState = openfl.display.StageDisplayState.FULL_SCREEN_INTERACTIVE;
-#end
+		#if mobile
+			Lib.current.stage.displayState = openfl.display.StageDisplayState.FULL_SCREEN_INTERACTIVE;
+		#end
 	}
 
 	private function init(?E:Event):Void

@@ -124,9 +124,8 @@
 	<icon path="assets/icons/bubble-icon80.png" size="80" if="ios"/>
 	<icon path="assets/icons/bubble-icon87.png" size="87" if="ios"/>
 	<icon path="assets/icons/bubble-icon96.png" size="96" if="android"/>
-  <icon path="assets/icons/bubble-icon100.png" size="100" if="ios"/>
-  <icon path="assets/icons/bubble-icon114.png" size="114" if="android"/>
-  <icon path="assets/icons/bubble-icon114.png" size="114" if="ios"/>
+	<icon path="assets/icons/bubble-icon100.png" size="100" if="ios"/>
+	<icon path="assets/icons/bubble-icon114.png" size="114"/>
 	<icon path="assets/icons/bubble-icon120.png" size="120" if="ios"/>
 	<icon path="assets/icons/bubble-icon128.png" size="128"/>
 	<icon path="assets/icons/bubble-icon144.png" size="144" if="android"/>
