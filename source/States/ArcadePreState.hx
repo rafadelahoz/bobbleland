@@ -1,20 +1,14 @@
 package;
 
-import openfl.display.Preloader.DefaultPreloader;
 import flixel.FlxG;
-import flixel.FlxState;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.FlxCamera;
-import flixel.math.FlxPoint;
-import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxBitmapText;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.addons.display.FlxBackdrop;
-import flixel.addons.transition.FlxTransitionableState;
 
 import text.PixelText;
 import text.TextUtils;

@@ -3,7 +3,6 @@ package;
 import flixel.FlxG;
 import flixel.util.FlxTimer;
 import flixel.text.FlxText;
-import flixel.text.FlxBitmapText;
 import flixel.addons.transition.FlxTransitionableState;
 
 class BubbleState extends FlxTransitionableState
