@@ -1,5 +1,6 @@
 package;
 
+import openfl.display.Preloader.DefaultPreloader;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxObject;
@@ -268,6 +269,8 @@ class ArcadePreState extends BubbleState
             case "catbomb":
                 if (btnCatbomb != null)
                     btnCatbomb.setPressed(true, true);
+            default:
+                // nops!
         }
     }
 
