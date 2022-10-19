@@ -120,7 +120,12 @@ class Entity extends FlxSprite
 
     static function getSharedVibrationDelta() : FlxPoint
     {
-        var now : Float = Sys.time();
+        var now : Float = 0;
+        #if (!flash && !html5)
+            now = Sys.time();
+        #else
+            now = haxe.Timer.stamp();
+        #end
         if (now > vibrationSharedTimestamp)
         {
             vibrationSharedTimestamp = now;
