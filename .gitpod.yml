@@ -1,0 +1,21 @@
+# List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
+tasks:
+  - name: Setup Haxe + Haxeflixel
+    init: |
+      sudo add-apt-repository ppa:haxe/releases -y
+      sudo apt-get update
+      sudo apt-get install haxe -y
+      mkdir ~/haxelib && haxelib setup ~/haxelib
+      haxelib install lime
+      haxelib install openfl
+      haxelib install flixel
+      haxelib run lime setup flixel
+      haxelib run lime setup -y
+      haxelib install flixel-tools
+      haxelib install extension-share
+    command: echo 'start script'
+
+# List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
+ports:
+  - port: 3000
+    onOpen: open-preview
