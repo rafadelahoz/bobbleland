@@ -1,7 +1,7 @@
 package;
 
 import haxe.CallStack;
-import extension.share.Share;
+// import extension.share.Share;
 
 class ErrorReporter
 {
@@ -18,6 +18,6 @@ class ErrorReporter
         Logger.done();
 
         /*Share.init(Share.TWITTER);
-        Share.share(error + "\n" + stack, "Exception occurred", null, null, "the@badladns.com");*/
+        // Share.share(error + "\n" + stack, "Exception occurred", null, null, "the@badladns.com");*/
     }
 }

@@ -121,11 +121,12 @@ class Ticket extends FlxSpriteGroup
         btnSignature.loadSpritesheet("assets/ui/btn-signature.png", 72, 56);
         add(btnSignature);
 
-        btnShare = new Button(ticket.x + 8, sprHeight-48, onShare);
-        btnShare.loadSpritesheet("assets/ui/btn-share.png", 56, 24);
-        btnShare.visible = false;
-        btnShare.active = false;
-        add(btnShare);
+        // 2025-12 - Disabled Share button due to extension no longer working
+        // btnShare = new Button(ticket.x + 8, sprHeight-48, onShare);
+        // btnShare.loadSpritesheet("assets/ui/btn-share.png", 56, 24);
+        // btnShare.visible = false;
+        // btnShare.active = false;
+        // add(btnShare);
 
         score = data.score;
         time = TextUtils.formatTime(data.time);
@@ -174,20 +175,20 @@ class Ticket extends FlxSpriteGroup
     {
         // Make ticket vibrate
         ticket.vibrate(true, 2, true);
-        btnShare.vibrate(true, 2, true);
+        // btnShare.vibrate(true, 2, true);
         // And stop after a while
         new FlxTimer().start(0.2, function(t:FlxTimer){
             t.destroy();
             ticket.vibrate(false);
-            btnShare.vibrate(false);
+            // btnShare.vibrate(false);
         });
 
         // Shade ticket
         ticket.color = Palette.DarkGray;
-        btnShare.color = Palette.DarkGray;
+        // btnShare.color = Palette.DarkGray;
         // But not for long
         flixel.tweens.FlxTween.color(ticket, 0.3, ticket.color, 0xFFFFFFFF, {ease: flixel.tweens.FlxEase.circOut});
-        flixel.tweens.FlxTween.color(btnShare, 0.3, btnShare.color, 0xFFFFFFFF, {ease: flixel.tweens.FlxEase.circOut});
+        // flixel.tweens.FlxTween.color(btnShare, 0.3, btnShare.color, 0xFFFFFFFF, {ease: flixel.tweens.FlxEase.circOut});
 
         switch (data.character)
         {
@@ -215,8 +216,8 @@ class Ticket extends FlxSpriteGroup
         btnSignature.visible = false;
         btnSignature.active = false;
 
-        btnShare.active = true;
-        btnShare.visible = true;
+        // btnShare.active = true;
+        // btnShare.visible = true;
 
         if (signatureCallback != null)
             signatureCallback();
